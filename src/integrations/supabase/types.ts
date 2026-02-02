@@ -473,6 +473,565 @@ export type Database = {
           },
         ]
       }
+      entities: {
+        Row: {
+          address_ar: string | null
+          city: string | null
+          commercial_name_ar: string | null
+          cr_number: string | null
+          created_at: string | null
+          email: string | null
+          entity_type: Database["public"]["Enums"]["entity_type"]
+          id: string
+          legal_name_ar: string
+          metadata: Json | null
+          national_id: string | null
+          owner_user_id: string
+          phone: string | null
+          status: Database["public"]["Enums"]["entity_status"]
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          address_ar?: string | null
+          city?: string | null
+          commercial_name_ar?: string | null
+          cr_number?: string | null
+          created_at?: string | null
+          email?: string | null
+          entity_type?: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          legal_name_ar: string
+          metadata?: Json | null
+          national_id?: string | null
+          owner_user_id: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["entity_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          address_ar?: string | null
+          city?: string | null
+          commercial_name_ar?: string | null
+          cr_number?: string | null
+          created_at?: string | null
+          email?: string | null
+          entity_type?: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          legal_name_ar?: string
+          metadata?: Json | null
+          national_id?: string | null
+          owner_user_id?: string
+          phone?: string | null
+          status?: Database["public"]["Enums"]["entity_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_members: {
+        Row: {
+          can_sign: boolean | null
+          created_at: string | null
+          entity_id: string
+          id: string
+          role: Database["public"]["Enums"]["entity_member_role"]
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          can_sign?: boolean | null
+          created_at?: string | null
+          entity_id: string
+          id?: string
+          role?: Database["public"]["Enums"]["entity_member_role"]
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          can_sign?: boolean | null
+          created_at?: string | null
+          entity_id?: string
+          id?: string
+          role?: Database["public"]["Enums"]["entity_member_role"]
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_members_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entity_members_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_applications: {
+        Row: {
+          amount_sar: number
+          application_number: string
+          created_at: string | null
+          decided_at: string | null
+          decision_reason_ar: string | null
+          down_payment_sar: number | null
+          entity_id: string
+          id: string
+          order_id: string | null
+          purpose_ar: string | null
+          score_snapshot: Json | null
+          service_id: string | null
+          status: Database["public"]["Enums"]["finance_application_status"]
+          submitted_at: string | null
+          tenant_id: string | null
+          tenor_months: number
+          updated_at: string | null
+        }
+        Insert: {
+          amount_sar: number
+          application_number: string
+          created_at?: string | null
+          decided_at?: string | null
+          decision_reason_ar?: string | null
+          down_payment_sar?: number | null
+          entity_id: string
+          id?: string
+          order_id?: string | null
+          purpose_ar?: string | null
+          score_snapshot?: Json | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["finance_application_status"]
+          submitted_at?: string | null
+          tenant_id?: string | null
+          tenor_months?: number
+          updated_at?: string | null
+        }
+        Update: {
+          amount_sar?: number
+          application_number?: string
+          created_at?: string | null
+          decided_at?: string | null
+          decision_reason_ar?: string | null
+          down_payment_sar?: number | null
+          entity_id?: string
+          id?: string
+          order_id?: string | null
+          purpose_ar?: string | null
+          score_snapshot?: Json | null
+          service_id?: string | null
+          status?: Database["public"]["Enums"]["finance_application_status"]
+          submitted_at?: string | null
+          tenant_id?: string | null
+          tenor_months?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_applications_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_applications_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_applications_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_applications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_audit_logs: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          tenant_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          tenant_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          tenant_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_audit_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_contracts: {
+        Row: {
+          admin_approved_at: string | null
+          admin_approved_by: string | null
+          application_id: string
+          contract_number: string
+          created_at: string | null
+          id: string
+          offer_id: string
+          pdf_meta: Json | null
+          pdf_url: string | null
+          signed_at: string | null
+          signed_by_user_id: string | null
+          status: Database["public"]["Enums"]["finance_contract_status"]
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          application_id: string
+          contract_number: string
+          created_at?: string | null
+          id?: string
+          offer_id: string
+          pdf_meta?: Json | null
+          pdf_url?: string | null
+          signed_at?: string | null
+          signed_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["finance_contract_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          application_id?: string
+          contract_number?: string
+          created_at?: string | null
+          id?: string
+          offer_id?: string
+          pdf_meta?: Json | null
+          pdf_url?: string | null
+          signed_at?: string | null
+          signed_by_user_id?: string | null
+          status?: Database["public"]["Enums"]["finance_contract_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_contracts_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "finance_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_contracts_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "finance_offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_contracts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_documents: {
+        Row: {
+          created_at: string | null
+          doc_type: Database["public"]["Enums"]["finance_doc_type"]
+          entity_id: string
+          file_name: string | null
+          file_url: string
+          id: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["finance_doc_status"]
+          tenant_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          doc_type: Database["public"]["Enums"]["finance_doc_type"]
+          entity_id: string
+          file_name?: string | null
+          file_url: string
+          id?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["finance_doc_status"]
+          tenant_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          doc_type?: Database["public"]["Enums"]["finance_doc_type"]
+          entity_id?: string
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["finance_doc_status"]
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_documents_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_offers: {
+        Row: {
+          application_id: string
+          apr_percent: number
+          created_at: string | null
+          expires_at: string | null
+          fees_sar: number | null
+          id: string
+          monthly_payment_sar: number
+          offer_name_ar: string | null
+          offer_name_en: string | null
+          offer_status: Database["public"]["Enums"]["finance_offer_status"]
+          tenant_id: string | null
+          total_payable_sar: number
+        }
+        Insert: {
+          application_id: string
+          apr_percent?: number
+          created_at?: string | null
+          expires_at?: string | null
+          fees_sar?: number | null
+          id?: string
+          monthly_payment_sar: number
+          offer_name_ar?: string | null
+          offer_name_en?: string | null
+          offer_status?: Database["public"]["Enums"]["finance_offer_status"]
+          tenant_id?: string | null
+          total_payable_sar: number
+        }
+        Update: {
+          application_id?: string
+          apr_percent?: number
+          created_at?: string | null
+          expires_at?: string | null
+          fees_sar?: number | null
+          id?: string
+          monthly_payment_sar?: number
+          offer_name_ar?: string | null
+          offer_name_en?: string | null
+          offer_status?: Database["public"]["Enums"]["finance_offer_status"]
+          tenant_id?: string | null
+          total_payable_sar?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_offers_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "finance_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_offers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_payments: {
+        Row: {
+          amount_sar: number
+          contract_id: string
+          created_at: string | null
+          due_date: string
+          id: string
+          installment_no: number
+          method: Database["public"]["Enums"]["finance_payment_method"] | null
+          paid_at: string | null
+          reference: string | null
+          status: Database["public"]["Enums"]["finance_payment_status"]
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amount_sar: number
+          contract_id: string
+          created_at?: string | null
+          due_date: string
+          id?: string
+          installment_no: number
+          method?: Database["public"]["Enums"]["finance_payment_method"] | null
+          paid_at?: string | null
+          reference?: string | null
+          status?: Database["public"]["Enums"]["finance_payment_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amount_sar?: number
+          contract_id?: string
+          created_at?: string | null
+          due_date?: string
+          id?: string
+          installment_no?: number
+          method?: Database["public"]["Enums"]["finance_payment_method"] | null
+          paid_at?: string | null
+          reference?: string | null
+          status?: Database["public"]["Enums"]["finance_payment_status"]
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_payments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "finance_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_payments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      finance_profiles: {
+        Row: {
+          available_limit_sar: number | null
+          created_at: string | null
+          credit_limit_sar: number | null
+          entity_id: string
+          id: string
+          kyc_status: Database["public"]["Enums"]["kyc_status"]
+          last_score: number | null
+          last_score_at: string | null
+          notes_admin: string | null
+          risk_level: Database["public"]["Enums"]["risk_level"] | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          available_limit_sar?: number | null
+          created_at?: string | null
+          credit_limit_sar?: number | null
+          entity_id: string
+          id?: string
+          kyc_status?: Database["public"]["Enums"]["kyc_status"]
+          last_score?: number | null
+          last_score_at?: string | null
+          notes_admin?: string | null
+          risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          available_limit_sar?: number | null
+          created_at?: string | null
+          credit_limit_sar?: number | null
+          entity_id?: string
+          id?: string
+          kyc_status?: Database["public"]["Enums"]["kyc_status"]
+          last_score?: number | null
+          last_score_at?: string | null
+          notes_admin?: string | null
+          risk_level?: Database["public"]["Enums"]["risk_level"] | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_profiles_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: true
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       financial_transactions: {
         Row: {
           amount: number
@@ -1890,6 +2449,23 @@ export type Database = {
         Args: { p_tenant_id?: string }
         Returns: string
       }
+      generate_finance_application_number: {
+        Args: { p_tenant_id?: string }
+        Returns: string
+      }
+      generate_finance_contract_number: {
+        Args: { p_tenant_id?: string }
+        Returns: string
+      }
+      generate_finance_installments: {
+        Args: {
+          p_amount_sar: number
+          p_contract_id: string
+          p_start_date?: string
+          p_tenor_months: number
+        }
+        Returns: undefined
+      }
       generate_invoice_number: {
         Args: { p_tenant_id?: string }
         Returns: string
@@ -1910,6 +2486,10 @@ export type Database = {
           status: Database["public"]["Enums"]["order_status"]
           tenant_id: string
         }[]
+      }
+      get_entity_finance_summary: {
+        Args: { p_entity_id: string }
+        Returns: Json
       }
       get_expiring_contracts: {
         Args: { p_days_threshold?: number }
@@ -1974,6 +2554,17 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_finance_audit: {
+        Args: {
+          p_action: string
+          p_actor_user_id: string
+          p_entity_id: string
+          p_entity_type: string
+          p_metadata?: Json
+          p_tenant_id?: string
+        }
+        Returns: string
+      }
       log_transaction_event: {
         Args: {
           p_event_type: string
@@ -2036,6 +2627,42 @@ export type Database = {
         | "pending_signature"
         | "signed"
         | "cancelled"
+      entity_member_role:
+        | "owner"
+        | "admin"
+        | "finance_manager"
+        | "signer"
+        | "viewer"
+      entity_status: "active" | "suspended"
+      entity_type: "individual" | "company" | "institution"
+      finance_application_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "needs_info"
+      finance_contract_status:
+        | "generated"
+        | "signed_by_customer"
+        | "approved_by_admin"
+        | "active"
+        | "closed"
+        | "canceled"
+      finance_doc_status: "uploaded" | "approved" | "rejected"
+      finance_doc_type:
+        | "individual_id"
+        | "salary_proof"
+        | "bank_statement"
+        | "company_cr"
+        | "institution_license"
+        | "authorization_letter"
+        | "board_resolution"
+        | "iban_certificate"
+        | "other"
+      finance_offer_status: "active" | "selected" | "expired"
+      finance_payment_method: "mada" | "visa" | "bank_transfer" | "wallet"
+      finance_payment_status: "scheduled" | "paid" | "overdue" | "failed"
       financial_transaction_status:
         | "pending"
         | "processing"
@@ -2052,6 +2679,7 @@ export type Database = {
         | "transfer"
         | "fee"
       invoice_status: "draft" | "issued" | "paid" | "cancelled" | "overdue"
+      kyc_status: "not_started" | "pending" | "verified" | "rejected"
       ledger_account_type:
         | "asset"
         | "liability"
@@ -2082,6 +2710,7 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "refunded"
+      risk_level: "low" | "medium" | "high"
       signature_method: "checkbox" | "drawn" | "nafath_verified"
     }
     CompositeTypes: {
@@ -2237,6 +2866,46 @@ export const Constants = {
         "signed",
         "cancelled",
       ],
+      entity_member_role: [
+        "owner",
+        "admin",
+        "finance_manager",
+        "signer",
+        "viewer",
+      ],
+      entity_status: ["active", "suspended"],
+      entity_type: ["individual", "company", "institution"],
+      finance_application_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "approved",
+        "rejected",
+        "needs_info",
+      ],
+      finance_contract_status: [
+        "generated",
+        "signed_by_customer",
+        "approved_by_admin",
+        "active",
+        "closed",
+        "canceled",
+      ],
+      finance_doc_status: ["uploaded", "approved", "rejected"],
+      finance_doc_type: [
+        "individual_id",
+        "salary_proof",
+        "bank_statement",
+        "company_cr",
+        "institution_license",
+        "authorization_letter",
+        "board_resolution",
+        "iban_certificate",
+        "other",
+      ],
+      finance_offer_status: ["active", "selected", "expired"],
+      finance_payment_method: ["mada", "visa", "bank_transfer", "wallet"],
+      finance_payment_status: ["scheduled", "paid", "overdue", "failed"],
       financial_transaction_status: [
         "pending",
         "processing",
@@ -2255,6 +2924,7 @@ export const Constants = {
         "fee",
       ],
       invoice_status: ["draft", "issued", "paid", "cancelled", "overdue"],
+      kyc_status: ["not_started", "pending", "verified", "rejected"],
       ledger_account_type: [
         "asset",
         "liability",
@@ -2288,6 +2958,7 @@ export const Constants = {
         "cancelled",
         "refunded",
       ],
+      risk_level: ["low", "medium", "high"],
       signature_method: ["checkbox", "drawn", "nafath_verified"],
     },
   },

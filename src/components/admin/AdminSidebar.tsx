@@ -22,7 +22,8 @@ import {
   X,
   Wallet,
   Landmark,
-  FileText
+  FileText,
+  CreditCard
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -138,6 +139,14 @@ const businessNavItems: NavItem[] = [
     titleEn: "Finance Center",
     icon: Landmark,
     href: ROUTES.ADMIN.FINANCE,
+    permission: "finance.view",
+  },
+  {
+    titleKey: "finance-internal",
+    titleAr: "التمويل الداخلي",
+    titleEn: "Internal Finance",
+    icon: CreditCard,
+    href: "/admin/finance-internal",
     permission: "finance.view",
   },
 ];

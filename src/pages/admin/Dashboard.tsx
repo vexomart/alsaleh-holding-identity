@@ -19,6 +19,7 @@ import { NotificationsPage } from '@/components/admin/notifications/Notification
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
 import { AuditLogPage } from '@/components/admin/audit/AuditLogPage';
 import { FinanceCenter } from '@/components/admin/finance';
+import { FinanceManagement } from '@/components/finance/admin/FinanceManagement';
 import { AdminClientHub } from '@/components/admin/clients';
 import { Card, CardContent } from '@/components/ui/card';
 import { Construction } from 'lucide-react';
@@ -60,6 +61,7 @@ const AdminDashboard = () => {
         <Route path="contracts" element={<ContractsManagement />} />
         <Route path="wallets" element={<WalletsManagement />} />
         <Route path="finance" element={<FinanceCenter />} />
+        <Route path="finance-internal" element={<FinanceManagement />} />
         
         {/* CMS Routes */}
         {/* CMS routes removed - module not implemented */}
