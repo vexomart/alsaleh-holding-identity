@@ -2413,6 +2413,10 @@ export type Database = {
         Args: { p_admin_id: string; p_contract_id: string; p_reason: string }
         Returns: boolean
       }
+      approve_finance_contract_with_wallet_credit: {
+        Args: { p_admin_id: string; p_contract_id: string; p_notes?: string }
+        Returns: Json
+      }
       cleanup_expired_nafath_states: { Args: never; Returns: undefined }
       create_pre_approved_contract: {
         Args: {

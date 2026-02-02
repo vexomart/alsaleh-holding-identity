@@ -117,37 +117,32 @@ export function ContractsTab() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("غير مصرح");
 
-      const amountSar = contract.application?.amount_sar;
-      const tenorMonths = contract.application?.tenor_months;
-      if (!amountSar || !tenorMonths) {
-        throw new Error("بيانات العقد غير مكتملة (المبلغ/المدة)");
-      }
-
-      const { error } = await supabase
-        .from("finance_contracts")
-        .update({ 
-          status: "active" as FinanceContractStatus,
-          admin_approved_at: new Date().toISOString(),
-          admin_approved_by: user.id
-        })
-        .eq("id", contract.id);
-      if (error) throw error;
-
-      // Generate installments immediately (creates rows in finance_payments)
-      const startDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-      const { error: installmentsError } = await supabase.rpc(
-        "generate_finance_installments" as never,
+      // Use the new RPC function that handles approval + wallet credit atomically
+      const { data, error } = await supabase.rpc(
+        "approve_finance_contract_with_wallet_credit" as never,
         {
-          p_amount_sar: amountSar,
           p_contract_id: contract.id,
-          p_tenor_months: tenorMonths,
-          p_start_date: startDate,
+          p_admin_id: user.id,
+          p_notes: null
         } as never
       );
-      if (installmentsError) throw installmentsError;
+
+      if (error) throw error;
+      
+      const result = data as { success: boolean; error?: string; amount_credited?: number; message?: string };
+      if (!result.success) {
+        throw new Error(result.error || "حدث خطأ غير متوقع");
+      }
+
+      return result;
     },
-    onSuccess: () => {
-      toast.success("تمت الموافقة على العقد وتفعيله");
+    onSuccess: (result) => {
+      const data = result as { amount_credited?: number };
+      const amountMsg = data?.amount_credited 
+        ? ` وتم إيداع ${data.amount_credited.toLocaleString('ar-SA')} ريال في محفظة العميل`
+        : "";
+      toast.success(`تمت الموافقة على العقد وتفعيله${amountMsg}`);
+      
       // Invalidate all related queries for instant UI update
       queryClient.invalidateQueries({ queryKey: ["admin-finance-contracts"], refetchType: 'active' });
       queryClient.invalidateQueries({ queryKey: ["admin-finance-applications"], refetchType: 'active' });
@@ -155,12 +150,14 @@ export function ContractsTab() {
       queryClient.invalidateQueries({ queryKey: ["finance-applications"], refetchType: 'active' });
       queryClient.invalidateQueries({ queryKey: ["finance-contracts"], refetchType: 'active' });
       queryClient.invalidateQueries({ queryKey: ["my-upcoming-payments"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["customer-wallet"], refetchType: 'active' });
+      queryClient.invalidateQueries({ queryKey: ["wallet-transactions"], refetchType: 'active' });
       setShowApproveDialog(false);
       setSelectedContract(null);
     },
     onError: (error) => {
       console.error("Approval error:", error);
-      toast.error("حدث خطأ أثناء الموافقة على العقد");
+      toast.error(error instanceof Error ? error.message : "حدث خطأ أثناء الموافقة على العقد");
     },
   });
 
