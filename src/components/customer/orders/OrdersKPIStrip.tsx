@@ -1,10 +1,10 @@
 /**
- * OrdersKPIStrip - Mini KPI cards for orders overview
- * RTL-first with count-up animations
+ * OrdersKPIStrip - Premium KPI Cards with Animations
+ * RTL-first with count-up and hover effects
  */
 
-import { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useEffect, useState } from 'react';
+import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Card } from '@/components/ui/card';
@@ -16,6 +16,7 @@ import {
   Truck, 
   CheckCircle,
   TrendingUp,
+  Sparkles,
 } from 'lucide-react';
 import { CustomerOrder, OrderStatus } from './types';
 
@@ -33,6 +34,7 @@ interface KPIConfig {
   icon: React.ElementType;
   gradient: string;
   iconBg: string;
+  ringColor: string;
 }
 
 const KPI_CONFIG: KPIConfig[] = [
@@ -41,51 +43,72 @@ const KPI_CONFIG: KPIConfig[] = [
     labelAr: 'إجمالي الطلبات',
     labelEn: 'Total Orders',
     icon: Package,
-    gradient: 'from-primary/10 to-primary/5',
-    iconBg: 'bg-primary/10 text-primary',
+    gradient: 'from-primary/15 via-primary/10 to-primary/5',
+    iconBg: 'bg-primary/15 text-primary',
+    ringColor: 'ring-primary',
   },
   {
     key: 'pending',
     labelAr: 'قيد المراجعة',
     labelEn: 'Pending Review',
     icon: Clock,
-    gradient: 'from-amber-500/10 to-amber-500/5',
-    iconBg: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400',
+    gradient: 'from-amber-500/15 via-amber-500/10 to-amber-500/5',
+    iconBg: 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400',
+    ringColor: 'ring-amber-500',
   },
   {
     key: 'in_progress',
     labelAr: 'قيد التنفيذ',
     labelEn: 'In Progress',
     icon: Truck,
-    gradient: 'from-blue-500/10 to-blue-500/5',
-    iconBg: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+    gradient: 'from-blue-500/15 via-blue-500/10 to-blue-500/5',
+    iconBg: 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400',
+    ringColor: 'ring-blue-500',
   },
   {
     key: 'completed',
     labelAr: 'مكتملة',
     labelEn: 'Completed',
     icon: CheckCircle,
-    gradient: 'from-emerald-500/10 to-emerald-500/5',
-    iconBg: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400',
+    gradient: 'from-emerald-500/15 via-emerald-500/10 to-emerald-500/5',
+    iconBg: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400',
+    ringColor: 'ring-emerald-500',
   },
 ];
 
-// Animated number component
-function AnimatedNumber({ value, reducedMotion }: { value: number; reducedMotion: boolean }) {
-  if (reducedMotion) {
-    return <span>{value}</span>;
-  }
-
-  return (
-    <motion.span
-      key={value}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-    >
-      {value}
-    </motion.span>
-  );
+// Animated counter component
+function AnimatedCounter({ value, reducedMotion }: { value: number; reducedMotion: boolean }) {
+  const [displayValue, setDisplayValue] = useState(0);
+  
+  useEffect(() => {
+    if (reducedMotion) {
+      setDisplayValue(value);
+      return;
+    }
+    
+    const duration = 600;
+    const startTime = Date.now();
+    const startValue = displayValue;
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startValue + (value - startValue) * eased);
+      
+      setDisplayValue(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }, [value, reducedMotion]);
+  
+  return <span className="tabular-nums">{displayValue}</span>;
 }
 
 export function OrdersKPIStrip({
@@ -110,31 +133,40 @@ export function OrdersKPIStrip({
     return result;
   }, [orders]);
 
-  // Card animation variants
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: reducedMotion ? 0 : 0.08,
+      },
+    },
+  };
+
   const cardVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: (i: number) => ({
+    hidden: { opacity: 0, y: 24, scale: 0.9 },
+    visible: {
       opacity: 1,
       y: 0,
       scale: 1,
       transition: {
-        delay: reducedMotion ? 0 : i * 0.05,
-        duration: reducedMotion ? 0 : 0.2,
+        duration: reducedMotion ? 0 : 0.3,
         ease: [0.25, 0.1, 0.25, 1] as const,
       },
-    }),
+    },
   };
 
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {KPI_CONFIG.map((_, i) => (
-          <Card key={i} className="p-4">
+          <Card key={i} className="p-4 border-2">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-xl" />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className="h-3 w-16" />
-                <Skeleton className="h-6 w-10" />
+              <Skeleton className="h-12 w-12 rounded-2xl" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-8 w-12" />
               </div>
             </div>
           </Card>
@@ -144,7 +176,12 @@ export function OrdersKPIStrip({
   }
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <motion.div 
+      className="grid grid-cols-2 lg:grid-cols-4 gap-3"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {KPI_CONFIG.map((config, index) => {
         const Icon = config.icon;
         const count = counts[config.key] || 0;
@@ -153,48 +190,70 @@ export function OrdersKPIStrip({
         return (
           <motion.div
             key={config.key}
-            custom={index}
-            initial="hidden"
-            animate="visible"
             variants={cardVariants}
           >
-            <Card
-              onClick={() => onFilterByStatus(config.key)}
-              className={cn(
-                'p-4 cursor-pointer transition-all duration-200',
-                'hover:shadow-md hover:scale-[1.02]',
-                'bg-gradient-to-br',
-                config.gradient,
-                isActive && 'ring-2 ring-primary shadow-md scale-[1.02]'
-              )}
+            <motion.div
+              whileHover={reducedMotion ? {} : { scale: 1.03, y: -4 }}
+              whileTap={reducedMotion ? {} : { scale: 0.97 }}
             >
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  'h-10 w-10 rounded-xl flex items-center justify-center shrink-0',
-                  config.iconBg
-                )}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground truncate">
-                    {isRTL ? config.labelAr : config.labelEn}
-                  </p>
-                  <p className="text-2xl font-bold tabular-nums">
-                    <AnimatedNumber value={count} reducedMotion={reducedMotion} />
-                  </p>
-                </div>
+              <Card
+                onClick={() => onFilterByStatus(config.key)}
+                className={cn(
+                  'p-4 cursor-pointer transition-all duration-300 border-2 overflow-hidden relative',
+                  'hover:shadow-xl',
+                  'bg-gradient-to-br',
+                  config.gradient,
+                  isActive && `ring-2 ${config.ringColor} shadow-lg border-transparent`
+                )}
+              >
+                {/* Glow effect on active */}
                 {isActive && (
                   <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="h-2 w-2 rounded-full bg-primary shrink-0"
+                    className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                   />
                 )}
-              </div>
-            </Card>
+                
+                <div className="relative flex items-center gap-3">
+                  <motion.div 
+                    className={cn(
+                      'h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm',
+                      config.iconBg
+                    )}
+                    animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Icon className="h-6 w-6" />
+                  </motion.div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground truncate font-medium">
+                      {isRTL ? config.labelAr : config.labelEn}
+                    </p>
+                    <p className="text-3xl font-bold mt-0.5">
+                      <AnimatedCounter value={count} reducedMotion={reducedMotion} />
+                    </p>
+                  </div>
+                  
+                  {/* Active indicator */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        className="absolute top-2 end-2"
+                      >
+                        <Sparkles className="h-4 w-4 text-primary" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </Card>
+            </motion.div>
           </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
