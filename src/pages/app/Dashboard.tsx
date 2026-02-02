@@ -20,6 +20,7 @@ import { CustomerContractsCenter } from '@/components/customer/contracts';
 import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
 import { CustomerInvoicesCenter } from '@/components/customer/invoices';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
+import VersionPage from '@/pages/app/Version';
 
 const CustomerDashboard = () => {
   return (
@@ -39,6 +40,7 @@ const CustomerDashboard = () => {
         <Route path="transactions" element={<CustomerTransactions />} />
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
+        <Route path="version" element={<VersionPage />} />
       </Routes>
     </CustomerLayout>
   );
