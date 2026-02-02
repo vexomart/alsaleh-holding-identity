@@ -1,21 +1,28 @@
 /**
- * INVOICE PDF TEMPLATE — Arabic RTL Corporate
+ * INVOICE PDF TEMPLATE
  * 
- * Returns a pdfmake document definition ONLY.
- * Does NOT call createPdf — that's done in render.ts.
+ * Arabic RTL tax invoice (فاتورة ضريبية)
  */
 
-import { FONT_NAME } from '../init';
-import { rtl, ltr, formatCurrency, createRtlTable, rtlKeyValue, arabicDefaultStyles } from '../arabic';
-import type { DocDefinition } from '../render';
+import { 
+  type DocDefinition,
+  arabicDocumentStyles,
+  rtl, 
+  ltr, 
+  formatCurrency,
+  createRtlTable,
+  rtlKeyValue,
+  createSummaryBox,
+  PDF_COLORS,
+  PDF_SPACING,
+} from '../core';
 
-// Invoice data types
+// Invoice types
 export interface InvoiceItem {
   description: string;
   quantity: number;
   unitPrice: number;
   vatRate?: number;
-  total?: number; // Optional, for display purposes
 }
 
 export interface InvoiceData {
@@ -23,7 +30,6 @@ export interface InvoiceData {
   date: string | Date;
   dueDate?: string | Date;
   
-  // Seller
   seller: {
     name: string;
     address?: string;
@@ -33,7 +39,6 @@ export interface InvoiceData {
     email?: string;
   };
   
-  // Buyer
   buyer: {
     name: string;
     address?: string;
@@ -42,20 +47,15 @@ export interface InvoiceData {
     email?: string;
   };
   
-  // Items
   items: InvoiceItem[];
   
-  // Totals (can be provided or calculated)
   subtotal?: number;
   vatRate?: number;
   vatAmount?: number;
   total?: number;
   
-  // Notes
   notes?: string;
   currency?: string;
-  
-  // Optional status for display (permissive type)
   status?: string;
   
   // Legacy compatibility
@@ -63,18 +63,9 @@ export interface InvoiceData {
 }
 
 /**
- * Convert Date or string to display string
- */
-function toDateString(date: string | Date | undefined): string {
-  if (!date) return '';
-  if (typeof date === 'string') return date;
-  return date.toISOString().split('T')[0];
-}
-
-/**
  * Calculate invoice totals
  */
-export function calculateTotals(data: InvoiceData): {
+export function calculateInvoiceTotals(data: InvoiceData): {
   subtotal: number;
   vatAmount: number;
   total: number;
@@ -92,18 +83,25 @@ export function calculateTotals(data: InvoiceData): {
 }
 
 /**
+ * Convert date to string
+ */
+function toDateStr(date: string | Date | undefined): string {
+  if (!date) return '';
+  if (typeof date === 'string') return date;
+  return date.toISOString().split('T')[0];
+}
+
+/**
  * Build invoice document definition
  */
-export function buildInvoiceDocDefinition(data: InvoiceData): DocDefinition {
+export function buildInvoiceDoc(data: InvoiceData): DocDefinition {
   const currency = data.currency || 'SAR';
-  const totals = calculateTotals(data);
+  const totals = calculateInvoiceTotals(data);
   const vatRate = data.vatRate ?? 0.15;
+  const invoiceDate = toDateStr(data.date || data.issueDate);
+  const dueDate = toDateStr(data.dueDate);
   
-  // Handle date - use issueDate as fallback
-  const invoiceDate = toDateString(data.date || data.issueDate);
-  const dueDate = toDateString(data.dueDate);
-  
-  // Items table data
+  // Items table
   const tableHeaders = ['الإجمالي', 'الضريبة', 'السعر', 'الكمية', 'الوصف'];
   const tableRows = data.items.map(item => {
     const lineTotal = item.quantity * item.unitPrice;
@@ -118,50 +116,47 @@ export function buildInvoiceDocDefinition(data: InvoiceData): DocDefinition {
   });
   
   const content: unknown[] = [
-    // Header: فاتورة ضريبية
+    // Header
     {
       text: rtl('فاتورة ضريبية'),
       style: 'header',
       alignment: 'center',
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Invoice meta
     {
       columns: [
-        {
-          width: '*',
-          stack: [
-            rtlKeyValue('رقم الفاتورة', ltr(data.invoiceNumber), true),
-            rtlKeyValue('التاريخ', rtl(invoiceDate)),
-            ...(dueDate ? [rtlKeyValue('تاريخ الاستحقاق', rtl(dueDate))] : []),
-          ],
-        },
+        { width: '*', stack: [
+          rtlKeyValue('رقم الفاتورة', ltr(data.invoiceNumber), true),
+          rtlKeyValue('التاريخ', rtl(invoiceDate)),
+          ...(dueDate ? [rtlKeyValue('تاريخ الاستحقاق', rtl(dueDate))] : []),
+        ]},
       ],
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
-    // Seller and Buyer boxes
+    // Seller & Buyer
     {
       columns: [
-        // Buyer (left in RTL)
+        // Buyer (left in visual RTL)
         {
           width: '*',
           stack: [
             { text: rtl('المشتري'), style: 'subheader' },
-            { text: rtl(data.buyer.name), margin: [0, 5, 0, 0] },
+            { text: rtl(data.buyer.name), margin: [0, PDF_SPACING[2], 0, 0] },
             ...(data.buyer.address ? [{ text: rtl(data.buyer.address) }] : []),
             ...(data.buyer.vatNumber ? [{ text: `${rtl('الرقم الضريبي:')} ${ltr(data.buyer.vatNumber)}` }] : []),
             ...(data.buyer.phone ? [{ text: `${rtl('الهاتف:')} ${ltr(data.buyer.phone)}` }] : []),
           ],
-          margin: [0, 0, 10, 0],
+          margin: [0, 0, PDF_SPACING[4], 0],
         },
-        // Seller (right in RTL)
+        // Seller (right in visual RTL)
         {
           width: '*',
           stack: [
             { text: rtl('البائع'), style: 'subheader' },
-            { text: rtl(data.seller.name), margin: [0, 5, 0, 0] },
+            { text: rtl(data.seller.name), margin: [0, PDF_SPACING[2], 0, 0] },
             ...(data.seller.address ? [{ text: rtl(data.seller.address) }] : []),
             ...(data.seller.vatNumber ? [{ text: `${rtl('الرقم الضريبي:')} ${ltr(data.seller.vatNumber)}` }] : []),
             ...(data.seller.crNumber ? [{ text: `${rtl('السجل التجاري:')} ${ltr(data.seller.crNumber)}` }] : []),
@@ -169,51 +164,38 @@ export function buildInvoiceDocDefinition(data: InvoiceData): DocDefinition {
           ],
         },
       ],
-      margin: [0, 0, 0, 20],
+      margin: [0, 0, 0, PDF_SPACING[8]],
     },
     
     // Items table
-    { text: rtl('البنود'), style: 'subheader', margin: [0, 10, 0, 10] },
+    { text: rtl('البنود'), style: 'subheader', margin: [0, PDF_SPACING[4], 0, PDF_SPACING[4]] },
     createRtlTable({
       headers: tableHeaders,
       rows: tableRows,
       widths: [80, 60, 60, 40, '*'],
-      numericCols: [0, 1, 2, 3], // All except description
+      numericCols: [0, 1, 2, 3],
     }),
     
-    // Totals box
+    // Totals
     {
-      margin: [0, 20, 0, 0],
+      margin: [0, PDF_SPACING[8], 0, 0],
       alignment: 'right',
-      table: {
-        widths: [100, 100],
-        body: [
-          [
-            { text: formatCurrency(totals.subtotal, currency), alignment: 'right' },
-            { text: rtl('المجموع الفرعي'), alignment: 'right', bold: true },
-          ],
-          [
-            { text: formatCurrency(totals.vatAmount, currency), alignment: 'right' },
-            { text: rtl(`ضريبة القيمة المضافة (${Math.round(vatRate * 100)}%)`), alignment: 'right', bold: true },
-          ],
-          [
-            { text: formatCurrency(totals.total, currency), alignment: 'right', bold: true, fillColor: '#f3f4f6' },
-            { text: rtl('الإجمالي'), alignment: 'right', bold: true, fillColor: '#f3f4f6' },
-          ],
-        ],
-      },
-      layout: 'lightHorizontalLines',
+      ...createSummaryBox([
+        { label: 'المجموع الفرعي', value: formatCurrency(totals.subtotal, currency) },
+        { label: `ضريبة القيمة المضافة (${Math.round(vatRate * 100)}%)`, value: formatCurrency(totals.vatAmount, currency) },
+        { label: 'الإجمالي', value: formatCurrency(totals.total, currency), highlight: true },
+      ]),
     },
     
     // Notes
     ...(data.notes ? [
-      { text: rtl('ملاحظات'), style: 'subheader', margin: [0, 20, 0, 5] },
-      { text: rtl(data.notes) },
+      { text: rtl('ملاحظات'), style: 'subheader', margin: [0, PDF_SPACING[8], 0, PDF_SPACING[2]] },
+      { text: rtl(data.notes), style: 'muted' },
     ] : []),
   ];
   
   return {
-    ...arabicDefaultStyles,
+    ...arabicDocumentStyles,
     pageSize: 'A4',
     pageMargins: [40, 60, 40, 60],
     content,
@@ -231,7 +213,36 @@ export function buildInvoiceDocDefinition(data: InvoiceData): DocDefinition {
 }
 
 /**
- * Convert order data to invoice data
+ * Sample invoice for testing
+ */
+export const sampleInvoiceData: InvoiceData = {
+  invoiceNumber: 'INV-2025-0001',
+  date: '2025-02-02',
+  dueDate: '2025-03-02',
+  seller: {
+    name: 'شركة الصالح القابضة',
+    address: 'الرياض، المملكة العربية السعودية',
+    vatNumber: '310123456789012',
+    crNumber: '1010123456',
+    phone: '+966 11 234 5678',
+  },
+  buyer: {
+    name: 'مؤسسة التقنية الحديثة',
+    address: 'جدة، المملكة العربية السعودية',
+    vatNumber: '310987654321098',
+    phone: '+966 12 345 6789',
+  },
+  items: [
+    { description: 'خدمات استشارية', quantity: 10, unitPrice: 500 },
+    { description: 'تطوير برمجيات', quantity: 1, unitPrice: 15000 },
+    { description: 'دعم فني شهري', quantity: 3, unitPrice: 2000 },
+  ],
+  vatRate: 0.15,
+  notes: 'شكراً لتعاملكم معنا. الدفع مستحق خلال 30 يوماً.',
+};
+
+/**
+ * Convert order data to invoice data (for integration)
  */
 export function orderToInvoiceData(
   order: {
@@ -283,32 +294,3 @@ export function orderToInvoiceData(
     currency: order.currency || 'SAR',
   };
 }
-
-/**
- * Sample invoice data for testing
- */
-export const sampleInvoiceData: InvoiceData = {
-  invoiceNumber: 'INV-2025-0001',
-  date: '2025-02-02',
-  dueDate: '2025-03-02',
-  seller: {
-    name: 'شركة الصالح القابضة',
-    address: 'الرياض، المملكة العربية السعودية',
-    vatNumber: '310123456789012',
-    crNumber: '1010123456',
-    phone: '+966 11 234 5678',
-  },
-  buyer: {
-    name: 'مؤسسة التقنية الحديثة',
-    address: 'جدة، المملكة العربية السعودية',
-    vatNumber: '310987654321098',
-    phone: '+966 12 345 6789',
-  },
-  items: [
-    { description: 'خدمات استشارية', quantity: 10, unitPrice: 500 },
-    { description: 'تطوير برمجيات', quantity: 1, unitPrice: 15000 },
-    { description: 'دعم فني شهري', quantity: 3, unitPrice: 2000 },
-  ],
-  vatRate: 0.15,
-  notes: 'شكراً لتعاملكم معنا. الدفع مستحق خلال 30 يوماً.',
-};

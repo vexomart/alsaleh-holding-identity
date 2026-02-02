@@ -1,78 +1,123 @@
 /**
  * PDF2 — PUBLIC API
  * 
- * This is the ONLY entry point for PDF functionality.
- * All components must import from here.
+ * Single entry point for all PDF functionality.
+ * All components should import from here.
  */
 
-// Initialization
-export { ensurePdfReady, assertFontsReady, getFontDiagnostics, forceReloadFonts, FONT_NAME } from './init';
-
-// Rendering (the ONLY place createPdf is called)
-export { createPdfBlob, createPdfDataUrl, type DocDefinition } from './render';
-
-// Download
-export { safeDownloadPdf, downloadBlob, type DownloadResult, type DownloadMethod } from './download';
-
-// Arabic helpers
-export { 
-  rtl, 
-  ltr, 
-  rtlText, 
-  ltrToken, 
-  formatCurrency, 
-  formatArabicDate, 
+// ============ CORE ============
+export {
+  // pdfmake instance
+  pdfMake,
+  type PdfDocument,
+  type PdfMakeInstance,
+  
+  // Font management
+  FONT_NAME,
+  FONT_FILES,
+  initializeFonts,
+  areFontsReady,
+  forceReloadFonts,
+  getFontDiagnostics,
+  
+  // PDF generation
+  generatePdfBlob,
+  generatePdfDataUrl,
+  generatePdfBuffer,
+  type DocDefinition,
+  type GenerateOptions,
+  
+  // Download engine
+  downloadPdfBlob,
+  downloadBlob,
+  type DownloadResult,
+  type DownloadMethod,
+  
+  // Branding
+  PDF_COLORS,
+  PDF_TYPOGRAPHY,
+  PDF_SPACING,
+  arabicDocumentStyles,
+  tableLayouts,
+  
+  // Bidirectional text
+  rtl,
+  ltr,
+  containsArabic,
+  formatCurrency,
+  formatArabicDate,
+  formatShortDate,
   toArabicNumerals,
+  toArabicOrdinal,
+  formatPhone,
+  formatPercent,
+  
+  // Table utilities
   createRtlTable,
   rtlKeyValue,
-  containsArabic,
-  arabicDefaultStyles,
-} from './arabic';
+  createSummaryBox,
+  type TableConfig,
+} from './core';
 
-// Templates
-export { 
-  buildInvoiceDocDefinition, 
-  calculateTotals as calculateInvoiceTotals,
+// ============ TEMPLATES ============
+export {
+  // Invoice
+  buildInvoiceDoc,
+  calculateInvoiceTotals,
   orderToInvoiceData,
   sampleInvoiceData,
   type InvoiceData,
   type InvoiceItem,
-} from './templates/invoice';
-
-export { 
-  buildContractDocDefinition, 
+  
+  // Contract
+  buildContractDoc,
   defaultContractClauses,
   sampleContractData,
   type ContractData,
   type ContractParty,
   type ContractClause,
-} from './templates/contract';
-
-// Transaction Report
-export {
-  buildTransactionReportDocDefinition,
-  createTransactionReportPDF,
+  
+  // Transaction Report
+  buildTransactionReportDoc,
   type TransactionSummary,
   type TransactionItem,
-} from './templates/transaction-report';
+  type TransactionReportOptions,
+} from './templates';
 
-// Debug (only exposed in development)
-export { debugArabicPdfSystem, generateGoldenPack } from './debug';
+// ============ COMPONENTS ============
+export {
+  PdfPreview,
+  PdfDownloadButton,
+  type PdfPreviewProps,
+  type PdfPreviewRef,
+  type PdfDownloadButtonProps,
+} from './components';
+
+// ============ SERVICES ============
+export {
+  uploadPdfToStorage,
+  getSignedUrl,
+  deletePdfFromStorage,
+  listPdfs,
+  type StorageResult,
+  type UploadOptions,
+} from './services';
+
+// ============ CONVENIENCE FUNCTIONS ============
 
 /**
- * Convenience function: Generate and download invoice PDF
+ * Generate and download invoice PDF
  */
-export async function downloadInvoicePdf(data: import('./templates/invoice').InvoiceData): Promise<boolean> {
-  const { buildInvoiceDocDefinition } = await import('./templates/invoice');
-  const { createPdfBlob } = await import('./render');
-  const { safeDownloadPdf } = await import('./download');
+export async function downloadInvoicePdf(data: import('./templates').InvoiceData): Promise<boolean> {
+  const { buildInvoiceDoc } = await import('./templates');
+  const { generatePdfBlob, downloadPdfBlob } = await import('./core');
   
   try {
-    const doc = buildInvoiceDocDefinition(data);
-    const blob = await createPdfBlob(doc);
+    const doc = buildInvoiceDoc(data);
+    const blob = await generatePdfBlob(doc);
     const filename = `invoice-${data.invoiceNumber}.pdf`;
-    const result = safeDownloadPdf(blob, filename);
-    return result.ok;
+    const result = downloadPdfBlob(blob, filename);
+    return result.success;
   } catch (error) {
     console.error('[PDF2] Invoice download failed:', error);
     return false;
@@ -80,21 +125,71 @@ export async function downloadInvoicePdf(data: import('./templates/invoice').Inv
 }
 
 /**
- * Convenience function: Generate and download contract PDF
+ * Generate and download contract PDF
  */
-export async function downloadContractPdf(data: import('./templates/contract').ContractData): Promise<boolean> {
-  const { buildContractDocDefinition } = await import('./templates/contract');
-  const { createPdfBlob } = await import('./render');
-  const { safeDownloadPdf } = await import('./download');
+export async function downloadContractPdf(data: import('./templates').ContractData): Promise<boolean> {
+  const { buildContractDoc } = await import('./templates');
+  const { generatePdfBlob, downloadPdfBlob } = await import('./core');
   
   try {
-    const doc = buildContractDocDefinition(data);
-    const blob = await createPdfBlob(doc);
+    const doc = buildContractDoc(data);
+    const blob = await generatePdfBlob(doc);
     const filename = `contract-${data.contractNumber}.pdf`;
-    const result = safeDownloadPdf(blob, filename);
-    return result.ok;
+    const result = downloadPdfBlob(blob, filename);
+    return result.success;
   } catch (error) {
     console.error('[PDF2] Contract download failed:', error);
     return false;
   }
+}
+
+/**
+ * Generate and download transaction report PDF
+ */
+export async function downloadTransactionReportPdf(
+  summary: import('./templates').TransactionSummary,
+  options?: import('./templates').TransactionReportOptions
+): Promise<boolean> {
+  const { buildTransactionReportDoc } = await import('./templates');
+  const { generatePdfBlob, downloadPdfBlob } = await import('./core');
+  
+  try {
+    const doc = buildTransactionReportDoc(summary, options);
+    const blob = await generatePdfBlob(doc);
+    const filename = `transactions-${summary.startDate}-${summary.endDate}.pdf`;
+    const result = downloadPdfBlob(blob, filename);
+    return result.success;
+  } catch (error) {
+    console.error('[PDF2] Transaction report download failed:', error);
+    return false;
+  }
+}
+
+// ============ LEGACY ALIASES (for backward compatibility) ============
+export { buildInvoiceDoc as buildInvoiceDocDefinition } from './templates';
+export { buildContractDoc as buildContractDocDefinition } from './templates';
+export { buildTransactionReportDoc as buildTransactionReportDocDefinition } from './templates';
+export { downloadPdfBlob as safeDownloadPdf } from './core';
+export { generatePdfBlob as createPdfBlob } from './core';
+export { generatePdfDataUrl as createPdfDataUrl } from './core';
+export { initializeFonts as ensurePdfReady } from './core';
+export { arabicDocumentStyles as arabicDefaultStyles } from './core';
+
+// Legacy function alias
+export async function createTransactionReportPDF(
+  summary: import('./templates').TransactionSummary,
+  options?: { language?: 'ar' | 'en'; download?: boolean }
+): Promise<Blob> {
+  const { buildTransactionReportDoc } = await import('./templates');
+  const { generatePdfBlob, downloadPdfBlob } = await import('./core');
+  
+  const doc = buildTransactionReportDoc(summary, options);
+  const blob = await generatePdfBlob(doc);
+  
+  if (options?.download) {
+    const filename = `transactions-report-${summary.startDate}-${summary.endDate}.pdf`;
+    downloadPdfBlob(blob, filename);
+  }
+  
+  return blob;
 }
