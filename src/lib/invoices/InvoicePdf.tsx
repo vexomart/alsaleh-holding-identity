@@ -358,6 +358,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 2,
   },
+  versionStamp: {
+    fontSize: 6,
+    color: '#64748b',
+    marginTop: 4,
+    letterSpacing: 0.5,
+  },
   // QR Placeholder
   qrPlaceholder: {
     width: 60,
@@ -611,6 +617,7 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
           <View style={styles.footerRight}>
             <Text style={styles.footerCompany}>{COMPANY.name_ar}</Text>
             <Text style={styles.footerPage}>صفحة 1 من 1</Text>
+            <Text style={styles.versionStamp}>Template v2.0 - 2026</Text>
           </View>
         </View>
       </Page>
