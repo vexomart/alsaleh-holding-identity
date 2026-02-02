@@ -1,73 +1,74 @@
 /**
  * Invoice Header Component
- * Premium top bar with status, number, and tax invoice label
+ * Modern minimal header with status and invoice number
  */
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import { FileText, Hash } from 'lucide-react';
 import { InvoiceStatusBadge } from './InvoiceStatusBadge';
 import { InvoiceViewStatus } from './types';
 
 interface InvoiceHeaderProps {
   invoiceNumber: string;
   status: InvoiceViewStatus;
+  issuedAt?: string;
   className?: string;
 }
 
 export function InvoiceHeader({ 
   invoiceNumber, 
   status,
+  issuedAt,
   className 
 }: InvoiceHeaderProps) {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
 
+  const formatDate = (dateString: string) => {
+    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(new Date(dateString));
+  };
+
   return (
     <motion.div 
-      initial={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.2 }}
       className={cn(
-        'relative overflow-hidden rounded-2xl border bg-card',
+        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/50',
         className
       )}
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
-      
-      <div className="relative p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          {/* Tax Invoice Label */}
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-primary/10 text-primary">
-              <FileText className="h-6 w-6 sm:h-7 sm:w-7" />
-            </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-                {isRTL ? 'فاتورة ضريبية' : 'Tax Invoice'}
-              </h1>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {isRTL ? 'مستند رسمي' : 'Official Document'}
-              </p>
-            </div>
-          </div>
-
-          {/* Invoice Number & Status */}
-          <div className="flex flex-col sm:items-end gap-2">
-            <InvoiceStatusBadge status={status} size="lg" />
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Hash className="h-4 w-4" />
-              <span 
-                dir="ltr" 
-                className="font-mono text-base sm:text-lg font-semibold text-foreground ltr-token"
-              >
-                {invoiceNumber}
-              </span>
-            </div>
-          </div>
+      {/* Title & Status */}
+      <div className="space-y-1">
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
+            {isRTL ? 'فاتورة ضريبية' : 'Tax Invoice'}
+          </h1>
+          <InvoiceStatusBadge status={status} size="md" />
         </div>
+        {issuedAt && (
+          <p className="text-sm text-muted-foreground">
+            {formatDate(issuedAt)}
+          </p>
+        )}
+      </div>
+
+      {/* Invoice Number */}
+      <div className="sm:text-end">
+        <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+          {isRTL ? 'رقم الفاتورة' : 'Invoice No.'}
+        </p>
+        <p 
+          dir="ltr" 
+          className="text-lg font-mono font-medium text-foreground ltr-token"
+        >
+          {invoiceNumber}
+        </p>
       </div>
     </motion.div>
   );

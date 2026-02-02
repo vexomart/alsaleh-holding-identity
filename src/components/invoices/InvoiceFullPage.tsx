@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -141,16 +141,16 @@ export function InvoiceFullPage({
       {/* Back Navigation */}
       {backUrl && (
         <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-40"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="border-b bg-background sticky top-0 z-40"
         >
-          <div className="container max-w-6xl py-3">
+          <div className="container max-w-4xl py-3">
             <Button 
               variant="ghost" 
               size="sm"
               onClick={() => navigate(backUrl)}
-              className="gap-2"
+              className="gap-2 text-muted-foreground hover:text-foreground"
             >
               <BackIcon className="h-4 w-4" />
               {isRTL ? backLabelAr : backLabel}
@@ -161,7 +161,7 @@ export function InvoiceFullPage({
 
       {/* Main Content */}
       <div className={cn(
-        'container max-w-6xl py-6 sm:py-8',
+        'container max-w-4xl py-6 sm:py-8',
         isMobile && 'px-4'
       )}>
         {isLoading ? (

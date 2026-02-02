@@ -6,8 +6,6 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Receipt, Calculator, Wallet } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 
 interface InvoiceTotalsCardProps {
   subtotal: number;
@@ -38,61 +36,47 @@ export function InvoiceTotalsCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.15 }}
-      className={cn(
-        'rounded-xl border bg-card overflow-hidden',
-        className
-      )}
+      transition={{ duration: 0.2, delay: 0.12 }}
+      className={cn('rounded-xl border bg-card', className)}
     >
-      {/* Header */}
-      <div className="px-4 py-3 flex items-center gap-2 border-b bg-muted/30">
-        <Calculator className="h-4 w-4 text-muted-foreground" />
-        <h3 className="font-semibold text-foreground">
-          {isRTL ? 'ملخص الفاتورة' : 'Invoice Summary'}
-        </h3>
-      </div>
-
-      <div className="p-4 sm:p-5 space-y-4">
+      <div className="p-5 space-y-4">
         {/* Subtotal */}
-        <div className="flex justify-between items-center">
-          <span className="text-muted-foreground flex items-center gap-2">
-            <Receipt className="h-4 w-4" />
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-muted-foreground">
             {isRTL ? 'الإجمالي قبل الضريبة' : 'Subtotal'}
           </span>
-          <span dir="ltr" className="font-mono font-medium tabular-nums ltr-token">
-            {formatCurrency(subtotal)} <span className="text-muted-foreground text-sm">{currency}</span>
+          <span dir="ltr" className="font-mono tabular-nums text-foreground ltr-token">
+            {formatCurrency(subtotal)} {currency}
           </span>
         </div>
 
         {/* VAT */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-sm">
           <span className="text-muted-foreground">
             {isRTL 
               ? `ضريبة القيمة المضافة (${Math.round(vatRate * 100)}%)`
-              : `VAT (${(vatRate * 100).toFixed(0)}%)`
+              : `VAT (${Math.round(vatRate * 100)}%)`
             }
           </span>
-          <span dir="ltr" className="font-mono font-medium tabular-nums ltr-token text-primary/80">
-            +{formatCurrency(vatAmount)} <span className="text-muted-foreground text-sm">{currency}</span>
+          <span dir="ltr" className="font-mono tabular-nums text-foreground ltr-token">
+            {formatCurrency(vatAmount)} {currency}
           </span>
         </div>
 
-        <Separator />
+        {/* Divider */}
+        <div className="border-t border-border/50" />
 
         {/* Grand Total */}
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-lg flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
-            {isRTL ? 'الإجمالي شامل الضريبة' : 'Total (Inc. VAT)'}
+        <div className="flex justify-between items-center pt-1">
+          <span className="font-semibold text-foreground">
+            {isRTL ? 'الإجمالي شامل الضريبة' : 'Total'}
           </span>
-          <div className="text-end">
-            <span dir="ltr" className="font-mono font-bold text-2xl text-primary tabular-nums ltr-token">
-              {formatCurrency(total)}
-            </span>
-            <span className="text-muted-foreground text-sm ms-2">{currency}</span>
-          </div>
+          <span dir="ltr" className="text-2xl font-bold text-primary tabular-nums ltr-token">
+            {formatCurrency(total)}
+            <span className="text-sm font-normal text-muted-foreground ms-1.5">{currency}</span>
+          </span>
         </div>
       </div>
     </motion.div>

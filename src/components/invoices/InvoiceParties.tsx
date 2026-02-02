@@ -1,20 +1,12 @@
 /**
  * Invoice Parties Component
- * Seller and Buyer information cards
+ * Clean seller and buyer information cards
  */
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
-import { 
-  Building2, 
-  UserRound, 
-  Mail, 
-  Phone, 
-  MapPin,
-  Hash,
-  ShieldCheck
-} from 'lucide-react';
+import { Building2, User } from 'lucide-react';
 import { InvoiceParty } from './types';
 
 interface InvoicePartiesProps {
@@ -32,7 +24,6 @@ export function InvoiceParties({ seller, buyer, className }: InvoicePartiesProps
       {/* Seller Card */}
       <PartyCard 
         party={seller}
-        type="seller"
         title={isRTL ? 'البائع' : 'Seller'}
         icon={Building2}
         index={0}
@@ -41,9 +32,8 @@ export function InvoiceParties({ seller, buyer, className }: InvoicePartiesProps
       {/* Buyer Card */}
       <PartyCard 
         party={buyer}
-        type="buyer"
         title={isRTL ? 'العميل' : 'Customer'}
-        icon={UserRound}
+        icon={User}
         index={1}
       />
     </div>
@@ -52,13 +42,12 @@ export function InvoiceParties({ seller, buyer, className }: InvoicePartiesProps
 
 interface PartyCardProps {
   party: InvoiceParty;
-  type: 'seller' | 'buyer';
   title: string;
   icon: React.ElementType;
   index: number;
 }
 
-function PartyCard({ party, type, title, icon: Icon, index }: PartyCardProps) {
+function PartyCard({ party, title, icon: Icon, index }: PartyCardProps) {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
 
@@ -67,43 +56,25 @@ function PartyCard({ party, type, title, icon: Icon, index }: PartyCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.05 }}
-      className={cn(
-        'rounded-xl border bg-card overflow-hidden',
-        type === 'seller' && 'border-primary/20'
-      )}
+      transition={{ duration: 0.2, delay: index * 0.04 }}
+      className="rounded-xl border bg-card"
     >
       {/* Header */}
-      <div className={cn(
-        'px-4 py-3 flex items-center gap-3 border-b',
-        type === 'seller' 
-          ? 'bg-primary/5 border-primary/10' 
-          : 'bg-muted/50'
-      )}>
-        <div className={cn(
-          'p-2 rounded-lg',
-          type === 'seller' 
-            ? 'bg-primary/10 text-primary' 
-            : 'bg-muted text-muted-foreground'
-        )}>
-          <Icon className="h-4 w-4" />
-        </div>
-        <h3 className="font-semibold text-foreground">{title}</h3>
-        {type === 'seller' && (
-          <ShieldCheck className="h-4 w-4 text-primary ms-auto" />
-        )}
+      <div className="px-4 py-3 border-b border-border/50 flex items-center gap-2">
+        <Icon className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-muted-foreground">{title}</span>
       </div>
 
       {/* Content */}
       <div className="p-4 space-y-3">
         {/* Name */}
         <div>
-          <p className="font-bold text-lg text-foreground">{name}</p>
+          <p className="font-semibold text-foreground">{name}</p>
           {party.customerId && (
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-              <Hash className="h-3 w-3" />
+            <p className="text-xs text-muted-foreground mt-0.5">
+              <span className="me-1">{isRTL ? 'رقم العميل:' : 'ID:'}</span>
               <span dir="ltr" className="font-mono ltr-token">{party.customerId}</span>
             </p>
           )}
@@ -111,11 +82,11 @@ function PartyCard({ party, type, title, icon: Icon, index }: PartyCardProps) {
 
         {/* VAT Number */}
         {party.vatNumber && (
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">
-              {isRTL ? 'رقم السجل الضريبي:' : 'VAT No:'}
+          <div className="text-sm">
+            <span className="text-muted-foreground me-1">
+              {isRTL ? 'الرقم الضريبي:' : 'VAT:'}
             </span>
-            <span dir="ltr" className="font-mono font-medium text-foreground ltr-token">
+            <span dir="ltr" className="font-mono text-foreground ltr-token">
               {party.vatNumber}
             </span>
           </div>
@@ -123,31 +94,20 @@ function PartyCard({ party, type, title, icon: Icon, index }: PartyCardProps) {
 
         {/* Address */}
         {address && (
-          <div className="flex items-start gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <span className="text-muted-foreground">{address}</span>
-          </div>
+          <p className="text-sm text-muted-foreground">{address}</p>
         )}
 
-        {/* Contact Info */}
-        <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {party.email && (
-            <div className="flex items-center gap-1.5">
-              <Mail className="h-3.5 w-3.5 text-muted-foreground" />
-              <span dir="ltr" className="text-muted-foreground ltr-token">
-                {party.email}
-              </span>
-            </div>
-          )}
-          {party.phone && (
-            <div className="flex items-center gap-1.5">
-              <Phone className="h-3.5 w-3.5 text-muted-foreground" />
-              <span dir="ltr" className="text-muted-foreground ltr-token">
-                {party.phone}
-              </span>
-            </div>
-          )}
-        </div>
+        {/* Contact */}
+        {(party.email || party.phone) && (
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            {party.email && (
+              <span dir="ltr" className="ltr-token">{party.email}</span>
+            )}
+            {party.phone && (
+              <span dir="ltr" className="ltr-token">{party.phone}</span>
+            )}
+          </div>
+        )}
       </div>
     </motion.div>
   );

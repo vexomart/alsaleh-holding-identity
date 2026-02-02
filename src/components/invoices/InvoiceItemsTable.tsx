@@ -1,21 +1,12 @@
 /**
  * Invoice Items Table
- * Premium table for desktop, card list for mobile
+ * Clean table for desktop, card list for mobile
  */
 
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Package } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { InvoiceLineItem } from './types';
 
 interface InvoiceItemsTableProps {
@@ -39,56 +30,32 @@ export function InvoiceItemsTable({ items, currency, className }: InvoiceItemsTa
   if (isMobile) {
     return (
       <div className={cn('space-y-3', className)}>
-        <div className="flex items-center gap-2 px-1">
-          <Package className="h-4 w-4 text-muted-foreground" />
-          <h3 className="font-semibold text-foreground">
-            {isRTL ? 'البنود' : 'Line Items'}
-          </h3>
-          <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-            {items.length}
-          </span>
-        </div>
+        <p className="text-sm font-medium text-muted-foreground px-1">
+          {isRTL ? 'البنود' : 'Items'} ({items.length})
+        </p>
         
-        <div className="space-y-3">
+        <div className="space-y-2">
           {items.map((item, index) => (
             <motion.div
               key={item.id || index}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: index * 0.03 }}
-              className="rounded-xl border bg-card p-4 space-y-3"
+              transition={{ duration: 0.15, delay: index * 0.03 }}
+              className="rounded-xl border bg-card p-4"
             >
               {/* Description */}
-              <div>
-                <p className="font-medium text-foreground">
-                  {isRTL && item.descriptionAr ? item.descriptionAr : item.description}
-                </p>
-              </div>
+              <p className="font-medium text-foreground mb-3">
+                {isRTL && item.descriptionAr ? item.descriptionAr : item.description}
+              </p>
 
-              {/* Details Grid */}
-              <div className="grid grid-cols-3 gap-3 text-sm">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">
-                    {isRTL ? 'الكمية' : 'Qty'}
-                  </p>
-                  <p className="font-semibold tabular-nums">{item.quantity}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">
-                    {isRTL ? 'سعر الوحدة' : 'Unit Price'}
-                  </p>
-                  <p dir="ltr" className="font-semibold tabular-nums ltr-token">
-                    {formatCurrency(item.unitPrice)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">
-                    {isRTL ? 'الإجمالي' : 'Total'}
-                  </p>
-                  <p dir="ltr" className="font-bold text-primary tabular-nums ltr-token">
-                    {formatCurrency(item.lineTotal)}
-                  </p>
-                </div>
+              {/* Details */}
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  {item.quantity} × {formatCurrency(item.unitPrice)}
+                </span>
+                <span dir="ltr" className="font-semibold text-foreground tabular-nums ltr-token">
+                  {formatCurrency(item.lineTotal)} {currency}
+                </span>
               </div>
             </motion.div>
           ))}
@@ -100,72 +67,57 @@ export function InvoiceItemsTable({ items, currency, className }: InvoiceItemsTa
   // Desktop Table
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.1 }}
+      transition={{ duration: 0.2, delay: 0.08 }}
       className={cn('rounded-xl border bg-card overflow-hidden', className)}
     >
-      {/* Header */}
-      <div className="px-4 py-3 flex items-center gap-2 border-b bg-muted/30">
-        <Package className="h-4 w-4 text-muted-foreground" />
-        <h3 className="font-semibold text-foreground">
-          {isRTL ? 'بنود الفاتورة' : 'Invoice Items'}
-        </h3>
-        <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full ms-2">
-          {items.length} {isRTL ? 'بند' : 'items'}
-        </span>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-muted/20 hover:bg-muted/20">
-            <TableHead className="w-12 text-center font-semibold">#</TableHead>
-            <TableHead className="font-semibold">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b bg-muted/30">
+            <th className="text-start px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wide">
               {isRTL ? 'الوصف' : 'Description'}
-            </TableHead>
-            <TableHead className="w-24 text-center font-semibold">
+            </th>
+            <th className="text-center px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wide w-20">
               {isRTL ? 'الكمية' : 'Qty'}
-            </TableHead>
-            <TableHead className="w-32 text-center font-semibold">
+            </th>
+            <th className="text-center px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wide w-28">
               {isRTL ? 'سعر الوحدة' : 'Unit Price'}
-            </TableHead>
-            <TableHead className="w-32 text-center font-semibold">
+            </th>
+            <th className="text-center px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wide w-32">
               {isRTL ? 'الإجمالي' : 'Total'}
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border/50">
           {items.map((item, index) => (
-            <motion.tr
+            <tr 
               key={item.id || index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.15, delay: index * 0.03 }}
-              className="group hover:bg-muted/30 transition-colors"
+              className={cn(
+                'transition-colors',
+                index % 2 === 1 && 'bg-muted/20'
+              )}
             >
-              <TableCell className="text-center text-muted-foreground font-mono text-sm">
-                {index + 1}
-              </TableCell>
-              <TableCell className="font-medium">
+              <td className="px-4 py-3.5 text-sm text-foreground">
                 {isRTL && item.descriptionAr ? item.descriptionAr : item.description}
-              </TableCell>
-              <TableCell className="text-center tabular-nums">
+              </td>
+              <td className="px-4 py-3.5 text-sm text-center text-foreground tabular-nums">
                 {item.quantity}
-              </TableCell>
-              <TableCell className="text-center">
-                <span dir="ltr" className="font-mono tabular-nums ltr-token">
+              </td>
+              <td className="px-4 py-3.5 text-sm text-center">
+                <span dir="ltr" className="font-mono text-foreground tabular-nums ltr-token">
                   {formatCurrency(item.unitPrice)}
                 </span>
-              </TableCell>
-              <TableCell className="text-center">
-                <span dir="ltr" className="font-mono font-semibold text-foreground tabular-nums ltr-token">
+              </td>
+              <td className="px-4 py-3.5 text-sm text-center">
+                <span dir="ltr" className="font-mono font-medium text-foreground tabular-nums ltr-token">
                   {formatCurrency(item.lineTotal)}
                 </span>
-              </TableCell>
-            </motion.tr>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </motion.div>
   );
 }

@@ -1,10 +1,9 @@
 /**
  * Invoice View Component
- * Enterprise-grade invoice UI - Shared between Admin & Customer
- * RTL-first, responsive, premium animations
+ * Modern enterprise invoice UI - Shared between Admin & Customer
+ * Clean, minimal, RTL-first
  */
 
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -45,104 +44,62 @@ export function InvoiceView({
       dir={isRTL ? 'rtl' : 'ltr'}
       lang={isRTL ? 'ar' : 'en'}
       className={cn(
-        'space-y-6',
-        isMobile && 'pb-28', // Space for fixed action bar
+        'max-w-4xl mx-auto',
+        isMobile && 'pb-36', // Space for fixed action bar
         className
       )}
     >
-      {/* Header with Status & Number */}
+      {/* Header */}
       <InvoiceHeader 
         invoiceNumber={invoice.invoiceNumber}
         status={invoice.status}
-      />
-
-      {/* Key Metrics Row */}
-      <InvoiceMetricsRow
-        total={invoice.total}
-        vatAmount={invoice.vatAmount}
-        vatRate={invoice.vatRate}
         issuedAt={invoice.issuedAt}
-        orderNumber={invoice.orderNumber}
-        currency={invoice.currency}
       />
 
-      {/* Desktop: Two Column Layout */}
-      {!isMobile ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column: Items + Details */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Parties */}
-            <InvoiceParties 
-              seller={invoice.seller}
-              buyer={invoice.buyer}
-            />
-            
-            {/* Items Table */}
-            <InvoiceItemsTable 
-              items={invoice.items}
-              currency={invoice.currency}
-            />
-          </div>
+      {/* Content */}
+      <div className="space-y-6 mt-6">
+        {/* Key Metrics */}
+        <InvoiceMetricsRow
+          total={invoice.total}
+          vatAmount={invoice.vatAmount}
+          vatRate={invoice.vatRate}
+          issuedAt={invoice.issuedAt}
+          orderNumber={invoice.orderNumber}
+          currency={invoice.currency}
+        />
 
-          {/* Right Column: Totals + Actions */}
-          <div className="space-y-4">
-            {/* Totals Card */}
-            <InvoiceTotalsCard
-              subtotal={invoice.subtotal}
-              vatRate={invoice.vatRate}
-              vatAmount={invoice.vatAmount}
-              total={invoice.total}
-              currency={invoice.currency}
-            />
-            
-            {/* Actions (Desktop) */}
-            <InvoiceActions
-              invoiceNumber={invoice.invoiceNumber}
-              orderNumber={invoice.orderNumber}
-              contractUrl={invoice.contractId ? `/app/contracts/${invoice.contractId}` : undefined}
-              paymentUrl={invoice.paymentUrl}
-              status={invoice.status}
-              onDownload={onDownload}
-              onPayNow={onPayNow}
-            />
-          </div>
-        </div>
-      ) : (
-        /* Mobile: Stacked Layout */
-        <div className="space-y-6">
-          {/* Parties */}
-          <InvoiceParties 
-            seller={invoice.seller}
-            buyer={invoice.buyer}
-          />
-          
-          {/* Items */}
-          <InvoiceItemsTable 
-            items={invoice.items}
-            currency={invoice.currency}
-          />
-          
-          {/* Totals */}
-          <InvoiceTotalsCard
-            subtotal={invoice.subtotal}
-            vatRate={invoice.vatRate}
-            vatAmount={invoice.vatAmount}
-            total={invoice.total}
-            currency={invoice.currency}
-          />
+        {/* Parties */}
+        <InvoiceParties 
+          seller={invoice.seller}
+          buyer={invoice.buyer}
+        />
+        
+        {/* Items */}
+        <InvoiceItemsTable 
+          items={invoice.items}
+          currency={invoice.currency}
+        />
+        
+        {/* Totals */}
+        <InvoiceTotalsCard
+          subtotal={invoice.subtotal}
+          vatRate={invoice.vatRate}
+          vatAmount={invoice.vatAmount}
+          total={invoice.total}
+          currency={invoice.currency}
+        />
 
-          {/* Mobile Fixed Actions */}
-          <InvoiceActions
-            invoiceNumber={invoice.invoiceNumber}
-            orderNumber={invoice.orderNumber}
-            contractUrl={invoice.contractId ? `/app/contracts/${invoice.contractId}` : undefined}
-            paymentUrl={invoice.paymentUrl}
-            status={invoice.status}
-            onDownload={onDownload}
-            onPayNow={onPayNow}
-          />
-        </div>
-      )}
+        {/* Actions */}
+        <InvoiceActions
+          invoiceNumber={invoice.invoiceNumber}
+          orderNumber={invoice.orderNumber}
+          contractUrl={invoice.contractId ? `/app/contracts/${invoice.contractId}` : undefined}
+          paymentUrl={invoice.paymentUrl}
+          status={invoice.status}
+          onDownload={onDownload}
+          onPayNow={onPayNow}
+        />
+      </div>
     </div>
   );
 }
