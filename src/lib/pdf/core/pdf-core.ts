@@ -262,39 +262,13 @@ export async function generatePDFBlob(
   console.log('[PDF CORE] Document definition created');
   console.log('[PDF CORE] Creating PDF document...');
   
-  // CRITICAL: Build fonts and vfs objects to pass DIRECTLY to createPdf
-  // This bypasses any global state issues with pdfMake.vfs
-  const fonts = {
-    [ARABIC_FONT_NAME]: {
-      normal: 'Cairo-Regular.ttf',
-      bold: 'Cairo-Bold.ttf',
-      italics: 'Cairo-Regular.ttf',
-      bolditalics: 'Cairo-Bold.ttf',
-    },
-    // Also include Roboto as fallback
-    Roboto: {
-      normal: 'Roboto-Regular.ttf',
-      bold: 'Roboto-Medium.ttf',
-      italics: 'Roboto-Italic.ttf',
-      bolditalics: 'Roboto-MediumItalic.ttf',
-    },
-  };
-  
-  // Get VFS directly from our singleton
-  const vfs = pdfMakeInstance.vfs;
-  
-  console.log('[PDF CORE] Passing fonts/vfs directly to createPdf:', {
-    fontFamilies: Object.keys(fonts),
-    vfsHasCairoRegular: !!vfs?.['Cairo-Regular.ttf'],
-    vfsHasCairoBold: !!vfs?.['Cairo-Bold.ttf'],
-  });
-  
   let pdfDoc: ReturnType<typeof pdfMakeInstance.createPdf>;
   
   try {
-    // Pass fonts and vfs DIRECTLY to createPdf to ensure they're used
-    // Signature: createPdf(docDefinition, tableLayouts, fonts, vfs)
-    pdfDoc = (pdfMakeInstance as any).createPdf(docDefinition, null, fonts, vfs);
+    // CRITICAL FIX: Call createPdf with ONLY docDefinition
+    // DO NOT pass null/undefined as second parameter - this causes "options invalid type" error
+    // The fonts and VFS are already registered globally on pdfMakeInstance
+    pdfDoc = pdfMakeInstance.createPdf(docDefinition);
     console.log('[PDF CORE] PDF document created successfully');
   } catch (createError) {
     console.error('[PDF CORE] ❌ Failed to create PDF document:', createError);

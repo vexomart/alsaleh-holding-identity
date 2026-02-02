@@ -187,29 +187,16 @@ export async function generateTestPdf(): Promise<Blob> {
   };
   
   console.log('[DEBUG] Creating PDF document...');
-  
-  // Build fonts and vfs objects to pass DIRECTLY to createPdf
-  const fonts = {
-    [ARABIC_FONT_NAME]: {
-      normal: 'Cairo-Regular.ttf',
-      bold: 'Cairo-Bold.ttf',
-      italics: 'Cairo-Regular.ttf',
-      bolditalics: 'Cairo-Bold.ttf',
-    },
-  };
-  
-  const vfs = pdfMakeInstance.vfs;
-  
-  console.log('[DEBUG] Passing fonts/vfs directly to createPdf:', {
-    fontFamilies: Object.keys(fonts),
-    vfsHasCairoRegular: !!vfs?.['Cairo-Regular.ttf'],
-    vfsHasCairoBold: !!vfs?.['Cairo-Bold.ttf'],
+  console.log('[DEBUG] VFS state:', {
+    vfsHasCairoRegular: !!pdfMakeInstance.vfs?.['Cairo-Regular.ttf'],
+    vfsHasCairoBold: !!pdfMakeInstance.vfs?.['Cairo-Bold.ttf'],
   });
   
   return new Promise((resolve, reject) => {
     try {
-      // Pass fonts and vfs DIRECTLY to createPdf
-      const pdfDoc = (pdfMakeInstance as any).createPdf(docDefinition, null, fonts, vfs);
+      // CRITICAL FIX: Call createPdf with ONLY docDefinition
+      // DO NOT pass null/extra params - this causes "options invalid type" error
+      const pdfDoc = pdfMakeInstance.createPdf(docDefinition);
       
       pdfDoc.getBlob((blob: Blob) => {
         if (blob && blob.size > 0) {
