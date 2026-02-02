@@ -24,9 +24,6 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force single React instance
-      "react": path.resolve(__dirname, "./node_modules/react"),
-      "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
     dedupe: [
       "react", 
@@ -35,11 +32,9 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-dev-runtime",
       "react-router-dom",
       "@tanstack/react-query",
-      "@supabase/supabase-js",
     ],
   },
   optimizeDeps: {
     include: ["react", "react-dom", "react-router-dom"],
-    force: true,
   },
 }));
