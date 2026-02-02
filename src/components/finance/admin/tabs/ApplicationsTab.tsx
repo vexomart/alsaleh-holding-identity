@@ -56,6 +56,7 @@ import {
   DollarSign,
   Clock,
   FileText,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -66,6 +67,7 @@ import {
 } from "@/types/finance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { OfferGenerator } from "../OfferGenerator";
 
 interface Application {
   id: string;
@@ -91,6 +93,7 @@ export function ApplicationsTab() {
   const [showDetails, setShowDetails] = useState(false);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
+  const [showOfferGenerator, setShowOfferGenerator] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   
   const queryClient = useQueryClient();
@@ -332,6 +335,20 @@ export function ApplicationsTab() {
                                 </Button>
                               </>
                             )}
+                            {app.status === "under_review" && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-primary hover:text-primary hover:bg-primary/10"
+                                onClick={() => {
+                                  setSelectedApp(app);
+                                  setShowOfferGenerator(true);
+                                }}
+                                title="إنشاء عرض"
+                              >
+                                <TrendingUp className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -498,6 +515,13 @@ export function ApplicationsTab() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Offer Generator */}
+      <OfferGenerator
+        open={showOfferGenerator}
+        onOpenChange={setShowOfferGenerator}
+        application={selectedApp}
+      />
     </>
   );
 }

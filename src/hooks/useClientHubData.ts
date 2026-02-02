@@ -13,7 +13,8 @@ import {
   ActiveService,
   FinancialSnapshot,
   ContractSummary,
-  ClientStatus
+  ClientStatus,
+  FinanceApplicationSummary
 } from '@/components/client-hub/types';
 import { generateClientId, determineClientStatus } from '@/components/client-hub/utils';
 
@@ -33,6 +34,7 @@ export function useClientHubData() {
         invoicesResult,
         walletResult,
         transactionsResult,
+        entitiesResult,
       ] = await Promise.all([
         supabase
           .from('profiles')
@@ -74,6 +76,10 @@ export function useClientHubData() {
           .eq('customer_user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(50),
+        supabase
+          .from('entities')
+          .select('id, legal_name_ar')
+          .eq('owner_user_id', user.id),
       ]);
 
       const profile = profileResult.data;
@@ -82,6 +88,22 @@ export function useClientHubData() {
       const invoices = invoicesResult.data || [];
       const wallet = walletResult.data;
       const transactions = transactionsResult.data || [];
+      const entities = entitiesResult.data || [];
+
+      // Fetch finance applications if user has entities
+      let financeApplications: any[] = [];
+      if (entities.length > 0) {
+        const entityIds = entities.map(e => e.id);
+        const { data: apps } = await supabase
+          .from('finance_applications')
+          .select(`
+            *,
+            entity:entities(legal_name_ar)
+          `)
+          .in('entity_id', entityIds)
+          .order('created_at', { ascending: false });
+        financeApplications = apps || [];
+      }
 
       // Build client identity
       const hasActiveContracts = contracts.some(c => c.status === 'signed');
@@ -189,6 +211,38 @@ export function useClientHubData() {
         }
       });
 
+      // Finance Applications
+      financeApplications.forEach(app => {
+        const eventType = app.status === 'approved' 
+          ? 'finance_application_approved' 
+          : app.status === 'rejected' 
+          ? 'finance_application_rejected' 
+          : 'finance_application_submitted';
+        
+        const statusLabel = app.status === 'approved' 
+          ? 'Approved' 
+          : app.status === 'rejected' 
+          ? 'Rejected' 
+          : 'Submitted';
+        
+        const statusLabelAr = app.status === 'approved' 
+          ? 'موافق عليه' 
+          : app.status === 'rejected' 
+          ? 'مرفوض' 
+          : 'مقدم';
+
+        timeline.push({
+          id: `finance-app-${app.id}`,
+          type: eventType,
+          title: `Finance Application ${app.application_number} - ${statusLabel}`,
+          titleAr: `طلب تمويل ${app.application_number} - ${statusLabelAr}`,
+          description: `Amount: ${app.amount_sar} SAR, ${app.tenor_months} months`,
+          descriptionAr: `المبلغ: ${app.amount_sar} ر.س، ${app.tenor_months} شهر`,
+          timestamp: app.decided_at || app.submitted_at || app.created_at,
+          actor: app.status === 'submitted' ? 'client' : 'admin',
+        });
+      });
+
       // Sort timeline by date (newest first)
       timeline.sort((a, b) => 
         new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
@@ -256,6 +310,16 @@ export function useClientHubData() {
         activeServices,
         financialSnapshot,
         contracts: contractsSummary,
+        financeApplications: financeApplications.map(app => ({
+          id: app.id,
+          applicationNumber: app.application_number,
+          amountSar: app.amount_sar,
+          tenorMonths: app.tenor_months,
+          status: app.status,
+          entityName: app.entity?.legal_name_ar,
+          createdAt: app.created_at,
+          decidedAt: app.decided_at,
+        })),
       };
     },
     enabled: !!user?.id,

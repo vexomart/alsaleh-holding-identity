@@ -53,7 +53,10 @@ export type TimelineEventType =
   | 'wallet_credited'
   | 'wallet_debited'
   | 'status_changed'
-  | 'note_added';
+  | 'note_added'
+  | 'finance_application_submitted'
+  | 'finance_application_approved'
+  | 'finance_application_rejected';
 
 export interface ActiveService {
   id: string;
@@ -96,9 +99,21 @@ export interface ClientHubData {
   activeServices: ActiveService[];
   financialSnapshot: FinancialSnapshot;
   contracts: ContractSummary[];
+  financeApplications?: FinanceApplicationSummary[];
   // Admin only
   internalNotes?: string;
   riskLevel?: 'low' | 'medium' | 'high';
+}
+
+export interface FinanceApplicationSummary {
+  id: string;
+  applicationNumber: string;
+  amountSar: number;
+  tenorMonths: number;
+  status: string;
+  entityName?: string;
+  createdAt: string;
+  decidedAt?: string;
 }
 
 // Timeline event configuration
@@ -185,6 +200,24 @@ export const TIMELINE_EVENT_CONFIG: Record<TimelineEventType, {
     color: 'text-slate-500',
     labelEn: 'Note Added',
     labelAr: 'تمت إضافة ملاحظة',
+  },
+  finance_application_submitted: {
+    icon: 'FileText',
+    color: 'text-blue-500',
+    labelEn: 'Finance Application Submitted',
+    labelAr: 'تم تقديم طلب تمويل',
+  },
+  finance_application_approved: {
+    icon: 'CheckCircle',
+    color: 'text-emerald-500',
+    labelEn: 'Finance Application Approved',
+    labelAr: 'تمت الموافقة على طلب التمويل',
+  },
+  finance_application_rejected: {
+    icon: 'XCircle',
+    color: 'text-red-500',
+    labelEn: 'Finance Application Rejected',
+    labelAr: 'تم رفض طلب التمويل',
   },
 };
 

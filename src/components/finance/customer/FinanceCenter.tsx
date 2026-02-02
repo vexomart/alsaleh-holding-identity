@@ -36,6 +36,7 @@ import {
   KYCStatus,
 } from "@/types/finance";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MyApplications } from "./MyApplications";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -403,6 +404,11 @@ export function FinanceCenter() {
           </Card>
         </motion.div>
       )}
+
+      {/* My Applications */}
+      <motion.div variants={itemVariants}>
+        <MyApplications />
+      </motion.div>
     </motion.div>
   );
 }
