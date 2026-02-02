@@ -1,6 +1,6 @@
 /**
- * INVOICE PDF TEMPLATE
- * React-PDF component for generating Arabic RTL invoices
+ * INVOICE PDF TEMPLATE - Premium Corporate Design
+ * شركة علي صالح الشهري القابضة
  */
 
 import React from 'react';
@@ -15,7 +15,7 @@ import {
 import type { InvoiceDataNew, InvoiceTotals } from './types';
 import { calculateInvoiceTotals, formatShortDate, calculateLineTotal } from './invoice-utils';
 
-// Register Cairo fonts from public folder
+// Register Cairo fonts
 Font.register({
   family: 'Cairo',
   fonts: [
@@ -24,229 +24,343 @@ Font.register({
   ],
 });
 
-// RTL Arabic styles
+// Company Info
+const COMPANY = {
+  name_ar: 'شركة علي صالح الشهري القابضة',
+  name_en: 'Ali Saleh Al-Shahri Holding Co.',
+  vat: '310123456789012',
+  cr: '1010123456',
+  address_ar: 'الرياض، المملكة العربية السعودية',
+  address_en: 'Riyadh, Kingdom of Saudi Arabia',
+  phone: '+966 11 123 4567',
+  email: 'info@ash-holding.sa',
+  website: 'www.ash-holding.sa',
+};
+
+// Premium Corporate Styles
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Cairo',
-    fontSize: 10,
-    padding: 40,
-    direction: 'rtl',
+    fontSize: 9,
+    padding: 0,
     backgroundColor: '#ffffff',
   },
-  header: {
+  // Header Band
+  headerBand: {
+    backgroundColor: '#1a1a2e',
+    paddingVertical: 25,
+    paddingHorizontal: 40,
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
-    marginBottom: 30,
-    borderBottomWidth: 2,
-    borderBottomColor: '#0f766e',
-    paddingBottom: 20,
+    alignItems: 'center',
   },
-  headerLeft: {
-    alignItems: 'flex-start',
-  },
-  headerRight: {
+  companyBlock: {
     alignItems: 'flex-end',
   },
-  title: {
-    fontSize: 24,
+  companyName: {
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#0f766e',
-    marginBottom: 5,
-    textAlign: 'right',
-  },
-  subtitle: {
-    fontSize: 12,
-    color: '#64748b',
-    textAlign: 'right',
-  },
-  invoiceNumber: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#1e293b',
-    marginBottom: 5,
-  },
-  invoiceDate: {
-    fontSize: 10,
-    color: '#64748b',
-  },
-  section: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#0f766e',
-    marginBottom: 10,
-    textAlign: 'right',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
-    paddingBottom: 5,
-  },
-  partyRow: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  partyBox: {
-    width: '48%',
-    backgroundColor: '#f8fafc',
-    padding: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  partyTitle: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: '#0f766e',
-    marginBottom: 8,
-    textAlign: 'right',
-  },
-  partyText: {
-    fontSize: 10,
-    color: '#334155',
+    color: '#ffffff',
     marginBottom: 4,
     textAlign: 'right',
   },
-  partyLabel: {
-    fontSize: 9,
-    color: '#64748b',
+  companyNameEn: {
+    fontSize: 10,
+    color: '#b8b8d1',
     textAlign: 'right',
   },
+  invoiceBlock: {
+    alignItems: 'flex-start',
+    backgroundColor: '#d4af37',
+    padding: 15,
+    borderRadius: 4,
+  },
+  invoiceTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    marginBottom: 2,
+  },
+  invoiceTitleEn: {
+    fontSize: 8,
+    color: '#1a1a2e',
+    opacity: 0.8,
+  },
+  // Invoice Meta Strip
+  metaStrip: {
+    backgroundColor: '#f8f9fa',
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  metaItem: {
+    alignItems: 'center',
+  },
+  metaLabel: {
+    fontSize: 7,
+    color: '#6c757d',
+    marginBottom: 2,
+  },
+  metaValue: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+  },
+  // Main Content
+  content: {
+    padding: 40,
+    paddingTop: 25,
+  },
+  // Parties Section
+  partiesRow: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    marginBottom: 25,
+    gap: 20,
+  },
+  partyCard: {
+    width: '48%',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 6,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
+  partyHeader: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#dee2e6',
+  },
+  partyIcon: {
+    width: 24,
+    height: 24,
+    backgroundColor: '#1a1a2e',
+    borderRadius: 4,
+    marginLeft: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  partyIconText: {
+    color: '#d4af37',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  partyTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    textAlign: 'right',
+  },
+  partyName: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    marginBottom: 6,
+    textAlign: 'right',
+  },
+  partyDetail: {
+    fontSize: 8,
+    color: '#495057',
+    marginBottom: 3,
+    textAlign: 'right',
+  },
+  partyDetailLabel: {
+    color: '#6c757d',
+  },
+  // Items Table
+  tableSection: {
+    marginBottom: 20,
+  },
+  tableSectionTitle: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: '#1a1a2e',
+    marginBottom: 10,
+    textAlign: 'right',
+    paddingBottom: 5,
+    borderBottomWidth: 2,
+    borderBottomColor: '#d4af37',
+  },
   table: {
-    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#dee2e6',
+    borderRadius: 6,
+    overflow: 'hidden',
   },
   tableHeader: {
     flexDirection: 'row-reverse',
-    backgroundColor: '#0f766e',
-    padding: 10,
-    borderRadius: 3,
+    backgroundColor: '#1a1a2e',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
   },
   tableRow: {
     flexDirection: 'row-reverse',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#e9ecef',
   },
   tableRowAlt: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#f8f9fa',
   },
-  colDescription: {
-    width: '40%',
-    textAlign: 'right',
+  tableRowLast: {
+    borderBottomWidth: 0,
   },
-  colQty: {
-    width: '12%',
-    textAlign: 'center',
-  },
-  colPrice: {
-    width: '16%',
-    textAlign: 'center',
-  },
-  colVat: {
-    width: '16%',
-    textAlign: 'center',
-  },
-  colTotal: {
-    width: '16%',
-    textAlign: 'left',
-  },
-  headerText: {
+  // Column widths
+  colNum: { width: '6%', textAlign: 'center' },
+  colDesc: { width: '38%', textAlign: 'right' },
+  colQty: { width: '10%', textAlign: 'center' },
+  colPrice: { width: '15%', textAlign: 'center' },
+  colVat: { width: '15%', textAlign: 'center' },
+  colTotal: { width: '16%', textAlign: 'left' },
+  headerCell: {
     color: '#ffffff',
+    fontSize: 8,
     fontWeight: 'bold',
-    fontSize: 10,
   },
-  cellText: {
-    color: '#334155',
-    fontSize: 10,
+  cell: {
+    color: '#212529',
+    fontSize: 8,
   },
+  cellBold: {
+    fontWeight: 'bold',
+  },
+  // Totals Section
   totalsSection: {
-    marginTop: 20,
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start',
+    marginTop: 15,
   },
-  totalsBox: {
-    width: '40%',
-    backgroundColor: '#f1f5f9',
-    padding: 15,
-    borderRadius: 5,
+  totalsCard: {
+    width: '45%',
+    backgroundColor: '#f8f9fa',
+    borderRadius: 6,
+    overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#dee2e6',
   },
   totalsRow: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
   },
   totalsLabel: {
-    fontSize: 10,
-    color: '#64748b',
+    fontSize: 9,
+    color: '#495057',
     textAlign: 'right',
   },
   totalsValue: {
-    fontSize: 10,
-    color: '#334155',
+    fontSize: 9,
+    color: '#212529',
     textAlign: 'left',
+    fontWeight: 'bold',
   },
   totalsFinal: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
-    borderTopWidth: 2,
-    borderTopColor: '#0f766e',
-    paddingTop: 10,
-    marginTop: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    backgroundColor: '#1a1a2e',
   },
   totalsFinalLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
-    color: '#0f766e',
+    color: '#ffffff',
     textAlign: 'right',
   },
   totalsFinalValue: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
-    color: '#0f766e',
+    color: '#d4af37',
     textAlign: 'left',
   },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 40,
-    right: 40,
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    borderTopWidth: 1,
-    borderTopColor: '#e2e8f0',
-    paddingTop: 15,
-  },
-  footerText: {
-    fontSize: 9,
-    color: '#64748b',
-    textAlign: 'right',
-  },
-  footerPage: {
-    fontSize: 9,
-    color: '#64748b',
-  },
-  notes: {
+  // Notes
+  notesSection: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#fffbeb',
-    borderRadius: 5,
+    backgroundColor: '#fff8e1',
+    borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#fcd34d',
+    borderColor: '#ffecb3',
   },
   notesTitle: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 'bold',
-    color: '#92400e',
+    color: '#f57c00',
     marginBottom: 5,
     textAlign: 'right',
   },
   notesText: {
-    fontSize: 10,
-    color: '#92400e',
+    fontSize: 8,
+    color: '#e65100',
     textAlign: 'right',
+    lineHeight: 1.5,
+  },
+  // Footer
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#1a1a2e',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  footerLeft: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    gap: 15,
+  },
+  footerItem: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+  footerLabel: {
+    fontSize: 7,
+    color: '#b8b8d1',
+    marginLeft: 4,
+  },
+  footerValue: {
+    fontSize: 7,
+    color: '#ffffff',
+  },
+  footerRight: {
+    alignItems: 'flex-start',
+  },
+  footerPage: {
+    fontSize: 7,
+    color: '#b8b8d1',
+  },
+  footerCompany: {
+    fontSize: 8,
+    color: '#d4af37',
+    fontWeight: 'bold',
+  },
+  // QR Placeholder
+  qrPlaceholder: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#ffffff',
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  qrText: {
+    fontSize: 6,
+    color: '#6c757d',
+    textAlign: 'center',
   },
 });
 
@@ -260,152 +374,234 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
   const totals: InvoiceTotals = calculateInvoiceTotals(data.items, vatRate);
 
   const formatAmount = (amount: number) => {
-    return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + currency;
+    return amount.toLocaleString('en-US', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    });
+  };
+
+  const formatCurrency = (amount: number) => {
+    return `${formatAmount(amount)} ${currency}`;
   };
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerRight}>
-            <Text style={styles.title}>فاتورة ضريبية</Text>
-            <Text style={styles.subtitle}>Tax Invoice</Text>
+        {/* Header Band */}
+        <View style={styles.headerBand}>
+          <View style={styles.companyBlock}>
+            <Text style={styles.companyName}>{COMPANY.name_ar}</Text>
+            <Text style={styles.companyNameEn}>{COMPANY.name_en}</Text>
           </View>
-          <View style={styles.headerLeft}>
-            <Text style={styles.invoiceNumber}>رقم الفاتورة: {data.invoice_number}</Text>
-            <Text style={styles.invoiceDate}>التاريخ: {formatShortDate(data.issued_at)}</Text>
-            {data.due_date && (
-              <Text style={styles.invoiceDate}>تاريخ الاستحقاق: {formatShortDate(data.due_date)}</Text>
-            )}
+          <View style={styles.invoiceBlock}>
+            <Text style={styles.invoiceTitle}>فاتورة ضريبية</Text>
+            <Text style={styles.invoiceTitleEn}>TAX INVOICE</Text>
           </View>
         </View>
 
-        {/* Seller & Buyer Info */}
-        <View style={styles.partyRow}>
-          {/* Seller (Right) */}
-          <View style={styles.partyBox}>
-            <Text style={styles.partyTitle}>البائع / Seller</Text>
-            <Text style={styles.partyText}>{data.seller.name_ar || data.seller.name}</Text>
-            {data.seller.vat && (
-              <Text style={styles.partyLabel}>الرقم الضريبي: {data.seller.vat}</Text>
-            )}
-            {data.seller.address_ar && (
-              <Text style={styles.partyLabel}>{data.seller.address_ar}</Text>
-            )}
-            {data.seller.phone && (
-              <Text style={styles.partyLabel}>هاتف: {data.seller.phone}</Text>
-            )}
-            {data.seller.email && (
-              <Text style={styles.partyLabel}>البريد: {data.seller.email}</Text>
-            )}
+        {/* Meta Strip */}
+        <View style={styles.metaStrip}>
+          <View style={styles.metaItem}>
+            <Text style={styles.metaLabel}>رقم الفاتورة</Text>
+            <Text style={styles.metaValue}>{data.invoice_number}</Text>
           </View>
-
-          {/* Buyer (Left) */}
-          <View style={styles.partyBox}>
-            <Text style={styles.partyTitle}>المشتري / Buyer</Text>
-            <Text style={styles.partyText}>{data.buyer.name_ar || data.buyer.name}</Text>
-            {data.buyer.vat && (
-              <Text style={styles.partyLabel}>الرقم الضريبي: {data.buyer.vat}</Text>
-            )}
-            {data.buyer.address_ar && (
-              <Text style={styles.partyLabel}>{data.buyer.address_ar}</Text>
-            )}
-            {data.buyer.phone && (
-              <Text style={styles.partyLabel}>هاتف: {data.buyer.phone}</Text>
-            )}
-            {data.buyer.email && (
-              <Text style={styles.partyLabel}>البريد: {data.buyer.email}</Text>
-            )}
+          <View style={styles.metaItem}>
+            <Text style={styles.metaLabel}>تاريخ الإصدار</Text>
+            <Text style={styles.metaValue}>{formatShortDate(data.issued_at)}</Text>
           </View>
-        </View>
-
-        {/* Items Table */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>تفاصيل الفاتورة</Text>
-          
-          <View style={styles.table}>
-            {/* Table Header */}
-            <View style={styles.tableHeader}>
-              <View style={styles.colDescription}>
-                <Text style={styles.headerText}>الوصف</Text>
-              </View>
-              <View style={styles.colQty}>
-                <Text style={styles.headerText}>الكمية</Text>
-              </View>
-              <View style={styles.colPrice}>
-                <Text style={styles.headerText}>السعر</Text>
-              </View>
-              <View style={styles.colVat}>
-                <Text style={styles.headerText}>الضريبة</Text>
-              </View>
-              <View style={styles.colTotal}>
-                <Text style={styles.headerText}>الإجمالي</Text>
-              </View>
+          {data.due_date && (
+            <View style={styles.metaItem}>
+              <Text style={styles.metaLabel}>تاريخ الاستحقاق</Text>
+              <Text style={styles.metaValue}>{formatShortDate(data.due_date)}</Text>
             </View>
+          )}
+          <View style={styles.metaItem}>
+            <Text style={styles.metaLabel}>الرقم الضريبي</Text>
+            <Text style={styles.metaValue}>{COMPANY.vat}</Text>
+          </View>
+        </View>
 
-            {/* Table Rows */}
-            {data.items.map((item, index) => {
-              const lineTotal = calculateLineTotal(item);
-              const lineVat = lineTotal * vatRate;
-              const lineTotalWithVat = lineTotal + lineVat;
-              
-              return (
-                <View 
-                  key={index} 
-                  style={[styles.tableRow, index % 2 === 1 ? styles.tableRowAlt : {}]}
-                >
-                  <View style={styles.colDescription}>
-                    <Text style={styles.cellText}>{item.description_ar || item.description}</Text>
-                  </View>
-                  <View style={styles.colQty}>
-                    <Text style={styles.cellText}>{item.qty}</Text>
-                  </View>
-                  <View style={styles.colPrice}>
-                    <Text style={styles.cellText}>{formatAmount(item.unit_price)}</Text>
-                  </View>
-                  <View style={styles.colVat}>
-                    <Text style={styles.cellText}>{formatAmount(lineVat)}</Text>
-                  </View>
-                  <View style={styles.colTotal}>
-                    <Text style={styles.cellText}>{formatAmount(lineTotalWithVat)}</Text>
-                  </View>
+        {/* Main Content */}
+        <View style={styles.content}>
+          {/* Parties */}
+          <View style={styles.partiesRow}>
+            {/* Seller */}
+            <View style={styles.partyCard}>
+              <View style={styles.partyHeader}>
+                <View style={styles.partyIcon}>
+                  <Text style={styles.partyIconText}>ب</Text>
                 </View>
-              );
-            })}
-          </View>
-        </View>
+                <Text style={styles.partyTitle}>البائع / Seller</Text>
+              </View>
+              <Text style={styles.partyName}>{data.seller?.name_ar || COMPANY.name_ar}</Text>
+              <Text style={styles.partyDetail}>
+                <Text style={styles.partyDetailLabel}>الرقم الضريبي: </Text>
+                {data.seller?.vat || COMPANY.vat}
+              </Text>
+              {(data.seller?.address_ar || COMPANY.address_ar) && (
+                <Text style={styles.partyDetail}>
+                  <Text style={styles.partyDetailLabel}>العنوان: </Text>
+                  {data.seller?.address_ar || COMPANY.address_ar}
+                </Text>
+              )}
+              <Text style={styles.partyDetail}>
+                <Text style={styles.partyDetailLabel}>البريد: </Text>
+                {data.seller?.email || COMPANY.email}
+              </Text>
+            </View>
 
-        {/* Totals */}
-        <View style={styles.totalsSection}>
-          <View style={styles.totalsBox}>
-            <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>المجموع الفرعي</Text>
-              <Text style={styles.totalsValue}>{formatAmount(totals.subtotal)}</Text>
-            </View>
-            <View style={styles.totalsRow}>
-              <Text style={styles.totalsLabel}>ضريبة القيمة المضافة ({(vatRate * 100).toFixed(0)}%)</Text>
-              <Text style={styles.totalsValue}>{formatAmount(totals.vat_amount)}</Text>
-            </View>
-            <View style={styles.totalsFinal}>
-              <Text style={styles.totalsFinalLabel}>الإجمالي شامل الضريبة</Text>
-              <Text style={styles.totalsFinalValue}>{formatAmount(totals.total)}</Text>
+            {/* Buyer */}
+            <View style={styles.partyCard}>
+              <View style={styles.partyHeader}>
+                <View style={styles.partyIcon}>
+                  <Text style={styles.partyIconText}>م</Text>
+                </View>
+                <Text style={styles.partyTitle}>المشتري / Buyer</Text>
+              </View>
+              <Text style={styles.partyName}>{data.buyer?.name_ar || data.buyer?.name || 'عميل'}</Text>
+              {data.buyer?.vat && (
+                <Text style={styles.partyDetail}>
+                  <Text style={styles.partyDetailLabel}>الرقم الضريبي: </Text>
+                  {data.buyer.vat}
+                </Text>
+              )}
+              {data.buyer?.address_ar && (
+                <Text style={styles.partyDetail}>
+                  <Text style={styles.partyDetailLabel}>العنوان: </Text>
+                  {data.buyer.address_ar}
+                </Text>
+              )}
+              {data.buyer?.email && (
+                <Text style={styles.partyDetail}>
+                  <Text style={styles.partyDetailLabel}>البريد: </Text>
+                  {data.buyer.email}
+                </Text>
+              )}
+              {data.buyer?.phone && (
+                <Text style={styles.partyDetail}>
+                  <Text style={styles.partyDetailLabel}>الهاتف: </Text>
+                  {data.buyer.phone}
+                </Text>
+              )}
             </View>
           </View>
-        </View>
 
-        {/* Notes */}
-        {(data.notes_ar || data.notes) && (
-          <View style={styles.notes}>
-            <Text style={styles.notesTitle}>ملاحظات</Text>
-            <Text style={styles.notesText}>{data.notes_ar || data.notes}</Text>
+          {/* Items Table */}
+          <View style={styles.tableSection}>
+            <Text style={styles.tableSectionTitle}>تفاصيل الفاتورة</Text>
+            
+            <View style={styles.table}>
+              {/* Header */}
+              <View style={styles.tableHeader}>
+                <View style={styles.colNum}>
+                  <Text style={styles.headerCell}>#</Text>
+                </View>
+                <View style={styles.colDesc}>
+                  <Text style={styles.headerCell}>الوصف</Text>
+                </View>
+                <View style={styles.colQty}>
+                  <Text style={styles.headerCell}>الكمية</Text>
+                </View>
+                <View style={styles.colPrice}>
+                  <Text style={styles.headerCell}>السعر</Text>
+                </View>
+                <View style={styles.colVat}>
+                  <Text style={styles.headerCell}>الضريبة</Text>
+                </View>
+                <View style={styles.colTotal}>
+                  <Text style={styles.headerCell}>الإجمالي</Text>
+                </View>
+              </View>
+
+              {/* Rows */}
+              {data.items.map((item, index) => {
+                const lineTotal = calculateLineTotal(item);
+                const lineVat = lineTotal * vatRate;
+                const lineTotalWithVat = lineTotal + lineVat;
+                const isLast = index === data.items.length - 1;
+                
+                return (
+                  <View 
+                    key={index} 
+                    style={[
+                      styles.tableRow, 
+                      index % 2 === 1 && styles.tableRowAlt,
+                      isLast && styles.tableRowLast
+                    ]}
+                  >
+                    <View style={styles.colNum}>
+                      <Text style={styles.cell}>{index + 1}</Text>
+                    </View>
+                    <View style={styles.colDesc}>
+                      <Text style={[styles.cell, styles.cellBold]}>
+                        {item.description_ar || item.description}
+                      </Text>
+                    </View>
+                    <View style={styles.colQty}>
+                      <Text style={styles.cell}>{item.qty}</Text>
+                    </View>
+                    <View style={styles.colPrice}>
+                      <Text style={styles.cell}>{formatAmount(item.unit_price)}</Text>
+                    </View>
+                    <View style={styles.colVat}>
+                      <Text style={styles.cell}>{formatAmount(lineVat)}</Text>
+                    </View>
+                    <View style={styles.colTotal}>
+                      <Text style={[styles.cell, styles.cellBold]}>{formatAmount(lineTotalWithVat)}</Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
           </View>
-        )}
+
+          {/* Totals */}
+          <View style={styles.totalsSection}>
+            <View style={styles.totalsCard}>
+              <View style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>المجموع الفرعي (قبل الضريبة)</Text>
+                <Text style={styles.totalsValue}>{formatCurrency(totals.subtotal)}</Text>
+              </View>
+              <View style={styles.totalsRow}>
+                <Text style={styles.totalsLabel}>ضريبة القيمة المضافة ({(vatRate * 100).toFixed(0)}%)</Text>
+                <Text style={styles.totalsValue}>{formatCurrency(totals.vat_amount)}</Text>
+              </View>
+              <View style={styles.totalsFinal}>
+                <Text style={styles.totalsFinalLabel}>الإجمالي شامل الضريبة</Text>
+                <Text style={styles.totalsFinalValue}>{formatCurrency(totals.total)}</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Notes */}
+          {(data.notes_ar || data.notes) && (
+            <View style={styles.notesSection}>
+              <Text style={styles.notesTitle}>ملاحظات</Text>
+              <Text style={styles.notesText}>{data.notes_ar || data.notes}</Text>
+            </View>
+          )}
+        </View>
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>الصالح القابضة - ASH Holding</Text>
-          <Text style={styles.footerPage}>صفحة 1 من 1</Text>
+          <View style={styles.footerLeft}>
+            <View style={styles.footerItem}>
+              <Text style={styles.footerLabel}>هاتف:</Text>
+              <Text style={styles.footerValue}>{COMPANY.phone}</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Text style={styles.footerLabel}>بريد:</Text>
+              <Text style={styles.footerValue}>{COMPANY.email}</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Text style={styles.footerLabel}>موقع:</Text>
+              <Text style={styles.footerValue}>{COMPANY.website}</Text>
+            </View>
+          </View>
+          <View style={styles.footerRight}>
+            <Text style={styles.footerCompany}>{COMPANY.name_ar}</Text>
+            <Text style={styles.footerPage}>صفحة 1 من 1</Text>
+          </View>
         </View>
       </Page>
     </Document>
