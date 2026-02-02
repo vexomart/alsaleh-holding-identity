@@ -1,6 +1,6 @@
 /**
  * Invoice Actions Component
- * Primary actions: Download, Pay, Copy
+ * Clean action bar: Download, Pay, Copy
  */
 
 import { useState } from 'react';
@@ -10,21 +10,12 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { 
   Download, 
   Copy, 
   CreditCard, 
-  ExternalLink,
-  FileText,
   Loader2,
   Check,
-  Hash
 } from 'lucide-react';
 import { InvoiceViewStatus } from './types';
 
@@ -42,7 +33,6 @@ interface InvoiceActionsProps {
 export function InvoiceActions({
   invoiceNumber,
   orderNumber,
-  contractUrl,
   paymentUrl,
   status,
   onDownload,
@@ -54,7 +44,7 @@ export function InvoiceActions({
   const isMobile = useIsMobile();
   
   const [isDownloading, setIsDownloading] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleDownload = async () => {
     setIsDownloading(true);
@@ -65,12 +55,12 @@ export function InvoiceActions({
     }
   };
 
-  const copyToClipboard = async (text: string, field: string) => {
+  const copyInvoiceNumber = async () => {
     try {
-      await navigator.clipboard.writeText(text);
-      setCopiedField(field);
-      toast.success(isRTL ? 'تم النسخ' : 'Copied');
-      setTimeout(() => setCopiedField(null), 2000);
+      await navigator.clipboard.writeText(invoiceNumber);
+      setCopied(true);
+      toast.success(isRTL ? 'تم نسخ رقم الفاتورة' : 'Invoice number copied');
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.error(isRTL ? 'فشل النسخ' : 'Copy failed');
     }
@@ -80,135 +70,81 @@ export function InvoiceActions({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: 0.2 }}
+      transition={{ duration: 0.2, delay: 0.16 }}
       className={cn(
-        'rounded-xl border bg-card p-4',
-        isMobile && 'fixed bottom-0 inset-x-0 rounded-none border-x-0 border-b-0 safe-area-bottom z-50 shadow-lg',
+        isMobile && 'fixed bottom-0 inset-x-0 bg-background/95 backdrop-blur-sm border-t safe-area-bottom z-50',
         className
       )}
     >
       <div className={cn(
         'flex items-center gap-3',
-        isMobile ? 'flex-col' : 'flex-wrap'
+        isMobile ? 'p-4' : 'pt-4'
       )}>
-        {/* Primary Actions */}
-        <div className={cn('flex items-center gap-2', isMobile && 'w-full')}>
-          {/* Pay Now */}
-          {showPayButton && (
-            <Button
-              onClick={() => paymentUrl ? window.open(paymentUrl, '_blank') : onPayNow?.()}
-              className={cn('gap-2', isMobile && 'flex-1')}
-            >
-              <CreditCard className="h-4 w-4" />
-              {isRTL ? 'ادفع الآن' : 'Pay Now'}
-              {paymentUrl && <ExternalLink className="h-3 w-3" />}
-            </Button>
+        {/* Primary: Download PDF */}
+        <Button
+          variant={showPayButton ? 'outline' : 'default'}
+          onClick={handleDownload}
+          disabled={isDownloading}
+          className={cn('gap-2', isMobile && 'flex-1')}
+        >
+          {isDownloading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
           )}
-          
-          {/* Download PDF */}
+          {isRTL ? 'تحميل PDF' : 'Download PDF'}
+        </Button>
+
+        {/* Pay Now (if applicable) */}
+        {showPayButton && (
           <Button
-            variant={showPayButton ? 'outline' : 'default'}
-            onClick={handleDownload}
-            disabled={isDownloading}
+            onClick={() => paymentUrl ? window.open(paymentUrl, '_blank') : onPayNow?.()}
             className={cn('gap-2', isMobile && 'flex-1')}
           >
-            {isDownloading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+            <CreditCard className="h-4 w-4" />
+            {isRTL ? 'ادفع الآن' : 'Pay Now'}
+          </Button>
+        )}
+
+        {/* Copy Invoice Number */}
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={copyInvoiceNumber}
+            className="ms-auto"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-primary" />
             ) : (
-              <Download className="h-4 w-4" />
+              <Copy className="h-4 w-4" />
             )}
-            {isRTL ? 'تحميل PDF' : 'Download PDF'}
+          </Button>
+        )}
+      </div>
+
+      {/* Mobile: Copy Button Row */}
+      {isMobile && (
+        <div className="px-4 pb-4 pt-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={copyInvoiceNumber}
+            className="w-full gap-2 text-muted-foreground"
+          >
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-primary" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+            <span className="text-xs">
+              {isRTL ? 'نسخ رقم الفاتورة' : 'Copy Invoice Number'}
+            </span>
           </Button>
         </div>
-
-        {/* Secondary Actions */}
-        <div className={cn(
-          'flex items-center gap-2',
-          isMobile ? 'w-full justify-center' : 'ms-auto'
-        )}>
-          <TooltipProvider>
-            {/* Copy Invoice Number */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size={isMobile ? 'sm' : 'icon'}
-                  onClick={() => copyToClipboard(invoiceNumber, 'invoice')}
-                  className="gap-2"
-                >
-                  {copiedField === 'invoice' ? (
-                    <Check className="h-4 w-4 text-primary" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                  {isMobile && (
-                    <span className="text-xs">
-                      {isRTL ? 'رقم الفاتورة' : 'Invoice #'}
-                    </span>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{isRTL ? 'نسخ رقم الفاتورة' : 'Copy Invoice Number'}</p>
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Copy Order Number */}
-            {orderNumber && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size={isMobile ? 'sm' : 'icon'}
-                    onClick={() => copyToClipboard(orderNumber, 'order')}
-                    className="gap-2"
-                  >
-                    {copiedField === 'order' ? (
-                      <Check className="h-4 w-4 text-primary" />
-                    ) : (
-                      <Hash className="h-4 w-4" />
-                    )}
-                    {isMobile && (
-                      <span className="text-xs">
-                        {isRTL ? 'رقم الطلب' : 'Order #'}
-                      </span>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{isRTL ? 'نسخ رقم الطلب' : 'Copy Order Number'}</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-
-            {/* View Contract */}
-            {contractUrl && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size={isMobile ? 'sm' : 'icon'}
-                    onClick={() => window.open(contractUrl, '_blank')}
-                    className="gap-2"
-                  >
-                    <FileText className="h-4 w-4" />
-                    {isMobile && (
-                      <span className="text-xs">
-                        {isRTL ? 'العقد' : 'Contract'}
-                      </span>
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{isRTL ? 'فتح العقد' : 'View Contract'}</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </TooltipProvider>
-        </div>
-      </div>
+      )}
     </motion.div>
   );
 }

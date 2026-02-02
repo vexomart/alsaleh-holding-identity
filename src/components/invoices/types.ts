@@ -80,56 +80,42 @@ export const INVOICE_STATUS_CONFIG: Record<InvoiceViewStatus, {
   labelEn: string;
   color: string;
   bgColor: string;
-  borderColor: string;
-  iconColor: string;
 }> = {
   draft: {
     labelAr: 'مسودة',
     labelEn: 'Draft',
-    color: 'text-slate-700 dark:text-slate-300',
-    bgColor: 'bg-slate-100 dark:bg-slate-800/50',
-    borderColor: 'border-slate-200 dark:border-slate-700',
-    iconColor: 'text-slate-500',
+    color: 'text-slate-600 dark:text-slate-400',
+    bgColor: 'bg-slate-100 dark:bg-slate-800/60',
   },
   pending: {
     labelAr: 'بانتظار الدفع',
     labelEn: 'Pending',
-    color: 'text-amber-700 dark:text-amber-300',
-    bgColor: 'bg-amber-50 dark:bg-amber-900/30',
-    borderColor: 'border-amber-200 dark:border-amber-800',
-    iconColor: 'text-amber-500',
+    color: 'text-amber-700 dark:text-amber-400',
+    bgColor: 'bg-amber-100 dark:bg-amber-900/40',
   },
   issued: {
     labelAr: 'صادرة',
     labelEn: 'Issued',
-    color: 'text-blue-700 dark:text-blue-300',
-    bgColor: 'bg-blue-50 dark:bg-blue-900/30',
-    borderColor: 'border-blue-200 dark:border-blue-800',
-    iconColor: 'text-blue-500',
+    color: 'text-blue-700 dark:text-blue-400',
+    bgColor: 'bg-blue-100 dark:bg-blue-900/40',
   },
   paid: {
     labelAr: 'مدفوعة',
     labelEn: 'Paid',
-    color: 'text-emerald-700 dark:text-emerald-300',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-900/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-800',
-    iconColor: 'text-emerald-500',
+    color: 'text-emerald-700 dark:text-emerald-400',
+    bgColor: 'bg-emerald-100 dark:bg-emerald-900/40',
   },
   overdue: {
     labelAr: 'متأخرة',
     labelEn: 'Overdue',
-    color: 'text-red-700 dark:text-red-300',
-    bgColor: 'bg-red-50 dark:bg-red-900/30',
-    borderColor: 'border-red-200 dark:border-red-800',
-    iconColor: 'text-red-500',
+    color: 'text-red-700 dark:text-red-400',
+    bgColor: 'bg-red-100 dark:bg-red-900/40',
   },
   cancelled: {
     labelAr: 'ملغاة',
     labelEn: 'Cancelled',
-    color: 'text-gray-700 dark:text-gray-400',
-    bgColor: 'bg-gray-100 dark:bg-gray-800/50',
-    borderColor: 'border-gray-200 dark:border-gray-700',
-    iconColor: 'text-gray-400',
+    color: 'text-gray-600 dark:text-gray-400',
+    bgColor: 'bg-gray-100 dark:bg-gray-800/60',
   },
 };
 
