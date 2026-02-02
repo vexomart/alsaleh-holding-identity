@@ -259,16 +259,10 @@ export function ApplicationsTab() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredApplications?.map((app, index) => {
+                {filteredApplications?.map((app) => {
                     const statusConfig = APPLICATION_STATUS_CONFIG[app.status as FinanceApplicationStatus];
                     return (
-                      <motion.tr
-                        key={app.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                        className="border-b"
-                      >
+                      <TableRow key={app.id}>
                         <TableCell className="font-mono text-sm">
                           {app.application_number}
                         </TableCell>
@@ -340,7 +334,7 @@ export function ApplicationsTab() {
                             )}
                           </div>
                         </TableCell>
-                      </motion.tr>
+                      </TableRow>
                     );
                   })}
                 </TableBody>
