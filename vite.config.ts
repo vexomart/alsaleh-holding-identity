@@ -32,6 +32,9 @@ export default defineConfig(({ mode }) => ({
       { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
       // Some deps import the subpath directly and expect a default export:
       //   import decompress from 'brotli/decompress.js'
+      // Use both string and regex aliases to cover all resolver code paths.
+      { find: "brotli/decompress.js", replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
+      { find: "brotli/decompress", replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
       { find: /^brotli\/decompress\.js$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
       { find: /^brotli\/decompress$/, replacement: path.resolve(__dirname, "./src/shims/brotli-decompress.ts") },
     ],
@@ -67,6 +70,8 @@ export default defineConfig(({ mode }) => ({
     ],
     // @react-pdf/renderer is known to cause duplicate-React hook crashes when pre-bundled.
     // It will still be loaded when needed, but won't be forced into the shared prebundle.
-    exclude: ["@react-pdf/renderer"],
+    // Exclude brotli as well so Vite doesn't prebundle the problematic subpath import
+    // before our alias can rewrite it.
+    exclude: ["@react-pdf/renderer", "brotli"],
   },
 }));
