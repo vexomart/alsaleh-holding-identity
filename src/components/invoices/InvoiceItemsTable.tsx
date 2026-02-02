@@ -1,6 +1,6 @@
 /**
  * Invoice Items Table
- * Classic corporate invoice table design
+ * Premium corporate invoice table - Global enterprise style
  */
 
 import { motion } from 'framer-motion';
@@ -33,36 +33,38 @@ export function InvoiceItemsTable({ items, currency, className }: InvoiceItemsTa
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.15 }}
-        className={cn('space-y-3', className)}
+        className={cn('space-y-4 invoice-container', className)}
       >
         {/* Section Header */}
-        <div className="flex items-center gap-2 px-1">
-          <div className="w-1 h-5 bg-slate-900 dark:bg-slate-400 rounded-full" />
-          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+        <div className="flex items-center gap-3 px-1">
+          <div className="w-1.5 h-6 bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-full" />
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] invoice-section-title">
             {isRTL ? 'تفاصيل البنود' : 'Line Items'}
           </h3>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-3">
           {items.map((item, index) => (
             <div
               key={item.id || index}
-              className="bg-card border border-border rounded-lg p-4"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm"
             >
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
-                  <p className="font-semibold text-foreground">
+                  <p className="font-semibold text-foreground invoice-item-description">
                     {isRTL && item.descriptionAr ? item.descriptionAr : item.description}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {item.quantity} × <span dir="ltr" className="ltr-token">{formatCurrency(item.unitPrice)}</span>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    <span className="invoice-qty">{item.quantity}</span>
+                    <span className="mx-2">×</span>
+                    <span dir="ltr" className="ltr-token font-mono">{formatCurrency(item.unitPrice)}</span>
                   </p>
                 </div>
                 <div className="text-end">
-                  <p dir="ltr" className="font-bold text-lg text-foreground tabular-nums ltr-token">
+                  <p dir="ltr" className="font-bold text-xl text-foreground tabular-nums ltr-token font-mono invoice-amount">
                     {formatCurrency(item.lineTotal)}
                   </p>
-                  <p className="text-xs text-muted-foreground">{currency}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{currency}</p>
                 </div>
               </div>
             </div>
@@ -72,69 +74,69 @@ export function InvoiceItemsTable({ items, currency, className }: InvoiceItemsTa
     );
   }
 
-  // Desktop: Classic Table
+  // Desktop: Premium Table
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.15 }}
-      className={cn('space-y-3', className)}
+      className={cn('space-y-4 invoice-container', className)}
     >
       {/* Section Header */}
-      <div className="flex items-center gap-2 px-1">
-        <div className="w-1 h-5 bg-slate-900 dark:bg-slate-400 rounded-full" />
-        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+      <div className="flex items-center gap-3 px-1">
+        <div className="w-1.5 h-6 bg-gradient-to-b from-[#1a1a2e] to-[#0f3460] rounded-full" />
+        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] invoice-section-title">
           {isRTL ? 'تفاصيل البنود' : 'Line Items'}
         </h3>
       </div>
 
-      {/* Classic Table */}
-      <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
-        <table className="w-full">
+      {/* Premium Table */}
+      <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
+        <table className="w-full invoice-table">
           <thead>
-            <tr className="bg-slate-900 dark:bg-slate-800 text-white">
-              <th className="text-start px-4 py-3 text-xs font-bold uppercase tracking-wider w-12">
+            <tr className="bg-gradient-to-r from-[#1a1a2e] via-[#16213e] to-[#0f3460] text-white">
+              <th className="text-start px-5 py-4 text-[11px] font-bold uppercase tracking-[0.15em] w-14 invoice-th">
                 #
               </th>
-              <th className="text-start px-4 py-3 text-xs font-bold uppercase tracking-wider">
+              <th className="text-start px-5 py-4 text-[11px] font-bold uppercase tracking-[0.15em] invoice-th">
                 {isRTL ? 'الوصف' : 'Description'}
               </th>
-              <th className="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider w-24">
+              <th className="text-center px-5 py-4 text-[11px] font-bold uppercase tracking-[0.15em] w-28 invoice-th">
                 {isRTL ? 'الكمية' : 'Qty'}
               </th>
-              <th className="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider w-32">
+              <th className="text-center px-5 py-4 text-[11px] font-bold uppercase tracking-[0.15em] w-36 invoice-th">
                 {isRTL ? 'سعر الوحدة' : 'Unit Price'}
               </th>
-              <th className="text-center px-4 py-3 text-xs font-bold uppercase tracking-wider w-36">
+              <th className="text-center px-5 py-4 text-[11px] font-bold uppercase tracking-[0.15em] w-40 invoice-th">
                 {isRTL ? 'الإجمالي' : 'Amount'}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {items.map((item, index) => (
               <tr 
                 key={item.id || index}
                 className={cn(
-                  'transition-colors',
-                  index % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50 dark:bg-slate-900/50'
+                  'transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50',
+                  index % 2 === 0 ? 'bg-white dark:bg-slate-950' : 'bg-slate-50/50 dark:bg-slate-900/30'
                 )}
               >
-                <td className="px-4 py-4 text-sm text-muted-foreground font-mono">
+                <td className="px-5 py-4 text-sm text-muted-foreground font-mono invoice-td">
                   {String(index + 1).padStart(2, '0')}
                 </td>
-                <td className="px-4 py-4 text-sm font-medium text-foreground">
+                <td className="px-5 py-4 text-sm font-medium text-foreground invoice-td invoice-description">
                   {isRTL && item.descriptionAr ? item.descriptionAr : item.description}
                 </td>
-                <td className="px-4 py-4 text-sm text-center text-foreground tabular-nums">
+                <td className="px-5 py-4 text-sm text-center text-foreground tabular-nums invoice-td">
                   {item.quantity}
                 </td>
-                <td className="px-4 py-4 text-sm text-center">
-                  <span dir="ltr" className="font-mono text-foreground tabular-nums ltr-token">
+                <td className="px-5 py-4 text-sm text-center invoice-td">
+                  <span dir="ltr" className="font-mono text-foreground tabular-nums ltr-token invoice-price">
                     {formatCurrency(item.unitPrice)}
                   </span>
                 </td>
-                <td className="px-4 py-4 text-sm text-center">
-                  <span dir="ltr" className="font-mono font-semibold text-foreground tabular-nums ltr-token">
+                <td className="px-5 py-4 text-sm text-center invoice-td">
+                  <span dir="ltr" className="font-mono font-bold text-foreground tabular-nums ltr-token invoice-amount">
                     {formatCurrency(item.lineTotal)}
                   </span>
                 </td>
