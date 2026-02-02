@@ -23,7 +23,8 @@ export default defineConfig(({ mode }) => ({
   ].filter(Boolean),
   resolve: {
     alias: [
-      { find: "@", replacement: path.resolve(__dirname, "./src") },
+      // Only alias our app imports like "@/..."; do NOT touch scoped packages like "@radix-ui/...".
+      { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
       // Pin only the exact React entrypoints to prevent duplicate React instances,
       // without breaking subpath imports like `react/jsx-runtime`.
       { find: /^react$/, replacement: path.resolve(__dirname, "node_modules/react/index.js") },
