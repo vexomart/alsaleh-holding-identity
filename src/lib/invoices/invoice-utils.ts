@@ -4,6 +4,7 @@
  */
 
 import type { InvoiceData, InvoiceDataNew, InvoiceItem, InvoiceTotals } from './types';
+import { SELLER_INFO } from './constants';
 
 /**
  * Default VAT rate in Saudi Arabia
@@ -109,12 +110,12 @@ export function orderToInvoiceData(
       invoice_number: `INV-${order.order_number}`,
       issued_at: order.created_at || now.toISOString(),
       seller: {
-        name: 'ASH Holding',
-        name_ar: 'الصالح القابضة',
-        vat: '310000000000003',
-        address_ar: 'الرياض، المملكة العربية السعودية',
-        email: 'info@ash-holding.sa',
-        phone: '+966 11 000 0000',
+        name: SELLER_INFO.name_en,
+        name_ar: SELLER_INFO.name_ar,
+        vat: SELLER_INFO.vat,
+        address_ar: SELLER_INFO.address_ar,
+        email: SELLER_INFO.email,
+        phone: SELLER_INFO.phone,
       },
       buyer: {
         name: customer.full_name || 'Customer',
@@ -144,12 +145,12 @@ export function orderToInvoiceData(
     invoice_number: invoiceNumber,
     issued_at: order.created_at || now.toISOString(),
     seller: {
-      name: 'ASH Holding',
-      name_ar: 'الصالح القابضة',
-      vat: '310000000000003',
-      address_ar: 'الرياض، المملكة العربية السعودية',
-      email: 'info@ash-holding.sa',
-      phone: '+966 11 000 0000',
+      name: SELLER_INFO.name_en,
+      name_ar: SELLER_INFO.name_ar,
+      vat: SELLER_INFO.vat,
+      address_ar: SELLER_INFO.address_ar,
+      email: SELLER_INFO.email,
+      phone: SELLER_INFO.phone,
     },
     buyer: {
       name: 'Customer',
@@ -177,12 +178,12 @@ export function generateSampleInvoice(): InvoiceDataNew {
     issued_at: new Date(),
     due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     seller: {
-      name: 'ASH Holding',
-      name_ar: 'الصالح القابضة',
-      vat: '310000000000003',
-      address_ar: 'الرياض، المملكة العربية السعودية',
-      email: 'info@ash-holding.sa',
-      phone: '+966 11 000 0000',
+      name: SELLER_INFO.name_en,
+      name_ar: SELLER_INFO.name_ar,
+      vat: SELLER_INFO.vat,
+      address_ar: SELLER_INFO.address_ar,
+      email: SELLER_INFO.email,
+      phone: SELLER_INFO.phone,
     },
     buyer: {
       name: 'Mohammed Ali',

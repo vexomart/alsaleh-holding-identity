@@ -14,6 +14,7 @@ import {
 } from '@react-pdf/renderer';
 import type { InvoiceDataNew, InvoiceTotals } from './types';
 import { calculateInvoiceTotals, formatShortDate, calculateLineTotal } from './invoice-utils';
+import { SELLER_INFO } from './constants';
 
 // Register Cairo fonts
 Font.register({
@@ -24,17 +25,17 @@ Font.register({
   ],
 });
 
-// Company Info
+// Company Info (single source of truth)
 const COMPANY = {
-  name_ar: 'شركة علي صالح الشهري القابضة',
-  name_en: 'Ali Saleh Al-Shahri Holding Co.',
-  vat: '310123456789012',
-  cr: '1010123456',
-  address_ar: 'الرياض، المملكة العربية السعودية',
-  address_en: 'Riyadh, Kingdom of Saudi Arabia',
-  phone: '+966 11 123 4567',
-  email: 'info@ash-holding.sa',
-  website: 'www.ash-holding.sa',
+  name_ar: SELLER_INFO.name_ar,
+  name_en: SELLER_INFO.name_en,
+  vat: SELLER_INFO.vat,
+  cr: SELLER_INFO.cr,
+  address_ar: SELLER_INFO.address_ar,
+  address_en: SELLER_INFO.address_en,
+  phone: SELLER_INFO.phone,
+  email: SELLER_INFO.email,
+  website: SELLER_INFO.website,
 };
 
 // Premium Corporate Styles - Enhanced Design
