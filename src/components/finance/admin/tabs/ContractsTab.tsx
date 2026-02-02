@@ -65,6 +65,11 @@ interface Contract {
       legal_name_ar: string;
     };
   };
+  offer?: {
+    monthly_payment_sar: number;
+    total_payable_sar: number;
+    apr_percent: number;
+  };
 }
 
 export function ContractsTab() {
@@ -88,6 +93,11 @@ export function ContractsTab() {
             amount_sar,
             tenor_months,
             entity:entities(legal_name_ar)
+          ),
+          offer:finance_offers(
+            monthly_payment_sar,
+            total_payable_sar,
+            apr_percent
           )
         `)
         .order("created_at", { ascending: false });
@@ -353,11 +363,47 @@ export function ContractsTab() {
                 
                 <div className="p-4 rounded-lg bg-muted/50">
                   <p className="text-sm text-muted-foreground">مبلغ التمويل</p>
-                  <p className="font-semibold">
+                  <p className="font-semibold text-lg text-primary">
                     {selectedContract.application?.amount_sar 
                       ? formatCurrencySAR(selectedContract.application.amount_sar)
                       : "-"}
                   </p>
+                </div>
+
+                {/* Financial Details Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-muted/50">
+                    <p className="text-xs text-muted-foreground">مدة التمويل</p>
+                    <p className="font-semibold">
+                      {selectedContract.application?.tenor_months 
+                        ? `${selectedContract.application.tenor_months} شهر`
+                        : "-"}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-muted/50">
+                    <p className="text-xs text-muted-foreground">القسط الشهري</p>
+                    <p className="font-semibold text-primary">
+                      {selectedContract.offer?.monthly_payment_sar 
+                        ? formatCurrencySAR(selectedContract.offer.monthly_payment_sar)
+                        : "-"}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-muted/50">
+                    <p className="text-xs text-muted-foreground">إجمالي السداد</p>
+                    <p className="font-semibold">
+                      {selectedContract.offer?.total_payable_sar 
+                        ? formatCurrencySAR(selectedContract.offer.total_payable_sar)
+                        : "-"}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-muted/50">
+                    <p className="text-xs text-muted-foreground">معدل الربح</p>
+                    <p className="font-semibold">
+                      {selectedContract.offer?.apr_percent 
+                        ? `${selectedContract.offer.apr_percent}%`
+                        : "0%"}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="p-4 rounded-lg bg-muted/50">
