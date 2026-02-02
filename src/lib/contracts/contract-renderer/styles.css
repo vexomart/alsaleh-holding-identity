@@ -1,0 +1,588 @@
+/**
+ * Finance Contract Print Styles
+ * شركة علي صالح الشهري القابضة
+ * Professional A4 Print Layout with Perfect RTL
+ */
+
+/* ========================================
+   PAGE SETUP - A4
+   ======================================== */
+@page {
+  size: A4;
+  margin: 24mm 18mm 20mm 18mm;
+}
+
+@page :first {
+  margin-top: 20mm;
+}
+
+/* ========================================
+   ROOT & TYPOGRAPHY
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+body {
+  font-family: 'Cairo', 'Noto Kufi Arabic', 'Tajawal', 'Arial', sans-serif;
+  direction: rtl;
+  text-align: right;
+  color: #1a1a2e;
+  background: #ffffff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ========================================
+   CONTRACT CONTAINER
+   ======================================== */
+.contract-document {
+  width: 100%;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 0;
+  background: #ffffff;
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+/* ========================================
+   HEADER (REPEATING)
+   ======================================== */
+.contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #1a1a2e;
+}
+
+.company-info {
+  text-align: right;
+}
+
+.company-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.document-type {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.contract-meta {
+  text-align: left;
+  direction: ltr;
+}
+
+.contract-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+.contract-date {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* ========================================
+   FOOTER (REPEATING)
+   ======================================== */
+.contract-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 18mm;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 10px;
+  color: #6b7280;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-disclaimer {
+  max-width: 70%;
+  text-align: right;
+}
+
+.page-number {
+  text-align: left;
+  direction: rtl;
+}
+
+/* ========================================
+   SECTION TITLES
+   ======================================== */
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 24px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.section-title::before {
+  content: '■';
+  margin-left: 8px;
+  color: #059669;
+}
+
+/* ========================================
+   COVER BLOCK
+   ======================================== */
+.cover-block {
+  text-align: center;
+  padding: 32px 0;
+  margin-bottom: 24px;
+  border: 2px solid #1a1a2e;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.cover-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+.cover-subtitle {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.cover-contract-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: #059669;
+  font-family: 'SF Mono', 'Monaco', monospace;
+  direction: ltr;
+  display: inline-block;
+}
+
+/* ========================================
+   PARTIES TABLE
+   ======================================== */
+.parties-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  table-layout: fixed;
+}
+
+.parties-table th,
+.parties-table td {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  text-align: right;
+  vertical-align: top;
+}
+
+.parties-table th {
+  background: #1a1a2e;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.parties-table td {
+  font-size: 12px;
+}
+
+.parties-table .label-cell {
+  background: #f3f4f6;
+  font-weight: 500;
+  width: 25%;
+  color: #374151;
+}
+
+.parties-table .value-cell {
+  background: #ffffff;
+  width: 25%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ========================================
+   FINANCIALS BOX
+   ======================================== */
+.financials-box {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1px solid #059669;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.financials-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #059669;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.financials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.financial-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #d1fae5;
+}
+
+.financial-label {
+  font-size: 12px;
+  color: #374151;
+}
+
+.financial-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  direction: ltr;
+  text-align: left;
+}
+
+.financial-total {
+  grid-column: span 2;
+  background: #059669;
+  border-color: #059669;
+}
+
+.financial-total .financial-label,
+.financial-total .financial-value {
+  color: #ffffff;
+}
+
+/* ========================================
+   ARTICLES (LEGAL CLAUSES)
+   ======================================== */
+.article {
+  margin: 16px 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.article-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.article-title .article-number {
+  display: inline-block;
+  background: #1a1a2e;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 11px;
+}
+
+.article-content {
+  font-size: 12.5px;
+  line-height: 1.9;
+  text-align: justify;
+  text-justify: inter-word;
+  color: #374151;
+  padding-right: 16px;
+}
+
+.article-content p {
+  margin-bottom: 8px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  orphans: 3;
+  widows: 3;
+}
+
+/* ========================================
+   PAYMENT SCHEDULE TABLE
+   ======================================== */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  table-layout: fixed;
+  font-size: 11px;
+}
+
+.schedule-table thead {
+  display: table-header-group;
+}
+
+.schedule-table th {
+  background: #1a1a2e;
+  color: #ffffff;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid #0f172a;
+}
+
+.schedule-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.schedule-table tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.schedule-table tbody tr:nth-child(odd) {
+  background: #ffffff;
+}
+
+.schedule-table .amount-cell {
+  font-weight: 600;
+  color: #059669;
+  direction: ltr;
+}
+
+.schedule-table .status-paid {
+  color: #059669;
+}
+
+.schedule-table .status-pending {
+  color: #f59e0b;
+}
+
+.schedule-table .status-scheduled {
+  color: #6b7280;
+}
+
+/* ========================================
+   SIGNATURE BLOCK
+   ======================================== */
+.signatures-section {
+  margin-top: 40px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.signatures-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.signature-box {
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 180px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.signature-box.first-party {
+  border-color: #059669;
+}
+
+.signature-box.second-party {
+  border-color: #1a1a2e;
+}
+
+.signature-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.signature-title.first-party {
+  color: #059669;
+}
+
+.signature-title.second-party {
+  color: #1a1a2e;
+}
+
+.signature-name {
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #374151;
+}
+
+.signature-area {
+  height: 80px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  margin-bottom: 12px;
+}
+
+.signature-placeholder {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.signature-image {
+  max-height: 70px;
+  max-width: 100%;
+}
+
+.signature-date {
+  font-size: 10px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* ========================================
+   DIGITAL STAMP
+   ======================================== */
+.digital-stamp {
+  display: inline-block;
+  padding: 16px 24px;
+  border: 3px solid #059669;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  text-align: center;
+  transform: rotate(-5deg);
+  margin: 16px auto;
+}
+
+.stamp-title {
+  font-size: 10px;
+  color: #059669;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.stamp-company {
+  font-size: 12px;
+  font-weight: 700;
+  color: #059669;
+  margin-bottom: 4px;
+}
+
+.stamp-date {
+  font-size: 9px;
+  color: #059669;
+}
+
+.stamp-id {
+  font-size: 8px;
+  color: #059669;
+  font-family: 'SF Mono', 'Monaco', monospace;
+  direction: ltr;
+}
+
+/* ========================================
+   KEEP-TOGETHER UTILITIES
+   ======================================== */
+.keep-together {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.keep-with-next {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.page-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.page-break-after {
+  page-break-after: always;
+  break-after: page;
+}
+
+/* ========================================
+   PREVENT OVERFLOW
+   ======================================== */
+.no-overflow {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* ========================================
+   PRINT SPECIFIC
+   ======================================== */
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+  
+  .contract-document {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure backgrounds print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* ========================================
+   SCREEN PREVIEW
+   ======================================== */
+@media screen {
+  .contract-document {
+    padding: 20mm;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+  
+  .contract-footer {
+    position: relative;
+    margin-top: 40px;
+  }
+}
