@@ -56,9 +56,9 @@ import { TransactionDetailDialog } from './TransactionDetailDialog';
 import { 
   exportTransactionsToCSV, 
   downloadCSV, 
-  calculateTransactionSummary, 
   type ExportTransaction,
 } from '@/lib/financial/export-utils';
+import type { TransactionSummary as PdfTransactionSummary, TransactionItem as PdfTransactionItem } from '@/lib/pdf2';
 import { STATUS_LABELS, TYPE_LABELS } from '@/lib/financial/status-machine';
 import type { TransactionStatus, TransactionType } from '@/lib/financial/status-machine';
 
@@ -347,17 +347,49 @@ export function FinanceTransactions() {
     setIsExporting(true);
     try {
       // Use unified PDF2 system
-      const { createTransactionReportPDF } = await import('@/lib/pdf2');
+      const pdf2 = await import('@/lib/pdf2');
+      const { STATUS_LABELS, TYPE_LABELS } = await import('@/lib/financial/status-machine');
       
-      const exportData: ExportTransaction[] = filteredTransactions.map(tx => ({
-        ...tx,
-        transaction_type: tx.transaction_type,
-        status: tx.status,
-      }));
-
-      const summary = calculateTransactionSummary(exportData);
+      // Calculate totals
+      let totalIncome = 0;
+      let totalExpense = 0;
+      const transactionItems: PdfTransactionItem[] = filteredTransactions.map(tx => {
+        const amount = tx.amount || 0;
+        if (['topup', 'invoice_payment'].includes(tx.transaction_type)) {
+          totalIncome += amount;
+        } else {
+          totalExpense += amount;
+        }
+        return {
+          id: tx.id,
+          date: tx.created_at ? new Date(tx.created_at).toLocaleDateString('en-CA') : '',
+          type: TYPE_LABELS[tx.transaction_type]?.en || tx.transaction_type,
+          typeAr: TYPE_LABELS[tx.transaction_type]?.ar || tx.transaction_type,
+          description: tx.description || '',
+          descriptionAr: tx.description_ar || undefined,
+          amount,
+          status: STATUS_LABELS[tx.status]?.en || tx.status,
+          statusAr: STATUS_LABELS[tx.status]?.ar || tx.status,
+        };
+      });
       
-      await createTransactionReportPDF(summary, {
+      // Calculate date range
+      const dates = filteredTransactions.map(tx => new Date(tx.created_at || Date.now()));
+      const minDate = dates.length ? new Date(Math.min(...dates.map(d => d.getTime()))) : new Date();
+      const maxDate = dates.length ? new Date(Math.max(...dates.map(d => d.getTime()))) : new Date();
+      
+      const summary: PdfTransactionSummary = {
+        startDate: minDate.toLocaleDateString('en-CA'),
+        endDate: maxDate.toLocaleDateString('en-CA'),
+        totalTransactions: filteredTransactions.length,
+        totalIncome,
+        totalExpense,
+        netAmount: totalIncome - totalExpense,
+        currency: 'SAR',
+        transactions: transactionItems,
+      };
+      
+      await pdf2.createTransactionReportPDF(summary, {
         language: language as 'ar' | 'en',
         download: true,
       });
