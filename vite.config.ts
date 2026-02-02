@@ -70,8 +70,19 @@ export default defineConfig(({ mode }) => ({
     ],
     // @react-pdf/renderer is known to cause duplicate-React hook crashes when pre-bundled.
     // It will still be loaded when needed, but won't be forced into the shared prebundle.
-    // Exclude brotli as well so Vite doesn't prebundle the problematic subpath import
-    // before our alias can rewrite it.
-    exclude: ["@react-pdf/renderer", "brotli"],
+    exclude: ["@react-pdf/renderer"],
+    esbuildOptions: {
+      // Force esbuild to resolve brotli/decompress through our shim by providing a plugin
+      plugins: [
+        {
+          name: 'brotli-shim',
+          setup(build) {
+            build.onResolve({ filter: /^brotli\/decompress/ }, () => ({
+              path: require('path').resolve(__dirname, './src/shims/brotli-decompress.ts'),
+            }));
+          },
+        },
+      ],
+    },
   },
 }));
