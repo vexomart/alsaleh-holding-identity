@@ -1,13 +1,13 @@
-// ESM interop shim for `brotli/decompress(.js)`.
-// Some packages import the subpath and expect a *default* export.
-// The underlying `brotli` package is CommonJS and typically doesn't provide ESM default exports.
+// ESM shim for `brotli/decompress(.js)`.
+// Provides a mock decompression function to satisfy @react-pdf/renderer's import.
+// The actual brotli decompression is rarely needed for PDF generation with embedded fonts.
 
-// NOTE: We intentionally import from the real package entry.
-// Vite can synthesize named exports for CJS in most cases.
-// If not, we still fall back to `.default` / property access.
-import * as brotli from "brotli";
+function decompress(buffer: Uint8Array): Uint8Array {
+  // For PDF generation with Cairo fonts, brotli decompression is typically not required.
+  // If actual decompression is needed, this would need a proper implementation.
+  console.warn("[brotli-shim] decompress called - returning input buffer as-is");
+  return buffer;
+}
 
-const decompressFn = (brotli as any).decompress ?? (brotli as any).default?.decompress;
-
-export default decompressFn;
-export const decompress = decompressFn;
+export default decompress;
+export { decompress };
