@@ -22,26 +22,12 @@ export default defineConfig(({ mode }) => ({
     componentTagger(),
   ].filter(Boolean),
   resolve: {
-    alias: [
-      // Only alias our app imports like "@/..."; do NOT touch scoped packages like "@radix-ui/...".
-      { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
-      // Pin only the exact React entrypoints to prevent duplicate React instances,
-      // without breaking subpath imports like `react/jsx-runtime`.
-      { find: /^react$/, replacement: path.resolve(__dirname, "node_modules/react/index.js") },
-      { find: /^react-dom$/, replacement: path.resolve(__dirname, "node_modules/react-dom/index.js") },
-      {
-        find: /^react-dom\/client$/,
-        replacement: path.resolve(__dirname, "node_modules/react-dom/client.js"),
-      },
-      {
-        find: /^react\/jsx-runtime$/,
-        replacement: path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
-      },
-      {
-        find: /^react\/jsx-dev-runtime$/,
-        replacement: path.resolve(__dirname, "node_modules/react/jsx-dev-runtime.js"),
-      },
-    ],
+    // Keep default Vite/Node resolution for React to avoid splitting across different entrypoints.
+    // We only alias our app path prefix.
+    alias: [{ find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" }],
+
+    // Be explicit (even though it's the default) so symlinked deps don't create duplicate React copies.
+    preserveSymlinks: false,
     dedupe: [
       "react", 
       "react-dom", 
@@ -68,7 +54,9 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
-      "@react-pdf/renderer",
     ],
+    // @react-pdf/renderer is known to cause duplicate-React hook crashes when pre-bundled.
+    // It will still be loaded when needed, but won't be forced into the shared prebundle.
+    exclude: ["@react-pdf/renderer"],
   },
 }));
