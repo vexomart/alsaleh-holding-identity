@@ -29,11 +29,22 @@ export default {
     },
     extend: {
       fontFamily: {
+        'ar': ['IBM Plex Sans Arabic', 'system-ui', '-apple-system', 'Segoe UI', 'Arial', 'sans-serif'],
+        'en': ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Arial', 'sans-serif'],
         'executive': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
         'corporate': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
-        'formal': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
-        'title': ['IBM Plex Sans Arabic', 'Inter', 'system-ui', 'sans-serif'],
         sans: ['IBM Plex Sans Arabic', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'h1': ['2rem', { lineHeight: '1.2', fontWeight: '700', letterSpacing: '-0.02em' }],
+        'h2': ['1.5rem', { lineHeight: '1.2', fontWeight: '700', letterSpacing: '-0.02em' }],
+        'h3': ['1.25rem', { lineHeight: '1.375', fontWeight: '600' }],
+        'h4': ['1.125rem', { lineHeight: '1.375', fontWeight: '600' }],
+        'body': ['0.875rem', { lineHeight: '1.625', fontWeight: '400' }],
+        'body-lg': ['1rem', { lineHeight: '1.625', fontWeight: '400' }],
+        'body-sm': ['0.75rem', { lineHeight: '1.5', fontWeight: '400' }],
+        'label': ['0.75rem', { lineHeight: '1.5', fontWeight: '500', letterSpacing: '0.01em' }],
+        'button': ['0.875rem', { lineHeight: '1.25', fontWeight: '600' }],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -152,16 +163,26 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
-    // RTL Support Plugin
+    // RTL Support Plugin + Typography
     function({ addUtilities, addBase }) {
-      // RTL Base styles
+      // Enterprise Typography Base
       addBase({
+        'html': {
+          fontFamily: "var(--font-ar, 'IBM Plex Sans Arabic', system-ui, sans-serif)",
+          '-webkit-font-smoothing': 'antialiased',
+          '-moz-osx-font-smoothing': 'grayscale',
+          'font-variant-numeric': 'tabular-nums',
+        },
         'html[dir="rtl"]': {
           direction: 'rtl',
         },
         'html[dir="rtl"] body': {
           direction: 'rtl',
-          fontFamily: "'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif",
+          fontFamily: "var(--font-ar)",
+        },
+        'html[dir="ltr"] body, html[lang="en"] body': {
+          direction: 'ltr',
+          fontFamily: "var(--font-en, 'Inter', system-ui, sans-serif)",
         }
       });
 
