@@ -51,7 +51,10 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "@tanstack/react-query",
       "@radix-ui/react-tooltip",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-popover",
       "framer-motion",
+      "@react-pdf/renderer",
     ],
   },
   optimizeDeps: {
@@ -65,6 +68,7 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
+      "@react-pdf/renderer",
     ],
   },
 }));
