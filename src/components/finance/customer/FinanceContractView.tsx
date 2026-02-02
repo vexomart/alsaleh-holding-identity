@@ -560,6 +560,118 @@ export function FinanceContractView({
               )}
             </div>
           )}
+
+          {/* Payment Schedule - Show when contract is active */}
+          {isActive && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
+              className="pt-6 border-t"
+            >
+              <h4 className="font-semibold mb-4 flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                جدول الأقساط
+                <Badge variant="outline" className="mr-2 text-xs">
+                  {application.tenor_months} قسط
+                </Badge>
+              </h4>
+              
+              <div className="rounded-xl border overflow-hidden">
+                {/* Table Header */}
+                <div className="grid grid-cols-4 gap-2 bg-muted/70 p-3 text-sm font-semibold text-muted-foreground">
+                  <div className="text-center">#</div>
+                  <div>تاريخ الاستحقاق</div>
+                  <div className="text-center">المبلغ</div>
+                  <div className="text-center">الحالة</div>
+                </div>
+                
+                {/* Table Body */}
+                <div className="divide-y">
+                  {Array.from({ length: application.tenor_months }, (_, i) => {
+                    const dueDate = new Date();
+                    dueDate.setMonth(dueDate.getMonth() + i + 1);
+                    dueDate.setDate(27); // يوم 27 من كل شهر
+                    
+                    const isPast = dueDate < new Date();
+                    const isCurrentMonth = dueDate.getMonth() === new Date().getMonth() && 
+                                           dueDate.getFullYear() === new Date().getFullYear();
+                    
+                    return (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          delay: 0.3 + (i * 0.05), 
+                          duration: 0.3,
+                          ease: "easeOut" as const
+                        }}
+                        className={cn(
+                          "grid grid-cols-4 gap-2 p-3 text-sm items-center transition-colors",
+                          isCurrentMonth && "bg-primary/5 border-r-4 border-primary",
+                          isPast && "bg-muted/30"
+                        )}
+                      >
+                        <div className="text-center font-bold text-muted-foreground">
+                          {(i + 1).toLocaleString('ar-SA')}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            "font-medium",
+                            isCurrentMonth && "text-primary"
+                          )}>
+                            {dueDate.toLocaleDateString('ar-SA', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </span>
+                          {isCurrentMonth && (
+                            <Badge className="text-[10px] px-1.5 py-0 bg-primary/20 text-primary border-0">
+                              هذا الشهر
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-center font-bold">
+                          {formatCurrencySAR(offer.monthly_payment_sar)}
+                        </div>
+                        <div className="text-center">
+                          <Badge 
+                            variant="outline"
+                            className={cn(
+                              "text-xs",
+                              isPast ? "bg-green-500/10 text-green-600 border-green-200" : 
+                              isCurrentMonth ? "bg-yellow-500/10 text-yellow-600 border-yellow-200" :
+                              "bg-muted text-muted-foreground"
+                            )}
+                          >
+                            {isPast ? "مدفوع" : isCurrentMonth ? "مستحق" : "قادم"}
+                          </Badge>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+                
+                {/* Total Row */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 + (application.tenor_months * 0.05) + 0.2 }}
+                  className="grid grid-cols-4 gap-2 p-4 bg-gradient-to-l from-primary/10 to-primary/5 border-t-2 border-primary/20"
+                >
+                  <div className="col-span-2 font-bold text-primary">
+                    إجمالي المبلغ المستحق
+                  </div>
+                  <div className="text-center font-bold text-lg text-primary">
+                    {formatCurrencySAR(offer.total_payable_sar)}
+                  </div>
+                  <div></div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
         </CardContent>
       </Card>
     </motion.div>
