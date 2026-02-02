@@ -6,7 +6,7 @@
  */
 
 import pdfMake from './pdfmake';
-import { ensurePdfReady, assertFontsReady } from './init';
+import { ensurePdfReady, assertFontsReady, getFontDiagnostics, forceReloadFonts } from './init';
 
 // Type for pdfmake document definition
 export interface DocDefinition {
@@ -35,30 +35,53 @@ export interface DocDefinition {
  * @returns Promise<Blob> - PDF as Blob
  */
 export async function createPdfBlob(docDefinition: DocDefinition): Promise<Blob> {
+  console.log('[PDF2 RENDER] Starting PDF generation...');
+  
   // 1. Ensure fonts are loaded
-  await ensurePdfReady();
+  try {
+    await ensurePdfReady();
+  } catch (error) {
+    console.error('[PDF2 RENDER] Font initialization failed, attempting force reload...');
+    await forceReloadFonts();
+  }
   
   // 2. Assert fonts before generation
-  assertFontsReady();
+  const diagnostics = getFontDiagnostics();
+  console.log('[PDF2 RENDER] Font diagnostics:', diagnostics);
+  
+  try {
+    assertFontsReady();
+  } catch (error) {
+    console.error('[PDF2 RENDER] Font assertion failed, force reloading...');
+    await forceReloadFonts();
+    assertFontsReady(); // If this fails again, let it throw
+  }
   
   // 3. Generate PDF with timeout
   return new Promise<Blob>((resolve, reject) => {
     const timeout = setTimeout(() => {
+      console.error('[PDF2 RENDER] Generation timeout after 30s');
       reject(new Error('PDF_GENERATE_TIMEOUT: Generation took too long'));
     }, 30000);
     
     try {
+      console.log('[PDF2 RENDER] Calling pdfMake.createPdf...');
+      
       // CRITICAL: Call createPdf with ONLY docDefinition
       // DO NOT pass any second parameter — causes "options invalid type" error
       const pdfDoc = pdfMake.createPdf(docDefinition);
+      
+      console.log('[PDF2 RENDER] PDF document created, getting blob...');
       
       // Get blob
       pdfDoc.getBlob((blob: Blob) => {
         clearTimeout(timeout);
         
+        console.log('[PDF2 RENDER] Blob received:', blob?.size, 'bytes');
+        
         // Validate blob
         if (!blob || blob.size < 1000) {
-          reject(new Error('PDF_GENERATE_FAILED: Invalid blob'));
+          reject(new Error(`PDF_GENERATE_FAILED: Invalid blob (size: ${blob?.size || 0})`));
           return;
         }
         
@@ -67,11 +90,13 @@ export async function createPdfBlob(docDefinition: DocDefinition): Promise<Blob>
           ? blob 
           : new Blob([blob], { type: 'application/pdf' });
         
+        console.log('[PDF2 RENDER] ✅ PDF generated successfully:', finalBlob.size, 'bytes');
         resolve(finalBlob);
       });
       
     } catch (error) {
       clearTimeout(timeout);
+      console.error('[PDF2 RENDER] createPdf error:', error);
       reject(new Error(`PDF_GENERATE_FAILED: ${error instanceof Error ? error.message : String(error)}`));
     }
   });
