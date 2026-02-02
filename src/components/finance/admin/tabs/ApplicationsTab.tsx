@@ -132,14 +132,14 @@ export function ApplicationsTab() {
             <Table dir="rtl" className="w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right whitespace-nowrap">إجراءات</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">التاريخ</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">الحالة</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">المدة</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">المبلغ</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">النوع</TableHead>
-                  <TableHead className="text-right whitespace-nowrap">الكيان</TableHead>
                   <TableHead className="text-right whitespace-nowrap">رقم الطلب</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الكيان</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">النوع</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">المبلغ</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">المدة</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الحالة</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">التاريخ</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">إجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,6 +153,43 @@ export function ApplicationsTab() {
                       transition={{ delay: index * 0.03 }}
                       className="border-b"
                     >
+                      <TableCell className="font-mono text-sm">
+                        {app.application_number}
+                      </TableCell>
+                      <TableCell>{app.entity?.legal_name_ar || "-"}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs">
+                          {app.entity?.entity_type === "individual"
+                            ? "فرد"
+                            : app.entity?.entity_type === "company"
+                            ? "شركة"
+                            : "مؤسسة"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="font-semibold">
+                        {formatCurrencySAR(app.amount_sar)}
+                      </TableCell>
+                      <TableCell>{app.tenor_months} شهر</TableCell>
+                      <TableCell>
+                        <Badge
+                          className={cn(
+                            "text-xs",
+                            statusConfig?.variant === "success" &&
+                              "bg-green-500/10 text-green-600 border-green-200",
+                            statusConfig?.variant === "warning" &&
+                              "bg-yellow-500/10 text-yellow-600 border-yellow-200",
+                            statusConfig?.variant === "destructive" &&
+                              "bg-red-500/10 text-red-600 border-red-200",
+                            statusConfig?.variant === "secondary" &&
+                              "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {statusConfig?.label || app.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-sm">
+                        {new Date(app.created_at).toLocaleDateString("ar-SA")}
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Button size="sm" variant="ghost">
@@ -177,43 +214,6 @@ export function ApplicationsTab() {
                             </>
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground text-sm">
-                        {new Date(app.created_at).toLocaleDateString("ar-SA")}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          className={cn(
-                            "text-xs",
-                            statusConfig?.variant === "success" &&
-                              "bg-green-500/10 text-green-600 border-green-200",
-                            statusConfig?.variant === "warning" &&
-                              "bg-yellow-500/10 text-yellow-600 border-yellow-200",
-                            statusConfig?.variant === "destructive" &&
-                              "bg-red-500/10 text-red-600 border-red-200",
-                            statusConfig?.variant === "secondary" &&
-                              "bg-muted text-muted-foreground"
-                          )}
-                        >
-                          {statusConfig?.label || app.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{app.tenor_months} شهر</TableCell>
-                      <TableCell className="font-semibold">
-                        {formatCurrencySAR(app.amount_sar)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="text-xs">
-                          {app.entity?.entity_type === "individual"
-                            ? "فرد"
-                            : app.entity?.entity_type === "company"
-                            ? "شركة"
-                            : "مؤسسة"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{app.entity?.legal_name_ar || "-"}</TableCell>
-                      <TableCell className="font-mono text-sm" dir="ltr">
-                        {app.application_number}
                       </TableCell>
                     </motion.tr>
                   );
