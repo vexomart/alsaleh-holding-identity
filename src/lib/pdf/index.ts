@@ -166,6 +166,14 @@ export { generateGoldenPack, printVisualChecklist } from './debug/golden-pack';
 export { verifyBrandCompliance, validateDocDefinition } from './debug/brand-verify';
 export { debugPdfFonts, printFontState, getFullDiagnostics } from './debug/debug-pdf-fonts';
 
+// NEW: Debug PDF system (exposes window.debugPdfSystem)
+export { debugPdfSystem } from './debug';
+
 // Low-level (internal use)
 export { ARABIC_FONT_NAME } from './core/fonts';
 export { DEFAULT_COMPANY_INFO } from './core/pdf-core';
+
+// NEW: Clean PDF architecture exports
+export { ensurePdfReady, getPdfDiagnostics, assertCairoFonts } from './pdf-init';
+export { createPdfBlob, createBaseDocDefinition } from './pdf-render';
+export { safeDownloadPdf, openPdfInNewTab, blobToDataUrl, blobToBase64 } from './download';
