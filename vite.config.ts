@@ -68,7 +68,7 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
     ],
-    exclude: ["@react-pdf/renderer"],
+    exclude: ["@react-pdf/renderer", "brotli"],
     esbuildOptions: {
       plugins: [
         {
