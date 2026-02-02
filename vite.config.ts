@@ -26,8 +26,17 @@ export default defineConfig(({ mode }) => ({
     // We only alias our app path prefix.
     alias: [
       { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
+      // Pin React to a single physical path to prevent duplicate instances across prebundled deps.
+      // This helps avoid hook dispatcher null errors like `Cannot read properties of null (reading 'useRef')`.
+      { find: /^react$/, replacement: path.resolve(__dirname, "./node_modules/react/index.js") },
+      { find: /^react-dom$/, replacement: path.resolve(__dirname, "./node_modules/react-dom/index.js") },
+      { find: /^react-dom\/client$/, replacement: path.resolve(__dirname, "./node_modules/react-dom/client.js") },
+      { find: /^react\/jsx-runtime$/, replacement: path.resolve(__dirname, "./node_modules/react/jsx-runtime.js") },
+      { find: /^react\/jsx-dev-runtime$/, replacement: path.resolve(__dirname, "./node_modules/react/jsx-dev-runtime.js") },
       // Fix ESM default-import expectations for base64-js in some PDF-related deps
       { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
+      // Fix ESM default-import expectations for unicode-trie in some PDF/font deps
+      { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
     ],
 
     // Be explicit (even though it's the default) so symlinked deps don't create duplicate React copies.
