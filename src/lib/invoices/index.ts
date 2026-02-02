@@ -31,6 +31,21 @@ export {
   DEFAULT_VAT_RATE,
 } from './invoice-utils';
 
+// RTL Helpers
+export {
+  forceRtlText,
+  keepLtrToken,
+  formatMoneySAR,
+  formatPercentage,
+  formatPhoneLtr,
+  formatEmailLtr,
+  formatInvoiceNumber,
+  formatDateAr,
+  formatDateShortLtr,
+  containsArabic,
+  smartDirection,
+} from './rtl';
+
 // PDF Component
 export { InvoicePdf } from './InvoicePdf';
 
@@ -39,6 +54,17 @@ export { generateInvoicePdf, generateInvoicePdfDataUrl } from './generateInvoice
 
 // Download
 export { downloadBlob, downloadInvoiceFile, type DownloadResult, type DownloadMethod } from './download';
+
+// Audit
+export {
+  runPdfAudit,
+  generateSampleInvoiceAr,
+  generateSampleInvoiceMixed,
+  generateSampleInvoiceWithContract,
+  generateSampleInvoiceMultiItems,
+  type AuditResult,
+  type AuditReport,
+} from './audit';
 
 /**
  * Combined function: Generate and download invoice PDF
@@ -54,7 +80,7 @@ export async function downloadInvoicePdf(data: import('./types').InvoiceData): P
     console.log('[Invoice] Generating PDF for:', invoiceNumber);
     
     const blob = await generateInvoicePdf(data);
-    const result = downloadBlob(blob, `invoice-${invoiceNumber}.pdf`);
+    const result = downloadBlob(blob, `فاتورة-${invoiceNumber}.pdf`);
     
     if (result.success) {
       toast.success('تم تحميل الفاتورة بنجاح');

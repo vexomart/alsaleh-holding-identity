@@ -9,7 +9,7 @@ import { db, supabase } from '@/integrations/supabase/db';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import { downloadInvoicePDF } from '@/components/InvoicePDF';
+import { downloadInvoicePdf, type InvoiceDataLegacy } from '@/lib/invoices';
 import { useToast } from '@/hooks/use-toast';
 
 interface PaymentTransaction {
@@ -144,22 +144,36 @@ const PaymentVerification = () => {
     if (!transaction) return;
     
     try {
-      const invoiceData = {
+      const amount = Number(transaction.amount) || 0;
+      const vatRate = 0.15;
+      const subtotal = amount / (1 + vatRate);
+      const vatAmount = amount - subtotal;
+      
+      const invoiceData: InvoiceDataLegacy = {
         invoiceNumber: `INV-${transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.id}`,
-        date: new Date().toLocaleDateString('ar-SA'),
-        customerName: transaction.customer_name || 'عميل',
-        customerEmail: transaction.customer_email || '',
-        customerPhone: transaction.customer_phone || '',
-        amount: Number(transaction.amount) || 0,
+        date: new Date().toISOString(),
+        seller: {
+          name: 'شركة علي صالح الشهري القابضة',
+          vatNumber: '310123456789012',
+        },
+        buyer: {
+          name: transaction.customer_name || 'عميل',
+        },
+        items: [{
+          description: transaction.offer_title || 'خدمة',
+          quantity: 1,
+          unitPrice: subtotal,
+        }],
+        subtotal,
+        vatRate,
+        vatAmount,
+        total: amount,
         currency: transaction.currency || 'SAR',
-        serviceName: transaction.offer_title || 'خدمة',
-        transactionId: transaction.paylink_transaction_no || transaction.tap_charge_id || transaction.id,
-        paymentMethod: transaction.payment_method || 'دفع إلكتروني',
-        orderStatus: verificationStatus === 'success' ? '✅ تم الدفع - جاري التنفيذ' : 
-                    verificationStatus === 'pending' ? '⏳ قيد المعالجة' : '❌ مُلغى',
+        notes: verificationStatus === 'success' ? 'تم الدفع بنجاح' : 
+               verificationStatus === 'pending' ? 'قيد المعالجة' : 'ملغى',
       };
       
-      await downloadInvoicePDF(invoiceData);
+      await downloadInvoicePdf(invoiceData);
       toast({
         title: "تم تحميل الفاتورة",
         description: "تم تحميل الفاتورة بنجاح"

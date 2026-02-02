@@ -11,7 +11,7 @@ import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { downloadInvoicePDF } from '@/components/InvoicePDF';
+import { downloadInvoicePdf, type InvoiceDataLegacy } from '@/lib/invoices';
 import { useToast } from '@/hooks/use-toast';
 
 interface TransactionDetails {
@@ -103,22 +103,36 @@ const PaymentSuccess = () => {
     if (!transactionDetails) return;
     
     try {
-      const invoiceData = {
+      const amount = Number(transactionDetails.amount) || 0;
+      const vatRate = 0.15;
+      const subtotal = amount / (1 + vatRate);
+      const vatAmount = amount - subtotal;
+      
+      const invoiceData: InvoiceDataLegacy = {
         invoiceNumber: `INV-${transactionDetails.paylink_transaction_no || Date.now()}`,
-        date: new Date().toLocaleDateString('ar-SA'),
-        customerName: transactionDetails.customer_name || 'عميل',
-        customerEmail: transactionDetails.customer_email || '',
-        customerPhone: transactionDetails.customer_phone || '',
-        amount: Number(transactionDetails.amount) || 0,
+        date: new Date().toISOString(),
+        seller: {
+          name: 'شركة علي صالح الشهري القابضة',
+          vatNumber: '310123456789012',
+        },
+        buyer: {
+          name: transactionDetails.customer_name || 'عميل',
+        },
+        items: [{
+          description: transactionDetails.offer_title || 'خدمة',
+          quantity: 1,
+          unitPrice: subtotal,
+        }],
+        subtotal,
+        vatRate,
+        vatAmount,
+        total: amount,
         currency: transactionDetails.currency || 'SAR',
-        serviceName: transactionDetails.offer_title || 'خدمة',
-        transactionId: transactionDetails.paylink_transaction_no || transactionDetails.id,
-        paymentMethod: transactionDetails.payment_method || 'بايلينك',
-        orderStatus: paymentStatus === 'success' ? '✅ تم الدفع - جاري التنفيذ' : 
-                    paymentStatus === 'pending' ? '⏳ قيد المعالجة' : '❌ مُلغى',
+        notes: paymentStatus === 'success' ? 'تم الدفع بنجاح' : 
+               paymentStatus === 'pending' ? 'قيد المعالجة' : 'ملغى',
       };
       
-      await downloadInvoicePDF(invoiceData);
+      await downloadInvoicePdf(invoiceData);
       toast({
         title: "تم تحميل الفاتورة",
         description: "تم تحميل الفاتورة بنجاح"
