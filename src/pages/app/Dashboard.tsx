@@ -28,6 +28,7 @@ import { Loader2 } from 'lucide-react';
 // Finance Pages
 const NewFinanceApplicationPage = lazy(() => import('@/pages/app/finance/NewApplicationPage'));
 const NewEntityPage = lazy(() => import('@/pages/app/finance/NewEntityPage'));
+const ApplicationDetailsPage = lazy(() => import('@/pages/app/finance/ApplicationDetailsPage'));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
@@ -56,6 +57,7 @@ const CustomerDashboard = () => {
         <Route path="finance" element={<FinanceCenter />} />
         <Route path="finance/apply" element={<Suspense fallback={<PageLoader />}><NewFinanceApplicationPage /></Suspense>} />
         <Route path="finance/entities/new" element={<Suspense fallback={<PageLoader />}><NewEntityPage /></Suspense>} />
+        <Route path="finance/applications/:id" element={<Suspense fallback={<PageLoader />}><ApplicationDetailsPage /></Suspense>} />
         
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />

@@ -3,19 +3,11 @@
  * Shows customer's finance applications with status tracking
  */
 
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -29,9 +21,7 @@ import {
   Building2,
   User,
   Landmark,
-  DollarSign,
   Calendar,
-  ArrowLeft,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
@@ -39,7 +29,6 @@ import { cn } from "@/lib/utils";
 import {
   APPLICATION_STATUS_CONFIG,
   FinanceApplicationStatus,
-  ENTITY_TYPE_CONFIG,
   formatCurrencySAR,
   EntityType,
 } from "@/types/finance";
@@ -87,8 +76,6 @@ const itemVariants = {
 export function MyApplications() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [selectedApp, setSelectedApp] = useState<ApplicationWithRelations | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
 
   const { data: applications, isLoading } = useQuery({
     queryKey: ["my-finance-applications", user?.id],
@@ -150,8 +137,7 @@ export function MyApplications() {
   };
 
   const handleViewDetails = (app: ApplicationWithRelations) => {
-    setSelectedApp(app);
-    setShowDetails(true);
+    navigate(`/app/finance/applications/${app.id}`);
   };
 
   if (isLoading) {
@@ -324,172 +310,6 @@ export function MyApplications() {
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* Details Sheet */}
-      <Sheet open={showDetails} onOpenChange={setShowDetails}>
-        <SheetContent side="left" className="w-full sm:max-w-lg overflow-y-auto" dir="rtl">
-          <SheetHeader>
-            <SheetTitle>تفاصيل الطلب</SheetTitle>
-            <SheetDescription>{selectedApp?.application_number}</SheetDescription>
-          </SheetHeader>
-
-          {selectedApp && (
-            <div className="mt-6 space-y-6">
-              {/* Status Banner */}
-              {(() => {
-                const statusConfig = APPLICATION_STATUS_CONFIG[selectedApp.status];
-                return (
-                  <div
-                    className={cn(
-                      "p-4 rounded-xl",
-                      statusConfig?.variant === "success" && "bg-green-500/10",
-                      statusConfig?.variant === "warning" && "bg-yellow-500/10",
-                      statusConfig?.variant === "destructive" && "bg-red-500/10",
-                      statusConfig?.variant === "secondary" && "bg-muted"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      {(() => {
-                        const Icon = getStatusIcon(selectedApp.status);
-                        return (
-                          <Icon
-                            className={cn(
-                              "h-6 w-6",
-                              statusConfig?.variant === "success" && "text-green-600",
-                              statusConfig?.variant === "warning" && "text-yellow-600",
-                              statusConfig?.variant === "destructive" && "text-red-600"
-                            )}
-                          />
-                        );
-                      })()}
-                      <div>
-                        <p className="font-semibold">{statusConfig?.label}</p>
-                        {selectedApp.decision_reason_ar && (
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {selectedApp.decision_reason_ar}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* Details Grid */}
-              <div className="grid gap-4">
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50">
-                  {(() => {
-                    const Icon = getEntityIcon(selectedApp.entity?.entity_type);
-                    return <Icon className="h-5 w-5 text-primary" />;
-                  })()}
-                  <div>
-                    <p className="text-sm text-muted-foreground">الكيان</p>
-                    <p className="font-semibold">{selectedApp.entity?.legal_name_ar}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50">
-                  <DollarSign className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">مبلغ التمويل</p>
-                    <p className="font-semibold">{formatCurrencySAR(selectedApp.amount_sar)}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">مدة السداد</p>
-                    <p className="font-semibold">{selectedApp.tenor_months} شهر</p>
-                  </div>
-                </div>
-
-                {selectedApp.purpose_ar && (
-                  <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
-                    <FileText className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">الغرض من التمويل</p>
-                      <p className="font-medium">{selectedApp.purpose_ar}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Offers Section */}
-              {selectedApp.offers && selectedApp.offers.length > 0 && (
-                <div className="space-y-3">
-                  <h4 className="font-semibold flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-primary" />
-                    العروض المتاحة
-                  </h4>
-                  {selectedApp.offers.map((offer) => (
-                    <Card
-                      key={offer.id}
-                      className={cn(
-                        "border",
-                        offer.offer_status === "active" && "border-green-200 bg-green-50/50"
-                      )}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              offer.offer_status === "active" &&
-                                "bg-green-500/10 text-green-600 border-green-200"
-                            )}
-                          >
-                            {offer.offer_status === "active" ? "متاح" : offer.offer_status}
-                          </Badge>
-                          <span className="text-sm text-muted-foreground">
-                            {offer.apr_percent}% ربح سنوي
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <p className="text-muted-foreground">القسط الشهري</p>
-                            <p className="font-bold text-lg text-green-600" dir="ltr">
-                              {formatCurrencySAR(offer.monthly_payment_sar)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-muted-foreground">إجمالي السداد</p>
-                            <p className="font-semibold" dir="ltr">
-                              {formatCurrencySAR(offer.total_payable_sar)}
-                            </p>
-                          </div>
-                        </div>
-                        {offer.offer_status === "active" && (
-                          <Button className="w-full mt-4" size="sm">
-                            قبول العرض
-                          </Button>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-
-              {/* Timeline */}
-              <div className="space-y-3">
-                <h4 className="font-semibold">سجل الطلب</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                    تم التقديم: {new Date(selectedApp.created_at).toLocaleDateString("ar-SA")}
-                  </div>
-                  {selectedApp.decided_at && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <div className="w-2 h-2 rounded-full bg-green-500" />
-                      تم البت: {new Date(selectedApp.decided_at).toLocaleDateString("ar-SA")}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
     </>
   );
 }
