@@ -3,7 +3,6 @@
  */
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -126,33 +125,27 @@ export function EntitiesTab() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <Table>
+            <Table dir="rtl" className="w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right">الكيان</TableHead>
-                  <TableHead className="text-right">النوع</TableHead>
-                  <TableHead className="text-right">الرقم التعريفي</TableHead>
-                  <TableHead className="text-right">حالة KYC</TableHead>
-                  <TableHead className="text-right">مستوى المخاطر</TableHead>
-                  <TableHead className="text-right">الحد الائتماني</TableHead>
-                  <TableHead className="text-right">إجراءات</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الكيان</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">النوع</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الرقم التعريفي</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">حالة KYC</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">مستوى المخاطر</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">الحد الائتماني</TableHead>
+                  <TableHead className="text-right whitespace-nowrap">إجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredEntities?.map((entity, index) => {
+                {filteredEntities?.map((entity) => {
                   const typeConfig = ENTITY_TYPE_CONFIG[entity.entity_type as EntityType];
                   const kycStatus = entity.finance_profile?.[0]?.kyc_status as KYCStatus;
                   const kycConfig = kycStatus ? KYC_STATUS_CONFIG[kycStatus] : null;
                   const riskLevel = entity.finance_profile?.[0]?.risk_level;
 
                   return (
-                    <motion.tr
-                      key={entity.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.03 }}
-                      className="border-b"
-                    >
+                    <TableRow key={entity.id}>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {getEntityIcon(entity.entity_type as EntityType)}
@@ -223,7 +216,7 @@ export function EntitiesTab() {
                           <Eye className="h-4 w-4" />
                         </Button>
                       </TableCell>
-                    </motion.tr>
+                    </TableRow>
                   );
                 })}
               </TableBody>
