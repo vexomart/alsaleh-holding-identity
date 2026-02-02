@@ -4,37 +4,26 @@
  * Includes Paylink payment integration with realtime status updates
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FileText, 
-  Download, 
   Receipt, 
   Loader2,
-  CheckCircle,
-  Clock,
-  XCircle,
-  AlertCircle,
-  CreditCard,
-  ExternalLink,
-  RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 import { 
   getInvoiceByOrderId, 
   createInvoice, 
-  orderHasInvoice,
   type Invoice,
   type InvoiceStatus 
 } from '@/lib/api/invoices';
 import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
+import { InvoiceView, mapCustomerInvoiceToViewModel } from '@/components/invoices';
 
 interface OrderInvoiceSectionProps {
   orderId: string;
@@ -52,49 +41,9 @@ interface OrderInvoiceSectionProps {
   onInvoiceGenerated?: (invoice: Invoice) => void;
 }
 
-const statusConfig: Record<InvoiceStatus, {
-  labelAr: string;
-  labelEn: string;
-  color: string;
-  bgColor: string;
-  icon: React.ElementType;
-}> = {
-  draft: {
-    labelAr: 'مسودة',
-    labelEn: 'Draft',
-    color: 'text-slate-600 dark:text-slate-400',
-    bgColor: 'bg-slate-100 dark:bg-slate-800',
-    icon: FileText,
-  },
-  issued: {
-    labelAr: 'صادرة',
-    labelEn: 'Issued',
-    color: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-100 dark:bg-blue-900/50',
-    icon: Receipt,
-  },
-  paid: {
-    labelAr: 'مدفوعة',
-    labelEn: 'Paid',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-100 dark:bg-emerald-900/50',
-    icon: CheckCircle,
-  },
-  cancelled: {
-    labelAr: 'ملغاة',
-    labelEn: 'Cancelled',
-    color: 'text-red-600 dark:text-red-400',
-    bgColor: 'bg-red-100 dark:bg-red-900/50',
-    icon: XCircle,
-  },
-  overdue: {
-    labelAr: 'متأخرة',
-    labelEn: 'Overdue',
-    color: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-100 dark:bg-amber-900/50',
-    icon: AlertCircle,
-  },
-};
+// NOTE: This file previously rendered a legacy inline invoice UI.
+// We now delegate rendering to the unified enterprise InvoiceView to guarantee
+// consistent look across Orders & Invoices screens.
 
 export function OrderInvoiceSection({
   orderId,
@@ -117,10 +66,9 @@ export function OrderInvoiceSection({
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [downloading, setDownloading] = useState(false);
 
   // Paylink payment hook
-  const { createPayment, isCreatingPayment, redirectToPayment } = usePaylinkPayment();
+  const { createPayment, redirectToPayment } = usePaylinkPayment();
 
   // Refetch invoice when needed
   const refetchInvoice = useCallback(async () => {
@@ -169,24 +117,37 @@ export function OrderInvoiceSection({
     fetchInvoice();
   }, [orderId]);
 
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 2,
-    }).format(amount);
-  };
-
-  // Format date
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return '-';
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(dateString));
-  };
+  const viewModel = useMemo(() => {
+    if (!invoice) return null;
+    return mapCustomerInvoiceToViewModel(
+      {
+        id: invoice.id,
+        invoice_number: invoice.invoice_number,
+        status: invoice.status,
+        subtotal: invoice.subtotal,
+        vat_rate: invoice.vat_rate,
+        vat_amount: invoice.vat_amount,
+        total: invoice.total,
+        currency: invoice.currency,
+        created_at: invoice.created_at,
+        due_date: invoice.due_date,
+        paid_at: invoice.paid_at ?? null,
+        payment_url: invoice.payment_url,
+        notes: invoice.notes ?? orderDescription ?? null,
+        order: {
+          id: orderId,
+          order_number: orderNumber,
+          title: orderTitle,
+          title_ar: orderTitleAr ?? null,
+          service: null,
+        },
+      },
+      {
+        buyerName: 'Customer',
+        buyerNameAr: 'العميل',
+      }
+    );
+  }, [invoice, orderDescription, orderId, orderNumber, orderTitle, orderTitleAr]);
 
   // Generate invoice (Admin only)
   const handleGenerateInvoice = async () => {
@@ -260,7 +221,6 @@ export function OrderInvoiceSection({
     if (!invoice) return;
 
     try {
-      setDownloading(true);
       console.log('[PDF] CLICK', { kind: 'invoice', id: invoice.id });
 
       const invoiceData: InvoiceData = {
@@ -295,8 +255,6 @@ export function OrderInvoiceSection({
         description: err instanceof Error ? err.message : String(err),
         variant: 'destructive',
       });
-    } finally {
-      setDownloading(false);
     }
   };
 
@@ -387,9 +345,7 @@ export function OrderInvoiceSection({
     );
   }
 
-  // Invoice exists - show details
-  const statusInfo = statusConfig[invoice.status];
-  const StatusIcon = statusInfo.icon;
+  const canPayNow = !isAdmin && invoice.status !== 'paid' && invoice.status !== 'cancelled';
 
   return (
     <motion.div
@@ -397,115 +353,12 @@ export function OrderInvoiceSection({
       animate={{ opacity: 1, y: 0 }}
       className="p-4 rounded-xl border bg-card"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Receipt className="h-4 w-4" />
-          <span className="text-xs font-medium uppercase tracking-wider">
-            {isRTL ? 'الفاتورة' : 'Invoice'}
-          </span>
-        </div>
-        <Badge className={cn("gap-1", statusInfo.bgColor, statusInfo.color)}>
-          <StatusIcon className="h-3 w-3" />
-          {isRTL ? statusInfo.labelAr : statusInfo.labelEn}
-        </Badge>
-      </div>
-
-      {/* Invoice Number (LTR inside RTL) */}
-      <div className="mb-4">
-        <p className="text-xs text-muted-foreground mb-1">
-          {isRTL ? 'رقم الفاتورة' : 'Invoice Number'}
-        </p>
-        <p className="font-mono text-sm font-semibold" dir="ltr">
-          {invoice.invoice_number}
-        </p>
-      </div>
-
-      {/* Date */}
-      <div className="mb-4">
-        <p className="text-xs text-muted-foreground mb-1">
-          {isRTL ? 'تاريخ الإصدار' : 'Issue Date'}
-        </p>
-        <p className="text-sm font-medium">
-          {formatDate(invoice.created_at)}
-        </p>
-      </div>
-
-      <Separator className="my-4" />
-
-      {/* VAT Breakdown */}
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {isRTL ? 'المبلغ الأساسي' : 'Subtotal'}
-          </span>
-          <span className="font-medium" dir="ltr">
-            {formatCurrency(invoice.subtotal)}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">
-            {isRTL ? `ضريبة القيمة المضافة (${invoice.vat_rate}%)` : `VAT (${invoice.vat_rate}%)`}
-          </span>
-          <span className="font-medium" dir="ltr">
-            {formatCurrency(invoice.vat_amount)}
-          </span>
-        </div>
-        <Separator className="my-2" />
-        <div className="flex justify-between text-base">
-          <span className="font-semibold">
-            {isRTL ? 'الإجمالي' : 'Total'}
-          </span>
-          <span className="font-bold text-primary" dir="ltr">
-            {formatCurrency(invoice.total)}
-          </span>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="mt-4 pt-4 border-t space-y-3">
-        {/* Pay Now Button - Show only for unpaid invoices (not admin view) */}
-        {!isAdmin && invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
-          <Button
-            onClick={handlePayNow}
-            disabled={isCreatingPayment}
-            className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
-          >
-            {isCreatingPayment ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                {isRTL ? 'جاري التحضير...' : 'Preparing...'}
-              </>
-            ) : (
-              <>
-                <CreditCard className="h-4 w-4" />
-                {isRTL ? 'ادفع الآن' : 'Pay Now'}
-                <ExternalLink className="h-3 w-3 ms-1 opacity-70" />
-              </>
-            )}
-          </Button>
-        )}
-
-        {/* Download Button */}
-        <Button
-          onClick={handleDownloadPDF}
-          disabled={downloading}
-          variant="outline"
-          className="w-full gap-2"
-        >
-          {downloading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {isRTL ? 'جاري التحميل...' : 'Downloading...'}
-            </>
-          ) : (
-            <>
-              <Download className="h-4 w-4" />
-              {isRTL ? 'تحميل الفاتورة PDF' : 'Download Invoice PDF'}
-            </>
-          )}
-        </Button>
-      </div>
+      <InvoiceView
+        invoice={viewModel}
+        isLoading={false}
+        onDownload={handleDownloadPDF}
+        onPayNow={canPayNow ? handlePayNow : undefined}
+      />
     </motion.div>
   );
 }
