@@ -191,7 +191,7 @@ export function calculateTransactionSummary(
 }
 
 /**
- * Generate PDF report definition for pdfmake
+ * Generate PDF report definition (legacy stub - now handled by invoices module)
  */
 export function generateTransactionReportDefinition(
   summary: TransactionSummary,

@@ -58,7 +58,7 @@ import {
   downloadCSV, 
   type ExportTransaction,
 } from '@/lib/financial/export-utils';
-import type { TransactionSummary as PdfTransactionSummary, TransactionItem as PdfTransactionItem } from '@/lib/pdf2';
+import type { TransactionSummary as PdfTransactionSummary, TransactionItem as PdfTransactionItem } from '@/lib/invoices';
 import { STATUS_LABELS, TYPE_LABELS } from '@/lib/financial/status-machine';
 import type { TransactionStatus, TransactionType } from '@/lib/financial/status-machine';
 
@@ -346,8 +346,8 @@ export function FinanceTransactions() {
   const handleExportPDF = useCallback(async () => {
     setIsExporting(true);
     try {
-      // Use unified PDF2 system
-      const pdf2 = await import('@/lib/pdf2');
+      // Use unified invoice system
+      const invoices = await import('@/lib/invoices');
       const { STATUS_LABELS, TYPE_LABELS } = await import('@/lib/financial/status-machine');
       
       // Calculate totals
@@ -389,7 +389,7 @@ export function FinanceTransactions() {
         transactions: transactionItems,
       };
       
-      await pdf2.createTransactionReportPDF(summary, {
+      await invoices.createTransactionReportPDF(summary, {
         language: language as 'ar' | 'en',
         download: true,
       });

@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { type InvoiceData, downloadInvoicePdf, orderToInvoiceData } from '@/lib/pdf2';
+import { type InvoiceData, downloadInvoicePdf, orderToInvoiceData } from '@/lib/invoices';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;

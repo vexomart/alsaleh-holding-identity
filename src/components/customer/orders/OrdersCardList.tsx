@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { CustomerOrder } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { downloadInvoicePdf, orderToInvoiceData } from '@/lib/pdf2';
+import { downloadInvoicePdf, orderToInvoiceData } from '@/lib/invoices';
 
 interface OrdersCardListProps {
   orders: CustomerOrder[];
