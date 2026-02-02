@@ -244,9 +244,17 @@ export async function generatePDFBlob(
   await initPdf();
 
   // Final hard-assert immediately before createPdf/getBlob.
-  // This protects against rare VFS resets (e.g. HMR/module side-effects) between init and generation.
   assertFontsReady();
   
+  // Get the font diagnostics to verify fonts are loaded
+  const fontDiag = getFontDiagnostics();
+  console.log('[PDF CORE] Font diagnostics before createPdf:', fontDiag);
+  
+  // CRITICAL: Verify we have actual font data
+  if (fontDiag.cairoRegularSize < 10000 || fontDiag.cairoBoldSize < 10000) {
+    throw new Error(`خط Cairo غير محمّل بشكل صحيح (Regular: ${fontDiag.cairoRegularSize}, Bold: ${fontDiag.cairoBoldSize})`);
+  }
+
   console.log('[PDF CORE] Generating PDF blob...');
 
   const docDefinition = createDocumentDefinition(content, options);
@@ -254,37 +262,66 @@ export async function generatePDFBlob(
   console.log('[PDF CORE] Document definition created');
   console.log('[PDF CORE] Creating PDF document...');
   
+  // CRITICAL: Build fonts and vfs objects to pass DIRECTLY to createPdf
+  // This bypasses any global state issues with pdfMake.vfs
+  const fonts = {
+    [ARABIC_FONT_NAME]: {
+      normal: 'Cairo-Regular.ttf',
+      bold: 'Cairo-Bold.ttf',
+      italics: 'Cairo-Regular.ttf',
+      bolditalics: 'Cairo-Bold.ttf',
+    },
+    // Also include Roboto as fallback
+    Roboto: {
+      normal: 'Roboto-Regular.ttf',
+      bold: 'Roboto-Medium.ttf',
+      italics: 'Roboto-Italic.ttf',
+      bolditalics: 'Roboto-MediumItalic.ttf',
+    },
+  };
+  
+  // Get VFS directly from our singleton
+  const vfs = pdfMakeInstance.vfs;
+  
+  console.log('[PDF CORE] Passing fonts/vfs directly to createPdf:', {
+    fontFamilies: Object.keys(fonts),
+    vfsHasCairoRegular: !!vfs?.['Cairo-Regular.ttf'],
+    vfsHasCairoBold: !!vfs?.['Cairo-Bold.ttf'],
+  });
+  
   let pdfDoc: ReturnType<typeof pdfMakeInstance.createPdf>;
   
   try {
-    pdfDoc = pdfMakeInstance.createPdf(docDefinition);
+    // Pass fonts and vfs DIRECTLY to createPdf to ensure they're used
+    // Signature: createPdf(docDefinition, tableLayouts, fonts, vfs)
+    pdfDoc = (pdfMakeInstance as any).createPdf(docDefinition, null, fonts, vfs);
     console.log('[PDF CORE] PDF document created successfully');
   } catch (createError) {
     console.error('[PDF CORE] ❌ Failed to create PDF document:', createError);
+    const failDiag = getFontDiagnostics();
+    console.error('[PDF CORE] VFS state at failure:', failDiag);
     throw createError;
   }
 
   return new Promise((resolve, reject) => {
     let settled = false;
 
-    // pdfmake أحياناً يرمي الخطأ عبر unhandledrejection (بدون callback)،
-    // مما يؤدي إلى timeout بدل رفض واضح. نلتقطه أثناء getBlob فقط.
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
       const reason = event.reason as any;
       const message = (reason?.message || String(reason || '')).toString();
       if (!message) return;
 
-      // نركز على أخطاء الخطوط/VFS لأنها الأكثر شيوعاً وتسبب التعليق.
       if (message.includes('virtual file system') || message.includes('Cairo')) {
         event.preventDefault?.();
         if (settled) return;
         settled = true;
         clearTimeout(timeout);
+        const errDiag = getFontDiagnostics();
+        console.error('[PDF CORE] Font error - VFS state:', errDiag);
         reject(reason instanceof Error ? reason : new Error(message));
       }
     };
 
-    // Set a timeout to catch hanging blob generation
     const timeout = setTimeout(() => {
       console.error('[PDF CORE] PDF generation timed out after 30 seconds');
       if (settled) return;

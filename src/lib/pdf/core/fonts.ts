@@ -1,10 +1,11 @@
 /**
- * PDF Font Management
+ * PDF Font Management — SINGLETON PATTERN
+ * 
+ * CRITICAL: This is the ONLY module that imports pdfmake directly.
+ * All other PDF modules MUST import from this file.
  * 
  * Handles Cairo TTF font loading and registration into pdfMake VFS.
- * This module MUST be initialized before any PDF generation.
- * 
- * CRITICAL: Uses singleton pdfMake module reference to avoid VFS reset issues.
+ * Uses aggressive protection against VFS resets (HMR, module side-effects).
  */
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -18,16 +19,17 @@ export const FONT_FILES = {
   bold: 'Cairo-Bold.ttf',
 };
 
-// Module state
+// Module state (singleton)
 let fontsInitialized = false;
 let initializationError: Error | null = null;
 let initPromise: Promise<void> | null = null;
-
-// Guard to ensure we only patch pdfMakeInstance once (important in dev/HMR)
 let vfsPatched = false;
 
-// Singleton pdfMake reference to prevent module reload issues
-// EXPORTED so all PDF modules use the SAME instance
+// Cairo font data cache (survives VFS resets)
+let cachedCairoRegular: string | null = null;
+let cachedCairoBold: string | null = null;
+
+// Type-safe pdfMake singleton
 export const pdfMakeInstance = pdfMake as unknown as {
   vfs: Record<string, string>;
   fonts: Record<string, {
@@ -36,7 +38,6 @@ export const pdfMakeInstance = pdfMake as unknown as {
     italics: string;
     bolditalics: string;
   }>;
-  // Include createPdf method for PDF generation
   createPdf: (docDefinition: unknown) => {
     getBlob: (callback: (blob: Blob) => void) => void;
     download: (filename: string) => void;
@@ -44,33 +45,52 @@ export const pdfMakeInstance = pdfMake as unknown as {
   };
 };
 
-function getGlobalPdfMake(): any {
-  return (globalThis as any).pdfMake;
+// Immediately attach to globalThis to prevent other modules from creating new instances
+(globalThis as any).pdfMake = pdfMakeInstance;
+
+function getGlobalPdfMake(): typeof pdfMakeInstance | null {
+  return (globalThis as any).pdfMake || null;
 }
 
-function syncToGlobalPdfMake(): void {
-  // Some builds attach pdfMake to window/global; if another copy is used internally,
-  // keep it aligned with our singleton to prevent VFS/font drift.
-  const g = getGlobalPdfMake();
-  if (!g) {
-    (globalThis as any).pdfMake = pdfMakeInstance;
-    return;
+/**
+ * Ensure Cairo fonts are in VFS (re-inject from cache if missing)
+ */
+function ensureCairoInVfs(): void {
+  if (!pdfMakeInstance.vfs) {
+    pdfMakeInstance.vfs = {};
   }
-
-  // If global points elsewhere, merge state both ways.
-  try {
-    if (g !== pdfMakeInstance) {
-      g.vfs = { ...(g.vfs || {}), ...(pdfMakeInstance.vfs || {}) };
-      g.fonts = { ...(g.fonts || {}), ...(pdfMakeInstance.fonts || {}) };
-
-      pdfMakeInstance.vfs = { ...(g.vfs || {}), ...(pdfMakeInstance.vfs || {}) };
-      pdfMakeInstance.fonts = { ...(g.fonts || {}), ...(pdfMakeInstance.fonts || {}) };
-
-      // Prefer our instance as the global singleton
-      (globalThis as any).pdfMake = pdfMakeInstance;
-    }
-  } catch (e) {
-    console.warn('[PDF FONTS] Could not sync global pdfMake (non-fatal):', e);
+  
+  // Re-inject from cache if fonts were wiped
+  if (cachedCairoRegular && !pdfMakeInstance.vfs[FONT_FILES.regular]) {
+    console.warn('[PDF FONTS] Cairo-Regular.ttf was wiped from VFS, re-injecting from cache');
+    pdfMakeInstance.vfs[FONT_FILES.regular] = cachedCairoRegular;
+  }
+  
+  if (cachedCairoBold && !pdfMakeInstance.vfs[FONT_FILES.bold]) {
+    console.warn('[PDF FONTS] Cairo-Bold.ttf was wiped from VFS, re-injecting from cache');
+    pdfMakeInstance.vfs[FONT_FILES.bold] = cachedCairoBold;
+  }
+  
+  // Re-register font family if missing
+  if (!pdfMakeInstance.fonts) {
+    pdfMakeInstance.fonts = {};
+  }
+  
+  if (cachedCairoRegular && cachedCairoBold && !pdfMakeInstance.fonts[ARABIC_FONT_NAME]) {
+    console.warn('[PDF FONTS] Cairo font family was wiped, re-registering');
+    pdfMakeInstance.fonts[ARABIC_FONT_NAME] = {
+      normal: FONT_FILES.regular,
+      bold: FONT_FILES.bold,
+      italics: FONT_FILES.regular,
+      bolditalics: FONT_FILES.bold,
+    };
+  }
+  
+  // Sync to global
+  const g = getGlobalPdfMake();
+  if (g && g !== pdfMakeInstance) {
+    if (cachedCairoRegular) g.vfs = { ...(g.vfs || {}), [FONT_FILES.regular]: cachedCairoRegular };
+    if (cachedCairoBold) g.vfs = { ...(g.vfs || {}), [FONT_FILES.bold]: cachedCairoBold };
   }
 }
 
@@ -80,13 +100,11 @@ function syncToGlobalPdfMake(): void {
 function initDefaultVfs(): void {
   const pdfFontsModule = pdfFonts as unknown as { pdfMake: { vfs: Record<string, string> } };
   
-  // Always ensure VFS exists
   if (!pdfMakeInstance.vfs) {
     pdfMakeInstance.vfs = {};
   }
 
-  // Merge default VFS from bundle (Roboto) instead of replacing.
-  // This prevents losing custom fonts (Cairo) if another module re-sets VFS.
+  // Merge bundled fonts (Roboto) but preserve Cairo if already loaded
   if (pdfFontsModule.pdfMake?.vfs) {
     pdfMakeInstance.vfs = {
       ...pdfFontsModule.pdfMake.vfs,
@@ -94,30 +112,23 @@ function initDefaultVfs(): void {
     };
   }
   
-  // Ensure fonts object exists
   if (!pdfMakeInstance.fonts) {
     pdfMakeInstance.fonts = {};
   }
-
-  // Ensure global singleton alignment early
-  syncToGlobalPdfMake();
+  
+  // Re-inject Cairo from cache if available
+  ensureCairoInVfs();
 }
 
 /**
- * Hard guard against VFS resets.
- *
- * In some bundler/HMR scenarios, pdfmake's bundled vfs_fonts can re-assign pdfMake.vfs,
- * which would wipe Cairo after we've registered it. We patch the vfs property so that
- * any future assignment MERGES instead of REPLACING, preserving already-registered keys.
+ * Protect VFS from being replaced (merge instead)
  */
-function patchVfsToPreserveRegisteredFonts(): void {
+function patchVfsProtection(): void {
   if (vfsPatched) return;
   vfsPatched = true;
 
-  // Ensure we start with a real object
   let vfsStore: Record<string, string> = pdfMakeInstance.vfs || {};
-  pdfMakeInstance.vfs = vfsStore;
-
+  
   try {
     Object.defineProperty(pdfMakeInstance, 'vfs', {
       configurable: true,
@@ -126,48 +137,25 @@ function patchVfsToPreserveRegisteredFonts(): void {
         return vfsStore;
       },
       set(next: Record<string, string>) {
-        // Merge (do NOT replace) to avoid losing Cairo keys.
-        // Keep existing keys as the source of truth.
-        vfsStore = {
-          ...(next || {}),
-          ...vfsStore,
-        };
+        // MERGE instead of REPLACE — preserve Cairo fonts
+        const cairoRegular = vfsStore[FONT_FILES.regular] || cachedCairoRegular;
+        const cairoBold = vfsStore[FONT_FILES.bold] || cachedCairoBold;
+        
+        vfsStore = { ...(next || {}) };
+        
+        // Always preserve Cairo
+        if (cairoRegular) vfsStore[FONT_FILES.regular] = cairoRegular;
+        if (cairoBold) vfsStore[FONT_FILES.bold] = cairoBold;
       },
     });
   } catch (e) {
-    // If defineProperty fails for any reason, we still keep the merged initDefaultVfs behavior.
-    console.warn('[PDF FONTS] Could not patch pdfMake.vfs setter (non-fatal):', e);
-  }
-
-  // Also try to patch the global pdfMake if it's a different object.
-  // This covers cases where some code path uses window.pdfMake directly.
-  try {
-    const g = getGlobalPdfMake();
-    if (g && g !== pdfMakeInstance) {
-      let gStore: Record<string, string> = g.vfs || {};
-      g.vfs = gStore;
-      Object.defineProperty(g, 'vfs', {
-        configurable: true,
-        enumerable: true,
-        get() {
-          return gStore;
-        },
-        set(next: Record<string, string>) {
-          gStore = {
-            ...(next || {}),
-            ...gStore,
-          };
-        },
-      });
-    }
-  } catch (e) {
-    console.warn('[PDF FONTS] Could not patch global pdfMake.vfs (non-fatal):', e);
+    console.warn('[PDF FONTS] Could not patch VFS protection:', e);
   }
 }
 
-// Initialize default VFS immediately on module load
+// Initialize on module load
 initDefaultVfs();
-patchVfsToPreserveRegisteredFonts();
+patchVfsProtection();
 
 /**
  * Load and register Cairo fonts into pdfMake
@@ -183,6 +171,10 @@ async function loadCairoFonts(): Promise<void> {
       boldLength: cairo.bold.length,
     });
 
+    // CACHE the fonts for future VFS resets
+    cachedCairoRegular = cairo.regular;
+    cachedCairoBold = cairo.bold;
+
     // Ensure VFS exists before registration
     if (!pdfMakeInstance.vfs) {
       pdfMakeInstance.vfs = {};
@@ -191,9 +183,6 @@ async function loadCairoFonts(): Promise<void> {
     // Register font files in VFS - MUST use exact filenames
     pdfMakeInstance.vfs[FONT_FILES.regular] = cairo.regular;
     pdfMakeInstance.vfs[FONT_FILES.bold] = cairo.bold;
-
-    // Keep any global pdfMake instance in sync as well
-    syncToGlobalPdfMake();
 
     // Verify VFS registration immediately
     if (!pdfMakeInstance.vfs[FONT_FILES.regular]) {
@@ -221,7 +210,8 @@ async function loadCairoFonts(): Promise<void> {
       throw new Error(`Failed to register ${ARABIC_FONT_NAME} font family`);
     }
 
-    syncToGlobalPdfMake();
+    // Sync to global
+    ensureCairoInVfs();
 
     console.log('[PDF FONTS] ✅ Cairo fonts registered successfully');
     console.log('[PDF FONTS] VFS keys:', Object.keys(pdfMakeInstance.vfs).filter(k => k.includes('Cairo') || k.includes('.ttf')));
@@ -250,13 +240,16 @@ export function initializeFonts(): Promise<void> {
     return Promise.reject(initializationError);
   }
 
-  // Already initialized - double-check VFS still has fonts
+  // Already initialized - try to recover from cache first
   if (fontsInitialized) {
+    ensureCairoInVfs(); // Try to recover from cache
+    
     // Verify fonts are still in VFS (might have been cleared)
     if (pdfMakeInstance.vfs?.[FONT_FILES.regular] && pdfMakeInstance.vfs?.[FONT_FILES.bold]) {
       return Promise.resolve();
     }
-    // Fonts were cleared, need to reload
+    
+    // Fonts were cleared AND cache didn't help, need full reload
     console.warn('[PDF FONTS] Fonts were cleared from VFS, reloading...');
     fontsInitialized = false;
     initPromise = null;
@@ -314,10 +307,13 @@ export function resetFontInit(): void {
  * Throws if fonts are not available
  */
 export function assertFontsReady(): void {
+  // First, try to recover from cache if fonts were wiped
+  ensureCairoInVfs();
+  
   const errors: string[] = [];
 
   // Check initialization state
-  if (!fontsInitialized) {
+  if (!fontsInitialized && !cachedCairoRegular) {
     errors.push('Fonts not initialized (call initializeFonts() first)');
   }
 
