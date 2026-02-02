@@ -346,8 +346,8 @@ export function FinanceTransactions() {
   const handleExportPDF = useCallback(async () => {
     setIsExporting(true);
     try {
-      // Use unified PDF system
-      const { createTransactionReportPDF } = await import('@/lib/pdf/templates/transaction-report.template');
+      // Use unified PDF2 system
+      const { createTransactionReportPDF } = await import('@/lib/pdf2');
       
       const exportData: ExportTransaction[] = filteredTransactions.map(tx => ({
         ...tx,

@@ -34,8 +34,7 @@ import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { type ContractData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type ContractData, downloadContractPdf } from '@/lib/pdf2';
 
 // Updated status configuration with new statuses
 const statusConfig: Record<ContractStatus, {
@@ -133,19 +132,24 @@ export function CustomerContracts() {
       const pricing: any = (contract as any).pricing_json || {};
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
-        contractType: 'عقد تقديم خدمات',
-        date: new Date(contract.created_at),
-        firstParty: {
+        date: contract.created_at,
+        serviceName: contract.service?.name_ar || contract.service?.name || 'خدمة',
+        provider: {
           name: 'شركة علي صالح الشهري القابضة',
-          title: 'Ali Saleh Al-Shehri Holding Company',
           address: 'المملكة العربية السعودية - الرياض',
+          role: 'provider' as const,
         },
-        secondParty: {
+        customer: {
           name: sig?.signer_name || '',
-          idNumber: sig?.signer_national_id || undefined,
+          nationalId: sig?.signer_national_id || undefined,
           phone: sig?.signer_phone || undefined,
+          role: 'customer' as const,
         },
-        preamble: contract.scope_summary_ar || contract.scope_summary || undefined,
+        amount: pricing.subtotal || 0,
+        vatRate: (pricing.vat_rate || 15) / 100,
+        vatAmount: pricing.vat_amount || 0,
+        totalAmount: pricing.total || 0,
+        currency: pricing.currency || 'SAR',
         clauses: [
           {
             title: 'نطاق العمل',
@@ -154,17 +158,10 @@ export function CustomerContracts() {
               : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.',
           },
         ],
-        pricing: {
-          subtotal: pricing.subtotal || 0,
-          vatRate: pricing.vat_rate || 15,
-          vatAmount: pricing.vat_amount || 0,
-          total: pricing.total || 0,
-          currency: pricing.currency || 'SAR',
-        },
       };
 
-      const report = await runDownloadAudit('contract', contractData);
-      if (report.ok === false) throw report.error;
+      const success = await downloadContractPdf(contractData);
+      if (!success) throw new Error('Download failed');
       toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (err) {
       console.error('[Contract Download] ❌ Error:', err);

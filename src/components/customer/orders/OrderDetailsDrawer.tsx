@@ -42,8 +42,7 @@ import {
 } from 'lucide-react';
 import { CustomerOrder, OrderEvent } from './types';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { orderToInvoiceData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type InvoiceData, downloadInvoicePdf, orderToInvoiceData } from '@/lib/pdf2';
 
 interface OrderDetailsDrawerProps {
   order: CustomerOrder | null;
@@ -111,8 +110,8 @@ export function OrderDetailsDrawer({
         services
       );
       
-      const report = await runDownloadAudit('invoice', invoiceData);
-      if (report.ok === false) throw report.error;
+      const success = await downloadInvoicePdf(invoiceData);
+      if (!success) throw new Error('Download failed');
       toast.success(isRTL ? 'تم تنزيل الملف' : 'Downloaded', { id: toastId });
     } catch (error) {
       console.error('[Invoice Download] ❌ Error:', error);

@@ -32,8 +32,7 @@ import {
   type Invoice,
   type InvoiceStatus 
 } from '@/lib/api/invoices';
-import { type InvoiceData } from '@/lib/pdf';
-import { runDownloadAudit } from '@/lib/pdf/debug/pdf-download-audit';
+import { type InvoiceData, downloadInvoicePdf } from '@/lib/pdf2';
 import { usePaylinkPayment } from '@/hooks/usePaylinkPayment';
 import { useInvoiceRealtime } from '@/hooks/useInvoiceRealtime';
 
@@ -215,39 +214,27 @@ export function OrderInvoiceSection({
         overdue: 'overdue',
       };
 
-      // Generate PDF (pdfmake) with embedded Cairo font
+      // Generate PDF with new PDF2 system
       const invoiceData: InvoiceData = {
         invoiceNumber: newInvoice.invoice_number,
-        issueDate: new Date(newInvoice.created_at),
-        dueDate: dueDate ? new Date(dueDate) : undefined,
-        status: pdfStatusMap[newInvoice.status] || 'pending',
-        customer: {
-          name: isRTL ? 'عميل' : 'Customer',
-          email: 'customer@example.com',
-        },
-        items: [{
-          description: isRTL ? (orderTitleAr || orderTitle) : orderTitle,
-          quantity: 1,
-          unitPrice: newInvoice.subtotal,
-          total: newInvoice.subtotal,
-        }],
+        date: newInvoice.created_at,
+        dueDate: dueDate || undefined,
+        status: newInvoice.status,
+        seller: { name: 'شركة الصالح القابضة', vatNumber: '310123456789012' },
+        buyer: { name: isRTL ? 'عميل' : 'Customer' },
+        items: [{ description: isRTL ? (orderTitleAr || orderTitle) : orderTitle, quantity: 1, unitPrice: newInvoice.subtotal }],
         subtotal: newInvoice.subtotal,
-        taxRate: newInvoice.vat_rate,
-        taxAmount: newInvoice.vat_amount,
+        vatRate: newInvoice.vat_rate / 100,
+        vatAmount: newInvoice.vat_amount,
         total: newInvoice.total,
         currency: newInvoice.currency,
         notes: orderDescription || undefined,
       };
 
       console.log('[PDF] CLICK', { kind: 'invoice', id: newInvoice.id });
-      const report = await runDownloadAudit('invoice', invoiceData);
-      if (report.ok === false) {
-        const msg = report.error instanceof Error ? report.error.message : String(report.error);
-        toast({
-          title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
-          description: msg,
-          variant: 'destructive',
-        });
+      const success = await downloadInvoicePdf(invoiceData);
+      if (!success) {
+        toast({ title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice', variant: 'destructive' });
         return;
       }
 
@@ -274,50 +261,27 @@ export function OrderInvoiceSection({
 
     try {
       setDownloading(true);
-
       console.log('[PDF] CLICK', { kind: 'invoice', id: invoice.id });
 
-      // Map invoice status to PDF status type
-      const pdfStatusMap: Record<InvoiceStatus, 'pending' | 'paid' | 'overdue' | 'cancelled'> = {
-        draft: 'pending',
-        issued: 'pending',
-        paid: 'paid',
-        cancelled: 'cancelled',
-        overdue: 'overdue',
-      };
-
-      // Generate PDF (pdfmake) with embedded Cairo font
       const invoiceData: InvoiceData = {
         invoiceNumber: invoice.invoice_number,
-        issueDate: new Date(invoice.created_at),
-        dueDate: invoice.due_date ? new Date(invoice.due_date) : undefined,
-        status: pdfStatusMap[invoice.status] || 'pending',
-        customer: {
-          name: isRTL ? 'عميل' : 'Customer',
-          email: 'customer@example.com',
-        },
-        items: [{
-          description: isRTL ? (orderTitleAr || orderTitle) : orderTitle,
-          quantity: 1,
-          unitPrice: invoice.subtotal,
-          total: invoice.subtotal,
-        }],
+        date: invoice.created_at,
+        dueDate: invoice.due_date || undefined,
+        status: invoice.status,
+        seller: { name: 'شركة الصالح القابضة', vatNumber: '310123456789012' },
+        buyer: { name: isRTL ? 'عميل' : 'Customer' },
+        items: [{ description: isRTL ? (orderTitleAr || orderTitle) : orderTitle, quantity: 1, unitPrice: invoice.subtotal }],
         subtotal: invoice.subtotal,
-        taxRate: invoice.vat_rate,
-        taxAmount: invoice.vat_amount,
+        vatRate: invoice.vat_rate / 100,
+        vatAmount: invoice.vat_amount,
         total: invoice.total,
         currency: invoice.currency,
         notes: orderDescription || undefined,
       };
 
-      const report = await runDownloadAudit('invoice', invoiceData);
-      if (report.ok === false) {
-        const msg = report.error instanceof Error ? report.error.message : String(report.error);
-        toast({
-          title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice',
-          description: msg,
-          variant: 'destructive',
-        });
+      const success = await downloadInvoicePdf(invoiceData);
+      if (!success) {
+        toast({ title: isRTL ? 'خطأ في تحميل الفاتورة' : 'Error downloading invoice', variant: 'destructive' });
         return;
       }
 
