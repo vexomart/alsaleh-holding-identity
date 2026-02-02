@@ -6,7 +6,6 @@
 import { cn } from "@/lib/utils";
 
 interface AdminDigitalStampProps {
-  adminName?: string;
   approvalDate?: string;
   stampId?: string;
   size?: "sm" | "md" | "lg";
@@ -14,7 +13,6 @@ interface AdminDigitalStampProps {
 }
 
 export function AdminDigitalStamp({
-  adminName = "مدير التمويل الداخلي",
   approvalDate,
   stampId,
   size = "md",
@@ -61,10 +59,6 @@ export function AdminDigitalStamp({
           ✓ تمت الموافقة
         </div>
         
-        {/* Admin name */}
-        <div className="text-emerald-600 mt-1 truncate max-w-full px-1">
-          {adminName}
-        </div>
         
         {/* Date */}
         <div className="text-emerald-500 mt-0.5">
