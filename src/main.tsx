@@ -22,25 +22,42 @@ const rootElement = document.getElementById("root");
 console.log('Root element found:', rootElement);
 console.log('Root element HTML:', rootElement?.outerHTML);
 
-// --- Cache / Service Worker hard reset (one-time) ---
-// بعض المستخدمين ما زال لديهم Service Worker قديم يعمل بـ cache-first ويُظهر نسخة قديمة من الواجهة.
-// هذا الكود يقوم بإلغاء تسجيل الـSW ومسح الـCache **مرة واحدة فقط** ثم يعيد تحميل الصفحة لضمان
-// وصول أحدث نسخة (وبالتالي ظهور UI Template v2.0 - 2026 داخل واجهة الفاتورة).
-const SW_RESET_KEY = 'sw_reset_done_v6_2026_02_02';
+// --- Cache / Service Worker hard reset ---
+// ملاحظة: في بيئة الـ Preview/Dev قد يستمر الـSW بإرجاع ملفات prebundle قديمة مما يسبب
+// Duplicate React وبالتالي أخطاء hooks مثل `useRef`.
+// لذلك: في الـPreview/Dev نعمل unregister + clear cache على كل تحميل (بدون مرة واحدة).
+// في الإنتاج (النطاق المنشور) نُبقي السلوك “مرة واحدة” لتفادي إعادة تحميل متكررة.
+const SW_RESET_KEY = 'sw_reset_done_v7_2026_02_02';
 
 async function hardResetServiceWorkerOnce() {
   try {
-    if (localStorage.getItem(SW_RESET_KEY) === '1') return;
+    const host = window.location.hostname;
+    const isPreviewOrDev =
+      // Vite dev
+      (import.meta as any)?.env?.DEV === true ||
+      // Lovable preview domains
+      host.includes('lovableproject.com') ||
+      host.includes('id-preview--') ||
+      host.endsWith('.lovable.app');
+
+    const PREVIEW_GUARD_KEY = 'sw_reset_preview_guard_v1';
+
+    // In preview/dev: guard per-tab to avoid reload loops.
+    if (isPreviewOrDev && sessionStorage.getItem(PREVIEW_GUARD_KEY) === '1') return;
+
+    // In production/published: keep the one-time guard.
+    if (!isPreviewOrDev && localStorage.getItem(SW_RESET_KEY) === '1') return;
 
     const hasSW = 'serviceWorker' in navigator;
     const hasCache = 'caches' in window;
     if (!hasSW && !hasCache) {
-      localStorage.setItem(SW_RESET_KEY, '1');
+      if (!isPreviewOrDev) localStorage.setItem(SW_RESET_KEY, '1');
       return;
     }
 
     // Mark first to avoid reload loops even if something fails.
-    localStorage.setItem(SW_RESET_KEY, '1');
+    if (isPreviewOrDev) sessionStorage.setItem(PREVIEW_GUARD_KEY, '1');
+    else localStorage.setItem(SW_RESET_KEY, '1');
 
     // Unregister any existing SWs.
     if (hasSW) {
