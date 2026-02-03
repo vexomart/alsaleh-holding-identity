@@ -109,16 +109,10 @@ export default defineConfig(({ mode }) => ({
       "@react-pdf/renderer",
     ],
   },
-  // Cache bust: v5 - Force complete rebuild to fix duplicate React
+  // Cache bust: v6 - Exclude react from prebundling to avoid duplication
   optimizeDeps: {
     force: true,
     include: [
-      "react",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "react-dom",
-      "react-dom/client",
-      "react-router-dom",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-tabs",
       "@radix-ui/react-dialog",
@@ -131,14 +125,17 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-accordion",
       "@radix-ui/react-primitive",
       "@radix-ui/react-slot",
-      "@radix-ui/react-context",
-      "@radix-ui/react-compose-refs",
-      "@radix-ui/react-use-controllable-state",
       "@tanstack/react-query",
-      "@react-pdf/renderer",
       "framer-motion",
     ],
-    exclude: ["brotli"],
+    exclude: [
+      "brotli",
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "react-dom/client",
+    ],
     esbuildOptions: {
       plugins: [
         {
