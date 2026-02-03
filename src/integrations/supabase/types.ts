@@ -1236,6 +1236,86 @@ export type Database = {
           },
         ]
       }
+      job_applications: {
+        Row: {
+          application_number: string | null
+          city: string | null
+          cover_letter: string | null
+          created_at: string | null
+          cv_file_name: string | null
+          cv_url: string | null
+          education: string | null
+          email: string
+          experience: string | null
+          full_name: string
+          id: string
+          linkedin_url: string | null
+          notes: string | null
+          phone: string
+          portfolio_url: string | null
+          position: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          application_number?: string | null
+          city?: string | null
+          cover_letter?: string | null
+          created_at?: string | null
+          cv_file_name?: string | null
+          cv_url?: string | null
+          education?: string | null
+          email: string
+          experience?: string | null
+          full_name: string
+          id?: string
+          linkedin_url?: string | null
+          notes?: string | null
+          phone: string
+          portfolio_url?: string | null
+          position: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          application_number?: string | null
+          city?: string | null
+          cover_letter?: string | null
+          created_at?: string | null
+          cv_file_name?: string | null
+          cv_url?: string | null
+          education?: string | null
+          email?: string
+          experience?: string | null
+          full_name?: string
+          id?: string
+          linkedin_url?: string | null
+          notes?: string | null
+          phone?: string
+          portfolio_url?: string | null
+          position?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journal_entries: {
         Row: {
           created_at: string | null
