@@ -7,25 +7,22 @@ import { componentTagger } from "lovable-tagger";
 const brotliShimPath = path.resolve(__dirname, "./src/shims/brotli.ts");
 const brotliDecompressShimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
 
-// Plugin to handle problematic package imports - EXACT matches only
-function shimsPlugin(): Plugin {
+// React paths for singleton enforcement
+const reactPath = path.resolve(__dirname, "node_modules/react");
+const reactDomPath = path.resolve(__dirname, "node_modules/react-dom");
+
+// Plugin to handle brotli imports
+function brotliPlugin(): Plugin {
   return {
-    name: "shims-plugin",
+    name: "brotli-shim",
     enforce: "pre",
-    resolveId(source, importer) {
-      // Skip if importing from within shims directory (prevent circular)
-      if (importer?.includes('/shims/')) {
-        return null;
-      }
-      
-      // Brotli - handle all subpaths
+    resolveId(source) {
       if (source === "brotli/decompress" || source === "brotli/decompress.js" || source.startsWith("brotli/")) {
         return brotliDecompressShimPath;
       }
       if (source === "brotli") {
         return brotliShimPath;
       }
-      
       return null;
     },
   };
@@ -38,20 +35,38 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    shimsPlugin(),
+    brotliPlugin(),
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force single React instance
+      "react": reactPath,
+      "react-dom": reactDomPath,
+      "react/jsx-runtime": path.resolve(reactPath, "jsx-runtime"),
+      "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
+      "react-dom/client": path.resolve(reactDomPath, "client"),
     },
-    // CRITICAL: Force single React instance
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "@tanstack/react-query"],
+    dedupe: [
+      "react", 
+      "react-dom", 
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "react-dom/client",
+      "@tanstack/react-query",
+    ],
   },
   optimizeDeps: {
     force: true,
-    include: ["@tanstack/react-query", "base64-js", "unicode-trie"],
+    include: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react-dom/client",
+      "@tanstack/react-query",
+    ],
     exclude: ["brotli"],
   },
   build: {
