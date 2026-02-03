@@ -13,9 +13,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 // Hub Components
-import { OverviewHeader } from "./hub/OverviewHeader";
-import { QuickActionPills } from "./hub/QuickActionPills";
-import { KPICards } from "./hub/KPICards";
+import { OverviewHeader } from "./hub/OverviewHeaderV2";
+import { QuickActionPillsV2 as QuickActionPills } from "./hub/QuickActionPillsV2";
+import { KPICardsV2 as KPICards } from "./hub/KPICardsV2";
 import { ActionRequiredStrip } from "./hub/ActionRequiredStrip";
 import { ActivityFeed } from "./hub/ActivityFeed";
 import { ServiceJourneyCard } from "./hub/ServiceJourneyCard";
