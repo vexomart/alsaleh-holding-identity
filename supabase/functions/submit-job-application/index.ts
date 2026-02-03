@@ -275,9 +275,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to applicant
     const applicantEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [jobData.email],
-      bcc: ["info@alialshehriholding.com"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

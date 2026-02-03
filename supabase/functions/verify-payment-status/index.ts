@@ -279,10 +279,10 @@ serve(async (req) => {
             // Send email in background (non-blocking)
             // @ts-ignore 
             const sendPromise = resend.emails.send({
-              from: 'نظام المدفوعات <info@fekrahtech.com>',
+              from: 'نظام المدفوعات - ASH HOLDING <info@ash-holding.sa>',
               to: [to],
-              bcc: ['info@fekrahtech.com'],
-              reply_to: 'info@fekrahtech.com',
+              bcc: ['info@ash-holding.sa'],
+              reply_to: 'info@ash-holding.sa',
               subject,
               html,
             }).then((res) => {

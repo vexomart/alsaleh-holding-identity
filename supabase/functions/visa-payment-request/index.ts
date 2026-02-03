@@ -26,8 +26,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to admin
     const adminEmailResponse = await resend.emails.send({
-      from: "نظام المحفظة <onboarding@resend.dev>",
-      to: ["admin@alshehriholding.com"], // Replace with actual admin email
+      from: "نظام المحفظة - ASH HOLDING <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: "طلب دفع عبر Visa/MasterCard جديد",
       html: `
         <div dir="rtl" style="font-family: Arial, sans-serif; background-color: #f8fafc; padding: 20px;">
@@ -75,7 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "شركة علي صالح محمد الشهري <onboarding@resend.dev>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [requestData.email],
       subject: "تأكيد استلام طلب الدفع عبر البطاقة الائتمانية",
       html: `

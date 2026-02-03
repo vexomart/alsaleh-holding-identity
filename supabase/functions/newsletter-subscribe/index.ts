@@ -73,11 +73,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email
     const emailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [email],
-      bcc: ["info@alialshehriholding.com"],
-      reply_to: "info@alialshehriholding.com",
-      subject: "مرحباً بك في النشرة الإخبارية - شركة علي صالح الشهري القابضة",
+      bcc: ["info@ash-holding.sa"],
+      reply_to: "info@ash-holding.sa",
+      subject: "مرحباً بك في النشرة الإخبارية - ASH HOLDING",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -151,8 +151,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification to admin
     await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "ASH HOLDING <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `اشتراك جديد في النشرة الإخبارية - ${email}`,
       html: `
         <div style="font-family: Arial, sans-serif; direction: rtl; padding: 20px;">
