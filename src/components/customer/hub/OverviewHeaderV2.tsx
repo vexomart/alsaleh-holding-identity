@@ -316,7 +316,7 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
   const reducedMotion = useReducedMotion();
 
   return (
-    <div className="relative w-full max-w-[340px]">
+    <div className="relative w-full max-w-xs sm:max-w-sm">
       {/* Glow Effect */}
       <motion.div
         className="absolute -inset-3 bg-gradient-to-r from-primary/30 via-emerald-500/30 to-primary/30 rounded-3xl blur-xl"
@@ -331,25 +331,25 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
         "shadow-2xl shadow-black/30"
       )}>
         {/* Card Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
           <div className="flex items-center gap-3">
             <motion.div
-              className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg shadow-primary/30"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
               animate={reducedMotion ? {} : { rotate: [0, 360] }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="h-6 w-6 text-white" />
+              <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
             </motion.div>
-            <div className="min-w-0">
-              <p className="text-white/50 text-xs uppercase tracking-widest font-medium">
+            <div className="min-w-0 flex-1">
+              <p className="text-white/50 text-[10px] sm:text-xs uppercase tracking-widest font-medium">
                 {isRTL ? "رقم العميل الفريد" : "Unique Client ID"}
               </p>
               <div className="flex items-center gap-2 mt-0.5">
-                <p className="text-white/80 text-sm font-semibold">
+                <p className="text-white/80 text-xs sm:text-sm font-semibold">
                   {isRTL ? "معرّف موثق" : "Verified Identifier"}
                 </p>
                 {isVerified && (
-                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <ShieldCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0" />
                 )}
               </div>
             </div>
@@ -357,12 +357,12 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
         </div>
 
         {/* ID Display */}
-        <div className="px-6 pb-4">
-          <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
-            <div className="flex items-center justify-between gap-3">
+        <div className="px-4 sm:px-6 pb-3 sm:pb-4">
+          <div className="bg-slate-900/60 rounded-xl p-3 sm:p-4 border border-white/5">
+            <div className="flex items-center justify-between gap-2 sm:gap-3">
               <motion.span
                 dir="ltr"
-                className="font-mono text-lg md:text-xl text-white tracking-wider tabular-nums truncate"
+                className="font-mono text-sm sm:text-base md:text-lg text-white tracking-wide sm:tracking-wider tabular-nums flex-1 text-center sm:text-start"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
@@ -374,7 +374,7 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
                 size="icon"
                 onClick={onCopy}
                 className={cn(
-                  "h-10 w-10 rounded-xl transition-all duration-300 shrink-0",
+                  "h-8 w-8 sm:h-10 sm:w-10 rounded-xl transition-all duration-300 shrink-0",
                   copiedId 
                     ? "bg-emerald-500/20 text-emerald-400" 
                     : "text-white/50 hover:text-white hover:bg-white/10"
@@ -388,7 +388,7 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
                     >
-                      <CheckCircle2 className="h-5 w-5" />
+                      <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -397,7 +397,7 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
                     >
-                      <Copy className="h-5 w-5" />
+                      <Copy className="h-4 w-4 sm:h-5 sm:w-5" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -407,17 +407,17 @@ function ClientIDCard({ customerId, isVerified, isRTL, copiedId, onCopy }: Clien
         </div>
 
         {/* Card Footer */}
-        <div className="px-6 py-4 border-t border-white/5 bg-white/[0.02]">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-8 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-white/5 bg-white/[0.02]">
+          <div className="flex items-center justify-center gap-2 sm:gap-3">
+            <div className="w-6 sm:w-8 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <motion.span
-              className="text-[10px] text-white/30 uppercase tracking-[0.25em] font-medium"
+              className="text-[9px] sm:text-[10px] text-white/30 uppercase tracking-[0.2em] sm:tracking-[0.25em] font-medium"
               animate={reducedMotion ? {} : { opacity: [0.3, 0.5, 0.3] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
               ASH Holding Group
             </motion.span>
-            <div className="w-8 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="w-6 sm:w-8 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
         </div>
       </div>
