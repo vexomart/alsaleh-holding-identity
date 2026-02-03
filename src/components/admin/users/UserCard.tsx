@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, forwardRef } from "react";
 import { motion } from "framer-motion";
 import { 
   MoreVertical, 
@@ -73,7 +73,7 @@ const roleConfig: Record<string, { labelAr: string; labelEn: string; color: stri
   customer: { labelAr: "عميل", labelEn: "Customer", color: "bg-gray-500/20 text-gray-700 border-gray-500/30", icon: Shield },
 };
 
-export const UserCard = memo(function UserCard({
+export const UserCard = memo(forwardRef<HTMLDivElement, UserCardProps>(function UserCard({
   user,
   language,
   isSelected,
@@ -84,7 +84,7 @@ export const UserCard = memo(function UserCard({
   onToggleStatus,
   onDelete,
   formatRelativeTime,
-}: UserCardProps) {
+}, ref) {
   const primaryRole = user.roles[0] || "customer";
   const roleInfo = roleConfig[primaryRole] || roleConfig.customer;
   const displayName = language === "ar" && user.full_name_ar 
@@ -95,6 +95,7 @@ export const UserCard = memo(function UserCard({
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -261,4 +262,4 @@ export const UserCard = memo(function UserCard({
       </div>
     </motion.div>
   );
-});
+}));
