@@ -11,23 +11,19 @@ function brotliReplacementPlugin(): Plugin {
   return {
     name: "brotli-replacement",
     enforce: "pre",
-    resolveId(source, importer) {
-      // Handle decompress subpath FIRST (more specific)
+    resolveId(source) {
       if (source === "brotli/decompress" || source === "brotli/decompress.js") {
         return { id: brotliDecompressShimPath, moduleSideEffects: false };
       }
-      // Handle any brotli subpath import
       if (source.startsWith("brotli/")) {
         return { id: brotliDecompressShimPath, moduleSideEffects: false };
       }
-      // Replace exact brotli package import
       if (source === "brotli") {
         return { id: brotliShimPath, moduleSideEffects: false };
       }
       return null;
     },
     load(id) {
-      // Intercept any direct file access to brotli in node_modules
       if (id.includes("node_modules/brotli")) {
         return `
           function decompress(buffer) {
@@ -49,6 +45,10 @@ function brotliReplacementPlugin(): Plugin {
   };
 }
 
+// Force single React instance - v7
+const reactPath = path.resolve(__dirname, "node_modules/react");
+const reactDomPath = path.resolve(__dirname, "node_modules/react-dom");
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -56,6 +56,10 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
     rollupOptions: {
       output: {
         manualChunks: undefined
@@ -68,74 +72,41 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
-    alias: [
-      { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
-      { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
-      { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
-      // Brotli aliases - subpaths MUST come first to prevent partial matching
-      { find: /^brotli\/decompress(\.js)?$/, replacement: brotliDecompressShimPath },
-      { find: /^brotli$/, replacement: brotliShimPath },
-      // Force single React instance for all packages
-      { find: /^react$/, replacement: path.resolve(__dirname, "node_modules/react") },
-      { find: /^react-dom$/, replacement: path.resolve(__dirname, "node_modules/react-dom") },
-      { find: /^react\/jsx-runtime$/, replacement: path.resolve(__dirname, "node_modules/react/jsx-runtime") },
-      { find: /^react\/jsx-dev-runtime$/, replacement: path.resolve(__dirname, "node_modules/react/jsx-dev-runtime") },
-    ],
-    preserveSymlinks: false,
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "base64-js": path.resolve(__dirname, "./src/shims/base64-js.ts"),
+      "unicode-trie": path.resolve(__dirname, "./src/shims/unicode-trie.ts"),
+      "brotli/decompress": brotliDecompressShimPath,
+      "brotli": brotliShimPath,
+      // Critical: Force single React instance
+      "react": reactPath,
+      "react-dom": reactDomPath,
+      "react/jsx-runtime": path.resolve(reactPath, "jsx-runtime"),
+      "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
+      "react-dom/client": path.resolve(reactDomPath, "client"),
+    },
     dedupe: [
       "react", 
       "react-dom", 
       "react/jsx-runtime",
       "react/jsx-dev-runtime",
       "react-dom/client",
-      "react-router-dom",
       "@tanstack/react-query",
-      "@radix-ui/react-tooltip",
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-popover",
-      "@radix-ui/react-tabs",
-      "@radix-ui/react-dropdown-menu",
-      "@radix-ui/react-select",
-      "@radix-ui/react-checkbox",
-      "@radix-ui/react-switch",
-      "@radix-ui/react-avatar",
-      "@radix-ui/react-accordion",
-      "@radix-ui/react-primitive",
-      "@radix-ui/react-context",
-      "@radix-ui/react-compose-refs",
-      "@radix-ui/react-slot",
-      "@radix-ui/react-use-controllable-state",
-      "framer-motion",
-      "@react-pdf/renderer",
     ],
   },
-  // Cache bust: v6 - Exclude react from prebundling to avoid duplication
+  // Cache bust: v7 - Simplified config to fix React duplication
   optimizeDeps: {
     force: true,
     include: [
-      "@radix-ui/react-tooltip",
-      "@radix-ui/react-tabs",
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-popover",
-      "@radix-ui/react-dropdown-menu",
-      "@radix-ui/react-select",
-      "@radix-ui/react-checkbox",
-      "@radix-ui/react-switch",
-      "@radix-ui/react-avatar",
-      "@radix-ui/react-accordion",
-      "@radix-ui/react-primitive",
-      "@radix-ui/react-slot",
-      "@tanstack/react-query",
-      "framer-motion",
-    ],
-    exclude: [
-      "brotli",
       "react",
       "react-dom",
       "react/jsx-runtime",
       "react/jsx-dev-runtime",
       "react-dom/client",
+      "@tanstack/react-query",
+      "react-router-dom",
     ],
+    exclude: ["brotli"],
     esbuildOptions: {
       plugins: [
         {
