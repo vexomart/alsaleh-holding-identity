@@ -34,22 +34,22 @@ interface OverviewHeaderProps {
   isRTL: boolean;
 }
 
-// Animated text character component
-const AnimatedCharacter = ({ char, index }: { char: string; index: number }) => {
+// Animated word component (Arabic-safe - doesn't break character connections)
+const AnimatedWord = ({ word, index, isRTL }: { word: string; index: number; isRTL: boolean }) => {
   const reducedMotion = useReducedMotion();
   
   return (
     <motion.span
       className="inline-block"
-      initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
+      initial={reducedMotion ? {} : { opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.3,
-        delay: index * 0.03,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        duration: 0.4,
+        delay: index * 0.1,
+        ease: "easeOut" as const,
       }}
     >
-      {char === " " ? "\u00A0" : char}
+      {word}
     </motion.span>
   );
 };
@@ -214,18 +214,18 @@ export function OverviewHeader({
                   </div>
                 </motion.div>
 
-                {/* Greeting Text with Character Animation */}
+                {/* Greeting Text with Word Animation (Arabic-safe) */}
                 <div className="flex-1 min-w-0">
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                     <span className="inline-flex flex-wrap items-baseline gap-x-3">
-                      <span>
-                        {greeting.split("").map((char, i) => (
-                          <AnimatedCharacter key={i} char={char} index={i} />
+                      <span className="flex flex-wrap gap-x-2">
+                        {greeting.split(" ").map((word, i) => (
+                          <AnimatedWord key={i} word={word} index={i} isRTL={isRTL} />
                         ))}
                       </span>
-                      <span className="bg-gradient-to-r from-primary via-emerald-400 to-cyan-400 bg-clip-text text-transparent font-extrabold">
-                        {userName.split("").map((char, i) => (
-                          <AnimatedCharacter key={i} char={char} index={greeting.length + i} />
+                      <span className="bg-gradient-to-r from-primary via-emerald-400 to-cyan-400 bg-clip-text text-transparent font-extrabold flex flex-wrap gap-x-2">
+                        {userName.split(" ").map((word, i) => (
+                          <AnimatedWord key={i} word={word} index={greeting.split(" ").length + i} isRTL={isRTL} />
                         ))}
                       </span>
                       <motion.span
