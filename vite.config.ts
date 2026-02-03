@@ -97,6 +97,7 @@ export default defineConfig(({ mode }) => ({
       "@react-pdf/renderer",
     ],
   },
+  // Cache bust: v2 - Force dependency rebuild
   optimizeDeps: {
     force: true,
     include: [
