@@ -101,32 +101,32 @@ const Navigation = () => {
   return (
     <>
       {/* ===== TOP BAR (Desktop Only) ===== */}
-      <div className="hidden lg:block fixed top-0 inset-x-0 z-50 h-10 bg-gradient-to-l from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
+      <div dir="rtl" className="hidden lg:block fixed top-0 inset-x-0 z-50 h-10 bg-gradient-to-l from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
         <div className="container mx-auto h-full px-6">
-          <div className="flex h-full items-center justify-between">
+          <div className="flex h-full items-center justify-between flex-row-reverse">
             {/* Right Side (RTL: appears first) - Time & Location */}
-            <div className="flex items-center gap-6 text-xs text-slate-300">
-              <div className="flex items-center gap-1.5 hover:text-blue-300 transition-colors">
+            <div className="flex items-center gap-6 text-xs text-slate-300 flex-row-reverse">
+              <div className="flex items-center gap-1.5 hover:text-blue-300 transition-colors flex-row-reverse">
                 <Clock className="w-3.5 h-3.5 text-blue-400" />
                 <span className="font-medium">الأحد - الخميس • 8:00 ص - 6:00 م</span>
               </div>
-              <div className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors">
+              <div className="flex items-center gap-1.5 hover:text-emerald-300 transition-colors flex-row-reverse">
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="font-medium">جدة، المملكة العربية السعودية</span>
               </div>
             </div>
             
             {/* Left Side (RTL: appears last) - Contact & Status */}
-            <div className="flex items-center gap-4">
-              <a href="mailto:info@ash-holding.sa" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-colors">
+            <div className="flex items-center gap-4 flex-row-reverse">
+              <a href="mailto:info@ash-holding.sa" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-colors flex-row-reverse">
                 <Mail className="w-3.5 h-3.5" />
                 <span className="font-medium text-xs">info@ash-holding.sa</span>
               </a>
-              <a href="tel:0555812567" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-colors">
+              <a href="tel:0555812567" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-colors flex-row-reverse">
                 <Phone className="w-3.5 h-3.5" />
                 <span className="font-medium text-xs ltr" dir="ltr">0555812567</span>
               </a>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 flex-row-reverse">
                 <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
                 <span className="text-emerald-300 font-semibold text-xs">متاح الآن</span>
               </div>
@@ -137,16 +137,18 @@ const Navigation = () => {
 
       {/* ===== MAIN NAVIGATION ===== */}
       <header 
+        dir="rtl"
         className={`
           fixed inset-x-0 z-40 
           transition-all duration-300 ease-out
           ${isScrolled ? 'top-0 shadow-lg' : 'top-0 lg:top-10'}
         `}
+        style={{ direction: 'rtl' }}
       >
         <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/80">
           <div className="container mx-auto px-4 lg:px-6">
-            {/* Main Nav Container - Fixed Heights */}
-            <div className="flex items-center justify-between h-14 lg:h-16">
+            {/* Main Nav Container - Fixed Heights - RTL */}
+            <div className="flex items-center justify-between h-14 lg:h-16 flex-row-reverse">
               
               {/* ===== LOGO (Right in RTL) ===== */}
               <Link to="/" className="flex items-center gap-2 sm:gap-3 shrink-0 group">

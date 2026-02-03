@@ -17,7 +17,11 @@ import { ImageOptimizer } from "@/components/ImageOptimizer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background pt-14 lg:pt-[104px] overflow-x-hidden relative mobile-scroll">
+    <div 
+      dir="rtl" 
+      className="min-h-screen bg-background pt-14 lg:pt-[104px] overflow-x-hidden relative mobile-scroll"
+      style={{ direction: 'rtl', textAlign: 'right' }}
+    >
       <PerformanceOptimizer />
       <ImageOptimizer />
       <Navigation />
