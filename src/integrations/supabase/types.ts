@@ -2051,6 +2051,259 @@ export type Database = {
           },
         ]
       }
+      referral_events: {
+        Row: {
+          actor: string
+          actor_user_id: string | null
+          created_at: string | null
+          event_type: string
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          new_status: string
+          old_status: string | null
+          referral_id: string
+          tenant_id: string | null
+        }
+        Insert: {
+          actor?: string
+          actor_user_id?: string | null
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_status: string
+          old_status?: string | null
+          referral_id: string
+          tenant_id?: string | null
+        }
+        Update: {
+          actor?: string
+          actor_user_id?: string | null
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          new_status?: string
+          old_status?: string | null
+          referral_id?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_events_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_rewards: {
+        Row: {
+          amount: number
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string | null
+          currency: string | null
+          id: string
+          notes: string | null
+          paid_at: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          payout_status: string
+          referral_id: string
+          tenant_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_status?: string
+          referral_id: string
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          notes?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payout_status?: string
+          referral_id?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referral_rewards_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_settings: {
+        Row: {
+          cooldown_hours: number | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          max_referrals_per_ip: number | null
+          max_referrals_per_user: number | null
+          min_conversion_status: string | null
+          reward_amount_per_referral: number | null
+          reward_currency: string | null
+          tenant_id: string | null
+          terms_ar: string | null
+          terms_en: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cooldown_hours?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_referrals_per_ip?: number | null
+          max_referrals_per_user?: number | null
+          min_conversion_status?: string | null
+          reward_amount_per_referral?: number | null
+          reward_currency?: string | null
+          tenant_id?: string | null
+          terms_ar?: string | null
+          terms_en?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cooldown_hours?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_referrals_per_ip?: number | null
+          max_referrals_per_user?: number | null
+          min_conversion_status?: string | null
+          reward_amount_per_referral?: number | null
+          reward_currency?: string | null
+          tenant_id?: string | null
+          terms_ar?: string | null
+          terms_en?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string | null
+          device_fingerprint: string | null
+          fraud_flags: Json | null
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          referral_code: string
+          referral_link: string
+          referred_email: string | null
+          referred_name: string | null
+          referred_phone: string | null
+          referred_user_id: string | null
+          referrer_user_id: string
+          reward_amount: number | null
+          reward_currency: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          fraud_flags?: Json | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          referral_code: string
+          referral_link: string
+          referred_email?: string | null
+          referred_name?: string | null
+          referred_phone?: string | null
+          referred_user_id?: string | null
+          referrer_user_id: string
+          reward_amount?: number | null
+          reward_currency?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_fingerprint?: string | null
+          fraud_flags?: Json | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          referral_code?: string
+          referral_link?: string
+          referred_email?: string | null
+          referred_name?: string | null
+          referred_phone?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string
+          reward_amount?: number | null
+          reward_currency?: string | null
+          status?: string
+          tenant_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           id: string
@@ -2478,6 +2731,7 @@ export type Database = {
         Args: { p_tenant_id?: string }
         Returns: string
       }
+      generate_referral_code: { Args: { user_id: string }; Returns: string }
       get_customer_wallet: { Args: { p_customer_id: string }; Returns: string }
       get_delayed_orders: {
         Args: { p_hours_threshold?: number }
@@ -2592,6 +2846,41 @@ export type Database = {
       service_requires_contract: {
         Args: { p_service_id: string }
         Returns: boolean
+      }
+      update_referral_status: {
+        Args: {
+          p_actor?: string
+          p_actor_user_id?: string
+          p_metadata?: Json
+          p_new_status: string
+          p_referral_id: string
+        }
+        Returns: {
+          created_at: string | null
+          device_fingerprint: string | null
+          fraud_flags: Json | null
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          referral_code: string
+          referral_link: string
+          referred_email: string | null
+          referred_name: string | null
+          referred_phone: string | null
+          referred_user_id: string | null
+          referrer_user_id: string
+          reward_amount: number | null
+          reward_currency: string | null
+          status: string
+          tenant_id: string | null
+          updated_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "referrals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       update_services_sort_order: {
         Args: { p_service_orders: Json }
