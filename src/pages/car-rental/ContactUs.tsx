@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import CarRentalFooter from "@/components/CarRentalFooter";
 import { 
   Phone,
@@ -94,24 +96,41 @@ const ContactUs = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        serviceType: ''
+    try {
+      const { data, error } = await supabase.functions.invoke('contact-form', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          serviceType: formData.serviceType,
+          source: 'car-rental-contact'
+        }
       });
-    }, 3000);
+
+      if (error) throw error;
+      
+      setIsSubmitted(true);
+      toast.success('تم إرسال رسالتك بنجاح!');
+      
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+          serviceType: ''
+        });
+      }, 3000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

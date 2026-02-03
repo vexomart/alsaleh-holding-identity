@@ -152,8 +152,19 @@ export function ComingSoonInfrastructure() {
     setIsSubmitting(true);
 
     try {
-      // Store notification subscription in notifications table
-      const { error } = await supabase.from("notifications").insert({
+      // Send email notification via newsletter-subscribe edge function
+      const { error: emailError } = await supabase.functions.invoke('newsletter-subscribe', {
+        body: {
+          email,
+          source: 'infrastructure-coming-soon',
+          subscriptionType: 'infrastructure_launch'
+        }
+      });
+
+      if (emailError) throw emailError;
+
+      // Also store in notifications table for admin tracking
+      await supabase.from("notifications").insert({
         title: "Infrastructure Launch Notification",
         title_ar: "إشعار إطلاق البنية التحتية",
         message: `Subscribed email: ${email}`,
@@ -165,8 +176,6 @@ export function ComingSoonInfrastructure() {
           subscribed_at: new Date().toISOString(),
         },
       });
-
-      if (error) throw error;
 
       setIsSubscribed(true);
       setEmail("");

@@ -79,24 +79,46 @@ const CareersPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // محاكاة إرسال البيانات
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    alert('تم إرسال طلبك بنجاح! سنتواصل معك قريباً.');
-    setIsSubmitting(false);
-    
-    // إعادة تعيين النموذج
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      position: '',
-      experience: '',
-      education: '',
-      skills: '',
-      motivation: '',
-      cv: null
-    });
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { toast } = await import('sonner');
+      
+      const { error } = await supabase.functions.invoke('job-application', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          position: formData.position,
+          experience: formData.experience,
+          education: formData.education,
+          skills: formData.skills,
+          motivation: formData.motivation,
+          source: 'careers-page'
+        }
+      });
+
+      if (error) throw error;
+      
+      toast.success('تم إرسال طلبك بنجاح! سنتواصل معك قريباً.');
+      
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        position: '',
+        experience: '',
+        education: '',
+        skills: '',
+        motivation: '',
+        cv: null
+      });
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      const { toast } = await import('sonner');
+      toast.error('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const benefits = [

@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import BackButton from "@/components/ui/back-button";
 import CarRentalFooter from "@/components/CarRentalFooter";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { 
   MessageSquare,
   Send,
@@ -106,26 +108,45 @@ const ComplaintsSuggestions = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        type: '',
-        subject: '',
-        message: '',
-        rating: 0,
-        anonymous: false
+    try {
+      const { data, error } = await supabase.functions.invoke('complaint-handler', {
+        body: {
+          name: formData.anonymous ? 'مجهول' : formData.name,
+          email: formData.anonymous ? 'anonymous@car-rental.com' : formData.email,
+          phone: formData.anonymous ? '' : formData.phone,
+          complaintType: formData.type,
+          subject: formData.subject,
+          message: formData.message,
+          rating: formData.rating,
+          isAnonymous: formData.anonymous,
+          source: 'car-rental-complaints'
+        }
       });
-    }, 3000);
+
+      if (error) throw error;
+      
+      setIsSubmitted(true);
+      toast.success('تم استلام رسالتك بنجاح!');
+      
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          type: '',
+          subject: '',
+          message: '',
+          rating: 0,
+          anonymous: false
+        });
+      }, 3000);
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      toast.error('حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getTypeDetails = (type: string) => {

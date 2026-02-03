@@ -83,33 +83,34 @@ export const ContactFormSecure: React.FC<ContactFormSecureProps> = ({
     const submitData = {
       ...sanitizedData,
       timestamp: new Date().toISOString(),
-      source: 'website_contact_form',
+      source: 'website_contact_form_secure',
       userAgent: navigator.userAgent,
       referrer: document.referrer,
       language: 'ar'
     };
 
-    // محاولة إرسال إلى النظام الخلفي
     try {
-      const response = await fetch('/api/contact/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(submitData)
+      // استخدام Edge Function لإرسال البريد
+      const { supabase } = await import('@/integrations/supabase/client');
+      
+      const { data, error } = await supabase.functions.invoke('contact-form', {
+        body: {
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          phone: sanitizedData.phone,
+          subject: sanitizedData.subject,
+          message: sanitizedData.message,
+          source: 'secure-contact-form'
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('فشل في إرسال الرسالة');
-      }
+      if (error) throw error;
 
-      return await response.json();
+      return { success: true, method: 'edge_function', data };
     } catch (error) {
-      // Fallback: إرسال بريد إلكتروني مباشر
-      console.warn('Backend submission failed, using email fallback');
+      console.warn('Edge function submission failed, using mailto fallback');
       
-      // إنشاء رابط mailto كحل بديل
+      // Fallback: إرسال بريد إلكتروني مباشر
       const emailBody = `
 الاسم: ${sanitizedData.name}
 البريد الإلكتروني: ${sanitizedData.email}
@@ -125,15 +126,6 @@ ${sanitizedData.message}
       `.trim();
 
       const mailtoLink = `mailto:info@ash-holding.sa?subject=${encodeURIComponent(sanitizedData.subject)}&body=${encodeURIComponent(emailBody)}`;
-      
-      // حفظ في localStorage كنسخة احتياطية
-      const submissions = JSON.parse(localStorage.getItem('contact_submissions') || '[]');
-      submissions.push({
-        ...submitData,
-        id: Date.now().toString(),
-        status: 'pending'
-      });
-      localStorage.setItem('contact_submissions', JSON.stringify(submissions));
       
       return { success: true, method: 'mailto', link: mailtoLink };
     }
@@ -178,18 +170,24 @@ ${sanitizedData.message}
           message: ''
         });
         
-        if (result.method === 'mailto') {
+        if (result.method === 'mailto' && 'link' in result) {
           toast.success('تم تحضير الرسالة. سيتم فتح برنامج البريد الإلكتروني...', {
             duration: 5000,
             action: {
               label: 'إرسال',
-              onClick: () => window.location.href = result.link
+              onClick: () => {
+                if ('link' in result && result.link) {
+                  window.location.href = result.link;
+                }
+              }
             }
           });
           
           // فتح mailto بعد ثانيتين
           setTimeout(() => {
-            window.location.href = result.link;
+            if ('link' in result && result.link) {
+              window.location.href = result.link;
+            }
           }, 2000);
         } else {
           toast.success('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.');
@@ -197,7 +195,7 @@ ${sanitizedData.message}
         
         onSuccess?.();
       } else {
-        throw new Error(result.message || 'فشل في إرسال الرسالة');
+        throw new Error('فشل في إرسال الرسالة');
       }
       
     } catch (error: any) {
