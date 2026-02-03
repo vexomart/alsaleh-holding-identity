@@ -92,6 +92,104 @@ const COMPANY_SERVICES: Service[] = [
   { id: '12', name: 'تحليل البيانات', description: 'Business Intelligence', basePrice: 18000, category: 'analytics' }
 ];
 
+const DigitalContracts = () => {
+  const [formData, setFormData] = useState<FormData>({
+    clientName: '',
+    clientEmail: '',
+    clientPhone: '',
+    clientID: '',
+    selectedServices: [],
+    projectDescription: '',
+    totalPrice: 0,
+    agreeToTerms: false,
+    agreeToPrivacy: false,
+    digitalSignature: '',
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showServices, setShowServices] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const signatureRef = useRef<SignatureCanvas>(null);
+  const [penColor, setPenColor] = useState<string>("#1e40af");
+  const [contractFormType, setContractFormType] = useState<'individual' | 'institution' | 'company'>('individual');
+
+  // SEO structured data for services
+  const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
+    "@type": "Service",
+    name: s.name,
+    description: s.description,
+    areaServed: "SA",
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "SAR",
+      price: s.basePrice,
+      availability: "https://schema.org/InStock"
+    }
+  }));
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "نظام التعاقد الإلكتروني",
+      description: "عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع.",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      itemListElement: servicesJsonLd.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item,
+      })),
+    },
+  ];
+
+  const addService = (service: Service) => {
+    if (!formData.selectedServices.find(s => s.id === service.id)) {
+      const newServices = [...formData.selectedServices, service];
+      setFormData(prev => ({
+        ...prev,
+        selectedServices: newServices,
+        totalPrice: newServices.reduce((sum, s) => sum + s.basePrice, 0)
+      }));
+    }
+  };
+
+  const removeService = (serviceId: string) => {
+    const newServices = formData.selectedServices.filter(s => s.id !== serviceId);
+    setFormData(prev => ({
+      ...prev,
+      selectedServices: newServices,
+      totalPrice: newServices.reduce((sum, s) => sum + s.basePrice, 0)
+    }));
+  };
+
+  const clearSignature = () => {
+    signatureRef.current?.clear();
+  };
+
+  const saveSignature = () => {
+    if (signatureRef.current) {
+      const signatureData = signatureRef.current.toDataURL();
+      setFormData(prev => ({ ...prev, digitalSignature: signatureData }));
+      toast.success('تم حفظ التوقيع بنجاح');
+    }
+  };
+
+  // تراجع عن آخر ضربة قلم
+  const undoSignature = () => {
+    if (!signatureRef.current) return;
+    const data = signatureRef.current.toData();
+    if (!data || data.length === 0) return;
+    data.pop();
+    signatureRef.current.fromData(data);
+  };
+
+  const filteredServices = selectedCategory === 'all'
+    ? COMPANY_SERVICES
+    : COMPANY_SERVICES.filter(service => service.category === selectedCategory);
+
   // دالة التحقق من صحة النموذج
   const isFormValid = () => {
     return (
@@ -228,46 +326,17 @@ const COMPANY_SERVICES: Service[] = [
       status = "preview",
       size = 140,
     } = opts || {};
-    return `
-  <svg width="${size}" height="${size}" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="الختم الرقمي" role="img" style="color: rgba(30,64,175,0.8);">
-    <circle cx="120" cy="120" r="112" fill="none" stroke="currentColor" stroke-width="4" />
-    <circle cx="120" cy="120" r="95" fill="none" stroke="currentColor" stroke-width="2" />
-    <circle cx="120" cy="120" r="78" fill="none" stroke="currentColor" stroke-width="1.5" />
-    <path id="topArc" d="M 35 120 A 85 85 0 0 1 205 120" fill="none" />
-    <text font-size="12" font-weight="700" fill="currentColor" text-anchor="middle" direction="rtl">
-      <textPath href="#topArc" startOffset="50%">${companyNameAr}</textPath>
-    </text>
-    <path id="bottomArc" d="M 205 120 A 85 85 0 0 1 35 120" fill="none" />
-    <text font-size="11" fill="currentColor" text-anchor="middle">
-      <textPath href="#bottomArc" startOffset="50%">${companyNameEn}</textPath>
-    </text>
-    <text x="120" y="105" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor" direction="rtl">
-      ${status === 'approved' ? "ختم إلكتروني" : "غير معتمد"}
-    </text>
-    <text x="120" y="122" text-anchor="middle" font-size="10" fill="currentColor">
-      ${status === 'approved' ? "Digital E-Stamp" : "Not Approved"}
-    </text>
-    <text x="120" y="142" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">
-      ${crNumber ? `السجل التجاري: ${crNumber}` : "السجل التجاري: —"}
-    </text>
-    <text x="120" y="158" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">
-      ${vatNumber ? `الرقم الضريبي: ${vatNumber}` : "الرقم الضريبي: —"}
-    </text>
-    <text x="120" y="176" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">
-      ${city ? `${city} • المملكة العربية السعودية` : "المملكة العربية السعودية"}
-    </text>
-    <text x="120" y="192" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">
-      ${contractNumber ? `رقم العقد: ${contractNumber} • التاريخ: ${date || ""}` : `التاريخ: ${date || ""}`}
-    </text>
-    ${status === 'preview' ? `
-      <g opacity="0.18">
-        <rect x="-20" y="108" width="280" height="24" fill="currentColor" transform="rotate(-20 120 120)" rx="4" />
-        <text x="120" y="124" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff" transform="rotate(-20 120 120)">
-          غير معتمد إلا بعد الدفع
-        </text>
-      </g>` : ''}
-  </svg>
-  `;
+    
+    const statusText = status === 'approved' ? "ختم إلكتروني" : "غير معتمد";
+    const statusTextEn = status === 'approved' ? "Digital E-Stamp" : "Not Approved";
+    const crText = crNumber ? "السجل التجاري: " + crNumber : "السجل التجاري: —";
+    const vatText = vatNumber ? "الرقم الضريبي: " + vatNumber : "الرقم الضريبي: —";
+    const cityText = city ? city + " • المملكة العربية السعودية" : "المملكة العربية السعودية";
+    const contractText = contractNumber ? "رقم العقد: " + contractNumber + " • التاريخ: " + (date || "") : "التاريخ: " + (date || "");
+    
+    const previewWatermark = status === 'preview' ? '<g opacity="0.18"><rect x="-20" y="108" width="280" height="24" fill="currentColor" transform="rotate(-20 120 120)" rx="4" /><text x="120" y="124" text-anchor="middle" font-size="14" font-weight="800" fill="#ffffff" transform="rotate(-20 120 120)">غير معتمد إلا بعد الدفع</text></g>' : '';
+    
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" aria-label="الختم الرقمي" role="img" style="color: rgba(30,64,175,0.8);"><circle cx="120" cy="120" r="112" fill="none" stroke="currentColor" stroke-width="4" /><circle cx="120" cy="120" r="95" fill="none" stroke="currentColor" stroke-width="2" /><circle cx="120" cy="120" r="78" fill="none" stroke="currentColor" stroke-width="1.5" /><path id="topArc" d="M 35 120 A 85 85 0 0 1 205 120" fill="none" /><text font-size="12" font-weight="700" fill="currentColor" text-anchor="middle" direction="rtl"><textPath href="#topArc" startOffset="50%">' + companyNameAr + '</textPath></text><path id="bottomArc" d="M 205 120 A 85 85 0 0 1 35 120" fill="none" /><text font-size="11" fill="currentColor" text-anchor="middle"><textPath href="#bottomArc" startOffset="50%">' + companyNameEn + '</textPath></text><text x="120" y="105" text-anchor="middle" font-size="16" font-weight="800" fill="currentColor" direction="rtl">' + statusText + '</text><text x="120" y="122" text-anchor="middle" font-size="10" fill="currentColor">' + statusTextEn + '</text><text x="120" y="142" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">' + crText + '</text><text x="120" y="158" text-anchor="middle" font-size="10" fill="currentColor" direction="rtl">' + vatText + '</text><text x="120" y="176" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">' + cityText + '</text><text x="120" y="192" text-anchor="middle" font-size="9" fill="currentColor" direction="rtl">' + contractText + '</text>' + previewWatermark + '</svg>';
   };
 
   // دالة إنشاء HTML للعقد
@@ -307,365 +376,26 @@ const COMPANY_SERVICES: Service[] = [
         page-break-inside: avoid;
     `;
 
-    contractElement.innerHTML = `
-      <div style="position: relative; width: 100%; height: 100%; background: white;">
-        ${showWatermark ? `<div style="position:absolute; inset:0; z-index:9999; pointer-events:none; display:grid; grid-template-columns:repeat(3,1fr); gap:40px; transform: rotate(-25deg); transform-origin:center; opacity:0.12;">
-          ${Array(18).fill('<div style="font-size:28pt; font-weight:800; text-align:center; color:#ef4444; letter-spacing:1px;">غير معتمد إلا بعد الدفع</div>').join('')}
-        </div>` : ''}
-        
-        <!-- الترويسة الرسمية -->
-        <div style="border: 2px solid #1e3a8a; padding: 20pt; margin-bottom: 15pt; text-align: center; background: #f8fafc;">
-          <div style="border: 1px solid #3b82f6; padding: 15pt; background: white;">
-            
-            <!-- الشعار -->
-            <div style="background: #1e3a8a; color: white; width: 60pt; height: 60pt; border-radius: 50%; margin: 0 auto 15pt; display: flex; align-items: center; justify-content: center;">
-              <div style="font-size: 14pt; font-weight: bold; text-align: center;">ASH</div>
-            </div>
-            
-            <!-- اسم الشركة -->
-            <h1 style="margin: 0 0 10pt 0; font-size: 18pt; font-weight: bold; color: #1e3a8a;">
-              شركة علي صالح الشهري القابضة
-            </h1>
-            <div style="font-size: 12pt; color: #64748b; margin-bottom: 10pt;">
-              للتقنية والحلول الرقمية المتقدمة
-            </div>
-            <div style="font-size: 10pt; color: #64748b; margin-bottom: 15pt;">
-              السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية
-            </div>
-            
-            <!-- معلومات الاتصال -->
-            <div style="border-top: 1px solid #e5e7eb; padding-top: 10pt;">
-              <div style="display: inline-block; margin: 0 15pt;">
-                <strong>الهاتف:</strong> 0555812567
-              </div>
-              <div style="display: inline-block;">
-                <strong>البريد الإلكتروني:</strong> info@ash-holding.sa
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- معلومات العقد -->
-        <div style="border: 1px solid #d1d5db; padding: 15pt; margin-bottom: 15pt; background: #f9fafb;">
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white; font-weight: bold;">
-                رقم العقد: ${contractId}
-              </td>
-              <td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white;">
-                التاريخ الميلادي: ${contractDate}
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 8pt; border: 1px solid #d1d5db; background: white; font-weight: bold;">
-                التاريخ الهجري: ${hijriDate}
-              </td>
-              <td style="padding: 8pt; border: 1px solid #d1d5db; background: white;">
-                مكان الإصدار: جدة - المملكة العربية السعودية
-              </td>
-            </tr>
-          </table>
-        </div>
-        
-        <!-- عنوان العقد -->
-        <div style="text-align: center; margin: 20pt 0; padding: 15pt; border: 2px solid #1e3a8a; background: #f0f9ff;">
-          <h2 style="margin: 0; font-size: 16pt; font-weight: bold; color: #1e3a8a;">
-            عقد تقديم الخدمات التقنية والاستشارية
-          </h2>
-          <div style="font-size: 10pt; color: #64748b; margin-top: 8pt;">
-            وفقاً للأنظمة واللوائح المعمول بها في المملكة العربية السعودية
-          </div>
-        </div>
-        
-        <!-- أطراف العقد -->
-        <div style="margin-bottom: 15pt;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            أطراف العقد
-          </h3>
-          <table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;">
-            <tr style="background: #f3f4f6;">
-              <th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">الطرف</th>
-              <th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">البيانات</th>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الطرف الأول</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الممثل القانوني</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">الأستاذ / علي صالح الشهري - المدير العام</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الطرف الثاني</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">${formData.clientName || 'العميل المحترم'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">رقم الهوية/السجل</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">${formData.clientID || 'يُملأ عند التوقيع'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">رقم الجوال</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">${formData.clientPhone || 'يُملأ عند التوقيع'}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">البريد الإلكتروني</td>
-              <td style="padding: 10pt; border: 1px solid #d1d5db;">${formData.clientEmail || 'يُملأ عند التوقيع'}</td>
-            </tr>
-          </table>
-        </div>
-        
-        <!-- موضوع العقد والخدمات -->
-        <div style="margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            موضوع العقد والخدمات المطلوبة
-          </h3>
-          <div style="border: 1px solid #d1d5db; padding: 12pt; background: #f9fafb; page-break-inside: avoid; break-inside: avoid;">
-            <p style="margin: 0 0 12pt 0; font-weight: bold; color: #1e3a8a;">الخدمات المتفق عليها:</p>
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;">
-              <tr style="background: #1e3a8a; color: white;">
-                <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">م</th>
-                <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">الخدمة</th>
-                <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">الوصف</th>
-                <th style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 10pt;">القيمة (ريال)</th>
-              </tr>
-              ${formData.selectedServices.map((service, index) => `
-                <tr style="background: ${index % 2 === 0 ? '#f8fafc' : 'white'};">
-                  <td style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 9pt;">${index + 1}</td>
-                  <td style="padding: 8pt; border: 1px solid #d1d5db; font-size: 9pt;">${service.name}</td>
-                  <td style="padding: 8pt; border: 1px solid #d1d5db; font-size: 9pt;">${service.description}</td>
-                  <td style="padding: 8pt; border: 1px solid #d1d5db; text-align: center; font-size: 9pt;">${service.basePrice.toLocaleString()}</td>
-                </tr>
-              `).join('')}
-            </table>
-            <p style="margin: 0 0 8pt 0; font-weight: bold;">وصف إضافي للمشروع:</p>
-            <p style="margin: 0;">${formData.projectDescription || 'تقديم حلول تقنية متكاملة ومتقدمة وفق أحدث المعايير والتقنيات العالمية مع ضمان الجودة والأداء العالي.'}</p>
-          </div>
-        </div>
-        
-        <!-- الشروط والأحكام -->
-        <div style="margin-bottom: 15pt;">
-          <h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">
-            الشروط والأحكام العامة (وفق أفضل الممارسات العالمية)
-          </h3>
-          <div style="border: 1px solid #d1d5db; padding: 12pt;">
-            <!-- تمهيد وتعريفات -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الأولى - التمهيد والتعريفات:</strong><br>
-              يُعد التمهيد وما ورد أعلاه جزءاً لا يتجزأ من هذا العقد. يُقصد بـ "الطرف الأول" شركة علي صالح الشهري القابضة، وبـ "الطرف الثاني" العميل الموضّحة بياناته أعلاه، وبـ "الخدمات" الأعمال الواردة في جدول نطاق العمل ومخرجاته.
-            </div>
-
-            <!-- بدء السريان -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثانية - بدء السريان واعتماد العقد:</strong><br>
-              يبدأ سريان العقد ويلتزم الطرفان به عند سداد الدفعة المقدمة الأولى وقدرها 50% من قيمة العقد. ولا يُعد هذا العقد نافذاً قبل ذلك.
-            </div>
-
-            <!-- نطاق العمل ومخرجاته -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثالثة - نطاق العمل ومخرجاته:</strong><br>
-              يلتزم الطرف الأول بتنفيذ الخدمات وفق نطاق العمل التالي ومخرجاته المتفق عليها:
-              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
-                <tr style="background:#f3f4f6;">
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">#</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المخرج</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الوصف</th>
-                </tr>
-                ${formData.selectedServices.map((s, i) => `
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${i+1}</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">${s.name}</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">${s.description}</td>
-                </tr>`).join('')}
-              </table>
-            </div>
-
-            <!-- الجدول الزمني والمعالم -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الرابعة - الجدول الزمني والمعالم الرئيسية:</strong><br>
-              يلتزم الطرف الأول بالجدول الزمني التالي على أن يتم التحديث كتابةً عند أي تغيير متفق عليه:
-              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
-                <tr style="background:#f3f4f6;">
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المعلم</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الوصف</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">المدة المتوقعة</th>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">التحليل والمواءمة</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">جمع المتطلبات وتوثيقها ومراجعتها</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">5 - 10 أيام عمل</td>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">التنفيذ والتطوير</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">بناء الحلول وفق المواصفات المعتمدة</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">15 - 30 يوم عمل</td>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الاختبارات والتسليم</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">اختبارات القبول والتسليم النهائي</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">5 - 10 أيام عمل</td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- الدفعات وجدول السداد -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الخامسة - الدفعات وجدول السداد:</strong><br>
-              القيمة الإجمالية للعقد: ${formData.totalPrice.toLocaleString()} ريال سعودي.
-              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
-                <tr style="background:#f3f4f6;">
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الدفعة</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">النسبة</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">القيمة</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">موعد الاستحقاق</th>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">دفعة مقدمة</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">50%</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${Math.round(formData.totalPrice * 0.5).toLocaleString()}</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">عند توقيع العقد</td>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الدفعة النهائية</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">50%</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; text-align:center; font-size:9pt;">${Math.round(formData.totalPrice * 0.5).toLocaleString()}</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">قبل التسليم النهائي</td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- التغييرات والنطاق -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة السادسة - إدارة التغييرات:</strong><br>
-              أي تعديل على نطاق العمل أو المخرجات يكون عبر طلب تغيير مكتوب يوضح الأثر الزمني والمالي ويُعتمد من الطرفين قبل التنفيذ.
-            </div>
-
-            <!-- السرية والبيانات -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة السابعة - السرية وحماية البيانات (سياسة الخصوصية):</strong><br>
-              يلتزم الطرفان بالحفاظ على سرية جميع المعلومات والبيانات المتبادلة وعدم الإفصاح عنها لأي طرف ثالث إلا بموافقة كتابية مسبقة، مع الالتزام بالأنظمة السعودية لحماية البيانات.
-            </div>
-
-            <!-- الملكية الفكرية -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثامنة - الملكية الفكرية:</strong><br>
-              تنتقل ملكية المخرجات النهائية للطرف الثاني بعد السداد الكامل لكافة المستحقات، ويحتفظ الطرف الأول بحقوقه في الأدوات والمنهجيات والمواد العامة غير الخاصة بالمشروع.
-            </div>
-
-            <!-- الضمان والمسؤولية -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة التاسعة - الضمان وحدود المسؤولية:</strong><br>
-              يوفر الطرف الأول ضماناً لمدة 6 أشهر على المخرجات ضد العيوب الفنية، ولا يسأل عن أي أضرار غير مباشرة أو تبعية. يقتصر التعويض - إن ثبت - على ما لا يتجاوز مجموع المبالغ المدفوعة.
-            </div>
-
-            <!-- الإنهاء -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة العاشرة - الإنهاء:</strong><br>
-              يجوز لأي طرف إنهاء العقد بإشعار خطي مسبق (15) يوماً عند إخلال الطرف الآخر بالتزاماته الجوهرية وعدم معالجتها خلال مدة معقولة. تُسوى المستحقات حتى تاريخ الإنهاء.
-            </div>
-
-            <!-- القوة القاهرة -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الحادية عشرة - القوة القاهرة:</strong><br>
-              لا يتحمل أي طرف المسؤولية عن التأخير أو التقصير الناتج عن أحداث خارجة عن الإرادة مثل الكوارث أو القرارات السيادية أو الأعطال العامة.
-            </div>
-
-            <!-- القبول ومعايير التسليم -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثانية عشرة - القبول ومعايير التسليم:</strong><br>
-              يُعد التسليم نهائياً بعد اجتياز اختبارات القبول (UAT) وإقرار الطرف الثاني خلال (5) أيام عمل، وإلا اعتُبر القبول ضمنياً مع معالجة الملاحظات المتفق عليها.
-            </div>
-
-            <!-- مستوى الخدمة (SLA) -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الثالثة عشرة - مستوى الخدمة (SLA):</strong><br>
-              أوقات العمل الرسمية: الأحد - الخميس من 9 صباحاً حتى 6 مساءً. أزمنة الاستجابة للحالات: حرجة 4 ساعات، عالية 1 يوم عمل، متوسطة 2 يوم عمل.
-              <table style="width: 100%; border-collapse: collapse; margin-top: 8pt;">
-                <tr style="background:#f3f4f6;">
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">الأولوية</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">وقت الاستجابة</th>
-                  <th style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">وقت المعالجة المبدئي</th>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">حرجة</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 4 ساعات</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 1 يوم</td>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">عالية</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 1 يوم</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 2 يوم</td>
-                </tr>
-                <tr>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">متوسطة</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 2 يوم</td>
-                  <td style="padding:8pt; border:1px solid #d1d5db; font-size:9pt;">≤ 3 يوم</td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- القانون والاختصاص -->
-            <div style="margin-bottom: 10pt;">
-              <strong style="color: #1e3a8a;">المادة الرابعة عشرة - القانون والاختصاص:</strong><br>
-              يخضع هذا العقد للأنظمة واللوائح المعمول بها في المملكة العربية السعودية، ويكون الاختصاص القضائي لمحاكم مدينة جدة ما لم يُتفق خلاف ذلك.
-            </div>
-
-            <!-- ملاحظات عامة -->
-            <div style="margin-bottom: 0; background:#fff7ed; border:1px dashed #f59e0b; padding:10pt;">
-              <strong style="color:#92400e;">ملاحظة:</strong> يُعد هذا العقد صارماً ويلتزم بمعايير الشركات العالمية في الحوكمة وإدارة المشاريع، وأي استثناءات يجب أن تُوثّق كتابياً.
-            </div>
-          </div>
-        </div>
-        
-        <!-- التوقيعات والأختام -->
-        <div style="margin-top: 30pt; page-break-inside: avoid; break-inside: avoid;">
-          <table style="width: 100%; border-collapse: collapse; page-break-inside: avoid; break-inside: avoid;">
-            <tr>
-              <td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;">
-                <div style="margin-bottom: 15pt;">
-                  <strong>الطرف الأول (الشركة)</strong>
-                </div>
-                <div style="margin-bottom: 40pt;">
-                  ${getOfficialStampSVG({
-                    companyNameAr: "شركة علي صالح الشهري القابضة",
-                    companyNameEn: "Alsaleh Holding Company",
-                    crNumber: "4030554749",
-                    vatNumber: "—",
-                    city: "جدة",
-                    contractNumber: contractId,
-                    date: contractDate,
-                    status: showWatermark ? 'preview' : 'approved',
-                    size: 128
-                  })}
-                </div>
-                <div style="border-top: 1px solid #000; padding-top: 8pt;">
-                  <strong>علي صالح الشهري</strong><br>
-                  المدير العام
-                </div>
-              </td>
-              <td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;">
-                <div style="margin-bottom: 15pt;">
-                  <strong>الطرف الثاني (العميل)</strong>
-                </div>
-                <div style="margin-bottom: 40pt;">
-                  ${formData.digitalSignature ? `<img src="${formData.digitalSignature}" style="max-width: 150pt; max-height: 80pt;" />` : 'التوقيع الرقمي'}
-                </div>
-                <div style="border-top: 1px solid #000; padding-top: 8pt;">
-                  <strong>${formData.clientName || 'اسم العميل'}</strong><br>
-                  التوقيع والختم
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-        
-        <!-- تذييل قانوني -->
-        <div style="margin-top: 20pt; padding: 15pt; border: 1px solid #d1d5db; background: #f8fafc; text-align: center; font-size: 9pt;">
-          <p style="margin: 0 0 8pt 0;">هذا العقد محرر ومؤرخ في جدة بالمملكة العربية السعودية</p>
-          <p style="margin: 0 0 8pt 0;">ويخضع للأنظمة واللوائح المعمول بها في المملكة العربية السعودية</p>
-          <p style="margin: 0;">العقد الإلكتروني موثق رقمياً ومعتمد قانونياً</p>
-        </div>
-      </div>
-    `;
+    const watermarkHtml = showWatermark ? '<div style="position:absolute; inset:0; z-index:9999; pointer-events:none; display:grid; grid-template-columns:repeat(3,1fr); gap:40px; transform: rotate(-25deg); transform-origin:center; opacity:0.12;">' + Array(18).fill('<div style="font-size:28pt; font-weight:800; text-align:center; color:#ef4444; letter-spacing:1px;">غير معتمد إلا بعد الدفع</div>').join('') + '</div>' : '';
+    
+    const signatureHtml = formData.digitalSignature ? '<img src="' + formData.digitalSignature + '" style="max-width: 150pt; max-height: 80pt;" />' : 'التوقيع الرقمي';
+    
+    const stampStatus = showWatermark ? 'preview' : 'approved';
+    
+    contractElement.innerHTML = '<div style="position: relative; width: 100%; height: 100%; background: white;">' + watermarkHtml + '<div style="border: 2px solid #1e3a8a; padding: 20pt; margin-bottom: 15pt; text-align: center; background: #f8fafc;"><div style="border: 1px solid #3b82f6; padding: 15pt; background: white;"><div style="background: #1e3a8a; color: white; width: 60pt; height: 60pt; border-radius: 50%; margin: 0 auto 15pt; display: flex; align-items: center; justify-content: center;"><div style="font-size: 14pt; font-weight: bold; text-align: center;">ASH</div></div><h1 style="margin: 0 0 10pt 0; font-size: 18pt; font-weight: bold; color: #1e3a8a;">شركة علي صالح الشهري القابضة</h1><div style="font-size: 12pt; color: #64748b; margin-bottom: 10pt;">للتقنية والحلول الرقمية المتقدمة</div><div style="font-size: 10pt; color: #64748b; margin-bottom: 15pt;">السجل التجاري: 4030554749 | جدة - المملكة العربية السعودية</div><div style="border-top: 1px solid #e5e7eb; padding-top: 10pt;"><div style="display: inline-block; margin: 0 15pt;"><strong>الهاتف:</strong> 0555812567</div><div style="display: inline-block;"><strong>البريد الإلكتروني:</strong> info@ash-holding.sa</div></div></div></div>' +
+    '<div style="border: 1px solid #d1d5db; padding: 15pt; margin-bottom: 15pt; background: #f9fafb;"><table style="width: 100%; border-collapse: collapse;"><tr><td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white; font-weight: bold;">رقم العقد: ' + contractId + '</td><td style="width: 50%; padding: 8pt; border: 1px solid #d1d5db; background: white;">التاريخ الميلادي: ' + contractDate + '</td></tr><tr><td style="padding: 8pt; border: 1px solid #d1d5db; background: white; font-weight: bold;">التاريخ الهجري: ' + hijriDate + '</td><td style="padding: 8pt; border: 1px solid #d1d5db; background: white;">مكان الإصدار: جدة - المملكة العربية السعودية</td></tr></table></div>' +
+    '<div style="text-align: center; margin: 20pt 0; padding: 15pt; border: 2px solid #1e3a8a; background: #f0f9ff;"><h2 style="margin: 0; font-size: 16pt; font-weight: bold; color: #1e3a8a;">عقد تقديم الخدمات التقنية والاستشارية</h2><div style="font-size: 10pt; color: #64748b; margin-top: 8pt;">وفقاً للأنظمة واللوائح المعمول بها في المملكة العربية السعودية</div></div>' +
+    '<div style="margin-bottom: 15pt;"><h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">أطراف العقد</h3><table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;"><tr style="background: #f3f4f6;"><th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">الطرف</th><th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; font-weight: bold;">البيانات</th></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الطرف الأول</td><td style="padding: 10pt; border: 1px solid #d1d5db;">شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الممثل القانوني</td><td style="padding: 10pt; border: 1px solid #d1d5db;">الأستاذ / علي صالح الشهري - المدير العام</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">الطرف الثاني</td><td style="padding: 10pt; border: 1px solid #d1d5db;">' + (formData.clientName || 'العميل المحترم') + '</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">رقم الهوية/السجل</td><td style="padding: 10pt; border: 1px solid #d1d5db;">' + (formData.clientID || 'يُملأ عند التوقيع') + '</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">رقم الجوال</td><td style="padding: 10pt; border: 1px solid #d1d5db;">' + (formData.clientPhone || 'يُملأ عند التوقيع') + '</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db; font-weight: bold; background: #fafafa;">البريد الإلكتروني</td><td style="padding: 10pt; border: 1px solid #d1d5db;">' + (formData.clientEmail || 'يُملأ عند التوقيع') + '</td></tr></table></div>' +
+    '<div style="margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;"><h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">موضوع العقد والخدمات المطلوبة</h3><table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;"><tr style="background: #f3f4f6;"><th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">الخدمة</th><th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">الوصف</th><th style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">السعر (ريال)</th></tr>' +
+    formData.selectedServices.map(function(service) {
+      return '<tr><td style="padding: 10pt; border: 1px solid #d1d5db;">' + service.name + '</td><td style="padding: 10pt; border: 1px solid #d1d5db;">' + service.description + '</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">' + service.basePrice.toLocaleString() + '</td></tr>';
+    }).join('') +
+    '<tr style="background: #f0f9ff; font-weight: bold;"><td colspan="2" style="padding: 10pt; border: 1px solid #d1d5db;">المجموع الإجمالي</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; color: #1e3a8a;">' + formData.totalPrice.toLocaleString() + ' ريال</td></tr></table></div>' +
+    '<div style="margin-bottom: 15pt;"><h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">وصف المشروع</h3><div style="padding: 15pt; border: 1px solid #d1d5db; background: #f9fafb; min-height: 60pt;">' + (formData.projectDescription || 'سيتم تحديد تفاصيل المشروع بالتنسيق بين الطرفين') + '</div></div>' +
+    '<div style="margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;"><h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">آلية الدفع</h3><table style="width: 100%; border-collapse: collapse; border: 1px solid #d1d5db;"><tr style="background: #f3f4f6;"><th style="padding: 10pt; border: 1px solid #d1d5db;">المرحلة</th><th style="padding: 10pt; border: 1px solid #d1d5db;">النسبة</th><th style="padding: 10pt; border: 1px solid #d1d5db;">المبلغ (ريال)</th><th style="padding: 10pt; border: 1px solid #d1d5db;">الحالة</th></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db;">الدفعة الأولى (مقدم)</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">50%</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">' + (formData.totalPrice * 0.5).toLocaleString() + '</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; color: #dc2626;">مطلوب للاعتماد</td></tr><tr><td style="padding: 10pt; border: 1px solid #d1d5db;">الدفعة النهائية</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">50%</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center;">' + (formData.totalPrice * 0.5).toLocaleString() + '</td><td style="padding: 10pt; border: 1px solid #d1d5db; text-align: center; color: #f59e0b;">قبل التسليم</td></tr></table></div>' +
+    '<div style="margin-bottom: 15pt; page-break-inside: avoid; break-inside: avoid;"><h3 style="font-size: 12pt; font-weight: bold; color: #1e3a8a; margin: 0 0 10pt 0; border-bottom: 1px solid #d1d5db; padding-bottom: 5pt;">الشروط والأحكام العامة</h3><div style="padding: 12pt; border: 1px solid #d1d5db; font-size: 10pt; background: #f9fafb;"><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الأولى - التعريفات:</strong><br>الطرف الأول: شركة علي صالح الشهري القابضة للتقنية والحلول الرقمية. الطرف الثاني: العميل الموضح بياناته أعلاه. العقد: هذه الوثيقة وجميع ملاحقها.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الثانية - مدة العقد:</strong><br>يسري العقد من تاريخ سداد الدفعة المقدمة (50%) ويستمر حتى تسليم المشروع بالكامل أو انتهاء الالتزامات المترتبة، ما لم يُنهَ وفقاً للمادة العاشرة.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الثالثة - نطاق العمل:</strong><br>يلتزم الطرف الأول بتقديم الخدمات المحددة أعلاه وفقاً لأعلى معايير الجودة، مع الالتزام بالجدول الزمني المتفق عليه. أي تعديلات أو إضافات تُوثّق خطياً ويُعاد تقييم الأثر المالي والزمني.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الرابعة - السرية:</strong><br>تلتزم الأطراف بعدم إفشاء أي معلومات سرية تتعلق بالطرف الآخر لمدة 5 سنوات من تاريخ انتهاء العقد، باستثناء ما يُطلب قانونياً.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الخامسة - التزامات الطرف الأول:</strong><br>- تنفيذ الخدمات بمهنية واحترافية عالية<br>- تعيين مدير مشروع كنقطة اتصال رئيسية<br>- تقديم تقارير دورية حول سير العمل<br>- تسليم جميع المخرجات والوثائق عند الانتهاء</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة السادسة - التزامات الطرف الثاني:</strong><br>- سداد الدفعات في مواعيدها المحددة<br>- توفير المعلومات والمتطلبات اللازمة في الوقت المناسب<br>- التعاون مع فريق العمل وتقديم التغذية الراجعة خلال 5 أيام عمل<br>- عدم التعديل على المخرجات دون موافقة خطية</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة السابعة - المدفوعات والأسعار:</strong><br>الأسعار بالريال السعودي وشاملة ضريبة القيمة المضافة 15%. يستحق الطرف الأول فائدة تأخير 1.5% شهرياً عند التأخر في السداد. كما يحق له تعليق العمل حتى استلام المستحقات.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الثامنة - الملكية الفكرية:</strong><br>تنتقل ملكية المخرجات النهائية للطرف الثاني بعد السداد الكامل لكافة المستحقات، ويحتفظ الطرف الأول بحقوقه في الأدوات والمنهجيات والمواد العامة غير الخاصة بالمشروع.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة التاسعة - الضمان وحدود المسؤولية:</strong><br>يوفر الطرف الأول ضماناً لمدة 6 أشهر على المخرجات ضد العيوب الفنية، ولا يسأل عن أي أضرار غير مباشرة أو تبعية. يقتصر التعويض - إن ثبت - على ما لا يتجاوز مجموع المبالغ المدفوعة.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة العاشرة - الإنهاء:</strong><br>يجوز لأي طرف إنهاء العقد بإشعار خطي مسبق (15) يوماً عند إخلال الطرف الآخر بالتزاماته الجوهرية وعدم معالجتها خلال مدة معقولة. تُسوى المستحقات حتى تاريخ الإنهاء.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الحادية عشرة - القوة القاهرة:</strong><br>لا يتحمل أي طرف المسؤولية عن التأخير أو التقصير الناتج عن أحداث خارجة عن الإرادة مثل الكوارث أو القرارات السيادية أو الأعطال العامة.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الثانية عشرة - القبول ومعايير التسليم:</strong><br>يُعد التسليم نهائياً بعد اجتياز اختبارات القبول (UAT) وإقرار الطرف الثاني خلال (5) أيام عمل، وإلا اعتُبر القبول ضمنياً مع معالجة الملاحظات المتفق عليها.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الثالثة عشرة - مستوى الخدمة (SLA):</strong><br>أوقات العمل الرسمية: الأحد - الخميس من 9 صباحاً حتى 6 مساءً. أزمنة الاستجابة للحالات: حرجة 4 ساعات، عالية 1 يوم عمل، متوسطة 2 يوم عمل.</div><div style="margin-bottom: 10pt;"><strong style="color: #1e3a8a;">المادة الرابعة عشرة - القانون والاختصاص:</strong><br>يخضع هذا العقد للأنظمة واللوائح المعمول بها في المملكة العربية السعودية، ويكون الاختصاص القضائي لمحاكم مدينة جدة ما لم يُتفق خلاف ذلك.</div><div style="margin-bottom: 0; background:#fff7ed; border:1px dashed #f59e0b; padding:10pt;"><strong style="color:#92400e;">ملاحظة:</strong> يُعد هذا العقد صارماً ويلتزم بمعايير الشركات العالمية في الحوكمة وإدارة المشاريع، وأي استثناءات يجب أن تُوثّق كتابياً.</div></div></div>' +
+    '<div style="margin-top: 30pt; page-break-inside: avoid; break-inside: avoid;"><table style="width: 100%; border-collapse: collapse; page-break-inside: avoid; break-inside: avoid;"><tr><td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;"><div style="margin-bottom: 15pt;"><strong>الطرف الأول (الشركة)</strong></div><div style="margin-bottom: 40pt;">' + getOfficialStampSVG({ companyNameAr: "شركة علي صالح الشهري القابضة", companyNameEn: "Alsaleh Holding Company", crNumber: "4030554749", vatNumber: "—", city: "جدة", contractNumber: contractId, date: contractDate, status: stampStatus, size: 128 }) + '</div><div style="border-top: 1px solid #000; padding-top: 8pt;"><strong>علي صالح الشهري</strong><br>المدير العام</div></td><td style="width: 50%; padding: 20pt; text-align: center; border: 1px solid #d1d5db;"><div style="margin-bottom: 15pt;"><strong>الطرف الثاني (العميل)</strong></div><div style="margin-bottom: 40pt;">' + signatureHtml + '</div><div style="border-top: 1px solid #000; padding-top: 8pt;"><strong>' + (formData.clientName || 'اسم العميل') + '</strong><br>التوقيع والختم</div></td></tr></table></div>' +
+    '<div style="margin-top: 20pt; padding: 15pt; border: 1px solid #d1d5db; background: #f8fafc; text-align: center; font-size: 9pt;"><p style="margin: 0 0 8pt 0;">هذا العقد محرر ومؤرخ في جدة بالمملكة العربية السعودية</p><p style="margin: 0 0 8pt 0;">ويخضع للأنظمة واللوائح المعمول بها في المملكة العربية السعودية</p><p style="margin: 0;">العقد الإلكتروني موثق رقمياً ومعتمد قانونياً</p></div></div>';
 
     return contractElement;
   };
@@ -1387,7 +1117,7 @@ const COMPANY_SERVICES: Service[] = [
           </div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
