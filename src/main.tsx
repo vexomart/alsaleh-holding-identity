@@ -44,12 +44,13 @@ const initializeDirection = () => {
 initializeDirection();
 
 // Force cache bust on version change
-const CACHE_KEY = 'app_cache_v37';
+const CACHE_KEY = 'app_cache_v38';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
+  Object.keys(localStorage).filter(k => k.startsWith('app_cache_')).forEach(k => localStorage.removeItem(k));
   sessionStorage.setItem(CACHE_KEY, '1');
-  // Clear all caches
+  // Clear all caches including Vite deps
   if ('caches' in window) {
     caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
   }

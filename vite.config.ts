@@ -70,10 +70,17 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     force: true,
+    esbuildOptions: {
+      // Force single React instance in pre-bundling
+      define: {
+        global: 'globalThis',
+      },
+    },
     include: [
       "react",
       "react-dom",
       "react/jsx-runtime",
+      "react/jsx-dev-runtime",
       "react-dom/client",
       "@tanstack/react-query",
     ],
