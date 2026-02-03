@@ -6,7 +6,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRef, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { MobileOptimizer } from "@/components/MobileOptimizer";
 import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
@@ -218,33 +218,31 @@ const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const App = () => {
-  const queryClientRef = useRef<QueryClient | null>(null);
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: 5 * 60 * 1000,
-          gcTime: 10 * 60 * 1000,
-          retry: (failureCount: number, error: any) => {
-            if (failureCount < 2 && error?.status !== 404) {
-              return true;
-            }
-            return false;
-          },
-          retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 5000),
-          refetchOnWindowFocus: false,
-          refetchOnMount: false,
-        },
-        mutations: {
-          retry: 1,
-        },
+// Create QueryClient outside component to avoid recreation and React hooks issues
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: (failureCount: number, error: any) => {
+        if (failureCount < 2 && error?.status !== 404) {
+          return true;
+        }
+        return false;
       },
-    });
-  }
-  
+      retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 5000),
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
+
+const App = () => {
   return (
-    <QueryClientProvider client={queryClientRef.current!}>
+    <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <TooltipProvider>
           <ReCaptchaProvider>
