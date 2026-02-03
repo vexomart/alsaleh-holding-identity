@@ -1,5 +1,6 @@
 /**
  * Customer Dashboard - World-Class Client Hub
+ * Mobile-First App-like Experience
  * 
  * STATUS: IMPLEMENTED
  * PHASE: MVP - Premium Experience
@@ -7,7 +8,7 @@
 
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { CustomerLayout } from '@/components/customer/CustomerLayout';
+import { CustomerLayout } from '@/components/customer/CustomerLayoutV2';
 import { ClientHub } from '@/components/customer/ClientHub';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
 import { CustomerServices } from '@/components/customer/services';
@@ -25,6 +26,7 @@ import { FinanceCenter } from '@/components/finance/customer/FinanceCenter';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
 import VersionPage from '@/pages/app/Version';
 import { Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Finance Pages
 const NewFinanceApplicationPage = lazy(() => import('@/pages/app/finance/NewApplicationPage'));
@@ -35,9 +37,19 @@ const ApplicationDetailsPage = lazy(() => import('@/pages/app/finance/Applicatio
 const CustomerReferralsPage = lazy(() => import('@/components/customer/referrals/CustomerReferralsPage'));
 
 const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[400px]">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  </div>
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="flex items-center justify-center min-h-[400px]"
+  >
+    <div className="flex flex-col items-center gap-3">
+      <div className="relative">
+        <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg animate-pulse" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary relative" />
+      </div>
+      <span className="text-sm text-muted-foreground">Loading...</span>
+    </div>
+  </motion.div>
 );
 
 const CustomerDashboard = () => {
