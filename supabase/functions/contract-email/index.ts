@@ -94,11 +94,11 @@ serve(async (req) => {
     `;
 
     const emailRes = await resend.emails.send({
-      from: 'نظام العقود <info@ash-holding.sa>',
+      from: 'ASH Holding <info@ash-holding.sa>',
       to: [to],
       bcc: ['info@ash-holding.sa'],
       reply_to: 'info@ash-holding.sa',
-      subject: `العقد الإلكتروني الخاص بك - ${contractNumber}`,
+      subject: `📄 العقد الإلكتروني الخاص بك - ${contractNumber}`,
       html,
     });
 
