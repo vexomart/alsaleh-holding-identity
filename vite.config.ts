@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
       "react-dom/client": path.resolve(reactDomPath, "client"),
     },
-    dedupe: [
+  dedupe: [
       "react", 
       "react-dom", 
       "react/jsx-runtime",
@@ -58,6 +58,14 @@ export default defineConfig(({ mode }) => ({
       "@tanstack/react-query",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-primitive",
+      "@radix-ui/react-context",
+      "@radix-ui/react-use-callback-ref",
+      "@radix-ui/react-use-controllable-state",
+      "@radix-ui/react-dismissable-layer",
+      "@radix-ui/react-portal",
+      "@radix-ui/react-presence",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-compose-refs",
     ],
   },
   optimizeDeps: {
