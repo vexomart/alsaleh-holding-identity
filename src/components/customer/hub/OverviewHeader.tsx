@@ -82,7 +82,7 @@ export function OverviewHeader({
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
         <div className="relative z-10 p-6 md:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="flex flex-col-reverse lg:flex-row-reverse lg:items-center lg:justify-between gap-8">
             {/* Greeting Card - Horizontal Rectangle */}
             <motion.div 
               initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
