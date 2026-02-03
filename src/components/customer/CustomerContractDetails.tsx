@@ -294,7 +294,7 @@ export function CustomerContractDetails() {
             <div className="flex gap-2">
               {contract.status === 'pending_signature' && (
                 <Button
-                  onClick={() => setIsSignDialogOpen(true)}
+                  onClick={() => navigate(`/app/contracts/${contract.id}/sign`)}
                   className="gap-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700"
                 >
                   <FileSignature className="h-4 w-4" />
