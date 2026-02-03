@@ -5,7 +5,8 @@
  * PHASE: Production Ready
  */
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import { AdminLayout } from '@/components/admin';
 import { AdminOverview } from '@/components/admin/AdminOverview';
 import { UsersManagement } from '@/components/admin/users/UsersManagement';
@@ -23,7 +24,17 @@ import { FinanceCenter } from '@/components/admin/finance';
 import { FinanceManagement } from '@/components/finance/admin/FinanceManagement';
 import { AdminClientHub } from '@/components/admin/clients';
 import { Card, CardContent } from '@/components/ui/card';
-import { Construction } from 'lucide-react';
+import { Construction, Loader2 } from 'lucide-react';
+
+// Lazy load referrals page
+const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/AdminReferralsPage'));
+
+// Page loader
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 // Placeholder for pages under development
 function PlaceholderPage({ title }: { title: string }) {
@@ -64,6 +75,9 @@ const AdminDashboard = () => {
         <Route path="wallets/:id" element={<WalletDetailsPage />} />
         <Route path="finance" element={<FinanceCenter />} />
         <Route path="finance-internal" element={<FinanceManagement />} />
+        
+        {/* Referrals Management */}
+        <Route path="referrals" element={<Suspense fallback={<PageLoader />}><AdminReferralsPage /></Suspense>} />
         
         {/* CMS Routes */}
         {/* CMS routes removed - module not implemented */}
