@@ -98,12 +98,13 @@ const Navigation = () => {
   ];
 
   return (
-    <div dir="rtl" className="rtl">
+    <div dir="rtl" className="rtl" style={{ direction: 'rtl' }}>
       {/* Corporate Top Bar */}
       <div className="hidden lg:block bg-gradient-to-l from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
         <div className="container mx-auto px-6">
-          <div className="flex flex-row-reverse items-center justify-between py-2">
-            <div className="flex flex-row-reverse items-center gap-6 text-xs text-slate-300">
+          <div className="flex items-center justify-between py-2" style={{ direction: 'rtl' }}>
+            {/* Right side - Time and Location (First in RTL) */}
+            <div className="flex items-center gap-6 text-xs text-slate-300">
               <div className="flex items-center gap-1.5 group hover:text-blue-300 transition-colors">
                 <Clock className="w-3 h-3 text-blue-400 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">الأحد - الخميس • 8:00 ص - 6:00 م</span>
@@ -114,6 +115,7 @@ const Navigation = () => {
               </div>
             </div>
             
+            {/* Left side - Contact Info (Last in RTL) */}
             <div className="flex items-center gap-4">
               <a href="mailto:info@ash-holding.sa" className="flex items-center gap-1.5 text-slate-300 hover:text-blue-300 transition-all duration-300 group">
                 <Mail className="w-3 h-3 group-hover:scale-110 transition-transform" />
@@ -133,25 +135,25 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[40px]'} w-full z-50 transition-all duration-300`} dir="rtl">
+      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[40px]'} w-full z-50 transition-all duration-300`} dir="rtl" style={{ direction: 'rtl' }}>
         <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/80">
           <div className="container mx-auto px-4 lg:px-6">
-            <div className="flex flex-row-reverse items-center justify-between h-14 lg:h-16">
+            <div className="flex items-center justify-between h-14 lg:h-16" style={{ direction: 'rtl' }}>
               
-              {/* Logo & Company Name - Enhanced Mobile - NOW ON RIGHT */}
+              {/* Logo & Company Name - ON RIGHT (First in RTL flow) */}
               <div className="flex items-center gap-2 sm:gap-3">
-                <a href="/" className="flex flex-row-reverse items-center gap-2 group">
+                <a href="/" className="flex items-center gap-2 group">
                   {/* Logo */}
                   <div className="relative">
                     <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
                       <span className="text-white font-bold text-sm lg:text-base">ASH</span>
                     </div>
-                    <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-white animate-pulse"></div>
+                    <div className="absolute -top-0.5 -left-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-white animate-pulse"></div>
                   </div>
                   
-                  {/* Company Name - Enhanced Typography */}
+                  {/* Company Name */}
                   <div className="hidden sm:block">
-                    <h1 className="text-base lg:text-lg font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
+                    <h1 className="text-base lg:text-lg font-bold bg-gradient-to-l from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
                       ASH HOLDING
                     </h1>
                     <div className="flex items-center gap-1.5 mt-0.5">
@@ -164,7 +166,7 @@ const Navigation = () => {
                         منذ 2016
                       </span>
                       <Badge variant="secondary" className="hidden lg:flex text-xs px-1.5 py-0.5 bg-emerald-100 text-emerald-700 border-emerald-200">
-                        <ShieldCheck className="w-2.5 h-2.5 mr-1" />
+                        <ShieldCheck className="w-2.5 h-2.5 ms-1" />
                         موثق
                       </Badge>
                     </div>
