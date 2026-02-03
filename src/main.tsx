@@ -11,7 +11,7 @@ import './index.css';
 const initializeDirection = () => {
   if (typeof document === 'undefined') return;
   
-  // Check saved language preference
+  // Check saved language preference - default to Arabic
   const savedLang = localStorage.getItem('ash_language') || 'ar';
   const isRTL = savedLang === 'ar';
   const dir = isRTL ? 'rtl' : 'ltr';
@@ -21,6 +21,7 @@ const initializeDirection = () => {
   document.documentElement.lang = savedLang;
   document.documentElement.setAttribute('data-direction', dir);
   document.documentElement.style.direction = dir;
+  document.documentElement.style.textAlign = isRTL ? 'right' : 'left';
   
   // Apply to body - CRITICAL
   document.body.dir = dir;
@@ -45,6 +46,14 @@ const initializeDirection = () => {
   document.documentElement.style.setProperty('--direction', dir);
   document.documentElement.style.setProperty('--text-align', isRTL ? 'right' : 'left');
   
+  // Force RTL on #root element when it exists
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    rootElement.dir = dir;
+    rootElement.style.direction = dir;
+    rootElement.style.textAlign = isRTL ? 'right' : 'left';
+  }
+  
   console.log(`[RTL] Direction initialized: ${dir}, Language: ${savedLang}`);
 };
 
@@ -52,7 +61,7 @@ const initializeDirection = () => {
 initializeDirection();
 
 // Force cache bust on version change
-const CACHE_KEY = 'app_cache_v36';
+const CACHE_KEY = 'app_cache_v37';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));

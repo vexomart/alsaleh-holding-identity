@@ -98,7 +98,10 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden mobile-scroll"
+    <section 
+      dir="rtl"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden mobile-scroll"
+      style={{ direction: 'rtl', textAlign: 'right' }}
       onTouchStart={(e) => e.currentTarget.classList.add('touch-active')}
       onTouchEnd={(e) => e.currentTarget.classList.remove('touch-active')}
     >
@@ -197,18 +200,18 @@ const HeroSection = () => {
         </div>
         
         {/* Corporate Action Buttons - RTL Optimized */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '1.2s' }}>
+        <div className="flex flex-col sm:flex-row-reverse gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 animate-fade-in px-4 sm:px-0" style={{ animationDelay: '1.2s' }}>
           <Button 
             size="lg" 
-            className="bg-gradient-to-l from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full"
+            className="bg-gradient-to-l from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full flex-row-reverse"
             onClick={() => {
               const companiesSection = document.getElementById('companies');
               companiesSection?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
+            <Globe className="w-5 h-5 sm:w-6 sm:h-6 ms-2 sm:ms-3 group-hover:rotate-12 transition-transform duration-300" />
+            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 ms-1 group-hover:translate-y-1 transition-transform duration-300" />
             <span className="group-hover:animate-pulse">استكشف شركاتنا</span>
-            <Globe className="w-5 h-5 sm:w-6 sm:h-6 me-2 sm:me-3 group-hover:rotate-12 transition-transform duration-300" />
-            <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 me-2 sm:me-3 group-hover:translate-y-1 transition-transform duration-300" />
             
             {/* Pulse effect */}
             <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
@@ -217,17 +220,17 @@ const HeroSection = () => {
           <Link to="/consultation">
             <Button 
               size="lg"
-              className="bg-gradient-to-l from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full relative"
+              className="bg-gradient-to-l from-orange-500 via-pink-600 to-purple-700 hover:from-orange-600 hover:via-pink-700 hover:to-purple-800 text-white font-bold w-full sm:w-auto px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl shadow-2xl border-2 border-white/20 backdrop-blur-sm transition-all duration-500 hover:scale-110 group rounded-full relative flex-row-reverse"
             >
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 ms-2 sm:ms-3 group-hover:rotate-12 transition-transform duration-300" />
               <span className="hidden sm:block">استشارة مجانية</span>
               <span className="sm:hidden">استشارة</span>
-              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 me-2 sm:me-3 group-hover:rotate-12 transition-transform duration-300" />
               
               {/* Pulse effect */}
               <div className="absolute inset-0 bg-white rounded-full opacity-20 scale-0 group-hover:scale-100 group-hover:opacity-0 transition-all duration-500" />
               
               {/* Floating badge - RTL position */}
-              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+              <div className="absolute -top-2 -start-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
                 مجاناً
               </div>
             </Button>

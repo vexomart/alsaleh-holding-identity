@@ -33,6 +33,131 @@
 }
 
 /* ===========================================
+   HARD RTL ENFORCEMENT - Homepage & All Pages
+   =========================================== */
+html[dir="rtl"],
+html.rtl,
+[dir="rtl"] {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Force RTL on all containers when dir=rtl */
+[dir="rtl"] * {
+  direction: inherit;
+}
+
+/* RTL Flex Row Reverse - Critical for button/icon order */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+/* RTL-aware margins and paddings */
+[dir="rtl"] .ml-auto { margin-inline-end: auto; margin-inline-start: 0; }
+[dir="rtl"] .mr-auto { margin-inline-start: auto; margin-inline-end: 0; }
+[dir="rtl"] .ml-2 { margin-inline-end: 0.5rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-2 { margin-inline-start: 0.5rem; margin-inline-end: 0; }
+[dir="rtl"] .ml-3 { margin-inline-end: 0.75rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-3 { margin-inline-start: 0.75rem; margin-inline-end: 0; }
+[dir="rtl"] .ml-4 { margin-inline-end: 1rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-4 { margin-inline-start: 1rem; margin-inline-end: 0; }
+
+[dir="rtl"] .pl-4 { padding-inline-end: 1rem; padding-inline-start: 0; }
+[dir="rtl"] .pr-4 { padding-inline-start: 1rem; padding-inline-end: 0; }
+[dir="rtl"] .pl-6 { padding-inline-end: 1.5rem; padding-inline-start: 0; }
+[dir="rtl"] .pr-6 { padding-inline-start: 1.5rem; padding-inline-end: 0; }
+
+/* RTL-aware positioning */
+[dir="rtl"] .left-0 { left: auto; right: 0; }
+[dir="rtl"] .right-0 { right: auto; left: 0; }
+[dir="rtl"] .left-4 { left: auto; right: 1rem; }
+[dir="rtl"] .right-4 { right: auto; left: 1rem; }
+
+/* RTL Text alignment */
+[dir="rtl"] .text-left { text-align: right !important; }
+[dir="rtl"] .text-right { text-align: left !important; }
+[dir="rtl"] .text-center { text-align: center !important; }
+
+/* RTL Icon flip for directional icons */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Chevron and Arrow icons should flip in RTL */
+[dir="rtl"] [class*="ChevronRight"],
+[dir="rtl"] [class*="ChevronLeft"],
+[dir="rtl"] [class*="ArrowRight"],
+[dir="rtl"] [class*="ArrowLeft"] {
+  transform: scaleX(-1);
+}
+
+/* RTL Button icon order - Icon after text */
+[dir="rtl"] button,
+[dir="rtl"] .btn,
+[dir="rtl"] [class*="Button"] {
+  flex-direction: row-reverse;
+}
+
+/* RTL Grid alignment */
+[dir="rtl"] .justify-start { justify-content: flex-end; }
+[dir="rtl"] .justify-end { justify-content: flex-start; }
+
+/* RTL-safe border radius */
+[dir="rtl"] .rounded-l-lg { border-radius: 0 0.5rem 0.5rem 0; }
+[dir="rtl"] .rounded-r-lg { border-radius: 0.5rem 0 0 0.5rem; }
+
+/* Homepage specific RTL enforcement */
+#root[dir="rtl"],
+.homepage-rtl {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Navigation RTL */
+[dir="rtl"] nav,
+[dir="rtl"] header {
+  direction: rtl;
+}
+
+[dir="rtl"] nav .flex {
+  flex-direction: row-reverse;
+}
+
+/* Hero Section RTL */
+[dir="rtl"] .hero-section,
+[dir="rtl"] section[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Cards RTL alignment */
+[dir="rtl"] .card,
+[dir="rtl"] [class*="Card"] {
+  text-align: right;
+}
+
+/* Badge RTL position */
+[dir="rtl"] .badge-position-right {
+  right: auto;
+  left: 0.75rem;
+}
+
+[dir="rtl"] .badge-position-left {
+  left: auto;
+  right: 0.75rem;
+}
+
+/* Footer RTL */
+[dir="rtl"] footer {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ===========================================
    PWA and Mobile-First Responsive Additions 
    =========================================== */
 @supports (padding: max(0px)) {
