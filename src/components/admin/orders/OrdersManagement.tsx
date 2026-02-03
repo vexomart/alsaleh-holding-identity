@@ -34,7 +34,8 @@ import {
   ExternalLink,
   ArrowLeft,
   ArrowRight,
-  Hash
+  Hash,
+  Banknote
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -726,9 +727,12 @@ export function OrdersManagement() {
                               </TableCell>
                               {/* المبلغ */}
                               <TableCell>
-                                <span className="font-semibold text-foreground">
-                                  {formatCurrency(order.total_amount)}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <Banknote className="h-4 w-4 text-emerald-600" />
+                                  <span className="font-semibold text-foreground">
+                                    {formatCurrency(order.total_amount)}
+                                  </span>
+                                </div>
                               </TableCell>
                               {/* التاريخ */}
                               <TableCell>
