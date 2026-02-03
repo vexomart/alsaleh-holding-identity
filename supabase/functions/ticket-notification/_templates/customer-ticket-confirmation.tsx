@@ -155,10 +155,10 @@ export const CustomerTicketConfirmation = ({
           <Text style={footerText}>
             مع أطيب التحيات،<br />
             <strong>فريق الدعم الفني</strong><br />
-            شركة علي صالح الشهري القابضة
+            ASH HOLDING
           </Text>
           <Text style={footerSubtext}>
-            📧 support@alialsheehrholding.com | 📞 +966 XX XXX XXXX
+            📧 info@ash-holding.sa | 📞 0555812567
           </Text>
         </Section>
       </Container>
