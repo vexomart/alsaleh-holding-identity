@@ -1,12 +1,11 @@
 /**
- * Overview Header - Modern Premium Dashboard Header
- * Clean, minimal design with gradient accents
+ * Overview Header - Premium Dashboard Header
+ * Two-column layout: Greeting (right) | Client ID Card (left)
  */
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   Copy,
@@ -69,12 +68,9 @@ export function OverviewHeader({
       {/* Main Card */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         {/* Background Pattern */}
-        <div className="absolute inset-0">
-          {/* Gradient Orbs */}
+        <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 end-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/30 via-emerald-500/20 to-transparent rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4" />
           <div className="absolute bottom-0 start-0 w-[400px] h-[400px] bg-gradient-to-tr from-amber-500/20 via-primary/10 to-transparent rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/4" />
-          
-          {/* Grid Pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
         </div>
 
@@ -82,90 +78,87 @@ export function OverviewHeader({
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
         <div className="relative z-10 p-6 md:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-            {/* Greeting Card - Horizontal Rectangle */}
+          {/* Two Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+            
+            {/* RIGHT COLUMN - Greeting (appears first in RTL) */}
             <motion.div 
-              initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={reducedMotion ? {} : { opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="flex-1"
+              className="order-1"
             >
-              <div className="flex items-center gap-6">
-                {/* Time Icon with Glow */}
+              {/* Greeting Row */}
+              <div className="flex items-center gap-4 mb-4">
+                {/* Time Icon */}
                 <div className="relative shrink-0">
                   <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-xl" />
-                  <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 backdrop-blur-sm border border-amber-400/20 flex items-center justify-center">
-                    <TimeIcon className="h-8 w-8 md:h-10 md:w-10 text-amber-400" />
+                  <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 backdrop-blur-sm border border-amber-400/20 flex items-center justify-center">
+                    <TimeIcon className="h-7 w-7 md:h-8 md:w-8 text-amber-400" />
                   </div>
                 </div>
                 
-                {/* Content */}
+                {/* Greeting Text */}
                 <div className="flex-1 min-w-0">
-                  {/* Greeting & Name */}
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
-                    <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
-                      {greeting}
-                    </h1>
-                    <span className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight flex items-center gap-2 flex-wrap">
+                    <span>{greeting}</span>
+                    <span className="bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
                       {userName}
                     </span>
-                    <span className="text-xl">👋</span>
-                  </div>
-
-                  {/* Status Badges Row */}
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    {/* Date Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
-                      <span className="text-white/60 text-xs">{currentDate}</span>
-                    </div>
-                    
-                    {/* Active Status */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-emerald-400 text-xs font-medium">
-                        {isRTL ? "نشط" : "Active"}
-                      </span>
-                    </div>
-                    
-                    {/* Verified Badge */}
-                    {isVerified && (
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                        <ShieldCheck className="h-3 w-3 text-primary" />
-                        <span className="text-primary text-xs font-medium">
-                          {isRTL ? "موثق" : "Verified"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Welcome Message */}
-                  <p className="text-white/40 text-sm leading-relaxed line-clamp-1">
-                    {isRTL
-                      ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
-                      : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
-                  </p>
+                    <span className="text-xl md:text-2xl">👋</span>
+                  </h1>
                 </div>
               </div>
+
+              {/* Status Badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
+                  <span className="text-white/60 text-xs md:text-sm">{currentDate}</span>
+                </div>
+                
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-emerald-400 text-xs font-medium">
+                    {isRTL ? "نشط" : "Active"}
+                  </span>
+                </div>
+                
+                {isVerified && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                    <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-primary text-xs font-medium">
+                      {isRTL ? "موثق" : "Verified"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Welcome Message */}
+              <p className="text-white/50 text-sm md:text-base leading-relaxed max-w-lg">
+                {isRTL
+                  ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
+                  : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
+              </p>
             </motion.div>
 
-            {/* Client ID Card */}
+            {/* LEFT COLUMN - Client ID Card (appears second in RTL) */}
             <motion.div
-              initial={reducedMotion ? {} : { opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="relative lg:self-center"
+              initial={reducedMotion ? {} : { opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="order-2 flex justify-center lg:justify-start"
             >
-              {/* Glow Effect */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-emerald-500/20 to-primary/20 rounded-2xl blur-xl opacity-50" />
-              
-              <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-5 min-w-[260px] border border-white/10 shadow-2xl">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg">
+              <div className="relative w-full max-w-[320px]">
+                {/* Glow Effect */}
+                <div className="absolute -inset-3 bg-gradient-to-r from-primary/20 via-emerald-500/20 to-primary/20 rounded-2xl blur-xl opacity-50" />
+                
+                <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/10 shadow-2xl">
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg shrink-0">
                       <Sparkles className="h-5 w-5 text-white" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-white/50 text-xs uppercase tracking-wider">
                         {isRTL ? "رقم العميل" : "Client ID"}
                       </p>
@@ -174,36 +167,36 @@ export function OverviewHeader({
                       </p>
                     </div>
                   </div>
-                </div>
 
-                {/* ID Display */}
-                <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span dir="ltr" className="font-mono text-lg text-white tracking-widest tabular-nums">
-                      {customerId || "---"}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={copyClientId}
-                      className="h-9 w-9 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      {copiedId ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+                  {/* ID Display */}
+                  <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
+                    <div className="flex items-center justify-between gap-3">
+                      <span dir="ltr" className="font-mono text-base md:text-lg text-white tracking-wider tabular-nums truncate">
+                        {customerId || "---"}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={copyClientId}
+                        className="h-9 w-9 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors shrink-0"
+                      >
+                        {copiedId ? (
+                          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Footer */}
-                <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-white/5">
-                  <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                  <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium">
-                    ASH Holding Group
-                  </span>
-                  <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  {/* Footer */}
+                  <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-white/5">
+                    <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium">
+                      ASH Holding Group
+                    </span>
+                    <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  </div>
                 </div>
               </div>
             </motion.div>
