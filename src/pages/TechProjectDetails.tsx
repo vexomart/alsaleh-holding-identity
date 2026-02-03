@@ -29,6 +29,7 @@ import {
   Monitor
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { DocumentsDownloadSection } from "@/components/tech-projects/DocumentsDownloadSection";
 
 const TechProjectDetails = () => {
   const { projectId } = useParams();
@@ -347,6 +348,9 @@ const TechProjectDetails = () => {
                 </ul>
               </CardContent>
             </Card>
+
+            {/* Documents Download Section */}
+            <DocumentsDownloadSection projectTitle={project.title} />
           </div>
 
           {/* Sidebar */}
