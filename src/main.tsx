@@ -10,12 +10,19 @@ if (typeof window !== 'undefined') {
   (window as any).ReactDOM = ReactDOM;
 }
 
-// Cache clear on version bump
-const CACHE_KEY = 'app_cache_v26';
-if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
-  sessionStorage.setItem(CACHE_KEY, '1');
-  if ('caches' in window) {
-    caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+// AGGRESSIVE cache clear - bump version to force full refresh
+const CACHE_KEY = 'app_cache_v30';
+if (typeof sessionStorage !== 'undefined') {
+  const cleared = sessionStorage.getItem(CACHE_KEY);
+  if (!cleared) {
+    // Clear everything
+    sessionStorage.clear();
+    sessionStorage.setItem(CACHE_KEY, '1');
+    if ('caches' in window) {
+      caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
+    }
+    // Force reload after cache clear
+    window.location.reload();
   }
 }
 
