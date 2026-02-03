@@ -3,7 +3,7 @@
  * Export all mobile-specific components
  */
 
-export { MobileBottomNav } from './MobileBottomNav';
+export { MobileBottomNav, BOTTOM_NAV_HEIGHT } from './MobileBottomNav';
 export { MobileHeader } from './MobileHeader';
 export { MobileDrawer } from './MobileDrawer';
 export { AppCard, AppCardList, AppCardSkeleton } from './AppCard';
