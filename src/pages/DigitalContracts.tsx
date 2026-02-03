@@ -48,6 +48,8 @@ import html2canvas from 'html2canvas';
 import SignatureCanvas from 'react-signature-canvas';
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
+import ContractHeroSection from "@/components/contract/ContractHeroSection";
+import ContractStepsSection from "@/components/contract/ContractStepsSection";
 
 interface Service {
   id: string;
@@ -89,104 +91,6 @@ const COMPANY_SERVICES: Service[] = [
   { id: '11', name: 'الدعم التقني', description: 'دعم شهري أو سنوي', basePrice: 100, category: 'support' },
   { id: '12', name: 'تحليل البيانات', description: 'Business Intelligence', basePrice: 18000, category: 'analytics' }
 ];
-
-const DigitalContracts = () => {
-  const [formData, setFormData] = useState<FormData>({
-    clientName: '',
-    clientEmail: '',
-    clientPhone: '',
-    clientID: '',
-    selectedServices: [],
-    projectDescription: '',
-    totalPrice: 0,
-    agreeToTerms: false,
-    agreeToPrivacy: false,
-    digitalSignature: '',
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showServices, setShowServices] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const signatureRef = useRef<SignatureCanvas>(null);
-  const [penColor, setPenColor] = useState<string>("#1e40af");
-  const [contractFormType, setContractFormType] = useState<'individual' | 'institution' | 'company'>('individual');
-
-  // SEO structured data for services
-  const servicesJsonLd = COMPANY_SERVICES.map((s) => ({
-    "@type": "Service",
-    name: s.name,
-    description: s.description,
-    areaServed: "SA",
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "SAR",
-      price: s.basePrice,
-      availability: "https://schema.org/InStock"
-    }
-  }));
-
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      name: "نظام التعاقد الإلكتروني",
-      description: "عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع.",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      itemListElement: servicesJsonLd.map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item,
-      })),
-    },
-  ];
-
-  const addService = (service: Service) => {
-    if (!formData.selectedServices.find(s => s.id === service.id)) {
-      const newServices = [...formData.selectedServices, service];
-      setFormData(prev => ({
-        ...prev,
-        selectedServices: newServices,
-        totalPrice: newServices.reduce((sum, s) => sum + s.basePrice, 0)
-      }));
-    }
-  };
-
-  const removeService = (serviceId: string) => {
-    const newServices = formData.selectedServices.filter(s => s.id !== serviceId);
-    setFormData(prev => ({
-      ...prev,
-      selectedServices: newServices,
-      totalPrice: newServices.reduce((sum, s) => sum + s.basePrice, 0)
-    }));
-  };
-
-  const clearSignature = () => {
-    signatureRef.current?.clear();
-  };
-
-  const saveSignature = () => {
-    if (signatureRef.current) {
-      const signatureData = signatureRef.current.toDataURL();
-      setFormData(prev => ({ ...prev, digitalSignature: signatureData }));
-      toast.success('تم حفظ التوقيع بنجاح');
-    }
-  };
-
-  // تراجع عن آخر ضربة قلم
-  const undoSignature = () => {
-    if (!signatureRef.current) return;
-    const data = signatureRef.current.toData();
-    if (!data || data.length === 0) return;
-    data.pop();
-    signatureRef.current.fromData(data);
-  };
-
-  const filteredServices = selectedCategory === 'all'
-    ? COMPANY_SERVICES
-    : COMPANY_SERVICES.filter(service => service.category === selectedCategory);
 
   // دالة التحقق من صحة النموذج
   const isFormValid = () => {
@@ -879,7 +783,7 @@ const DigitalContracts = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <SEO
         title="نظام التعاقد الإلكتروني المتقدم - شركة علي صالح الشهري القابضة"
         description="عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع. تجربة تعاقد موثوقة وآمنة."
@@ -888,70 +792,15 @@ const DigitalContracts = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-primary via-primary/90 to-primary/80 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_50%,transparent_75%)]"></div>
-        </div>
-        
-        <div className="relative z-10 container mx-auto px-4 py-16">
-          {/* Hero Content */}
-          <div className="text-center text-white mb-16" dir="rtl">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white/90 text-sm font-medium mb-6">
-              <Stamp className="w-4 h-4 ml-2" />
-              نظام التعاقد الإلكتروني المتقدم
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-l from-white via-white to-white/80 bg-clip-text text-transparent">
-              عقد إلكتروني بمعايير عالمية
-              <br />
-              وموثوقية سعودية
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
-              تجربة تعاقد احترافية تشمل كل خدماتنا وختم وتوقيع رقمي، مع تنبيهات دفع واضحة لضمان حقوق الطرفين
-            </p>
-            
-            {/* Steps Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
-              {[
-                { icon: FileCheck, title: "اختيار الخدمات", desc: "حدد ما تحتاجه" },
-                { icon: FileSignature, title: "إدخال البيانات", desc: "املأ النموذج" },
-                { icon: CreditCard, title: "سداد الدفعة", desc: "50% مقدم" },
-                { icon: CheckCircle2, title: "التنفيذ", desc: "تسليم احترافي" }
-              ].map((step, idx) => (
-                <div key={idx} className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur border border-white/10">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 flex items-center justify-center">
-                    <step.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-                  <p className="text-white/80 text-sm">{step.desc}</p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={() => document.getElementById('contract-form')?.scrollIntoView({ behavior: 'smooth' })}
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 h-auto"
-              >
-                ابدأ التعاقد الآن
-                <FileSignature className="w-5 h-5 mr-2" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white/20 text-white hover:bg-white/10 text-lg px-8 py-6 h-auto bg-transparent"
-              >
-                استعراض الخدمات
-                <Eye className="w-5 h-5 mr-2" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ContractHeroSection 
+        onStartClick={() => document.getElementById('contract-form')?.scrollIntoView({ behavior: 'smooth' })}
+        onLearnMoreClick={() => document.getElementById('steps-section')?.scrollIntoView({ behavior: 'smooth' })}
+      />
+
+      {/* Steps Section */}
+      <div id="steps-section">
+        <ContractStepsSection />
+      </div>
 
       {/* Main Contract Form Section */}
       <section id="contract-form" className="py-20 bg-gradient-to-br from-background via-muted/30 to-accent/5">
@@ -1540,7 +1389,7 @@ const DigitalContracts = () => {
       </section>
       
       <Footer />
-    </>
+    </div>
   );
 };
 
