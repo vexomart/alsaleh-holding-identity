@@ -208,13 +208,13 @@ export function PaymentsTab() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-right">رقم العقد</TableHead>
-                      <TableHead className="text-right">الكيان</TableHead>
-                      <TableHead className="text-right">رقم القسط</TableHead>
-                      <TableHead className="text-right">تاريخ الاستحقاق</TableHead>
-                      <TableHead className="text-right">المبلغ</TableHead>
-                      <TableHead className="text-right">الحالة</TableHead>
                       <TableHead className="text-right">إجراءات</TableHead>
+                      <TableHead className="text-right">الحالة</TableHead>
+                      <TableHead className="text-right">المبلغ</TableHead>
+                      <TableHead className="text-right">تاريخ الاستحقاق</TableHead>
+                      <TableHead className="text-right">رقم القسط</TableHead>
+                      <TableHead className="text-right">الكيان</TableHead>
+                      <TableHead className="text-right">رقم العقد</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -229,36 +229,6 @@ export function PaymentsTab() {
                           transition={{ delay: index * 0.03 }}
                           className={cn("border-b", isOverdue && "bg-red-500/5")}
                         >
-                          <TableCell className="font-mono text-sm">
-                            {payment.contract?.contract_number || "-"}
-                          </TableCell>
-                          <TableCell>
-                            {payment.contract?.application?.entity?.legal_name_ar || "-"}
-                          </TableCell>
-                          <TableCell>القسط {payment.installment_no}</TableCell>
-                          <TableCell>
-                            {new Date(payment.due_date).toLocaleDateString("ar-SA")}
-                          </TableCell>
-                          <TableCell className="font-semibold">
-                            {formatCurrencySAR(payment.amount_sar)}
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              className={cn(
-                                "text-xs",
-                                statusConfig?.variant === "success" &&
-                                  "bg-green-500/10 text-green-600 border-green-200",
-                                statusConfig?.variant === "warning" &&
-                                  "bg-yellow-500/10 text-yellow-600 border-yellow-200",
-                                statusConfig?.variant === "destructive" &&
-                                  "bg-red-500/10 text-red-600 border-red-200",
-                                statusConfig?.variant === "secondary" &&
-                                  "bg-muted text-muted-foreground"
-                              )}
-                            >
-                              {statusConfig?.label || payment.status}
-                            </Badge>
-                          </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
                               {(payment.status === "scheduled" || payment.status === "overdue") && (
@@ -284,6 +254,36 @@ export function PaymentsTab() {
                                 </Button>
                               )}
                             </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              className={cn(
+                                "text-xs",
+                                statusConfig?.variant === "success" &&
+                                  "bg-green-500/10 text-green-600 border-green-200",
+                                statusConfig?.variant === "warning" &&
+                                  "bg-yellow-500/10 text-yellow-600 border-yellow-200",
+                                statusConfig?.variant === "destructive" &&
+                                  "bg-red-500/10 text-red-600 border-red-200",
+                                statusConfig?.variant === "secondary" &&
+                                  "bg-muted text-muted-foreground"
+                              )}
+                            >
+                              {statusConfig?.label || payment.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="font-semibold">
+                            {formatCurrencySAR(payment.amount_sar)}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(payment.due_date).toLocaleDateString("ar-SA")}
+                          </TableCell>
+                          <TableCell>القسط {payment.installment_no}</TableCell>
+                          <TableCell>
+                            {payment.contract?.application?.entity?.legal_name_ar || "-"}
+                          </TableCell>
+                          <TableCell className="font-mono text-sm">
+                            {payment.contract?.contract_number || "-"}
                           </TableCell>
                         </motion.tr>
                       );
