@@ -10,7 +10,7 @@ import { Suspense, lazy } from 'react';
 import { CustomerLayout } from '@/components/customer/CustomerLayout';
 import { ClientHub } from '@/components/customer/ClientHub';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
-import { CustomerServices } from '@/components/customer/CustomerServices';
+import { CustomerServices } from '@/components/customer/services';
 import { CustomerCategoryServices } from '@/components/customer/CustomerCategoryServices';
 import { CustomerServiceDetails } from '@/components/customer/CustomerServiceDetails';
 import { CustomerNotifications } from '@/components/customer/CustomerNotifications';
