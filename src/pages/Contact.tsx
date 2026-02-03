@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 import BackButton from "@/components/ui/back-button";
 
@@ -53,37 +54,26 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/contact-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const { data, error } = await supabase.functions.invoke('contact-form', {
+        body: formData
+      });
 
-      const result = await response.json();
+      if (error) throw error;
 
-      if (response.ok) {
-        toast({
-          title: "تم إرسال الرسالة بنجاح",
-          description: "سنتواصل معك خلال 24 ساعة",
-        });
+      toast({
+        title: "تم إرسال الرسالة بنجاح",
+        description: "سنتواصل معك خلال 24 ساعة",
+      });
 
-        // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
-          category: ""
-        });
-      } else {
-        throw new Error(result.error || "حدث خطأ أثناء إرسال الرسالة");
-      }
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+        category: ""
+      });
     } catch (error) {
       console.error("Contact form error:", error);
       toast({
