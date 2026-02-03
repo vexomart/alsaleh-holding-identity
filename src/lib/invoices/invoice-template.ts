@@ -653,6 +653,246 @@ export function renderInvoiceHTML(
         border-radius: 0;
       }
     }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - TABLET
+       ======================================== */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .invoice-container {
+        border-radius: 16px;
+      }
+      
+      .invoice-header {
+        padding: 22px 24px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 14px;
+        text-align: center;
+        align-items: center;
+      }
+      
+      .company-name {
+        font-size: 18px;
+      }
+      
+      .invoice-badge {
+        font-size: 16px;
+        padding: 12px 26px;
+      }
+      
+      .invoice-info-bar {
+        flex-wrap: wrap;
+        padding: 14px 24px;
+        gap: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 45%;
+      }
+      
+      .invoice-body {
+        padding: 24px;
+      }
+      
+      .amount-section {
+        padding: 24px;
+      }
+      
+      .amount-value {
+        font-size: 32px;
+      }
+      
+      .parties-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .items-table th,
+      .items-table td {
+        padding: 10px 8px;
+        font-size: 11px;
+      }
+      
+      .totals-card {
+        padding: 16px;
+      }
+    }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - PHONE
+       ======================================== */
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      .invoice-container {
+        border-radius: 12px;
+      }
+      
+      .invoice-header {
+        padding: 18px 16px;
+      }
+      
+      .company-name {
+        font-size: 15px;
+      }
+      
+      .company-subtitle {
+        font-size: 11px;
+      }
+      
+      .invoice-badge {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+      
+      .invoice-info-bar {
+        flex-direction: column;
+        padding: 12px 16px;
+        font-size: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 4px 0;
+      }
+      
+      .invoice-body {
+        padding: 16px;
+      }
+      
+      .amount-section {
+        padding: 18px;
+        border-radius: 14px;
+        border-width: 2px;
+      }
+      
+      .amount-label {
+        font-size: 13px;
+      }
+      
+      .amount-value {
+        font-size: 24px;
+      }
+      
+      .amount-currency {
+        font-size: 14px;
+      }
+      
+      .amount-words {
+        font-size: 12px;
+      }
+      
+      .party-card {
+        border-radius: 12px;
+      }
+      
+      .party-header {
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+      
+      .party-body {
+        padding: 14px;
+      }
+      
+      .party-name {
+        font-size: 14px;
+      }
+      
+      .party-detail {
+        flex-direction: column;
+        gap: 3px;
+        font-size: 11px;
+        padding: 5px 0;
+      }
+      
+      .section-title {
+        font-size: 13px;
+      }
+      
+      .items-table {
+        font-size: 10px;
+      }
+      
+      .items-table th {
+        padding: 8px 4px;
+        font-size: 10px;
+      }
+      
+      .items-table td {
+        padding: 8px 4px;
+      }
+      
+      .cell-desc {
+        max-width: 100px;
+        word-break: break-word;
+      }
+      
+      .totals-card {
+        padding: 14px;
+        border-radius: 12px;
+      }
+      
+      .totals-row {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+      
+      .totals-final {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+      }
+      
+      .totals-final-value {
+        font-size: 20px;
+      }
+      
+      .notes-section {
+        padding: 14px;
+        border-radius: 10px;
+      }
+      
+      .notes-label {
+        font-size: 12px;
+      }
+      
+      .notes-text {
+        font-size: 12px;
+      }
+      
+      .invoice-footer {
+        padding: 16px;
+      }
+      
+      .footer-company {
+        font-size: 13px;
+      }
+      
+      .footer-thanks {
+        font-size: 11px;
+      }
+      
+      .footer-contact {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 10px;
+      }
+      
+      .footer-version {
+        font-size: 8px;
+      }
+    }
   </style>
 </head>
 <body>
