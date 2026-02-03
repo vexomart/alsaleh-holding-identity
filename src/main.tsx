@@ -27,7 +27,7 @@ console.log('Root element HTML:', rootElement?.outerHTML);
 // Duplicate React وبالتالي أخطاء hooks مثل `useRef`.
 // لذلك: في الـPreview/Dev نعمل unregister + clear cache على كل تحميل (بدون مرة واحدة).
 // في الإنتاج (النطاق المنشور) نُبقي السلوك “مرة واحدة” لتفادي إعادة تحميل متكررة.
-const SW_RESET_KEY = 'sw_reset_done_v18_wallet_animations_fix';
+const SW_RESET_KEY = 'sw_reset_done_v19_full_radix_fix';
 
 async function hardResetServiceWorkerOnce() {
   try {
@@ -41,7 +41,7 @@ async function hardResetServiceWorkerOnce() {
       host.endsWith('.lovable.app');
 
     // Bump this key whenever we need to force a new one-time reset per tab.
-    const PREVIEW_GUARD_KEY = 'sw_reset_preview_guard_v10';
+    const PREVIEW_GUARD_KEY = 'sw_reset_preview_guard_v11';
 
     // In preview/dev: guard per-tab to avoid reload loops.
     if (isPreviewOrDev && sessionStorage.getItem(PREVIEW_GUARD_KEY) === '1') return;

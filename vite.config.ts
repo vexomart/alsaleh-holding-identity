@@ -93,11 +93,17 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-tooltip",
       "@radix-ui/react-dialog",
       "@radix-ui/react-popover",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-primitive",
+      "@radix-ui/react-context",
+      "@radix-ui/react-compose-refs",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-use-controllable-state",
       "framer-motion",
       "@react-pdf/renderer",
     ],
   },
-  // Cache bust: v3 - Force dependency rebuild after wallet animations
+  // Cache bust: v4 - Force full rebuild with all radix packages
   optimizeDeps: {
     force: true,
     include: [
@@ -111,6 +117,8 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-tabs",
       "@radix-ui/react-dialog",
       "@radix-ui/react-popover",
+      "@radix-ui/react-primitive",
+      "@radix-ui/react-slot",
       "@tanstack/react-query",
       "@react-pdf/renderer",
       "framer-motion",
