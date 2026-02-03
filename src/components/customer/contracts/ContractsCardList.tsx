@@ -1,11 +1,10 @@
 /**
- * ContractsCardList - Mobile-first card view for contracts
- * RTL-first with premium animations
+ * ContractsCardList - Premium mobile-first card view
+ * RTL-first with glassmorphism design
  */
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -17,6 +16,7 @@ import {
   Download,
   ExternalLink,
   Clock,
+  CheckCircle2,
 } from 'lucide-react';
 import { CustomerContract } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
@@ -31,7 +31,6 @@ interface ContractsCardListProps {
   selectedContractId?: string;
 }
 
-// Card animation variants
 const cardVariants = {
   hidden: { opacity: 0, y: 20, scale: 0.98 },
   visible: (i: number) => ({
@@ -91,19 +90,33 @@ export function ContractsCardList({
           initial="hidden"
           animate="visible"
           variants={cardVariants}
-          whileHover={{ scale: 1.01 }}
+          whileHover={{ scale: 1.01, y: -2 }}
           whileTap={{ scale: 0.98 }}
         >
-          <Card
+          <div
             className={cn(
-              'cursor-pointer transition-all duration-200',
-              'hover:shadow-lg hover:border-primary/30',
+              'relative overflow-hidden rounded-xl cursor-pointer',
+              'bg-card border-2 transition-all duration-300',
+              'hover:shadow-xl hover:border-teal-500/50',
               'active:scale-[0.98]',
-              selectedContractId === contract.id && 'border-primary ring-2 ring-primary/20'
+              selectedContractId === contract.id 
+                ? 'border-teal-500 ring-2 ring-teal-500/20 shadow-lg shadow-teal-500/10' 
+                : 'border-border'
             )}
             onClick={() => onCardClick(contract)}
           >
-            <CardContent className="p-4">
+            {/* Top gradient bar based on status */}
+            <div className={cn(
+              'h-1.5 w-full',
+              contract.status === 'signed' && 'bg-gradient-to-r from-emerald-500 to-emerald-600',
+              contract.status === 'pending_signature' && 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+              contract.status === 'pending_admin_approval' && 'bg-gradient-to-r from-amber-500 to-amber-600',
+              contract.status === 'cancelled' && 'bg-gradient-to-r from-red-500 to-red-600',
+              contract.status === 'draft' && 'bg-gradient-to-r from-slate-400 to-slate-500',
+              !['signed', 'pending_signature', 'pending_admin_approval', 'cancelled', 'draft'].includes(contract.status) && 'bg-gradient-to-r from-teal-500 to-teal-600'
+            )} />
+            
+            <div className="p-4">
               {/* Header: Status + Amount */}
               <div className={cn(
                 "flex items-start justify-between gap-3 mb-3",
@@ -111,7 +124,7 @@ export function ContractsCardList({
               )}>
                 <div className="flex-1 min-w-0">
                   {/* Service/Contract Name */}
-                  <h3 className="font-semibold text-base truncate mb-2">
+                  <h3 className="font-semibold text-base truncate mb-2 text-foreground">
                     {contract.service
                       ? (isRTL 
                           ? (contract.service.name_ar || contract.service.name)
@@ -121,11 +134,16 @@ export function ContractsCardList({
                   <ContractStatusBadge status={contract.status} />
                 </div>
                 {contract.pricing_json?.total && (
-                  <div className={cn("shrink-0", isRTL ? "text-start" : "text-end")}>
-                    <p dir="ltr" className="text-lg font-bold text-primary tabular-nums">
+                  <div className={cn(
+                    "shrink-0 px-3 py-2 rounded-lg",
+                    "bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/30 dark:to-emerald-900/30",
+                    "border border-teal-200 dark:border-teal-800",
+                    isRTL ? "text-start" : "text-end"
+                  )}>
+                    <p dir="ltr" className="text-lg font-bold text-teal-700 dark:text-teal-300 tabular-nums">
                       {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
                     </p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-teal-600/80 dark:text-teal-400/80">
                       {isRTL ? 'شامل الضريبة' : 'incl. VAT'}
                     </p>
                   </div>
@@ -136,7 +154,7 @@ export function ContractsCardList({
               <div className={cn("flex items-center gap-3 mb-3 flex-wrap", isRTL && "flex-row-reverse")}>
                 <span 
                   dir="ltr" 
-                  className="inline-block font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded tabular-nums"
+                  className="inline-block font-mono text-xs text-muted-foreground bg-muted px-2.5 py-1.5 rounded-lg tabular-nums"
                 >
                   {contract.contract_number}
                 </span>
@@ -147,7 +165,7 @@ export function ContractsCardList({
                       onViewOrder?.(contract.order!.id);
                     }}
                     className={cn(
-                      "inline-flex items-center gap-1 text-xs text-primary hover:underline",
+                      "inline-flex items-center gap-1.5 text-xs text-teal-600 dark:text-teal-400 hover:underline px-2 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors",
                       isRTL && "flex-row-reverse"
                     )}
                   >
@@ -161,7 +179,7 @@ export function ContractsCardList({
 
               {/* Footer: Dates + Actions */}
               <div className={cn(
-                "flex items-center justify-between gap-2 pt-3 border-t",
+                "flex items-center justify-between gap-2 pt-3 border-t border-border/50",
                 isRTL && "flex-row-reverse"
               )}>
                 <div className={cn("flex items-center gap-3 text-sm text-muted-foreground", isRTL && "flex-row-reverse")}>
@@ -183,7 +201,11 @@ export function ContractsCardList({
                     <Button 
                       variant="default" 
                       size="sm" 
-                      className="gap-1.5 h-8"
+                      className={cn(
+                        "gap-1.5 h-9",
+                        "bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700",
+                        "shadow-md shadow-indigo-500/30"
+                      )}
                       onClick={(e) => {
                         e.stopPropagation();
                         onSign(contract);
@@ -196,7 +218,11 @@ export function ContractsCardList({
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="gap-1.5 h-8"
+                      className={cn(
+                        "gap-1.5 h-9",
+                        "border-teal-500 text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30",
+                        "shadow-sm"
+                      )}
                       onClick={(e) => {
                         e.stopPropagation();
                         onDownload(contract);
@@ -211,41 +237,53 @@ export function ContractsCardList({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className={cn("gap-1 text-primary h-8", isRTL && "flex-row-reverse")}
+                    className={cn(
+                      "gap-1 text-muted-foreground hover:text-teal-600 h-9",
+                      isRTL && "flex-row-reverse"
+                    )}
                   >
                     {isRTL ? 'التفاصيل' : 'Details'}
                     <ArrowIcon className="h-3.5 w-3.5" />
                   </Button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            
+            {/* Signed badge overlay */}
+            {contract.status === 'signed' && (
+              <div className="absolute top-3 left-3">
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle2 className="h-3 w-3" />
+                  <span className="text-xs font-medium">{isRTL ? 'موقّع' : 'Signed'}</span>
+                </div>
+              </div>
+            )}
+          </div>
         </motion.div>
       ))}
     </div>
   );
 }
 
-// Skeleton loader for cards
 function ContractsCardSkeleton() {
   return (
     <div className="space-y-3">
       {[...Array(5)].map((_, i) => (
-        <Card key={i} className="animate-pulse">
-          <CardContent className="p-4">
+        <div key={i} className="rounded-xl border-2 bg-card animate-pulse overflow-hidden">
+          <div className="h-1.5 w-full bg-muted" />
+          <div className="p-4">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="flex-1">
                 <Skeleton className="h-5 w-3/4 mb-2" />
                 <Skeleton className="h-6 w-28 rounded-full" />
               </div>
               <div className="space-y-1">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-12 w-28 rounded-lg" />
               </div>
             </div>
             <div className="flex gap-2 mb-3">
-              <Skeleton className="h-6 w-32" />
-              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-7 w-32 rounded-lg" />
+              <Skeleton className="h-7 w-24 rounded-lg" />
             </div>
             <div className="flex items-center justify-between pt-3 border-t">
               <div className="flex gap-3">
@@ -253,12 +291,12 @@ function ContractsCardSkeleton() {
                 <Skeleton className="h-4 w-24" />
               </div>
               <div className="flex gap-2">
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-9 w-20 rounded-lg" />
+                <Skeleton className="h-9 w-24 rounded-lg" />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ))}
     </div>
   );
