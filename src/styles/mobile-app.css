@@ -1,12 +1,12 @@
 /**
- * Mobile-First App-like Styles
- * Enhanced touch, safe areas, RTL, and app-like UI
- * NO HORIZONTAL OVERFLOW
+ * Mobile App Styles - Premium App-like Experience
+ * 100% RTL Support, Safe Areas, Touch Optimizations
+ * iPhone-grade design system
  */
 
-/* ===================================
+/* =========================================
    GLOBAL OVERFLOW PREVENTION
-   =================================== */
+   ========================================= */
 html, body {
   overflow-x: hidden !important;
   max-width: 100vw;
@@ -16,15 +16,22 @@ html, body {
   box-sizing: border-box;
 }
 
-/* ===================================
-   SAFE AREA INSETS (notch/home bar)
-   =================================== */
-.safe-area-top {
-  padding-top: env(safe-area-inset-top);
-}
-
-.safe-area-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
+/* =========================================
+   SAFE AREA SUPPORT - iPhone Notch/Dynamic Island
+   ========================================= */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-inline {
+    padding-inline-start: max(1rem, env(safe-area-inset-left));
+    padding-inline-end: max(1rem, env(safe-area-inset-right));
+  }
 }
 
 .safe-area-all {
@@ -34,22 +41,97 @@ html, body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* ===================================
-   TOUCH OPTIMIZATIONS
-   =================================== */
-@media (pointer: coarse) {
-  /* Larger touch targets */
-  .touch-target,
-  button,
-  a,
-  [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
+/* =========================================
+   MOBILE ROOT STYLES
+   ========================================= */
+@media (max-width: 768px) {
+  html {
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* Remove tap highlight */
+    -webkit-tap-highlight-color: transparent;
   }
+  
+  body {
+    /* Prevent horizontal overflow */
+    overflow-x: hidden;
+    /* Font optimization */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Touch optimization */
+    touch-action: manipulation;
+    /* Prevent iOS zoom on input */
+    font-size: 16px;
+  }
+  
+  /* Prevent all horizontal overflow */
+  * {
+    max-width: 100vw;
+    overflow-wrap: break-word;
+  }
+}
 
-  /* Better text selection */
-  input, textarea {
-    font-size: 16px !important; /* Prevents iOS zoom */
+/* =========================================
+   RTL LAYOUT ENFORCEMENT - 100% Arabic
+   ========================================= */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Ensure flex containers respect RTL */
+[dir="rtl"] .flex-row {
+  flex-direction: row; /* Natural RTL flow */
+}
+
+/* RTL icon flip for directional icons */
+[dir="rtl"] .rtl-flip,
+[dir="rtl"] .icon-directional {
+  transform: scaleX(-1);
+}
+
+/* =========================================
+   TOUCH TARGETS - Minimum 44px
+   ========================================= */
+@media (max-width: 768px) {
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Except for inline buttons */
+  .btn-inline {
+    min-height: auto;
+  }
+  
+  /* Form inputs proper sizing */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    min-height: 48px;
+    padding: 12px 16px;
   }
 }
 
@@ -59,20 +141,20 @@ html, body {
   opacity: 0.9;
 }
 
-/* ===================================
-   BOTTOM NAVIGATION - FIXED HEIGHT
-   =================================== */
+/* =========================================
+   BOTTOM NAVIGATION - Premium Design
+   ========================================= */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 50;
-  height: 72px;
-  background: hsl(var(--background) / 0.98);
+  height: 80px;
+  background: hsl(var(--background) / 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid hsl(var(--border));
+  border-top: 1px solid hsl(var(--border) / 0.5);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -81,20 +163,24 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  padding: 8px 4px;
   gap: 4px;
-  transition: color 0.2s ease;
+  flex: 1;
+  padding: 8px 4px;
+  color: hsl(var(--muted-foreground));
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .bottom-nav-item.active {
   color: hsl(var(--primary));
 }
 
+.bottom-nav-item:active {
+  transform: scale(0.9);
+}
+
 .bottom-nav-item span {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -102,22 +188,46 @@ html, body {
   max-width: 100%;
 }
 
-/* ===================================
-   APP-LIKE CARDS
-   =================================== */
+/* Active pill indicator */
+.bottom-nav-pill {
+  position: absolute;
+  top: -2px;
+  width: 48px;
+  height: 4px;
+  background: hsl(var(--primary));
+  border-radius: 9999px;
+}
+
+/* =========================================
+   MOBILE CARDS - App-like Design
+   ========================================= */
+.mobile-card,
 .app-card {
   background: hsl(var(--card));
   border-radius: 16px;
-  border: 1px solid hsl(var(--border) / 0.5);
   padding: 16px;
+  border: 1px solid hsl(var(--border) / 0.5);
+  box-shadow: 0 2px 8px -2px hsl(var(--foreground) / 0.04);
   transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
   overflow: hidden;
 }
 
+.mobile-card:active,
 .app-card:active {
   transform: scale(0.98);
+  background: hsl(var(--muted));
+}
+
+.mobile-card-elevated {
+  background: hsl(var(--card));
+  border-radius: 20px;
+  padding: 20px;
+  border: none;
+  box-shadow: 
+    0 4px 16px -4px hsl(var(--foreground) / 0.08),
+    0 2px 4px -1px hsl(var(--foreground) / 0.04);
 }
 
 .app-card.interactive {
@@ -131,30 +241,69 @@ html, body {
   }
 }
 
-/* ===================================
-   MOBILE HEADER
-   =================================== */
+/* =========================================
+   HEADER STYLES - Premium
+   ========================================= */
 .mobile-header {
   position: sticky;
   top: 0;
   z-index: 40;
   height: 56px;
-  background: hsl(var(--background) / 0.98);
+  background: hsl(var(--background) / 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
   padding-top: env(safe-area-inset-top);
   display: flex;
   align-items: center;
   padding-inline: 8px;
 }
 
-/* ===================================
-   BOTTOM SHEETS
-   =================================== */
+/* =========================================
+   SKELETON LOADING - Smooth Animation
+   ========================================= */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-mobile,
+.skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.skeleton-card {
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 100px;
+}
+
+/* =========================================
+   BOTTOM SHEET STYLES - Premium
+   ========================================= */
+.bottom-sheet,
 .bottom-sheet-content {
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
+  background: hsl(var(--background));
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -8px 32px -8px hsl(var(--foreground) / 0.15);
   padding-bottom: env(safe-area-inset-bottom);
   max-height: 85vh;
   overflow-y: auto;
@@ -162,32 +311,34 @@ html, body {
 }
 
 .bottom-sheet-handle {
-  width: 36px;
-  height: 4px;
+  width: 48px;
+  height: 6px;
   background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 2px;
-  margin: 8px auto 16px;
+  border-radius: 9999px;
+  margin: 12px auto;
 }
 
-/* ===================================
+/* =========================================
    STICKY FOOTER ACTIONS
-   =================================== */
-.sticky-footer {
+   ========================================= */
+.sticky-footer,
+.sticky-footer-mobile {
   position: fixed;
-  bottom: 72px; /* Above bottom nav */
+  bottom: 0;
   left: 0;
   right: 0;
-  z-index: 45;
-  background: hsl(var(--background) / 0.98);
+  z-index: 50;
+  background: hsl(var(--background) / 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid hsl(var(--border));
+  border-top: 1px solid hsl(var(--border) / 0.5);
   padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
 }
 
-/* ===================================
+/* =========================================
    SEARCH BAR
-   =================================== */
+   ========================================= */
 .search-bar {
   background: hsl(var(--muted) / 0.5);
   border-radius: 12px;
@@ -206,44 +357,125 @@ html, body {
   box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
 }
 
-/* ===================================
-   SKELETON LOADING
-   =================================== */
-.skeleton-pulse {
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* ===================================
-   EMPTY STATE
-   =================================== */
-.empty-state {
+/* =========================================
+   EMPTY STATES
+   ========================================= */
+.empty-state,
+.empty-state-mobile {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 48px 24px;
   text-align: center;
+  gap: 16px;
 }
 
 .empty-state-icon {
   width: 80px;
   height: 80px;
+  background: hsl(var(--muted));
   border-radius: 50%;
-  background: hsl(var(--muted) / 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
 }
 
-/* ===================================
+/* =========================================
+   MICRO-INTERACTIONS
+   ========================================= */
+.tap-scale {
+  transition: transform 0.15s ease;
+}
+
+.tap-scale:active {
+  transform: scale(0.95);
+}
+
+.tap-opacity {
+  transition: opacity 0.15s ease;
+}
+
+.tap-opacity:active {
+  opacity: 0.7;
+}
+
+/* =========================================
+   TYPOGRAPHY - Mobile Optimized
+   ========================================= */
+@media (max-width: 768px) {
+  .text-mobile-h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  .text-mobile-h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  .text-mobile-h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  
+  .text-mobile-body {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .text-mobile-caption {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .text-mobile-lg {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .text-mobile-sm {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+/* =========================================
+   SPACER UTILITIES
+   ========================================= */
+.spacer-bottom-nav {
+  height: calc(80px + env(safe-area-inset-bottom));
+}
+
+.spacer-header {
+  height: calc(56px + env(safe-area-inset-top));
+}
+
+/* =========================================
+   GRID SYSTEM - 8pt Grid
+   ========================================= */
+.gap-mobile-xs { gap: 4px; }
+.gap-mobile-sm { gap: 8px; }
+.gap-mobile-md { gap: 12px; }
+.gap-mobile-lg { gap: 16px; }
+.gap-mobile-xl { gap: 24px; }
+
+.p-mobile-xs { padding: 4px; }
+.p-mobile-sm { padding: 8px; }
+.p-mobile-md { padding: 12px; }
+.p-mobile-lg { padding: 16px; }
+.p-mobile-xl { padding: 24px; }
+
+/* =========================================
    MOBILE RESPONSIVE UTILITIES
-   =================================== */
+   ========================================= */
 @media (max-width: 767px) {
   /* Prevent horizontal overflow */
   .overflow-x-auto {
@@ -277,17 +509,6 @@ html, body {
     padding: 16px;
   }
 
-  /* Mobile text sizes */
-  .text-mobile-lg {
-    font-size: 1.125rem;
-    line-height: 1.5;
-  }
-
-  .text-mobile-sm {
-    font-size: 0.875rem;
-    line-height: 1.4;
-  }
-
   /* Mobile button sizes */
   .btn-mobile {
     min-height: 48px;
@@ -297,7 +518,7 @@ html, body {
 
   /* Content with bottom nav space */
   .content-with-nav {
-    padding-bottom: 88px !important;
+    padding-bottom: 104px !important; /* 80px nav + 24px buffer */
   }
 
   /* Tables to cards */
@@ -326,43 +547,28 @@ html, body {
   }
 }
 
-/* ===================================
-   RTL FULL SUPPORT
-   =================================== */
-[dir="rtl"] {
-  text-align: right;
-}
-
+/* =========================================
+   RTL FULL SUPPORT - Logical Properties
+   ========================================= */
 [dir="rtl"] .bottom-nav,
 [dir="rtl"] .mobile-header,
 [dir="rtl"] .app-card {
   direction: rtl;
 }
 
-/* Flex RTL adjustments - natural flow */
-[dir="rtl"] .flex-row {
-  flex-direction: row;
-}
+/* RTL margins using logical properties */
+[dir="rtl"] .ml-auto { margin-inline-end: auto; margin-inline-start: 0; }
+[dir="rtl"] .mr-auto { margin-inline-start: auto; margin-inline-end: 0; }
+[dir="rtl"] .ml-2 { margin-inline-end: 0.5rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-2 { margin-inline-start: 0.5rem; margin-inline-end: 0; }
+[dir="rtl"] .ml-3 { margin-inline-end: 0.75rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-3 { margin-inline-start: 0.75rem; margin-inline-end: 0; }
+[dir="rtl"] .ml-4 { margin-inline-end: 1rem; margin-inline-start: 0; }
+[dir="rtl"] .mr-4 { margin-inline-start: 1rem; margin-inline-end: 0; }
 
-/* RTL icon flip */
-[dir="rtl"] .rtl-flip,
-[dir="rtl"] .icon-directional {
-  transform: scaleX(-1);
-}
-
-/* RTL margins */
-[dir="rtl"] .ml-auto { margin-right: auto; margin-left: 0; }
-[dir="rtl"] .mr-auto { margin-left: auto; margin-right: 0; }
-[dir="rtl"] .ml-2 { margin-right: 0.5rem; margin-left: 0; }
-[dir="rtl"] .mr-2 { margin-left: 0.5rem; margin-right: 0; }
-[dir="rtl"] .ml-3 { margin-right: 0.75rem; margin-left: 0; }
-[dir="rtl"] .mr-3 { margin-left: 0.75rem; margin-right: 0; }
-[dir="rtl"] .ml-4 { margin-right: 1rem; margin-left: 0; }
-[dir="rtl"] .mr-4 { margin-left: 1rem; margin-right: 0; }
-
-/* RTL padding */
-[dir="rtl"] .pl-4 { padding-right: 1rem; padding-left: 0; }
-[dir="rtl"] .pr-4 { padding-left: 1rem; padding-right: 0; }
+/* RTL padding using logical properties */
+[dir="rtl"] .pl-4 { padding-inline-end: 1rem; padding-inline-start: 0; }
+[dir="rtl"] .pr-4 { padding-inline-start: 1rem; padding-inline-end: 0; }
 
 /* RTL border radius */
 [dir="rtl"] .rounded-l-lg { border-radius: 0 0.5rem 0.5rem 0; }
@@ -376,8 +582,8 @@ html, body {
 
 [dir="rtl"] button .icon + span,
 [dir="rtl"] .btn .icon + span {
-  margin-right: 0.5rem;
-  margin-left: 0;
+  margin-inline-end: 0.5rem;
+  margin-inline-start: 0;
 }
 
 /* RTL Sheet/Drawer */
@@ -386,9 +592,9 @@ html, body {
   right: 0;
 }
 
-/* ===================================
+/* =========================================
    KEYBOARD HANDLING
-   =================================== */
+   ========================================= */
 @media (max-height: 500px) {
   /* Compact mode when keyboard is open */
   .keyboard-aware {
@@ -405,23 +611,31 @@ html, body {
   }
 }
 
-/* ===================================
+@media (max-width: 768px) {
+  /* When keyboard is open, ensure form buttons are visible */
+  .keyboard-aware {
+    transition: padding-bottom 0.3s ease;
+  }
+}
+
+/* =========================================
    DARK MODE
-   =================================== */
+   ========================================= */
 .dark .bottom-nav,
 .dark .mobile-header {
-  background: hsl(var(--background) / 0.98);
+  background: hsl(var(--background) / 0.95);
   border-color: hsl(var(--border) / 0.5);
 }
 
-.dark .app-card {
+.dark .app-card,
+.dark .mobile-card {
   background: hsl(var(--card));
   border-color: hsl(var(--border) / 0.3);
 }
 
-/* ===================================
+/* =========================================
    SPECIFIC BREAKPOINTS (iPhone)
-   =================================== */
+   ========================================= */
 /* iPhone SE (320px) */
 @media (max-width: 320px) {
   .bottom-nav-item span {
@@ -455,9 +669,9 @@ html, body {
   }
 }
 
-/* ===================================
+/* =========================================
    FORM INPUTS MOBILE
-   =================================== */
+   ========================================= */
 @media (max-width: 767px) {
   input, select, textarea {
     font-size: 16px !important; /* Prevent iOS zoom */
@@ -479,8 +693,45 @@ html, body {
   /* Submit button always visible */
   form button[type="submit"] {
     position: sticky;
-    bottom: 88px; /* Above bottom nav */
+    bottom: 104px; /* Above bottom nav */
     width: 100%;
     margin-top: 16px;
   }
+}
+
+/* =========================================
+   ANIMATIONS - Reduced Motion Support
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth page transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.2s ease;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: all 0.15s ease;
 }

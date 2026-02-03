@@ -1,7 +1,6 @@
 /**
- * Mobile Header - Compact App-like Header
- * Sticky header with page title, back button, and actions
- * HARD RTL COMPLIANCE
+ * Mobile Header - Premium App-like Header
+ * 100% RTL compliant, micro-animations, app-like feel
  */
 
 import { useNavigate, useLocation } from "react-router-dom";
@@ -78,8 +77,8 @@ export function MobileHeader() {
       dir={isRTL ? "rtl" : "ltr"}
       className={cn(
         "sticky top-0 z-40",
-        "bg-background/95 backdrop-blur-xl",
-        "border-b border-border",
+        "bg-background/80 backdrop-blur-xl",
+        "border-b border-border/50",
         "h-14",
         "md:hidden"
       )}
@@ -88,73 +87,92 @@ export function MobileHeader() {
         direction: isRTL ? "rtl" : "ltr",
       }}
     >
-      <div className="h-full flex items-center gap-2 px-2">
+      <div 
+        className="h-full flex items-center gap-1 px-2"
+        style={{ direction: isRTL ? "rtl" : "ltr" }}
+      >
         {/* Start: Back/Menu Button */}
         <div className="flex items-center shrink-0">
           {canGoBack ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleBack}
-              className="h-10 w-10 rounded-full"
-            >
-              <BackIcon className="h-5 w-5" />
-            </Button>
+            <motion.div whileTap={{ scale: 0.9 }}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleBack}
+                className="h-10 w-10 rounded-full hover:bg-muted/80"
+              >
+                <BackIcon className="h-5 w-5" />
+              </Button>
+            </motion.div>
           ) : (
             <MobileDrawer
               trigger={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 rounded-full"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
+                <motion.div whileTap={{ scale: 0.9 }}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 w-10 rounded-full hover:bg-muted/80"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </motion.div>
               }
             />
           )}
         </div>
 
-        {/* Center: Title */}
-        <div className="flex-1 min-w-0 px-2">
+        {/* Center: Title with RTL-aware alignment */}
+        <div 
+          className="flex-1 min-w-0 px-2"
+          style={{ direction: isRTL ? "rtl" : "ltr" }}
+        >
           <motion.h1
             key={displayTitle}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
             className={cn(
               "text-lg font-bold text-foreground truncate",
               isRTL ? "text-right" : "text-left"
             )}
+            style={{ textAlign: isRTL ? "right" : "left" }}
           >
             {displayTitle}
           </motion.h1>
         </div>
 
-        {/* End: Actions */}
-        <div className="flex items-center gap-1 shrink-0">
+        {/* End: Actions - RTL aware ordering */}
+        <div 
+          className="flex items-center gap-1 shrink-0"
+          style={{ direction: isRTL ? "rtl" : "ltr" }}
+        >
           {/* Notifications */}
-          <NotificationBell
-            userId={user?.id}
-            roleTarget="customer"
-            isRTL={isRTL}
-            notificationsPageUrl="/app/notifications"
-            maxItems={5}
-          />
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <NotificationBell
+              userId={user?.id}
+              roleTarget="customer"
+              isRTL={isRTL}
+              notificationsPageUrl="/app/notifications"
+              maxItems={5}
+            />
+          </motion.div>
 
           {/* User Avatar */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/app/profile")}
-            className="h-10 w-10 rounded-full p-0"
-          >
-            <Avatar className="h-8 w-8 border-2 border-primary/20">
-              <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
-                {userInitial}
-              </AvatarFallback>
-            </Avatar>
-          </Button>
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/app/profile")}
+              className="h-10 w-10 rounded-full p-0 hover:bg-muted/80"
+            >
+              <Avatar className="h-8 w-8 border-2 border-primary/20 ring-2 ring-primary/10">
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="bg-primary/10 text-primary text-sm font-bold">
+                  {userInitial}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </motion.div>
         </div>
       </div>
     </header>

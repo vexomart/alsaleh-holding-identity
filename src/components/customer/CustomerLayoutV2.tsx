@@ -1,6 +1,6 @@
 /**
- * Customer Dashboard Layout V2 - Mobile-First
- * HARD RTL ENFORCEMENT at all levels
+ * Customer Dashboard Layout V2 - Mobile-First Premium
+ * 100% RTL ENFORCEMENT at all levels
  * App-like experience with Bottom Navigation on mobile
  */
 
@@ -38,12 +38,36 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     enabled: !!user,
   });
 
-  // Apply RTL to document on mount
+  // Apply RTL to document on mount - HARD ENFORCEMENT
   useEffect(() => {
-    document.documentElement.dir = isRTL ? "rtl" : "ltr";
-    document.documentElement.lang = isRTL ? "ar" : "en";
-    document.body.style.direction = isRTL ? "rtl" : "ltr";
+    const dir = isRTL ? "rtl" : "ltr";
+    const lang = isRTL ? "ar" : "en";
+    
+    // Apply to html element
+    document.documentElement.dir = dir;
+    document.documentElement.lang = lang;
+    document.documentElement.setAttribute("data-direction", dir);
+    
+    // Apply to body element
+    document.body.dir = dir;
+    document.body.style.direction = dir;
     document.body.style.textAlign = isRTL ? "right" : "left";
+    document.body.setAttribute("data-lang", lang);
+    
+    // Add class for CSS targeting
+    if (isRTL) {
+      document.documentElement.classList.add("rtl");
+      document.documentElement.classList.remove("ltr");
+      document.body.classList.add("rtl");
+      document.body.classList.remove("ltr");
+    } else {
+      document.documentElement.classList.add("ltr");
+      document.documentElement.classList.remove("rtl");
+      document.body.classList.add("ltr");
+      document.body.classList.remove("rtl");
+    }
+    
+    console.log(`[RTL] Layout direction: ${dir}`);
   }, [isRTL]);
 
   useEffect(() => {
@@ -82,8 +106,11 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     return null;
   }
 
+  // Calculate safe padding for bottom nav
+  const bottomPadding = BOTTOM_NAV_HEIGHT + 24; // Nav height + extra buffer
+
   // =====================
-  // MOBILE LAYOUT
+  // MOBILE LAYOUT - App-like Experience
   // =====================
   if (isMobile) {
     return (
@@ -95,18 +122,20 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
           textAlign: isRTL ? 'right' : 'left',
         }}
       >
-        {/* Mobile Header */}
+        {/* Mobile Header - Sticky */}
         <MobileHeader />
 
-        {/* Main Content */}
+        {/* Main Content with proper padding */}
         <main 
           className="overflow-x-hidden"
+          dir={isRTL ? 'rtl' : 'ltr'}
           style={{
-            minHeight: `calc(100vh - 56px - ${BOTTOM_NAV_HEIGHT}px)`,
-            paddingBottom: `${BOTTOM_NAV_HEIGHT + 16}px`, // Nav height + extra padding
-            paddingLeft: '16px',
-            paddingRight: '16px',
+            minHeight: `calc(100vh - 56px - ${bottomPadding}px)`,
+            paddingBottom: `${bottomPadding}px`,
+            paddingInlineStart: '16px',
+            paddingInlineEnd: '16px',
             paddingTop: '16px',
+            direction: isRTL ? 'rtl' : 'ltr',
           }}
         >
           <AnimatePresence mode="wait">
@@ -116,33 +145,39 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.15 }}
+              style={{ direction: isRTL ? 'rtl' : 'ltr' }}
             >
               {children}
             </motion.div>
           </AnimatePresence>
         </main>
 
-        {/* Bottom Navigation */}
+        {/* Bottom Navigation - Fixed */}
         <MobileBottomNav />
 
-        {/* Connection indicators */}
+        {/* Connection status indicators */}
         <div 
           className="fixed z-40 flex items-center gap-1.5"
           style={{
-            bottom: `${BOTTOM_NAV_HEIGHT + 8}px`,
+            bottom: `${BOTTOM_NAV_HEIGHT + 12}px`,
             [isRTL ? 'left' : 'right']: '16px',
           }}
         >
-          <div 
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
             className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
+              "w-2 h-2 rounded-full transition-colors",
               isServicesConnected ? "bg-success" : "bg-muted"
             )}
             title={isRTL ? "اتصال الخدمات" : "Services"}
           />
-          <div 
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.1 }}
             className={cn(
-              "w-1.5 h-1.5 rounded-full transition-colors",
+              "w-2 h-2 rounded-full transition-colors",
               isInvoicesConnected ? "bg-success" : "bg-muted"
             )}
             title={isRTL ? "اتصال الفواتير" : "Invoices"}
@@ -171,7 +206,10 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
         {/* Main Content Area */}
         <SidebarInset className="flex-1 flex flex-col min-w-0">
           <CustomerHeader />
-          <main className="flex-1 overflow-auto p-4 md:p-5 lg:p-6">
+          <main 
+            className="flex-1 overflow-auto p-4 md:p-5 lg:p-6"
+            style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -185,7 +223,7 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
             </AnimatePresence>
           </main>
           
-          {/* Desktop indicators */}
+          {/* Desktop connection indicators */}
           <div 
             className="fixed bottom-4 flex items-center gap-3 z-50"
             style={{ [isRTL ? 'left' : 'right']: '16px' }}
