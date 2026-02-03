@@ -87,24 +87,17 @@ html.rtl,
   transform: scaleX(-1);
 }
 
-/* Chevron and Arrow icons should flip in RTL */
-[dir="rtl"] [class*="ChevronRight"],
-[dir="rtl"] [class*="ChevronLeft"],
-[dir="rtl"] [class*="ArrowRight"],
-[dir="rtl"] [class*="ArrowLeft"] {
+/* Chevron and Arrow icons should flip in RTL - Only for navigation arrows */
+[dir="rtl"] .rtl-arrow-flip {
   transform: scaleX(-1);
 }
 
-/* RTL Button icon order - Icon after text */
-[dir="rtl"] button,
-[dir="rtl"] .btn,
-[dir="rtl"] [class*="Button"] {
-  flex-direction: row-reverse;
-}
+/* DO NOT auto-reverse buttons - let JSX control order */
+/* Buttons will have text first, then icon in JSX for RTL */
 
-/* RTL Grid alignment */
-[dir="rtl"] .justify-start { justify-content: flex-end; }
-[dir="rtl"] .justify-end { justify-content: flex-start; }
+/* RTL Grid alignment - Only for specific classes */
+[dir="rtl"] .rtl-justify-start { justify-content: flex-end; }
+[dir="rtl"] .rtl-justify-end { justify-content: flex-start; }
 
 /* RTL-safe border radius */
 [dir="rtl"] .rounded-l-lg { border-radius: 0 0.5rem 0.5rem 0; }
@@ -117,14 +110,10 @@ html.rtl,
   text-align: right !important;
 }
 
-/* Navigation RTL */
+/* Navigation RTL - Only container not children */
 [dir="rtl"] nav,
 [dir="rtl"] header {
   direction: rtl;
-}
-
-[dir="rtl"] nav .flex {
-  flex-direction: row-reverse;
 }
 
 /* Hero Section RTL */
