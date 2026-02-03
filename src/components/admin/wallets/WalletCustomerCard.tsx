@@ -4,28 +4,18 @@
  */
 
 import { memo, forwardRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  MoreVertical,
   Eye,
-  Plus,
-  Minus,
   Wallet,
   Mail,
   Phone,
@@ -34,6 +24,8 @@ import {
   CreditCard,
   Snowflake,
   CheckCircle2,
+  ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CustomerWallet } from "@/types/financial";
@@ -50,17 +42,14 @@ interface CustomerWithWallet {
 interface WalletCustomerCardProps {
   customer: CustomerWithWallet;
   language: string;
-  onView: () => void;
-  onAddBalance: () => void;
-  onDeductBalance: () => void;
-  onCreateWallet: () => void;
 }
 
 export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomerCardProps>(
   function WalletCustomerCard(
-    { customer, language, onView, onAddBalance, onDeductBalance, onCreateWallet },
+    { customer, language },
     ref
   ) {
+    const navigate = useNavigate();
     const isRTL = language === "ar";
     const [copiedUid, setCopiedUid] = useState(false);
     
@@ -81,7 +70,8 @@ export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomer
       return num.replace(/(.{4})/g, "$1 ").trim();
     };
 
-    const copyUid = async () => {
+    const copyUid = async (e: React.MouseEvent) => {
+      e.stopPropagation();
       if (!customer.customer_uid) return;
       try {
         await navigator.clipboard.writeText(customer.customer_uid);
@@ -92,6 +82,10 @@ export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomer
       }
     };
 
+    const handleCardClick = () => {
+      navigate(`/admin/wallets/${customer.id}`);
+    };
+
     return (
       <motion.div
         ref={ref}
@@ -99,14 +93,24 @@ export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomer
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        whileHover={{ y: -2 }}
+        whileHover={{ y: -4, scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+        onClick={handleCardClick}
         className={cn(
-          "group relative p-4 rounded-2xl border transition-all duration-200",
+          "group relative p-4 rounded-2xl border transition-all duration-200 cursor-pointer",
           "bg-card/50 backdrop-blur-sm hover:bg-card",
-          "hover:shadow-lg hover:shadow-primary/5",
+          "hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30",
           !hasWallet && "border-dashed border-muted-foreground/30"
         )}
       >
+        {/* Hover Indicator */}
+        <div className="absolute top-3 end-3 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Badge variant="secondary" className="text-xs gap-1 bg-primary/10 text-primary">
+            {isRTL ? "عرض التفاصيل" : "View Details"}
+            <ArrowRight className={cn("h-3 w-3", isRTL && "rotate-180")} />
+          </Badge>
+        </div>
+
         {/* Content */}
         <div className="flex items-start gap-4">
           {/* Avatar */}
@@ -142,7 +146,7 @@ export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomer
             {/* Name & UID */}
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="min-w-0">
-                <h3 className="font-semibold text-foreground truncate text-base">
+                <h3 className="font-semibold text-foreground truncate text-base group-hover:text-primary transition-colors">
                   {displayName}
                 </h3>
                 {customer.customer_uid && (
@@ -208,47 +212,6 @@ export const WalletCustomerCard = memo(forwardRef<HTMLDivElement, WalletCustomer
               )}
             </div>
           </div>
-
-          {/* Actions */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="h-9 w-9 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel>
-                {isRTL ? "الإجراءات" : "Actions"}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              
-              {hasWallet ? (
-                <>
-                  <DropdownMenuItem onClick={onView}>
-                    <Eye className="h-4 w-4 me-2" />
-                    {isRTL ? "عرض التفاصيل" : "View Details"}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onAddBalance}>
-                    <Plus className="h-4 w-4 me-2 text-emerald-600" />
-                    {isRTL ? "إضافة رصيد" : "Add Balance"}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={onDeductBalance}>
-                    <Minus className="h-4 w-4 me-2 text-red-600" />
-                    {isRTL ? "خصم رصيد" : "Deduct Balance"}
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <DropdownMenuItem onClick={onCreateWallet}>
-                  <Wallet className="h-4 w-4 me-2 text-primary" />
-                  {isRTL ? "إنشاء محفظة" : "Create Wallet"}
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </motion.div>
     );
