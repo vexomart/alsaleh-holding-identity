@@ -83,67 +83,69 @@ export function OverviewHeader({
 
         <div className="relative z-10 p-6 md:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-            {/* Left Content - Greeting Card */}
+            {/* Greeting Card - Horizontal Rectangle */}
             <motion.div 
               initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="flex-1"
             >
-              {/* Greeting Header */}
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-6">
                 {/* Time Icon with Glow */}
-                <div className="relative">
+                <div className="relative shrink-0">
                   <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-xl" />
-                  <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 backdrop-blur-sm border border-amber-400/20 flex items-center justify-center">
-                    <TimeIcon className="h-7 w-7 text-amber-400" />
+                  <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 backdrop-blur-sm border border-amber-400/20 flex items-center justify-center">
+                    <TimeIcon className="h-8 w-8 md:h-10 md:w-10 text-amber-400" />
                   </div>
                 </div>
                 
-                {/* Greeting Text */}
-                <div className="space-y-1">
-                  <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight flex items-center gap-3">
-                    {greeting}
-                    <span className="text-2xl">👋</span>
-                  </h1>
-                  <p className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
-                    {userName}
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  {/* Greeting & Name */}
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                      {greeting}
+                    </h1>
+                    <span className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+                      {userName}
+                    </span>
+                    <span className="text-xl">👋</span>
+                  </div>
+
+                  {/* Status Badges Row */}
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    {/* Date Badge */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
+                      <span className="text-white/60 text-xs">{currentDate}</span>
+                    </div>
+                    
+                    {/* Active Status */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-emerald-400 text-xs font-medium">
+                        {isRTL ? "نشط" : "Active"}
+                      </span>
+                    </div>
+                    
+                    {/* Verified Badge */}
+                    {isVerified && (
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                        <ShieldCheck className="h-3 w-3 text-primary" />
+                        <span className="text-primary text-xs font-medium">
+                          {isRTL ? "موثق" : "Verified"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Welcome Message */}
+                  <p className="text-white/40 text-sm leading-relaxed line-clamp-1">
+                    {isRTL
+                      ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
+                      : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
                   </p>
                 </div>
               </div>
-
-              {/* Date & Status Row */}
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                {/* Date Badge */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
-                  <span className="text-white/60 text-sm">{currentDate}</span>
-                </div>
-                
-                {/* Active Status */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-emerald-400 text-xs font-medium">
-                    {isRTL ? "حسابك نشط" : "Account Active"}
-                  </span>
-                </div>
-                
-                {/* Verified Badge */}
-                {isVerified && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                    <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                    <span className="text-primary text-xs font-medium">
-                      {isRTL ? "موثق" : "Verified"}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Welcome Message */}
-              <p className="text-white/50 text-sm md:text-base max-w-md leading-relaxed">
-                {isRTL
-                  ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
-                  : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
-              </p>
             </motion.div>
 
             {/* Client ID Card */}
