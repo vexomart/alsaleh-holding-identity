@@ -11,7 +11,6 @@ import {
   Cloud, 
   Shield, 
   Search,
-  Filter,
   Grid,
   List,
   ChevronRight,
@@ -20,17 +19,25 @@ import {
   Star,
   Clock,
   Users,
-  CheckCircle
+  CheckCircle,
+  Sparkles,
+  Rocket,
+  TrendingUp,
+  Target,
+  Layers,
+  Brain,
+  ExternalLink
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { PageLayout } from "@/components/PageLayout";
+import { motion } from "framer-motion";
 
 const TechProjects = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
 
-  // Projects array
   const projects = [
     {
       id: 1,
@@ -51,12 +58,13 @@ const TechProjects = () => {
         "إدارة العملاء والموردين",
         "نظام الإشعارات الذكي"
       ],
-      image: "/placeholder.svg"
+      icon: Database,
+      gradient: "from-emerald-500 to-teal-600"
     },
     {
       id: 2,
-      title: "مساعد الذكاء الاصطناعي لخدمة العملاء",
-      description: "برنامج ذكاء اصطناعي متطور مصمم لخدمة العملاء على الموقع الرسمي للشركة مع إجابات فورية وذكية",
+      title: "مساعد الذكاء الاصطناعي",
+      description: "برنامج ذكاء اصطناعي متطور مصمم لخدمة العملاء مع إجابات فورية وذكية",
       category: "ai",
       status: "مكتمل",
       progress: 100,
@@ -69,288 +77,366 @@ const TechProjects = () => {
         "إجابات فورية على استفسارات العملاء",
         "دعم اللغة العربية والإنجليزية",
         "تكامل مع قاعدة بيانات الشركة",
-        "تعلم مستمر من التفاعلات",
-        "واجهة دردشة تفاعلية",
-        "تحليلات لسلوك العملاء",
-        "إدارة التذاكر الآلية",
-        "تصعيد للموظفين عند الحاجة"
+        "تعلم مستمر من التفاعلات"
       ],
-      image: "/placeholder.svg"
+      icon: Brain,
+      gradient: "from-violet-500 to-purple-600"
     }
   ];
 
   const projectCategories = [
-    { id: 'all', name: 'جميع المشاريع', count: projects.length },
-    { id: 'web', name: 'تطبيقات الويب', count: projects.filter(p => p.category === 'web').length },
-    { id: 'mobile', name: 'تطبيقات الهاتف', count: projects.filter(p => p.category === 'mobile').length },
-    { id: 'ai', name: 'الذكاء الاصطناعي', count: projects.filter(p => p.category === 'ai').length },
-    { id: 'cloud', name: 'الحوسبة السحابية', count: projects.filter(p => p.category === 'cloud').length },
-    { id: 'security', name: 'الأمن السيبراني', count: projects.filter(p => p.category === 'security').length }
+    { id: 'all', name: 'جميع المشاريع', count: projects.length, icon: Layers },
+    { id: 'web', name: 'تطبيقات الويب', count: projects.filter(p => p.category === 'web').length, icon: Globe },
+    { id: 'mobile', name: 'تطبيقات الهاتف', count: projects.filter(p => p.category === 'mobile').length, icon: Smartphone },
+    { id: 'ai', name: 'الذكاء الاصطناعي', count: projects.filter(p => p.category === 'ai').length, icon: Brain },
+    { id: 'cloud', name: 'الحوسبة السحابية', count: projects.filter(p => p.category === 'cloud').length, icon: Cloud },
+    { id: 'security', name: 'الأمن السيبراني', count: projects.filter(p => p.category === 'security').length, icon: Shield }
   ];
 
   const stats = [
-    { label: 'إجمالي المشاريع', value: projects.length.toString(), icon: Code, color: 'text-blue-400' },
-    { label: 'المشاريع النشطة', value: projects.filter(p => p.status === 'قيد التطوير').length.toString(), icon: Zap, color: 'text-green-400' },
-    { label: 'المشاريع المكتملة', value: projects.filter(p => p.status === 'مكتمل').length.toString(), icon: Shield, color: 'text-purple-400' },
-    { label: 'المشاريع قيد التطوير', value: projects.filter(p => p.status === 'قيد التطوير').length.toString(), icon: Cloud, color: 'text-orange-400' }
+    { label: 'إجمالي المشاريع', value: projects.length.toString(), icon: Code, gradient: 'from-blue-500 to-cyan-500' },
+    { label: 'المشاريع المكتملة', value: projects.filter(p => p.status === 'مكتمل').length.toString(), icon: CheckCircle, gradient: 'from-emerald-500 to-green-500' },
+    { label: 'قيد التطوير', value: projects.filter(p => p.status === 'قيد التطوير').length.toString(), icon: Zap, gradient: 'from-amber-500 to-orange-500' },
+    { label: 'معدل النجاح', value: '100%', icon: TrendingUp, gradient: 'from-violet-500 to-purple-500' }
   ];
 
+  const filteredProjects = projects.filter(project => {
+    const matchesSearch = project.title.includes(searchQuery) || project.description.includes(searchQuery);
+    const matchesFilter = selectedFilter === 'all' || project.category === selectedFilter;
+    return matchesSearch && matchesFilter;
+  });
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-b border-slate-700/50">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
+    <PageLayout>
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-blue-500/5 to-violet-500/5" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-full blur-3xl opacity-50" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-r from-violet-500/20 to-purple-500/20 rounded-full blur-3xl opacity-50" />
         
-        <div className="container mx-auto px-6 py-20 relative z-10">
+        <div className="container mx-auto px-6 relative z-10">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-8">
-            <Link to="/" className="text-slate-400 hover:text-white transition-colors">
+            <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
               الرئيسية
             </Link>
-            <ChevronRight className="w-4 h-4 text-slate-500" />
-            <span className="text-white font-medium">المشاريع التقنية</span>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            <span className="text-foreground font-medium">المشاريع التقنية</span>
           </nav>
 
           <div className="max-w-4xl">
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl border border-blue-500/20">
-                <Code className="w-8 h-8 text-blue-400" />
+              <div className="p-4 bg-gradient-to-br from-primary to-blue-600 rounded-2xl shadow-lg shadow-primary/25">
+                <Rocket className="w-10 h-10 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                <Badge className="mb-2 bg-primary/10 text-primary border-primary/20">
+                  <Sparkles className="w-3 h-3 ml-1" />
+                  مشاريعنا التقنية
+                </Badge>
+                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-foreground via-primary to-blue-600 bg-clip-text text-transparent">
                   المشاريع التقنية
                 </h1>
-                <p className="text-xl text-slate-300">
-                  استكشف مشاريعنا التقنية المبتكرة والحلول الرقمية المتطورة
-                </p>
               </div>
             </div>
+            
+            <p className="text-xl text-muted-foreground leading-relaxed mb-10 max-w-2xl">
+              استكشف مشاريعنا التقنية المبتكرة والحلول الرقمية المتطورة التي نبنيها بأحدث التقنيات العالمية
+            </p>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
-                  <div 
+                  <motion.div
                     key={index}
-                    className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 backdrop-blur-sm"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group"
                   >
-                    <div className="flex items-center gap-3">
-                      <IconComponent className={`w-5 h-5 ${stat.color}`} />
-                      <div>
-                        <div className="text-2xl font-bold text-white">{stat.value}</div>
-                        <div className="text-xs text-slate-400">{stat.label}</div>
-                      </div>
-                    </div>
-                  </div>
+                    <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-card/80 backdrop-blur-sm overflow-hidden">
+                      <div className={`h-1 bg-gradient-to-r ${stat.gradient}`} />
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-xl bg-gradient-to-br ${stat.gradient} shadow-lg`}>
+                            <IconComponent className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                            <div className="text-xs text-muted-foreground">{stat.label}</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-12">
-        {/* Search and Filter Section */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="البحث في المشاريع..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 pr-10 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
-              />
-            </div>
+      <section className="py-12">
+        <div className="container mx-auto px-6">
+          {/* Search and Controls */}
+          <div className="mb-10">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
+              {/* Search */}
+              <div className="relative w-full lg:max-w-md">
+                <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="ابحث في المشاريع..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-card border border-border rounded-2xl px-5 py-3.5 pr-12 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+                />
+              </div>
 
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="p-2"
-              >
-                <Grid className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="p-2"
-              >
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Filter Categories */}
-          <div className="flex flex-wrap gap-2">
-            {projectCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedFilter(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  selectedFilter === category.id
-                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                    : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
-                }`}
-              >
-                {category.name}
-                <span className="mr-2 text-xs opacity-70">({category.count})</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Projects Section */}
-        <div className="mb-12">
-          {projects.length === 0 ? (
-            /* Empty State */
-            <div className="text-center py-20">
-              <div className="max-w-md mx-auto">
-                <div className="mb-6">
-                  <div className="w-24 h-24 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700/50">
-                    <Code className="w-12 h-12 text-slate-400" />
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  لا توجد مشاريع تقنية حالياً
-                </h3>
-                <p className="text-slate-400 mb-8 leading-relaxed">
-                  نحن نعمل على تطوير مشاريع تقنية مبتكرة. 
-                  سيتم عرض المشاريع هنا فور الانتهاء من تطويرها.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
-                    <Eye className="w-4 h-4 mr-2" />
-                    تابع التحديثات
-                  </Button>
-                  <Button variant="outline">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    العودة للرئيسية
-                  </Button>
-                </div>
+              {/* View Toggle */}
+              <div className="flex items-center gap-2 p-1 bg-muted rounded-xl">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className="rounded-lg"
+                >
+                  <Grid className="w-4 h-4 ml-1" />
+                  شبكة
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="rounded-lg"
+                >
+                  <List className="w-4 h-4 ml-1" />
+                  قائمة
+                </Button>
               </div>
             </div>
-          ) : (
-            /* Projects Grid/List */
-            <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
-              {projects.map((project) => (
-                <Card key={project.id} className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/70 transition-all duration-300 group">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge 
-                        className={`${
-                          project.status === 'قيد التطوير' 
-                            ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' 
-                            : 'bg-green-500/20 text-green-400 border-green-500/30'
-                        }`}
-                      >
-                        {project.status}
-                      </Badge>
-                      <div className="text-slate-400 text-sm flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {project.progress}%
-                      </div>
-                    </div>
-                    
-                    <CardTitle className="text-white text-xl mb-2 group-hover:text-blue-400 transition-colors">
-                      {project.title}
-                    </CardTitle>
-                    
-                    <CardDescription className="text-slate-300 leading-relaxed">
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-slate-400">تقدم المشروع</span>
-                        <span className="text-sm font-medium text-orange-400">{project.progress}%</span>
-                      </div>
-                       <div className="w-full bg-slate-700 rounded-full h-2">
-                         <div 
-                           className={`h-2 rounded-full transition-all duration-300 ${
-                             project.progress === 100 
-                               ? 'bg-gradient-to-r from-green-500 to-green-600' 
-                               : 'bg-gradient-to-r from-orange-500 to-orange-600'
-                           }`}
-                           style={{ width: `${project.progress}%` }}
-                         ></div>
-                       </div>
-                    </div>
 
-                    {/* Technologies */}
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-white mb-2">التقنيات المستخدمة</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {project.technologies.map((tech, index) => (
-                          <Badge key={index} variant="outline" className="text-xs bg-slate-700/50 text-slate-300 border-slate-600">
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Timeline */}
-                    <div className="mb-6">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="text-slate-400">
-                          <Calendar className="w-3 h-3 inline mr-1" />
-                          بدأ: {project.startDate}
-                        </div>
-                        <div className="text-slate-400">
-                          متوقع: {project.estimatedCompletion}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      <Link to={`/tech-project/${project.id}`} className="flex-1">
-                        <Button 
-                          size="sm" 
-                          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                        >
-                          <Eye className="w-3 h-3 mr-1" />
-                          عرض التفاصيل
-                        </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            {/* Category Filters */}
+            <div className="flex flex-wrap gap-3">
+              {projectCategories.map((category) => {
+                const IconComponent = category.icon;
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedFilter(category.id)}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium transition-all duration-300 ${
+                      selectedFilter === category.id
+                        ? 'bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/25'
+                        : 'bg-card text-muted-foreground hover:bg-accent hover:text-foreground border border-border'
+                    }`}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    {category.name}
+                    <span className={`px-2 py-0.5 rounded-full text-xs ${
+                      selectedFilter === category.id
+                        ? 'bg-white/20 text-white'
+                        : 'bg-muted text-muted-foreground'
+                    }`}>
+                      {category.count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-          )}
-        </div>
-
-        {/* Call to Action Section */}
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl p-8 border border-blue-500/20 text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">
-            هل لديك فكرة مشروع تقني؟
-          </h3>
-          <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
-            نحن نساعدك في تحويل أفكارك التقنية إلى واقع. تواصل معنا لمناقشة مشروعك القادم.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
-              ابدأ مشروعك الآن
-            </Button>
-            <Button variant="outline">
-              تواصل معنا
-            </Button>
           </div>
+
+          {/* Projects Display */}
+          <div className="mb-16">
+            {filteredProjects.length === 0 ? (
+              /* Empty State */
+              <Card className="border-dashed border-2 bg-card/50">
+                <CardContent className="py-20 text-center">
+                  <div className="max-w-md mx-auto">
+                    <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Code className="w-10 h-10 text-primary" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-3">
+                      لا توجد مشاريع في هذه الفئة
+                    </h3>
+                    <p className="text-muted-foreground mb-8">
+                      جرب اختيار فئة أخرى أو استخدم البحث للعثور على المشاريع
+                    </p>
+                    <Button onClick={() => setSelectedFilter('all')}>
+                      عرض جميع المشاريع
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              /* Projects Grid */
+              <div className={viewMode === 'grid' 
+                ? 'grid grid-cols-1 md:grid-cols-2 gap-8' 
+                : 'space-y-6'
+              }>
+                {filteredProjects.map((project, index) => {
+                  const ProjectIcon = project.icon;
+                  return (
+                    <motion.div
+                      key={project.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.15 }}
+                    >
+                      <Card className="group relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-card">
+                        {/* Top Gradient Bar */}
+                        <div className={`h-2 bg-gradient-to-r ${project.gradient}`} />
+                        
+                        <CardHeader className="pb-4">
+                          <div className="flex items-start justify-between mb-4">
+                            {/* Icon & Badge */}
+                            <div className="flex items-center gap-3">
+                              <div className={`p-3 rounded-2xl bg-gradient-to-br ${project.gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                <ProjectIcon className="w-6 h-6 text-white" />
+                              </div>
+                              <Badge 
+                                className={`${
+                                  project.status === 'قيد التطوير' 
+                                    ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' 
+                                    : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                                } font-medium`}
+                              >
+                                <CheckCircle className="w-3 h-3 ml-1" />
+                                {project.status}
+                              </Badge>
+                            </div>
+                            
+                            {/* Progress */}
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <div className="text-sm font-bold">{project.progress}%</div>
+                              <div className="w-12 h-2 bg-muted rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full bg-gradient-to-r ${project.gradient}`}
+                                  style={{ width: `${project.progress}%` }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <CardTitle className="text-2xl text-foreground mb-3 group-hover:text-primary transition-colors">
+                            {project.title}
+                          </CardTitle>
+                          
+                          <CardDescription className="text-muted-foreground leading-relaxed text-base">
+                            {project.description}
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="pt-0 space-y-6">
+                          {/* Technologies */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                              <Code className="w-4 h-4 text-primary" />
+                              التقنيات المستخدمة
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies.map((tech, techIndex) => (
+                                <Badge 
+                                  key={techIndex} 
+                                  variant="secondary"
+                                  className="bg-primary/5 text-primary border-primary/10 font-medium"
+                                >
+                                  {tech}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Features Preview */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                              <Star className="w-4 h-4 text-amber-500" />
+                              أبرز المميزات
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {project.features.slice(0, 4).map((feature, featureIndex) => (
+                                <div key={featureIndex} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <CheckCircle className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                                  <span className="truncate">{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Timeline & Budget */}
+                          <div className="flex items-center justify-between py-4 border-t border-border">
+                            <div className="flex items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1.5 text-muted-foreground">
+                                <Calendar className="w-4 h-4" />
+                                <span>{project.startDate}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 text-muted-foreground">
+                                <Target className="w-4 h-4" />
+                                <span>{project.budget}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Action Button */}
+                          <Link to={`/tech-project/${project.id}`} className="block">
+                            <Button 
+                              size="lg"
+                              className={`w-full bg-gradient-to-r ${project.gradient} hover:opacity-90 text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}
+                            >
+                              <Eye className="w-4 h-4 ml-2" />
+                              عرض تفاصيل المشروع
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                            </Button>
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* CTA Section */}
+          <Card className="border-0 bg-gradient-to-br from-primary/5 via-blue-500/5 to-violet-500/5 overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-blue-500 to-violet-500" />
+            <CardContent className="py-16 text-center relative">
+              <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2" />
+              <div className="absolute top-1/2 right-1/4 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl -translate-y-1/2" />
+              
+              <div className="relative z-10 max-w-2xl mx-auto">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/25">
+                  <Rocket className="w-8 h-8 text-white" />
+                </div>
+                
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent mb-4">
+                  هل لديك فكرة مشروع تقني؟
+                </h3>
+                <p className="text-lg text-muted-foreground mb-8">
+                  نحن نساعدك في تحويل أفكارك التقنية إلى واقع ملموس باستخدام أحدث التقنيات
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/consultation">
+                    <Button size="lg" className="bg-gradient-to-r from-primary to-blue-600 hover:opacity-90 shadow-lg px-8">
+                      <Sparkles className="w-5 h-5 ml-2" />
+                      ابدأ مشروعك الآن
+                    </Button>
+                  </Link>
+                  <Link to="/contact">
+                    <Button size="lg" variant="outline" className="px-8">
+                      تواصل معنا
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
-    </div>
+      </section>
+    </PageLayout>
   );
 };
 
