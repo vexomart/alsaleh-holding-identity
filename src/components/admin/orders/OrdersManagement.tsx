@@ -101,6 +101,12 @@ interface Order {
   created_at: string | null;
   updated_at: string | null;
   description: string | null;
+  // Customer profile data
+  customer?: {
+    full_name: string | null;
+    phone: string | null;
+    email: string | null;
+  } | null;
 }
 
 const statusConfig: Record<string, { 
@@ -197,13 +203,36 @@ export function OrdersManagement() {
   // Fetch orders
   const fetchOrders = async () => {
     try {
-      const { data, error } = await db
+      const { data: ordersData, error: ordersError } = await db
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setOrders(data || []);
+      if (ordersError) throw ordersError;
+
+      // Fetch customer profiles for orders with customer_id
+      const customerIds = [...new Set(ordersData?.filter(o => o.customer_id).map(o => o.customer_id) || [])];
+      
+      let customersMap: Record<string, { full_name: string | null; phone: string | null; email: string | null }> = {};
+      
+      if (customerIds.length > 0) {
+        const { data: profilesData } = await db
+          .from('profiles')
+          .select('id, full_name, phone, email')
+          .in('id', customerIds);
+        
+        profilesData?.forEach(p => {
+          customersMap[p.id] = { full_name: p.full_name, phone: p.phone, email: p.email };
+        });
+      }
+
+      // Merge customer data into orders
+      const ordersWithCustomers = ordersData?.map(order => ({
+        ...order,
+        customer: order.customer_id ? customersMap[order.customer_id] || null : null,
+      })) || [];
+
+      setOrders(ordersWithCustomers);
     } catch (err) {
       console.error('Error fetching orders:', err);
       toast({
@@ -385,6 +414,9 @@ export function OrdersManagement() {
         title: isRTL ? 'جاري إنشاء الفاتورة...' : 'Generating invoice...',
       });
 
+      const customerName = order.customer?.full_name || (isRTL ? 'عميل' : 'Customer');
+      const customerPhone = order.customer?.phone || '0555812567';
+
       const invoiceData: InvoiceData = {
         invoiceNumber: order.order_number,
         date: order.created_at || new Date().toISOString(),
@@ -398,7 +430,9 @@ export function OrdersManagement() {
         },
         
         buyer: {
-          name: isRTL ? 'عميل' : 'Customer',
+          name: customerName,
+          phone: customerPhone,
+          email: order.customer?.email || undefined,
         },
         
         items: [{

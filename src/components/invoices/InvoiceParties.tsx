@@ -74,6 +74,12 @@ export function InvoiceParties({ seller, buyer, className }: InvoicePartiesProps
               <span dir="ltr" className="font-mono ltr-token invoice-customer-id">{buyer.customerId}</span>
             </p>
           )}
+          {buyer.phone && (
+            <p className="text-sm text-muted-foreground mb-2 invoice-party-info">
+              <span className="font-semibold">{isRTL ? 'الجوال:' : 'Phone:'}</span>{' '}
+              <span dir="ltr" className="font-mono ltr-token">{buyer.phone}</span>
+            </p>
+          )}
           {buyer.vatNumber && (
             <p className="text-sm text-muted-foreground mb-2 invoice-party-info">
               <span className="font-semibold">{isRTL ? 'الرقم الضريبي:' : 'VAT:'}</span>{' '}

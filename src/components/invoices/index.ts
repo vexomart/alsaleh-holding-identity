@@ -57,6 +57,8 @@ export function mapCustomerInvoiceToViewModel(
     buyerName?: string;
     buyerNameAr?: string;
     buyerCustomerId?: string;
+    buyerPhone?: string;
+    buyerEmail?: string;
   }
 ): import('./types').InvoiceViewModel {
   const seller = {
@@ -73,6 +75,8 @@ export function mapCustomerInvoiceToViewModel(
     name: options?.buyerName || 'Customer',
     nameAr: options?.buyerNameAr || 'العميل',
     customerId: options?.buyerCustomerId,
+    phone: options?.buyerPhone,
+    email: options?.buyerEmail,
   };
 
   const items = [{
@@ -132,6 +136,9 @@ export function mapOrderToInvoiceViewModel(
     invoiceNumber?: string;
     buyerName?: string;
     buyerNameAr?: string;
+    buyerPhone?: string;
+    buyerEmail?: string;
+    buyerCustomerId?: string;
   }
 ): import('./types').InvoiceViewModel {
   const subtotal = order.total_amount || 0;
@@ -162,7 +169,9 @@ export function mapOrderToInvoiceViewModel(
     buyer: {
       name: options?.buyerName || 'Customer',
       nameAr: options?.buyerNameAr || 'العميل',
-      customerId: order.customer_id || undefined,
+      customerId: options?.buyerCustomerId || order.customer_id || undefined,
+      phone: options?.buyerPhone,
+      email: options?.buyerEmail,
     },
     items: [{
       id: '1',
