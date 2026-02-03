@@ -189,6 +189,10 @@ export function OrdersManagement() {
   // Dialog states
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  
+  // Inline price editing
+  const [editingPriceOrderId, setEditingPriceOrderId] = useState<string | null>(null);
+  const [editingPriceValue, setEditingPriceValue] = useState<string>('');
 
   // Fetch orders
   const fetchOrders = async () => {
@@ -283,6 +287,45 @@ export function OrdersManagement() {
         variant: 'destructive',
       });
     }
+  };
+
+  // Handle inline price update
+  const handlePriceUpdate = async (orderId: string) => {
+    const newPrice = parseFloat(editingPriceValue);
+    if (isNaN(newPrice) || newPrice < 0) {
+      toast({
+        title: isRTL ? 'يرجى إدخال مبلغ صحيح' : 'Please enter a valid amount',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const { error } = await db
+        .from('orders')
+        .update({ total_amount: newPrice })
+        .eq('id', orderId);
+
+      if (error) throw error;
+      
+      toast({ 
+        title: isRTL ? 'تم تحديث المبلغ' : 'Amount updated' 
+      });
+      setEditingPriceOrderId(null);
+      setEditingPriceValue('');
+    } catch (err) {
+      console.error('Error updating price:', err);
+      toast({
+        title: isRTL ? 'خطأ في تحديث المبلغ' : 'Error updating amount',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const startEditingPrice = (order: Order, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingPriceOrderId(order.id);
+    setEditingPriceValue(order.total_amount?.toString() || '');
   };
 
   const formatCurrency = (amount: number | null) => {
@@ -726,13 +769,57 @@ export function OrdersManagement() {
                                 {getStatusBadge(order.status)}
                               </TableCell>
                               {/* المبلغ */}
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Banknote className="h-4 w-4 text-emerald-600" />
-                                  <span className="font-semibold text-foreground">
-                                    {formatCurrency(order.total_amount)}
-                                  </span>
-                                </div>
+                              <TableCell onClick={(e) => e.stopPropagation()}>
+                                {editingPriceOrderId === order.id ? (
+                                  <div className="flex items-center gap-1">
+                                    <Input
+                                      type="number"
+                                      value={editingPriceValue}
+                                      onChange={(e) => setEditingPriceValue(e.target.value)}
+                                      className="h-8 w-24 text-sm"
+                                      placeholder="0"
+                                      autoFocus
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') handlePriceUpdate(order.id);
+                                        if (e.key === 'Escape') {
+                                          setEditingPriceOrderId(null);
+                                          setEditingPriceValue('');
+                                        }
+                                      }}
+                                    />
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                                      onClick={() => handlePriceUpdate(order.id)}
+                                    >
+                                      <CheckCircle className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                      onClick={() => {
+                                        setEditingPriceOrderId(null);
+                                        setEditingPriceValue('');
+                                      }}
+                                    >
+                                      <XCircle className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div 
+                                    className="flex items-center gap-2 cursor-pointer group hover:bg-muted/50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
+                                    onClick={(e) => startEditingPrice(order, e)}
+                                    title={isRTL ? 'انقر للتعديل' : 'Click to edit'}
+                                  >
+                                    <Banknote className="h-4 w-4 text-emerald-600" />
+                                    <span className="font-semibold text-foreground">
+                                      {formatCurrency(order.total_amount)}
+                                    </span>
+                                    <Edit className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                                  </div>
+                                )}
                               </TableCell>
                               {/* التاريخ */}
                               <TableCell>
