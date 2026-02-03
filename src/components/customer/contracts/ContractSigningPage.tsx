@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { AnimatePresence } from 'framer-motion';
 import { type ContractData, downloadContractPdf } from '@/lib/invoices';
+import { sendContractEmail } from '@/lib/api/email-notifications';
 
 import {
   SigningPageHeader,
@@ -133,6 +134,21 @@ export function ContractSigningPage() {
 
       setSignedAt(now);
       toast.success(isRTL ? 'تم توقيع العقد بنجاح!' : 'Contract signed successfully!');
+      
+      // Send contract signed email notification
+      if (signerData.email || profile?.email) {
+        sendContractEmail({
+          contractId: contract.id,
+          contractNumber: contract.contract_number,
+          customerEmail: signerData.email || profile?.email || '',
+          customerName: signerData.name,
+          serviceName: contract.service?.name || '',
+          serviceNameAr: contract.service?.name_ar || undefined,
+          totalAmount: contract.pricing_json?.total || 0,
+          currency: contract.pricing_json?.currency || 'SAR',
+          eventType: 'signed',
+        }).catch(err => console.error('Email notification failed:', err));
+      }
       
       // Move to success step
       setCurrentStep(4);

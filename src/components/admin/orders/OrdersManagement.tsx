@@ -84,6 +84,7 @@ import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
+import { sendOrderStatusEmail } from '@/lib/api/email-notifications';
 
 interface Order {
   id: string;
@@ -298,6 +299,10 @@ export function OrdersManagement() {
 
   // Handle status change
   const handleStatusChange = async (orderId: string, newStatus: string) => {
+    // Find order to get customer info
+    const order = orders.find(o => o.id === orderId);
+    const previousStatus = order?.status;
+    
     try {
       const { error } = await db
         .from('orders')
@@ -309,6 +314,22 @@ export function OrdersManagement() {
       toast({ 
         title: isRTL ? 'تم تحديث حالة الطلب' : 'Order status updated' 
       });
+      
+      // Send email notification to customer
+      if (order?.customer?.email && order.customer_id) {
+        sendOrderStatusEmail({
+          orderId: orderId,
+          orderNumber: order.order_number,
+          customerEmail: order.customer.email,
+          customerName: order.customer.full_name || '',
+          serviceName: order.title,
+          serviceNameAr: order.title_ar || undefined,
+          totalAmount: order.total_amount || 0,
+          currency: order.currency || 'SAR',
+          status: newStatus,
+          previousStatus: previousStatus || undefined,
+        }).catch(err => console.error('Email notification failed:', err));
+      }
     } catch (err) {
       console.error('Error updating order:', err);
       toast({
