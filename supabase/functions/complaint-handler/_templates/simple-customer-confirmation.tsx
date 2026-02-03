@@ -145,12 +145,12 @@ export const CustomerComplaintConfirmation = ({
           <Text style={actionTitle}>🚀 كيف يمكننا مساعدتك؟</Text>
           <Row style={actionRow}>
             <Column>
-              <Link href={`mailto:info@alialshehriholding.com?subject=متابعة الشكوى ${ticketNumber}`} style={primaryAction}>
+              <Link href={`mailto:info@ash-holding.sa?subject=متابعة الشكوى ${ticketNumber}`} style={primaryAction}>
                 💬 متابعة الشكوى
               </Link>
             </Column>
             <Column>
-              <Link href="https://alialshehriholding.com/support" style={secondaryAction}>
+              <Link href="https://ash-holding.sa/support" style={secondaryAction}>
                 📚 مركز المساعدة
               </Link>
             </Column>
@@ -178,14 +178,14 @@ export const CustomerComplaintConfirmation = ({
           <Section style={contactCard}>
             <Text style={contactCardIcon}>📧</Text>
             <Text style={contactCardTitle}>البريد الإلكتروني</Text>
-            <Text style={contactCardValue}>info@alialshehriholding.com</Text>
+            <Text style={contactCardValue}>info@ash-holding.sa</Text>
             <Text style={contactCardDesc}>رد خلال ساعة</Text>
           </Section>
           
           <Section style={contactCard}>
             <Text style={contactCardIcon}>🌐</Text>
             <Text style={contactCardTitle}>الموقع</Text>
-            <Text style={contactCardValue}>alialshehriholding.com</Text>
+            <Text style={contactCardValue}>ash-holding.sa</Text>
             <Text style={contactCardDesc}>مساعدة فورية</Text>
           </Section>
         </Section>
