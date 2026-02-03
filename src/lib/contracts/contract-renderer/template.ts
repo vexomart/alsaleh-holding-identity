@@ -1385,5 +1385,286 @@ body {
     border-radius: 4px;
   }
 }
+
+/* ========================================
+   MOBILE RESPONSIVE - TABLET
+   ======================================== */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .contract-document {
+    padding: 12mm;
+    margin: 10px auto;
+  }
+  
+  .contract-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .company-logo {
+    font-size: 28px;
+  }
+  
+  .company-name {
+    font-size: 16px;
+  }
+  
+  .contract-meta {
+    text-align: center;
+    direction: rtl;
+  }
+  
+  .cover-block {
+    padding: 20px 15px;
+  }
+  
+  .cover-title {
+    font-size: 22px;
+  }
+  
+  .internal-notice {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .notice-features {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .parties-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .financials-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .signatures-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .schedule-table th,
+  .schedule-table td {
+    padding: 6px 4px;
+    font-size: 9px;
+  }
+  
+  .section-title {
+    font-size: 13px;
+  }
+  
+  .article-header {
+    font-size: 11px;
+  }
+  
+  .article-content p {
+    font-size: 10px;
+  }
+}
+
+/* ========================================
+   MOBILE RESPONSIVE - PHONE
+   ======================================== */
+@media screen and (max-width: 480px) {
+  body {
+    padding: 5px;
+  }
+  
+  .contract-document {
+    padding: 8mm;
+    margin: 5px auto;
+    border-radius: 8px;
+  }
+  
+  html {
+    font-size: 10px;
+  }
+  
+  .company-name {
+    font-size: 14px;
+  }
+  
+  .company-subtitle {
+    font-size: 9px;
+  }
+  
+  .cover-title {
+    font-size: 18px;
+  }
+  
+  .cover-subtitle {
+    font-size: 10px;
+  }
+  
+  .cover-contract-number {
+    font-size: 11px;
+  }
+  
+  .internal-notice {
+    padding: 12px;
+  }
+  
+  .notice-title {
+    font-size: 11px;
+  }
+  
+  .notice-text {
+    font-size: 10px;
+  }
+  
+  .notice-features {
+    gap: 8px;
+  }
+  
+  .feature-item {
+    font-size: 9px;
+    padding: 3px 8px;
+  }
+  
+  .section-title {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .party-header {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  
+  .party-details {
+    padding: 10px;
+  }
+  
+  .detail-row {
+    font-size: 9px;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .detail-value {
+    max-width: 100%;
+  }
+  
+  .financials-box {
+    padding: 12px;
+  }
+  
+  .financial-item {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .fin-item-icon {
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+  }
+  
+  .financial-label {
+    font-size: 9px;
+  }
+  
+  .financial-value {
+    font-size: 11px;
+  }
+  
+  .financial-total {
+    padding: 12px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .total-value {
+    font-size: 18px;
+  }
+  
+  .amount-words {
+    font-size: 10px;
+  }
+  
+  .article-header {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  
+  .article-content {
+    padding: 10px;
+  }
+  
+  .article-content p {
+    font-size: 9px;
+    line-height: 1.7;
+  }
+  
+  .schedule-table {
+    font-size: 8px;
+  }
+  
+  .schedule-table th {
+    padding: 5px 3px;
+  }
+  
+  .schedule-table td {
+    padding: 4px 3px;
+  }
+  
+  .th-icon {
+    display: none;
+  }
+  
+  .signature-box {
+    padding: 15px 10px;
+  }
+  
+  .signature-title {
+    font-size: 11px;
+  }
+  
+  .signature-name {
+    font-size: 10px;
+  }
+  
+  .signature-area {
+    height: 80px;
+  }
+  
+  .digital-stamp {
+    padding: 4px;
+  }
+  
+  .stamp-border {
+    padding: 8px;
+  }
+  
+  .stamp-icon {
+    font-size: 18px;
+  }
+  
+  .stamp-title {
+    font-size: 7px;
+  }
+  
+  .stamp-company {
+    font-size: 8px;
+  }
+  
+  .footer-content {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  
+  .footer-meta {
+    text-align: center;
+    direction: rtl;
+  }
+}
   `;
 }

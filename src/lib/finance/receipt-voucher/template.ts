@@ -410,6 +410,217 @@ export function renderReceiptHTML(
         border-radius: 0;
       }
     }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - TABLET
+       ======================================== */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .voucher-container {
+        border-radius: 16px;
+      }
+      
+      .voucher-header {
+        padding: 20px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      
+      .company-name {
+        font-size: 20px;
+      }
+      
+      .voucher-badge {
+        padding: 12px 24px;
+        font-size: 18px;
+      }
+      
+      .info-bar {
+        flex-wrap: wrap;
+        padding: 12px 20px;
+        gap: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 45%;
+        text-align: center;
+      }
+      
+      .voucher-content {
+        padding: 20px;
+      }
+      
+      .amount-section {
+        padding: 20px;
+      }
+      
+      .amount-value {
+        font-size: 32px;
+      }
+      
+      .parties-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .signature-section {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .signature-box {
+        width: 100%;
+      }
+      
+      .approval-stamp {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        margin: 20px auto;
+      }
+    }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - PHONE
+       ======================================== */
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      .voucher-container {
+        border-radius: 12px;
+      }
+      
+      .voucher-header {
+        padding: 16px;
+      }
+      
+      .company-name {
+        font-size: 16px;
+      }
+      
+      .company-subtitle {
+        font-size: 11px;
+      }
+      
+      .voucher-badge {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+      
+      .info-bar {
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 100%;
+      }
+      
+      .voucher-content {
+        padding: 16px;
+      }
+      
+      .amount-section {
+        padding: 16px;
+        border-radius: 12px;
+      }
+      
+      .amount-label {
+        font-size: 12px;
+      }
+      
+      .amount-value {
+        font-size: 26px;
+      }
+      
+      .amount-words {
+        font-size: 13px;
+      }
+      
+      .party-card {
+        border-radius: 10px;
+      }
+      
+      .party-header {
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+      
+      .party-body {
+        padding: 12px;
+      }
+      
+      .party-name {
+        font-size: 14px;
+      }
+      
+      .party-detail {
+        font-size: 11px;
+        flex-direction: column;
+        gap: 2px;
+      }
+      
+      .details-section {
+        padding: 16px;
+        border-radius: 10px;
+      }
+      
+      .details-title {
+        font-size: 12px;
+      }
+      
+      .detail-label {
+        font-size: 11px;
+      }
+      
+      .detail-value {
+        font-size: 12px;
+      }
+      
+      .signature-title {
+        font-size: 11px;
+      }
+      
+      .signature-line {
+        height: 40px;
+      }
+      
+      .signature-name {
+        font-size: 12px;
+      }
+      
+      .approval-stamp {
+        width: 100px;
+        height: 100px;
+        border-width: 3px;
+      }
+      
+      .stamp-text {
+        font-size: 10px;
+      }
+      
+      .stamp-check {
+        font-size: 22px;
+      }
+      
+      .voucher-footer {
+        padding: 12px 16px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 <body>

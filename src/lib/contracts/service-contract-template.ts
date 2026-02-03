@@ -816,6 +816,266 @@ export function renderServiceContractHTML(
         page-break-inside: avoid;
       }
     }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - TABLET
+       ======================================== */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .contract-container {
+        border-radius: 12px;
+      }
+      
+      .contract-header {
+        padding: 20px 24px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 14px;
+        text-align: center;
+      }
+      
+      .company-name {
+        font-size: 20px;
+      }
+      
+      .contract-badge {
+        font-size: 16px;
+        padding: 12px 26px;
+      }
+      
+      .contract-info-bar {
+        flex-wrap: wrap;
+        padding: 14px 24px;
+        gap: 14px;
+      }
+      
+      .info-item {
+        flex: 1 1 30%;
+      }
+      
+      .contract-body {
+        padding: 24px;
+      }
+      
+      .preamble {
+        padding: 20px;
+      }
+      
+      .preamble-title {
+        font-size: 18px;
+      }
+      
+      .parties-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .service-section {
+        padding: 20px;
+      }
+      
+      .amount-box {
+        padding: 22px;
+      }
+      
+      .amount-value {
+        font-size: 32px;
+      }
+      
+      .signature-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .legal-title {
+        font-size: 18px;
+      }
+      
+      .article-header {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+    }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - PHONE
+       ======================================== */
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 5px;
+        font-size: 14px;
+      }
+      
+      .contract-container {
+        border-radius: 10px;
+      }
+      
+      .contract-header {
+        padding: 16px;
+      }
+      
+      .company-name {
+        font-size: 16px;
+      }
+      
+      .company-subtitle {
+        font-size: 12px;
+      }
+      
+      .contract-badge {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+      
+      .contract-info-bar {
+        flex-direction: column;
+        padding: 12px 16px;
+        font-size: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .info-item:last-child {
+        border-bottom: none;
+      }
+      
+      .contract-body {
+        padding: 16px;
+      }
+      
+      .preamble {
+        padding: 16px;
+        border-radius: 10px;
+      }
+      
+      .preamble-title {
+        font-size: 16px;
+      }
+      
+      .preamble-text {
+        font-size: 13px;
+      }
+      
+      .party-header {
+        padding: 12px 14px;
+        font-size: 13px;
+      }
+      
+      .party-body {
+        padding: 14px;
+      }
+      
+      .party-name {
+        font-size: 15px;
+      }
+      
+      .party-detail {
+        flex-direction: column;
+        gap: 3px;
+        font-size: 12px;
+        padding: 6px 0;
+      }
+      
+      .service-section {
+        padding: 16px;
+        border-radius: 12px;
+      }
+      
+      .service-title {
+        font-size: 14px;
+      }
+      
+      .service-name {
+        font-size: 18px;
+      }
+      
+      .service-description {
+        font-size: 13px;
+      }
+      
+      .amount-box {
+        padding: 18px;
+        border-radius: 12px;
+      }
+      
+      .amount-label {
+        font-size: 12px;
+      }
+      
+      .amount-value {
+        font-size: 26px;
+      }
+      
+      .amount-words {
+        font-size: 12px;
+      }
+      
+      .pricing-table {
+        font-size: 12px;
+      }
+      
+      .pricing-table td {
+        padding: 10px;
+      }
+      
+      .legal-section {
+        margin-bottom: 20px;
+      }
+      
+      .legal-title {
+        font-size: 16px;
+        padding: 10px 14px;
+      }
+      
+      .article {
+        padding: 14px;
+      }
+      
+      .article-header {
+        font-size: 12px;
+      }
+      
+      .article-content {
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      
+      .signature-section {
+        padding: 16px;
+      }
+      
+      .signature-title {
+        font-size: 15px;
+      }
+      
+      .signature-box {
+        padding: 16px;
+      }
+      
+      .digital-stamp {
+        transform: scale(0.8);
+      }
+      
+      .admin-stamp, .customer-stamp {
+        transform: scale(0.85);
+      }
+      
+      .contract-footer {
+        padding: 14px 16px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 <body>

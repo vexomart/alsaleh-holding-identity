@@ -525,6 +525,249 @@ export function renderVoucherHTML(
         animation: none !important;
       }
     }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - TABLET
+       ======================================== */
+    @media screen and (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .voucher-container {
+        border-radius: 16px;
+      }
+      
+      .voucher-header {
+        padding: 20px 24px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+        align-items: center;
+      }
+      
+      .company-name {
+        font-size: 18px;
+      }
+      
+      .voucher-badge {
+        font-size: 16px;
+        padding: 10px 22px;
+      }
+      
+      .voucher-info-bar {
+        flex-wrap: wrap;
+        padding: 12px 24px;
+        gap: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 30%;
+        justify-content: center;
+      }
+      
+      .voucher-body {
+        padding: 24px;
+      }
+      
+      .amount-section {
+        padding: 24px;
+      }
+      
+      .amount-value {
+        font-size: 32px;
+      }
+      
+      .parties-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .finance-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .signature-section {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+    
+    /* ========================================
+       MOBILE RESPONSIVE - PHONE
+       ======================================== */
+    @media screen and (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      .voucher-container {
+        border-radius: 12px;
+      }
+      
+      .voucher-header {
+        padding: 16px 20px;
+      }
+      
+      .company-name {
+        font-size: 14px;
+      }
+      
+      .company-subtitle {
+        font-size: 10px;
+      }
+      
+      .voucher-badge {
+        font-size: 14px;
+        padding: 8px 18px;
+      }
+      
+      .voucher-info-bar {
+        flex-direction: column;
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+      
+      .info-item {
+        flex: 1 1 100%;
+        justify-content: space-between;
+      }
+      
+      .voucher-body {
+        padding: 16px;
+      }
+      
+      .amount-section {
+        padding: 18px;
+        border-radius: 14px;
+        border-width: 2px;
+      }
+      
+      .amount-label {
+        font-size: 13px;
+      }
+      
+      .amount-value {
+        font-size: 24px;
+      }
+      
+      .amount-words {
+        font-size: 12px;
+      }
+      
+      .party-card {
+        border-radius: 12px;
+      }
+      
+      .party-header {
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+      
+      .party-body {
+        padding: 14px;
+      }
+      
+      .party-name {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      
+      .party-detail {
+        flex-direction: column;
+        gap: 2px;
+        font-size: 11px;
+        padding: 6px 0;
+      }
+      
+      .finance-section {
+        padding: 16px;
+        border-radius: 12px;
+      }
+      
+      .finance-title {
+        font-size: 13px;
+      }
+      
+      .finance-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .finance-item {
+        padding: 12px;
+        border-radius: 10px;
+      }
+      
+      .finance-item-label {
+        font-size: 10px;
+      }
+      
+      .finance-item-value {
+        font-size: 13px;
+      }
+      
+      .purpose-section {
+        padding: 14px 16px;
+        border-radius: 12px;
+      }
+      
+      .purpose-label {
+        font-size: 12px;
+      }
+      
+      .purpose-text {
+        font-size: 13px;
+      }
+      
+      .signature-box {
+        padding: 16px;
+      }
+      
+      .signature-title {
+        font-size: 12px;
+      }
+      
+      .signature-line {
+        height: 50px;
+        width: 90%;
+      }
+      
+      .signature-name {
+        font-size: 11px;
+      }
+      
+      .digital-stamp {
+        width: 110px;
+        height: 110px;
+      }
+      
+      .stamp-icon {
+        font-size: 22px;
+      }
+      
+      .stamp-text {
+        font-size: 9px;
+      }
+      
+      .stamp-date {
+        font-size: 8px;
+      }
+      
+      .voucher-footer {
+        padding: 14px 16px;
+      }
+      
+      .footer-text {
+        font-size: 10px;
+      }
+      
+      .footer-ref {
+        font-size: 9px;
+      }
+    }
   </style>
 </head>
 <body>
