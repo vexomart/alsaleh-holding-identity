@@ -1,3 +1,4 @@
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { HelmetProvider } from "react-helmet-async";
@@ -199,17 +200,41 @@ const PageLoader = () => (
  * RTL-Aware App Shell
  * Applies direction from language context to the root wrapper
  * This is the SINGLE SOURCE OF TRUTH for app-level direction
+ * 
+ * CRITICAL: This component ensures RTL is applied consistently
+ * across the entire application regardless of component hierarchy
  */
 const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
-  const { isRTL } = useLanguage();
+  const { isRTL, language } = useLanguage();
+  
+  // Sync document direction when language changes
+  React.useEffect(() => {
+    const dir = isRTL ? 'rtl' : 'ltr';
+    
+    // Apply to html
+    document.documentElement.dir = dir;
+    document.documentElement.lang = language;
+    document.documentElement.setAttribute('data-direction', dir);
+    
+    // Apply to body
+    document.body.dir = dir;
+    document.body.setAttribute('data-lang', language);
+    
+    // Toggle classes
+    document.documentElement.classList.toggle('rtl', isRTL);
+    document.documentElement.classList.toggle('ltr', !isRTL);
+    document.body.classList.toggle('rtl', isRTL);
+    document.body.classList.toggle('ltr', !isRTL);
+  }, [isRTL, language]);
   
   return (
     <div 
       dir={isRTL ? 'rtl' : 'ltr'}
       className={cn(
-        "min-h-screen bg-background mobile-text",
+        "min-h-screen bg-background mobile-text rtl-root",
         isRTL ? "text-right" : "text-left"
       )}
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
     >
       <div className="relative z-10 mobile-tap mobile-scroll">
         {children}
