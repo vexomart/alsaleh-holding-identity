@@ -90,8 +90,10 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
           style={{ gridArea: 'content' }}
         >
           <CustomerHeader />
-          <main className="flex-1 overflow-auto p-4 md:p-5 lg:p-6 pb-safe">
-            {children}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-5 lg:p-6 pb-safe">
+            <div className="overflow-visible">
+              {children}
+            </div>
           </main>
           
           {/* Real-time connection indicators + Cache Buster */}
