@@ -1,9 +1,10 @@
 /**
- * Mobile Bottom Navigation - App-like Navigation
- * Fixed bottom bar with 5 main navigation items
- * RTL-aware with smooth animations
+ * Mobile Bottom Navigation - Fixed App-like Navigation
+ * 4 main items + More button
+ * RTL 100% compliant, no overlap, safe areas
  */
 
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -14,10 +15,20 @@ import { Badge } from "@/components/ui/badge";
 import {
   LayoutDashboard,
   ShoppingCart,
-  Package,
   Wallet,
+  MoreHorizontal,
+  Bell,
+  Package,
+  FileSignature,
+  Receipt,
+  Landmark,
+  Users,
   User,
+  X,
 } from "lucide-react";
+
+// Bottom Nav height for content padding
+export const BOTTOM_NAV_HEIGHT = 72;
 
 interface NavItem {
   id: string;
@@ -28,14 +39,27 @@ interface NavItem {
   badge?: number;
 }
 
+// More menu items (sections not in bottom nav)
+const moreMenuItems: NavItem[] = [
+  { id: "services", titleAr: "الخدمات", titleEn: "Services", icon: Package, href: "/app/services" },
+  { id: "contracts", titleAr: "عقودي", titleEn: "Contracts", icon: FileSignature, href: "/app/contracts" },
+  { id: "invoices", titleAr: "فواتيري", titleEn: "Invoices", icon: Receipt, href: "/app/invoices" },
+  { id: "finance", titleAr: "التمويل", titleEn: "Finance", icon: Landmark, href: "/app/finance" },
+  { id: "referrals", titleAr: "الإحالات", titleEn: "Referrals", icon: Users, href: "/app/referrals" },
+  { id: "notifications", titleAr: "الإشعارات", titleEn: "Notifications", icon: Bell, href: "/app/notifications" },
+  { id: "profile", titleAr: "حسابي", titleEn: "Profile", icon: User, href: "/app/profile" },
+];
+
 export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isRTL } = useLanguage();
   const { user } = useAuth();
   const { unreadCount } = useNotifications({ userId: user?.id });
+  const [moreOpen, setMoreOpen] = useState(false);
 
-  const navItems: NavItem[] = [
+  // Main 4 navigation items (most used)
+  const mainNavItems: NavItem[] = [
     {
       id: "home",
       titleAr: "الرئيسية",
@@ -51,26 +75,11 @@ export function MobileBottomNav() {
       href: "/app/orders",
     },
     {
-      id: "services",
-      titleAr: "الخدمات",
-      titleEn: "Services",
-      icon: Package,
-      href: "/app/services",
-    },
-    {
       id: "wallet",
       titleAr: "المحفظة",
       titleEn: "Wallet",
       icon: Wallet,
       href: "/app/wallet",
-    },
-    {
-      id: "profile",
-      titleAr: "حسابي",
-      titleEn: "Profile",
-      icon: User,
-      href: "/app/profile",
-      badge: unreadCount,
     },
   ];
 
@@ -81,110 +90,211 @@ export function MobileBottomNav() {
     return location.pathname.startsWith(href);
   };
 
+  // Check if any more menu item is active
+  const isMoreActive = moreMenuItems.some(item => isActive(item.href));
+
   const handleNavigation = (href: string) => {
-    // Add haptic feedback if available
     if (navigator.vibrate) {
       navigator.vibrate(10);
     }
     navigate(href);
+    setMoreOpen(false);
   };
 
   return (
-    <nav
-      dir={isRTL ? "rtl" : "ltr"}
-      className={cn(
-        "fixed bottom-0 inset-x-0 z-50",
-        "bg-background/95 backdrop-blur-xl",
-        "border-t border-border/50",
-        "pb-safe",
-        "md:hidden" // Only show on mobile
-      )}
-      style={{
-        paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
-      }}
-    >
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-      
-      <div className="relative flex items-center justify-around px-2 py-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.href);
-
-          return (
-            <motion.button
-              key={item.id}
-              onClick={() => handleNavigation(item.href)}
+    <>
+      {/* More Menu Overlay */}
+      <AnimatePresence>
+        {moreOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMoreOpen(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+            />
+            
+            {/* More Menu Bottom Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              dir={isRTL ? "rtl" : "ltr"}
               className={cn(
-                "relative flex flex-col items-center justify-center",
-                "min-w-[64px] min-h-[56px] rounded-2xl",
-                "transition-all duration-200",
-                active
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                "fixed bottom-0 inset-x-0 z-[70]",
+                "bg-background rounded-t-3xl",
+                "max-h-[70vh] overflow-hidden",
+                "shadow-2xl"
               )}
-              whileTap={{ scale: 0.92 }}
+              style={{
+                paddingBottom: "env(safe-area-inset-bottom)",
+              }}
             >
-              {/* Active indicator */}
-              <AnimatePresence>
-                {active && (
-                  <motion.div
-                    layoutId="bottomNavIndicator"
-                    className="absolute inset-0 bg-primary/10 rounded-2xl"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </AnimatePresence>
+              {/* Handle bar */}
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-10 h-1 bg-muted-foreground/30 rounded-full" />
+              </div>
 
-              {/* Icon Container */}
-              <div className="relative">
-                <motion.div
-                  animate={{
-                    scale: active ? 1.1 : 1,
-                    y: active ? -2 : 0,
-                  }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pb-3 border-b">
+                <h3 className="text-lg font-bold">
+                  {isRTL ? "القائمة" : "Menu"}
+                </h3>
+                <button
+                  onClick={() => setMoreOpen(false)}
+                  className="h-10 w-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
                 >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Menu Items */}
+              <div className="overflow-y-auto p-4 pb-6">
+                <div className="grid grid-cols-3 gap-3">
+                  {moreMenuItems.map((item) => {
+                    const Icon = item.icon;
+                    const active = isActive(item.href);
+                    const hasNotifications = item.id === "notifications" && unreadCount > 0;
+
+                    return (
+                      <motion.button
+                        key={item.id}
+                        onClick={() => handleNavigation(item.href)}
+                        className={cn(
+                          "flex flex-col items-center justify-center gap-2",
+                          "p-4 rounded-2xl min-h-[88px]",
+                          "transition-all duration-200",
+                          active
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted/50 hover:bg-muted text-foreground"
+                        )}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <div className="relative">
+                          <Icon className="h-6 w-6" />
+                          {hasNotifications && (
+                            <span className="absolute -top-1 -end-1 h-2.5 w-2.5 bg-destructive rounded-full" />
+                          )}
+                        </div>
+                        <span className="text-xs font-medium text-center leading-tight">
+                          {isRTL ? item.titleAr : item.titleEn}
+                        </span>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom Navigation Bar */}
+      <nav
+        dir={isRTL ? "rtl" : "ltr"}
+        className={cn(
+          "fixed bottom-0 inset-x-0 z-50",
+          "bg-background border-t border-border",
+          "md:hidden" // Only on mobile
+        )}
+        style={{
+          height: `${BOTTOM_NAV_HEIGHT}px`,
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
+      >
+        <div 
+          className="h-full flex items-stretch justify-evenly"
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
+          {/* Main Nav Items */}
+          {mainNavItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavigation(item.href)}
+                className={cn(
+                  "flex-1 flex flex-col items-center justify-center gap-1",
+                  "min-w-0 px-1",
+                  "transition-colors duration-200",
+                  active ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                <div className="relative">
                   <Icon
                     className={cn(
-                      "h-6 w-6 transition-colors",
-                      active && "text-primary"
+                      "h-6 w-6 transition-all",
+                      active && "scale-110"
                     )}
                     strokeWidth={active ? 2.5 : 2}
                   />
-                </motion.div>
-
-                {/* Badge */}
-                {item.badge && item.badge > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1.5 -end-1.5 h-4 min-w-4 px-1 text-[10px] font-bold"
-                  >
-                    {item.badge > 9 ? "9+" : item.badge}
-                  </Badge>
+                  {item.badge && item.badge > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1.5 -end-2 h-4 min-w-4 px-1 text-[10px]"
+                    >
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </Badge>
+                  )}
+                </div>
+                <span
+                  className={cn(
+                    "text-[10px] font-medium whitespace-nowrap",
+                    active && "font-semibold"
+                  )}
+                >
+                  {isRTL ? item.titleAr : item.titleEn}
+                </span>
+                {/* Active indicator line */}
+                {active && (
+                  <motion.div
+                    layoutId="navIndicator"
+                    className="absolute top-0 h-0.5 w-12 bg-primary rounded-full"
+                  />
                 )}
-              </div>
+              </button>
+            );
+          })}
 
-              {/* Label */}
-              <motion.span
+          {/* More Button */}
+          <button
+            onClick={() => setMoreOpen(true)}
+            className={cn(
+              "flex-1 flex flex-col items-center justify-center gap-1",
+              "min-w-0 px-1",
+              "transition-colors duration-200",
+              isMoreActive || moreOpen ? "text-primary" : "text-muted-foreground"
+            )}
+          >
+            <div className="relative">
+              <MoreHorizontal
                 className={cn(
-                  "text-[10px] font-medium mt-1",
-                  active ? "text-primary" : "text-muted-foreground"
+                  "h-6 w-6 transition-all",
+                  (isMoreActive || moreOpen) && "scale-110"
                 )}
-                animate={{
-                  fontWeight: active ? 600 : 500,
-                }}
-              >
-                {isRTL ? item.titleAr : item.titleEn}
-              </motion.span>
-            </motion.button>
-          );
-        })}
-      </div>
-    </nav>
+                strokeWidth={(isMoreActive || moreOpen) ? 2.5 : 2}
+              />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -end-1 h-2.5 w-2.5 bg-destructive rounded-full" />
+              )}
+            </div>
+            <span
+              className={cn(
+                "text-[10px] font-medium whitespace-nowrap",
+                (isMoreActive || moreOpen) && "font-semibold"
+              )}
+            >
+              {isRTL ? "المزيد" : "More"}
+            </span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
 
