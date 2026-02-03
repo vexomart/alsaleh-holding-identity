@@ -155,8 +155,8 @@ console.log("📧 Sending customer confirmation email...");
 
     // Send confirmation email to customer with fallback
     const { response: customerEmailResponse, fallbackUsed: customerFallback } = await sendEmailWithFallback({
-      preferredFrom: "ASH HOLDING Support <info@ash-holding.sa>",
-      fallbackFrom: "ASH HOLDING Support <onboarding@resend.dev>",
+      preferredFrom: "ASH HOLDING <info@ash-holding.sa>",
+      fallbackFrom: "ASH HOLDING <onboarding@resend.dev>",
       to: customerEmail,
       subject: `✅ تأكيد استلام شكواك #${ticketNumber}`,
       html: customerEmailHtml,
@@ -186,8 +186,8 @@ console.log("📧 Sending admin notification email...");
     
     // Send notification to admin with fallback and corrected admin address
     const { response: adminEmailResponse, fallbackUsed: adminFallback } = await sendEmailWithFallback({
-      preferredFrom: "ASH System <info@ash-holding.sa>",
-      fallbackFrom: "ASH System <onboarding@resend.dev>",
+      preferredFrom: "ASH HOLDING <info@ash-holding.sa>",
+      fallbackFrom: "ASH HOLDING <onboarding@resend.dev>",
       to: "info@ash-holding.sa",
       subject: `🚨 شكوى جديدة #${ticketNumber} - ${priorityText} - ${title}`,
       html: adminEmailHtml,

@@ -30,7 +30,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@ash-holding.sa>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: ["info@ash-holding.sa"],
       bcc: ["info@ash-holding.sa"],
       subject: `رسالة جديدة من موقع الشركة - ${contactData.subject || 'بدون موضوع'}`,
