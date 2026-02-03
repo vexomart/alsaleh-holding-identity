@@ -162,7 +162,7 @@ export function KPICardsV2({ data, isLoading, isRTL, formatCurrency }: KPICardsP
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid gap-4 grid-cols-2 lg:grid-cols-4"
+      className="grid gap-4 grid-cols-2 lg:grid-cols-4 overflow-visible px-1 py-2"
     >
       {kpiConfigs.map((kpi, index) => {
         const value = data?.[kpi.key] ?? 0;

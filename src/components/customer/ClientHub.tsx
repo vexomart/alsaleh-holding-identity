@@ -272,7 +272,7 @@ export function ClientHub() {
       variants={pageVariants}
       initial="hidden"
       animate="show"
-      className="space-y-4 pb-6"
+      className="space-y-4 pb-6 overflow-visible"
     >
       {/* 1. Header Section */}
       <motion.div variants={sectionVariants}>
