@@ -128,10 +128,10 @@ const handler = async (req: Request): Promise<Response> => {
     `;
 
     const sendResult = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH Holding <info@ash-holding.sa>",
       to: [recipient],
-      bcc: ["info@alialshehriholding.com"],
-      subject: subject || "اختبار التوثيق - Resend",
+      bcc: ["info@ash-holding.sa"],
+      subject: subject || "✅ اختبار التوثيق - ASH Holding",
       html,
     });
 
