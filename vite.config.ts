@@ -56,6 +56,8 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-dev-runtime",
       "react-dom/client",
       "@tanstack/react-query",
+      "@radix-ui/react-tooltip",
+      "@radix-ui/react-primitive",
     ],
   },
   optimizeDeps: {
