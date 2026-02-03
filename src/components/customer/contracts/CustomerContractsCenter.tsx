@@ -157,7 +157,7 @@ export function CustomerContractsCenter() {
       dir={isRTL ? 'rtl' : 'ltr'} 
       className={cn("space-y-6 pb-6", isRTL ? "text-right" : "text-left")}
     >
-      {/* Sticky Header */}
+      {/* Premium Header */}
       <ContractsHeader
         searchValue={filters.search}
         onSearchChange={(value) => updateFilters({ search: value })}

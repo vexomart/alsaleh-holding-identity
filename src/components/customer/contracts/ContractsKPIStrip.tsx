@@ -1,12 +1,11 @@
 /**
- * ContractsKPIStrip - Status statistics cards
- * Enterprise-grade, RTL-first, animated
+ * ContractsKPIStrip - Premium glassmorphism KPI cards
+ * تصميم زجاجي احترافي
  */
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
-import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { 
   FileText, 
@@ -14,7 +13,6 @@ import {
   CheckCircle2, 
   XCircle,
   Hourglass,
-  FileSignature,
 } from 'lucide-react';
 
 export interface ContractsKPIData {
@@ -39,24 +37,25 @@ const cardVariants = {
     scale: 1,
     transition: {
       delay: i * 0.08,
-      duration: 0.25,
+      duration: 0.3,
       ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
     },
   }),
 };
 
-const numberVariants = {
-  hidden: { opacity: 0, scale: 0.5 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: 'spring' as const,
-      stiffness: 300,
-      damping: 20,
-    },
-  },
-};
+// Animated number component
+function AnimatedNumber({ value }: { value: number }) {
+  return (
+    <motion.span
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="tabular-nums"
+    >
+      {value}
+    </motion.span>
+  );
+}
 
 export function ContractsKPIStrip({ 
   data, 
@@ -73,9 +72,9 @@ export function ContractsKPIStrip({
       labelEn: 'Total Contracts',
       value: data.total,
       icon: FileText,
-      color: 'text-primary',
-      bgColor: 'bg-primary/10',
-      borderColor: 'border-primary/20',
+      gradient: 'from-slate-600 to-slate-800',
+      iconBg: 'bg-slate-500/20',
+      iconColor: 'text-slate-100',
       filter: 'all',
     },
     {
@@ -84,10 +83,11 @@ export function ContractsKPIStrip({
       labelEn: 'Pending Signature',
       value: data.pending_signature,
       icon: Clock,
-      color: 'text-indigo-600 dark:text-indigo-400',
-      bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
-      borderColor: 'border-indigo-200 dark:border-indigo-800',
+      gradient: 'from-indigo-500 to-indigo-700',
+      iconBg: 'bg-indigo-400/20',
+      iconColor: 'text-indigo-100',
       filter: 'pending_signature',
+      highlight: data.pending_signature > 0,
     },
     {
       key: 'pending_admin',
@@ -95,9 +95,9 @@ export function ContractsKPIStrip({
       labelEn: 'Pending Approval',
       value: data.pending_admin,
       icon: Hourglass,
-      color: 'text-amber-600 dark:text-amber-400',
-      bgColor: 'bg-amber-100 dark:bg-amber-900/30',
-      borderColor: 'border-amber-200 dark:border-amber-800',
+      gradient: 'from-amber-500 to-amber-700',
+      iconBg: 'bg-amber-400/20',
+      iconColor: 'text-amber-100',
       filter: 'pending_admin_approval',
     },
     {
@@ -106,9 +106,9 @@ export function ContractsKPIStrip({
       labelEn: 'Signed',
       value: data.signed,
       icon: CheckCircle2,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-      borderColor: 'border-emerald-200 dark:border-emerald-800',
+      gradient: 'from-emerald-500 to-emerald-700',
+      iconBg: 'bg-emerald-400/20',
+      iconColor: 'text-emerald-100',
       filter: 'signed',
     },
     {
@@ -117,9 +117,9 @@ export function ContractsKPIStrip({
       labelEn: 'Cancelled',
       value: data.cancelled,
       icon: XCircle,
-      color: 'text-red-600 dark:text-red-400',
-      bgColor: 'bg-red-100 dark:bg-red-900/30',
-      borderColor: 'border-red-200 dark:border-red-800',
+      gradient: 'from-red-500 to-red-700',
+      iconBg: 'bg-red-400/20',
+      iconColor: 'text-red-100',
       filter: 'cancelled',
     },
   ];
@@ -137,42 +137,59 @@ export function ContractsKPIStrip({
           initial="hidden"
           animate="visible"
           variants={cardVariants}
+          whileHover={{ scale: 1.03, y: -4 }}
+          whileTap={{ scale: 0.98 }}
         >
-          <Card 
+          <button 
             className={cn(
-              'cursor-pointer transition-all duration-200 border-2',
-              'hover:shadow-md hover:scale-[1.02] active:scale-[0.98]',
-              kpi.borderColor
+              "relative w-full overflow-hidden rounded-xl p-4",
+              "bg-gradient-to-br",
+              kpi.gradient,
+              "text-white shadow-lg",
+              "transition-all duration-300",
+              "hover:shadow-xl",
+              "focus:outline-none focus:ring-2 focus:ring-white/50",
+              "group"
             )}
             onClick={() => onFilterByStatus?.(kpi.filter)}
           >
-            <CardContent className="p-3 sm:p-4">
-              <div className={cn(
-                "flex items-center gap-3",
-                isRTL && "flex-row-reverse"
-              )}>
-                <div className={cn(
-                  "p-2 rounded-lg shrink-0",
-                  kpi.bgColor
-                )}>
-                  <kpi.icon className={cn("h-4 w-4 sm:h-5 sm:w-5", kpi.color)} />
-                </div>
-                <div className={cn("flex-1 min-w-0", isRTL && "text-right")}>
-                  <motion.p 
-                    className={cn("text-xl sm:text-2xl font-bold tabular-nums", kpi.color)}
-                    initial="hidden"
-                    animate="visible"
-                    variants={numberVariants}
-                  >
-                    {kpi.value}
-                  </motion.p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {isRTL ? kpi.labelAr : kpi.labelEn}
-                  </p>
-                </div>
+            {/* Glassmorphism overlay */}
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            {/* Highlight indicator */}
+            {kpi.highlight && (
+              <div className="absolute top-2 right-2">
+                <span className="flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
+                </span>
               </div>
-            </CardContent>
-          </Card>
+            )}
+            
+            {/* Content */}
+            <div className={cn(
+              "relative z-10 flex items-center gap-3",
+              isRTL && "flex-row-reverse"
+            )}>
+              <div className={cn(
+                "p-2.5 rounded-lg shrink-0",
+                kpi.iconBg
+              )}>
+                <kpi.icon className={cn("h-5 w-5", kpi.iconColor)} />
+              </div>
+              <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+                <p className="text-2xl sm:text-3xl font-bold">
+                  <AnimatedNumber value={kpi.value} />
+                </p>
+                <p className="text-xs text-white/80 truncate font-medium">
+                  {isRTL ? kpi.labelAr : kpi.labelEn}
+                </p>
+              </div>
+            </div>
+            
+            {/* Decorative circle */}
+            <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full bg-white/5" />
+          </button>
         </motion.div>
       ))}
     </div>
@@ -183,17 +200,15 @@ function ContractsKPISkeleton() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       {[...Array(5)].map((_, i) => (
-        <Card key={i} className="animate-pulse">
-          <CardContent className="p-3 sm:p-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-9 w-9 rounded-lg" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-6 w-12" />
-                <Skeleton className="h-3 w-20" />
-              </div>
+        <div key={i} className="rounded-xl bg-muted animate-pulse p-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-lg" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-7 w-12" />
+              <Skeleton className="h-3 w-20" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ))}
     </div>
   );

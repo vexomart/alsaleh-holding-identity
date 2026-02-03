@@ -1,0 +1,803 @@
+/**
+ * Service Contract HTML Template - Premium Design
+ * قالب عقد الخدمات بتصميم احترافي مشابه للفواتير
+ */
+
+import { ContractData } from '@/lib/invoices/types';
+
+// Arabic number converter
+function toArabicDigits(num: number | string): string {
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return String(num).replace(/\d/g, (d) => arabicDigits[parseInt(d)]);
+}
+
+function formatCurrencyArabic(amount: number): string {
+  const formatted = new Intl.NumberFormat('ar-SA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+  return `${formatted} ر.س`;
+}
+
+function numberToArabicWords(num: number): string {
+  const ones = ['', 'واحد', 'اثنان', 'ثلاثة', 'أربعة', 'خمسة', 'ستة', 'سبعة', 'ثمانية', 'تسعة'];
+  const tens = ['', 'عشرة', 'عشرون', 'ثلاثون', 'أربعون', 'خمسون', 'ستون', 'سبعون', 'ثمانون', 'تسعون'];
+  const teens = ['عشرة', 'أحد عشر', 'اثنا عشر', 'ثلاثة عشر', 'أربعة عشر', 'خمسة عشر', 'ستة عشر', 'سبعة عشر', 'ثمانية عشر', 'تسعة عشر'];
+  const hundreds = ['', 'مائة', 'مائتان', 'ثلاثمائة', 'أربعمائة', 'خمسمائة', 'ستمائة', 'سبعمائة', 'ثمانمائة', 'تسعمائة'];
+
+  function convert(n: number): string {
+    if (n === 0) return '';
+    if (n < 10) return ones[n];
+    if (n < 20) return teens[n - 10];
+    if (n < 100) {
+      const o = n % 10;
+      const t = Math.floor(n / 10);
+      if (o === 0) return tens[t];
+      return ones[o] + ' و' + tens[t];
+    }
+    if (n < 1000) {
+      const h = Math.floor(n / 100);
+      const r = n % 100;
+      if (r === 0) return hundreds[h];
+      return hundreds[h] + ' و' + convert(r);
+    }
+    if (n < 1000000) {
+      const t = Math.floor(n / 1000);
+      const r = n % 1000;
+      let tw = '';
+      if (t === 1) tw = 'ألف';
+      else if (t === 2) tw = 'ألفان';
+      else if (t <= 10) tw = convert(t) + ' آلاف';
+      else tw = convert(t) + ' ألف';
+      if (r === 0) return tw;
+      return tw + ' و' + convert(r);
+    }
+    return n.toString();
+  }
+
+  const intPart = Math.floor(num);
+  const decPart = Math.round((num - intPart) * 100);
+  
+  let result = convert(intPart) || 'صفر';
+  result += ' ريال سعودي';
+  
+  if (decPart > 0) {
+    result += ' و' + convert(decPart) + ' هللة';
+  }
+  
+  return result;
+}
+
+export interface ServiceContractRenderOptions {
+  showAnimations?: boolean;
+  printMode?: boolean;
+}
+
+export function renderServiceContractHTML(
+  data: ContractData,
+  options: ServiceContractRenderOptions = {}
+): string {
+  const { showAnimations = true, printMode = false } = options;
+  
+  const totalAmount = data.pricing?.total || 0;
+  const subtotal = data.pricing?.subtotal || 0;
+  const vatAmount = data.pricing?.vatAmount || 0;
+  const vatRate = data.pricing?.vatRate || 0.15;
+  const amountInWords = numberToArabicWords(totalAmount);
+  
+  const formatAmount = (amount: number) => {
+    return amount.toLocaleString('en-US', { 
+      minimumFractionDigits: 2, 
+      maximumFractionDigits: 2 
+    });
+  };
+
+  const formatDate = (dateStr: string | Date | undefined) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('ar-SA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const contractDate = formatDate(data.date || data.createdAt);
+  const signedDate = data.signedAt ? formatDate(data.signedAt) : null;
+
+  return `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عقد تقديم خدمات - ${data.contractNumber}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #0f766e;
+      --primary-light: #14b8a6;
+      --primary-dark: #0d9488;
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --navy: #1e293b;
+      --navy-dark: #0f172a;
+      --success: #10b981;
+      --bg-gradient: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #f0fdf4 100%);
+    }
+    
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+    
+    body {
+      font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--navy-dark);
+      line-height: 1.8;
+    }
+    
+    .contract-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(15, 118, 110, 0.1);
+      overflow: hidden;
+      ${showAnimations ? 'animation: slideUp 0.6s ease-out;' : ''}
+    }
+    
+    ${showAnimations ? `
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    ` : ''}
+    
+    /* Header */
+    .contract-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--navy) 100%);
+      padding: 30px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .contract-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .company-info {
+      color: white;
+    }
+    
+    .company-name {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      ${showAnimations ? 'animation: fadeIn 0.8s ease-out 0.2s backwards;' : ''}
+    }
+    
+    .company-subtitle {
+      font-size: 13px;
+      opacity: 0.85;
+      ${showAnimations ? 'animation: fadeIn 0.8s ease-out 0.4s backwards;' : ''}
+    }
+    
+    .contract-badge {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--navy-dark);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      ${showAnimations ? 'animation: scaleIn 0.5s ease-out 0.3s backwards;' : ''}
+    }
+    
+    /* Info Bar */
+    .contract-info-bar {
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      ${showAnimations ? 'animation: fadeIn 0.6s ease-out 0.5s backwards;' : ''}
+    }
+    
+    .info-label {
+      opacity: 0.7;
+      font-size: 11px;
+    }
+    
+    .info-value {
+      font-weight: 600;
+      font-family: 'IBM Plex Sans Arabic', monospace;
+    }
+    
+    /* Main Content */
+    .contract-body {
+      padding: 40px;
+    }
+    
+    /* Amount Section */
+    .amount-section {
+      background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+      border: 3px solid var(--primary);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+      ${showAnimations ? 'animation: scaleIn 0.6s ease-out 0.4s backwards;' : ''}
+    }
+    
+    .amount-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+      background-size: 200% 100%;
+      ${showAnimations ? 'animation: shimmer 2s ease-in-out infinite;' : ''}
+    }
+    
+    .amount-label {
+      font-size: 16px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .amount-value {
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .amount-currency {
+      font-size: 18px;
+      color: var(--primary);
+      opacity: 0.8;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .amount-words {
+      font-size: 15px;
+      color: var(--navy);
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--primary);
+    }
+    
+    /* Parties Grid */
+    .parties-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .party-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      ${showAnimations ? 'animation: fadeIn 0.6s ease-out 0.6s backwards;' : ''}
+    }
+    
+    .party-header {
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .party-header.provider {
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
+      color: white;
+    }
+    
+    .party-header.customer {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+    
+    .party-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--gold);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--navy-dark);
+    }
+    
+    .party-body {
+      padding: 20px;
+      background: #fafafa;
+    }
+    
+    .party-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 12px;
+    }
+    
+    .party-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      font-size: 13px;
+    }
+    
+    .party-detail:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      color: #64748b;
+    }
+    
+    .detail-value {
+      font-weight: 600;
+      color: var(--navy);
+      font-family: 'IBM Plex Sans Arabic', monospace;
+    }
+    
+    /* Service Section */
+    .service-section {
+      margin-bottom: 30px;
+      ${showAnimations ? 'animation: fadeIn 0.6s ease-out 0.7s backwards;' : ''}
+    }
+    
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid var(--gold);
+    }
+    
+    .service-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    
+    .service-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    
+    .service-description {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.8;
+    }
+    
+    /* Pricing Table */
+    .pricing-section {
+      margin-bottom: 30px;
+      ${showAnimations ? 'animation: fadeIn 0.6s ease-out 0.8s backwards;' : ''}
+    }
+    
+    .pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .pricing-table tr {
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .pricing-table tr:last-child {
+      border-bottom: none;
+    }
+    
+    .pricing-table td {
+      padding: 14px 20px;
+      font-size: 14px;
+    }
+    
+    .pricing-table td:first-child {
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--navy);
+      width: 200px;
+    }
+    
+    .pricing-table td:last-child {
+      text-align: left;
+      font-family: 'IBM Plex Sans Arabic', monospace;
+      font-weight: 600;
+    }
+    
+    .pricing-table tr.total {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    }
+    
+    .pricing-table tr.total td {
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    
+    .pricing-table tr.total td:first-child {
+      background: transparent;
+    }
+    
+    /* Signature Section */
+    .signature-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px dashed #e2e8f0;
+      ${showAnimations ? 'animation: fadeIn 0.6s ease-out 0.9s backwards;' : ''}
+    }
+    
+    .signature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    
+    .signature-box {
+      text-align: center;
+      padding: 20px;
+      border: 2px dashed #e2e8f0;
+      border-radius: 12px;
+      min-height: 120px;
+    }
+    
+    .signature-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 30px;
+    }
+    
+    .signature-line {
+      border-top: 2px solid var(--navy);
+      width: 80%;
+      margin: 0 auto;
+      padding-top: 10px;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    /* Digital Stamp */
+    .digital-stamp {
+      position: relative;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    .stamp-circle {
+      width: 100px;
+      height: 100px;
+      border: 3px solid var(--success);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(16, 185, 129, 0.1);
+      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 1s backwards;' : ''}
+    }
+    
+    @keyframes stampBounce {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      60% { transform: scale(1.2) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    .stamp-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--success);
+      text-align: center;
+    }
+    
+    .stamp-date {
+      font-size: 9px;
+      color: var(--success);
+      opacity: 0.8;
+    }
+    
+    /* Footer */
+    .contract-footer {
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
+      padding: 20px 40px;
+      text-align: center;
+      color: white;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .contract-container {
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contract-container">
+    <!-- Header -->
+    <div class="contract-header">
+      <div class="header-content">
+        <div class="company-info">
+          <div class="company-name">${data.provider?.name || 'شركة علي صالح الشهري القابضة'}</div>
+          <div class="company-subtitle">${data.provider?.address || 'المملكة العربية السعودية'}</div>
+        </div>
+        <div class="contract-badge">عقد تقديم خدمات</div>
+      </div>
+    </div>
+    
+    <!-- Info Bar -->
+    <div class="contract-info-bar">
+      <div class="info-item">
+        <span class="info-label">رقم العقد</span>
+        <span class="info-value" dir="ltr">${data.contractNumber}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">تاريخ الإصدار</span>
+        <span class="info-value">${contractDate}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">الحالة</span>
+        <span class="info-value">${signedDate ? 'موقّع' : 'قيد التوقيع'}</span>
+      </div>
+    </div>
+    
+    <!-- Body -->
+    <div class="contract-body">
+      <!-- Amount Section -->
+      ${totalAmount > 0 ? `
+      <div class="amount-section">
+        <div class="amount-label">قيمة العقد الإجمالية شاملة الضريبة</div>
+        <div class="amount-value" dir="ltr">${formatAmount(totalAmount)}</div>
+        <div class="amount-currency">ريال سعودي</div>
+        <div class="amount-words">فقط ${amountInWords} لا غير</div>
+      </div>
+      ` : ''}
+      
+      <!-- Parties -->
+      <div class="parties-grid">
+        <div class="party-card">
+          <div class="party-header provider">
+            <div class="party-icon">١</div>
+            <span>الطرف الأول (مقدم الخدمة)</span>
+          </div>
+          <div class="party-body">
+            <div class="party-name">${data.provider?.name || 'شركة علي صالح الشهري القابضة'}</div>
+            <div class="party-detail">
+              <span class="detail-label">العنوان:</span>
+              <span class="detail-value">${data.provider?.address || 'المملكة العربية السعودية'}</span>
+            </div>
+            ${data.provider?.phone ? `
+            <div class="party-detail">
+              <span class="detail-label">الهاتف:</span>
+              <span class="detail-value" dir="ltr">${data.provider.phone}</span>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+        
+        <div class="party-card">
+          <div class="party-header customer">
+            <div class="party-icon">٢</div>
+            <span>الطرف الثاني (العميل)</span>
+          </div>
+          <div class="party-body">
+            <div class="party-name">${data.customer?.name || data.customerNameAr || data.customerName || '-'}</div>
+            ${data.customer?.nationalId ? `
+            <div class="party-detail">
+              <span class="detail-label">رقم الهوية:</span>
+              <span class="detail-value" dir="ltr">${data.customer.nationalId}</span>
+            </div>
+            ` : ''}
+            ${data.customer?.phone ? `
+            <div class="party-detail">
+              <span class="detail-label">الهاتف:</span>
+              <span class="detail-value" dir="ltr">${data.customer.phone}</span>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Service Section -->
+      <div class="service-section">
+        <div class="section-title">
+          <span>📋</span>
+          <span>تفاصيل الخدمة</span>
+        </div>
+        <div class="service-card">
+          <div class="service-name">${data.serviceNameAr || data.serviceName || 'خدمة'}</div>
+          <div class="service-description">
+            ${data.scopeSummaryAr || data.scopeSummary || data.serviceDescription || 'تقديم الخدمات المتفق عليها وفقاً للمواصفات والمعايير المحددة في هذا العقد.'}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pricing Section -->
+      ${totalAmount > 0 ? `
+      <div class="pricing-section">
+        <div class="section-title">
+          <span>💰</span>
+          <span>التفاصيل المالية</span>
+        </div>
+        <table class="pricing-table">
+          <tr>
+            <td>المبلغ قبل الضريبة</td>
+            <td dir="ltr">${formatAmount(subtotal)} ر.س</td>
+          </tr>
+          <tr>
+            <td>ضريبة القيمة المضافة (${toArabicDigits(Math.round(vatRate * 100))}٪)</td>
+            <td dir="ltr">${formatAmount(vatAmount)} ر.س</td>
+          </tr>
+          <tr class="total">
+            <td>الإجمالي شامل الضريبة</td>
+            <td dir="ltr">${formatAmount(totalAmount)} ر.س</td>
+          </tr>
+        </table>
+      </div>
+      ` : ''}
+      
+      <!-- Signatures -->
+      <div class="signature-section">
+        <div class="signature-grid">
+          <div class="signature-box">
+            <div class="signature-label">توقيع الطرف الأول (مقدم الخدمة)</div>
+            <div class="digital-stamp">
+              <div class="stamp-circle">
+                <div class="stamp-text">شركة علي صالح<br/>الشهري القابضة</div>
+              </div>
+            </div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-label">توقيع الطرف الثاني (العميل)</div>
+            ${signedDate ? `
+            <div class="digital-stamp">
+              <div class="stamp-circle" style="border-color: var(--primary); background: rgba(15, 118, 110, 0.1);">
+                <div class="stamp-text" style="color: var(--primary);">تم التوقيع<br/>إلكترونياً</div>
+                <div class="stamp-date" style="color: var(--primary);">${signedDate}</div>
+              </div>
+            </div>
+            ` : `
+            <div class="signature-line">التوقيع</div>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="contract-footer">
+      <p>شركة علي صالح الشهري القابضة - جميع الحقوق محفوظة © ${new Date().getFullYear()}</p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+/**
+ * Preview contract in new window
+ */
+export function previewServiceContract(data: ContractData): Window | null {
+  const html = renderServiceContractHTML(data, { showAnimations: true, printMode: false });
+  
+  const previewWindow = window.open('', '_blank', 'width=900,height=700');
+  if (!previewWindow) {
+    console.error('Could not open preview window');
+    return null;
+  }
+  
+  previewWindow.document.write(html);
+  previewWindow.document.close();
+  
+  return previewWindow;
+}
+
+/**
+ * Print contract
+ */
+export function printServiceContract(data: ContractData): void {
+  const html = renderServiceContractHTML(data, { showAnimations: false, printMode: true });
+  
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  if (!printWindow) return;
+  
+  printWindow.document.write(html);
+  printWindow.document.close();
+  
+  printWindow.onload = () => {
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  };
+}
