@@ -100,10 +100,10 @@ const Navigation = () => {
   return (
     <div dir="rtl" className="rtl">
       {/* Corporate Top Bar */}
-      <div className="hidden lg:block bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
+      <div className="hidden lg:block bg-gradient-to-l from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-6 text-xs text-slate-300">
+          <div className="flex flex-row-reverse items-center justify-between py-2">
+            <div className="flex flex-row-reverse items-center gap-6 text-xs text-slate-300">
               <div className="flex items-center gap-1.5 group hover:text-blue-300 transition-colors">
                 <Clock className="w-3 h-3 text-blue-400 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">الأحد - الخميس • 8:00 ص - 6:00 م</span>
@@ -133,14 +133,14 @@ const Navigation = () => {
       </div>
 
       {/* Main Corporate Navigation */}
-      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[40px]'} w-full z-50 transition-all duration-300`}>
+      <nav className={`fixed ${isScrolled ? 'top-0 shadow-xl' : 'top-0 lg:top-[40px]'} w-full z-50 transition-all duration-300`} dir="rtl">
         <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/80">
           <div className="container mx-auto px-4 lg:px-6">
-            <div className="flex items-center justify-between h-14 lg:h-16">
+            <div className="flex flex-row-reverse items-center justify-between h-14 lg:h-16">
               
-              {/* Logo & Company Name - Enhanced Mobile */}
+              {/* Logo & Company Name - Enhanced Mobile - NOW ON RIGHT */}
               <div className="flex items-center gap-2 sm:gap-3">
-                <a href="/" className="flex items-center gap-2 group">
+                <a href="/" className="flex flex-row-reverse items-center gap-2 group">
                   {/* Logo */}
                   <div className="relative">
                     <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
