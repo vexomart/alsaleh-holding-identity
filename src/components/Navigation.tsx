@@ -221,7 +221,7 @@ const Navigation = () => {
                   </button>
                   
                   {showServices && (
-                    <div className="absolute top-full left-0 mt-2 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60] max-h-[75vh] overflow-y-auto"
+                    <div className="absolute top-full end-0 mt-2 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60] max-h-[75vh] overflow-y-auto"
                       onMouseEnter={() => { if (servicesHideRef.current) clearTimeout(servicesHideRef.current); setShowServices(true); }}
                       onMouseLeave={() => { servicesHideRef.current = window.setTimeout(() => setShowServices(false), 200); }}
                     >
@@ -263,7 +263,7 @@ const Navigation = () => {
                   </button>
                   
                   {showProducts && (
-                    <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60]">
+                    <div className="absolute top-full end-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60]">
                       <div className="p-4">
                         <div className="space-y-2">
                           {products.map((product, index) => {
@@ -321,7 +321,7 @@ const Navigation = () => {
                   </button>
                   
                   {showOthers && (
-                    <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60] max-h-[75vh] overflow-y-auto"
+                    <div className="absolute top-full end-0 mt-2 w-72 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 z-[60] max-h-[75vh] overflow-y-auto"
                       onMouseEnter={() => { if (othersHideRef.current) clearTimeout(othersHideRef.current); setShowOthers(true); }}
                       onMouseLeave={() => { othersHideRef.current = window.setTimeout(() => setShowOthers(false), 200); }}
                     >
