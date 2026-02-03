@@ -19,6 +19,7 @@ import { CustomerWallet } from '@/components/customer/CustomerWallet';
 import { CustomerTransactions } from '@/components/customer/CustomerTransactions';
 import { CustomerContractsCenter } from '@/components/customer/contracts';
 import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
+import { ContractSigningPage } from '@/components/customer/contracts/ContractSigningPage';
 import { CustomerInvoicesCenter } from '@/components/customer/invoices';
 import { FinanceCenter } from '@/components/finance/customer/FinanceCenter';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
@@ -49,6 +50,7 @@ const CustomerDashboard = () => {
         <Route path="service/:serviceId" element={<CustomerServiceDetails />} />
         <Route path="contracts" element={<CustomerContractsCenter />} />
         <Route path="contracts/:id" element={<CustomerContractDetails />} />
+        <Route path="contracts/:id/sign" element={<ContractSigningPage />} />
         <Route path="invoices" element={<CustomerInvoicesCenter />} />
         <Route path="wallet" element={<CustomerWallet />} />
         <Route path="transactions" element={<CustomerTransactions />} />
