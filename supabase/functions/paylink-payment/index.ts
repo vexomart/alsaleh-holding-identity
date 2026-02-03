@@ -99,8 +99,8 @@ serve(async (req) => {
     }
 
     // Get API credentials
-    const apiId = Deno.env.get('PAYLINK_API_ID');
-    const apiKey = Deno.env.get('PAYLINK_API_KEY');
+    const apiId = Deno.env.get('PAYLINK_VENDOR_ID');
+    const apiKey = Deno.env.get('PAYLINK_VENDOR_SECRET');
 
     console.log("🔐 Checking credentials...");
     if (!apiId || !apiKey) {
