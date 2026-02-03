@@ -1,11 +1,10 @@
 /**
- * Quick Action Pills - Premium Action Buttons
- * Gradient pills with hover effects
+ * Quick Action Pills - Modern Action Buttons
+ * Clean minimal design with subtle hover effects
  */
 
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
@@ -16,8 +15,8 @@ import {
   Receipt,
   Briefcase,
   LucideIcon,
-  ChevronLeft,
-  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 
 interface QuickAction {
@@ -25,8 +24,7 @@ interface QuickAction {
   titleEn: string;
   icon: LucideIcon;
   path: string;
-  gradient: string;
-  shadowColor: string;
+  variant: "primary" | "secondary" | "accent";
 }
 
 const actions: QuickAction[] = [
@@ -35,48 +33,42 @@ const actions: QuickAction[] = [
     titleEn: "New Order",
     icon: Plus,
     path: "/app/services",
-    gradient: "from-teal-500 to-emerald-600",
-    shadowColor: "shadow-teal-500/30",
+    variant: "primary",
   },
   {
     titleAr: "طلباتي",
     titleEn: "My Orders",
     icon: Package,
     path: "/app/orders",
-    gradient: "from-blue-500 to-blue-600",
-    shadowColor: "shadow-blue-500/30",
+    variant: "secondary",
   },
   {
     titleAr: "العقود",
     titleEn: "Contracts",
     icon: FileSignature,
     path: "/app/contracts",
-    gradient: "from-violet-500 to-purple-600",
-    shadowColor: "shadow-violet-500/30",
+    variant: "secondary",
   },
   {
     titleAr: "الفواتير",
     titleEn: "Invoices",
     icon: Receipt,
     path: "/app/invoices",
-    gradient: "from-amber-500 to-orange-500",
-    shadowColor: "shadow-amber-500/30",
+    variant: "secondary",
   },
   {
     titleAr: "المحفظة",
     titleEn: "Wallet",
     icon: Wallet,
     path: "/app/wallet",
-    gradient: "from-pink-500 to-rose-600",
-    shadowColor: "shadow-pink-500/30",
+    variant: "secondary",
   },
   {
     titleAr: "التمويل",
     titleEn: "Finance",
     icon: Briefcase,
     path: "/app/finance",
-    gradient: "from-slate-600 to-slate-700",
-    shadowColor: "shadow-slate-500/30",
+    variant: "accent",
   },
 ];
 
@@ -93,27 +85,39 @@ export function QuickActionPills({ isRTL }: QuickActionPillsProps) {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: reducedMotion ? 0 : 0.05,
+        staggerChildren: reducedMotion ? 0 : 0.04,
       },
     },
   };
 
   const item = {
-    hidden: reducedMotion ? {} : { opacity: 0, y: 10, scale: 0.9 },
+    hidden: reducedMotion ? {} : { opacity: 0, y: 8, scale: 0.95 },
     show: { 
       opacity: 1, 
       y: 0, 
       scale: 1,
-      transition: { duration: 0.25, ease: "easeOut" as const }
+      transition: { duration: 0.2, ease: "easeOut" as const }
     },
   };
 
-  const ArrowIcon = isRTL ? ChevronLeft : ChevronRight;
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+
+  const getVariantStyles = (variant: QuickAction["variant"]) => {
+    switch (variant) {
+      case "primary":
+        return "bg-gradient-to-r from-primary to-emerald-500 text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]";
+      case "accent":
+        return "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 hover:scale-[1.02]";
+      default:
+        return "bg-card border border-border text-foreground hover:bg-accent hover:border-primary/20 hover:scale-[1.02]";
+    }
+  };
 
   return (
     <div className="space-y-3">
       {/* Section Title */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className="w-1 h-4 bg-primary rounded-full" />
         <h3 className="text-sm font-semibold text-muted-foreground">
           {isRTL ? "الوصول السريع" : "Quick Access"}
         </h3>
@@ -127,24 +131,25 @@ export function QuickActionPills({ isRTL }: QuickActionPillsProps) {
         className="flex flex-wrap gap-2 md:gap-3"
       >
         {actions.map((action) => (
-          <motion.div key={action.path} variants={item}>
-            <Button
-              onClick={() => navigate(action.path)}
-              className={cn(
-                "h-11 min-h-[44px] px-5 rounded-full gap-2.5 font-semibold",
-                "transition-all duration-200",
-                "active:scale-95 hover:scale-105",
-                "text-white border-0",
-                `bg-gradient-to-r ${action.gradient}`,
-                `shadow-lg ${action.shadowColor}`,
-                "hover:shadow-xl"
-              )}
-            >
-              <action.icon className="h-4 w-4 shrink-0" />
-              <span>{isRTL ? action.titleAr : action.titleEn}</span>
-              <ArrowIcon className="h-3.5 w-3.5 opacity-60" />
-            </Button>
-          </motion.div>
+          <motion.button
+            key={action.path}
+            variants={item}
+            onClick={() => navigate(action.path)}
+            className={cn(
+              "inline-flex items-center gap-2.5 h-11 px-5 rounded-xl font-medium",
+              "transition-all duration-200 ease-out",
+              "active:scale-[0.98]",
+              "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+              getVariantStyles(action.variant)
+            )}
+          >
+            <action.icon className="h-4 w-4 shrink-0" />
+            <span className="text-sm">{isRTL ? action.titleAr : action.titleEn}</span>
+            <ArrowIcon className={cn(
+              "h-3.5 w-3.5 transition-transform",
+              action.variant !== "secondary" ? "opacity-70" : "opacity-40"
+            )} />
+          </motion.button>
         ))}
       </motion.div>
     </div>
