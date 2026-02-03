@@ -17,6 +17,14 @@ export {
   broadcastTransactionEvent, 
   broadcastBankTransferEvent 
 } from '../useWalletRealtime';
+export { 
+  useNotificationsRealtime, 
+  broadcastNotificationEvent 
+} from '../useNotificationsRealtime';
+export type { 
+  NotificationBroadcastEvent, 
+  NotificationBroadcastPayload 
+} from '../useNotificationsRealtime';
 
 export type {
   ServiceEventType,
