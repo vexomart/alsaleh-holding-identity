@@ -244,13 +244,13 @@ export function ContractsTab() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-right">رقم العقد</TableHead>
-                    <TableHead className="text-right">الكيان</TableHead>
-                    <TableHead className="text-right">رقم الطلب</TableHead>
-                    <TableHead className="text-right">المبلغ</TableHead>
-                    <TableHead className="text-right">الحالة</TableHead>
-                    <TableHead className="text-right">تاريخ التوقيع</TableHead>
                     <TableHead className="text-right">إجراءات</TableHead>
+                    <TableHead className="text-right">تاريخ التوقيع</TableHead>
+                    <TableHead className="text-right">الحالة</TableHead>
+                    <TableHead className="text-right">المبلغ</TableHead>
+                    <TableHead className="text-right">رقم الطلب</TableHead>
+                    <TableHead className="text-right">الكيان</TableHead>
+                    <TableHead className="text-right">رقم العقد</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -264,42 +264,7 @@ export function ContractsTab() {
                         transition={{ delay: index * 0.03 }}
                         className="border-b"
                       >
-                        <TableCell className="font-mono text-sm">
-                          {contract.contract_number}
-                        </TableCell>
-                        <TableCell>
-                          {contract.application?.entity?.legal_name_ar || "-"}
-                        </TableCell>
-                        <TableCell className="font-mono text-sm text-muted-foreground">
-                          {contract.application?.application_number || "-"}
-                        </TableCell>
-                        <TableCell className="font-semibold">
-                          {contract.application?.amount_sar 
-                            ? formatCurrencySAR(contract.application.amount_sar)
-                            : "-"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            className={cn(
-                              "text-xs",
-                              statusConfig?.variant === "success" &&
-                                "bg-green-500/10 text-green-600 border-green-200",
-                              statusConfig?.variant === "warning" &&
-                                "bg-yellow-500/10 text-yellow-600 border-yellow-200",
-                              statusConfig?.variant === "destructive" &&
-                                "bg-red-500/10 text-red-600 border-red-200",
-                              statusConfig?.variant === "secondary" &&
-                                "bg-muted text-muted-foreground"
-                            )}
-                          >
-                            {statusConfig?.label || contract.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
-                          {contract.signed_at
-                            ? new Date(contract.signed_at).toLocaleDateString("ar-SA")
-                            : "-"}
-                        </TableCell>
+                        {/* Actions - First */}
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Button 
@@ -330,6 +295,48 @@ export function ContractsTab() {
                               </Button>
                             )}
                           </div>
+                        </TableCell>
+                        {/* Signing Date */}
+                        <TableCell className="text-muted-foreground text-sm">
+                          {contract.signed_at
+                            ? new Date(contract.signed_at).toLocaleDateString("ar-SA")
+                            : "-"}
+                        </TableCell>
+                        {/* Status */}
+                        <TableCell>
+                          <Badge
+                            className={cn(
+                              "text-xs",
+                              statusConfig?.variant === "success" &&
+                                "bg-green-500/10 text-green-600 border-green-200",
+                              statusConfig?.variant === "warning" &&
+                                "bg-yellow-500/10 text-yellow-600 border-yellow-200",
+                              statusConfig?.variant === "destructive" &&
+                                "bg-red-500/10 text-red-600 border-red-200",
+                              statusConfig?.variant === "secondary" &&
+                                "bg-muted text-muted-foreground"
+                            )}
+                          >
+                            {statusConfig?.label || contract.status}
+                          </Badge>
+                        </TableCell>
+                        {/* Amount */}
+                        <TableCell className="font-semibold">
+                          {contract.application?.amount_sar 
+                            ? formatCurrencySAR(contract.application.amount_sar)
+                            : "-"}
+                        </TableCell>
+                        {/* Application Number */}
+                        <TableCell className="font-mono text-sm text-muted-foreground">
+                          {contract.application?.application_number || "-"}
+                        </TableCell>
+                        {/* Entity */}
+                        <TableCell>
+                          {contract.application?.entity?.legal_name_ar || "-"}
+                        </TableCell>
+                        {/* Contract Number - Last */}
+                        <TableCell className="font-mono text-sm">
+                          {contract.contract_number}
                         </TableCell>
                       </motion.tr>
                     );
