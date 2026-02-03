@@ -3,24 +3,29 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// Brotli shim paths
+// Shim paths
 const brotliShimPath = path.resolve(__dirname, "./src/shims/brotli.ts");
 const brotliDecompressShimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
 
-// Plugin to handle all brotli imports
-function brotliPlugin(): Plugin {
+// Plugin to handle problematic package imports - EXACT matches only
+function shimsPlugin(): Plugin {
   return {
-    name: "brotli-shim",
+    name: "shims-plugin",
     enforce: "pre",
-    resolveId(source) {
-      // Handle brotli/decompress and any subpath
+    resolveId(source, importer) {
+      // Skip if importing from within shims directory (prevent circular)
+      if (importer?.includes('/shims/')) {
+        return null;
+      }
+      
+      // Brotli - handle all subpaths
       if (source === "brotli/decompress" || source === "brotli/decompress.js" || source.startsWith("brotli/")) {
         return brotliDecompressShimPath;
       }
-      // Handle main brotli import
       if (source === "brotli") {
         return brotliShimPath;
       }
+      
       return null;
     },
   };
@@ -33,22 +38,20 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    brotliPlugin(),
+    shimsPlugin(),
     react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "base64-js": path.resolve(__dirname, "./src/shims/base64-js.ts"),
-      "unicode-trie": path.resolve(__dirname, "./src/shims/unicode-trie.ts"),
     },
     // CRITICAL: Force single React instance
     dedupe: ["react", "react-dom", "react/jsx-runtime", "@tanstack/react-query"],
   },
   optimizeDeps: {
     force: true,
-    include: ["@tanstack/react-query"],
+    include: ["@tanstack/react-query", "base64-js", "unicode-trie"],
     exclude: ["brotli"],
   },
   build: {
