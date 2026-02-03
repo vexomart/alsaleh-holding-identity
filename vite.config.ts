@@ -97,7 +97,7 @@ export default defineConfig(({ mode }) => ({
       "@react-pdf/renderer",
     ],
   },
-  // Cache bust: v2 - Force dependency rebuild
+  // Cache bust: v3 - Force dependency rebuild after wallet animations
   optimizeDeps: {
     force: true,
     include: [
@@ -108,8 +108,12 @@ export default defineConfig(({ mode }) => ({
       "react-dom/client",
       "react-router-dom",
       "@radix-ui/react-tooltip",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-popover",
       "@tanstack/react-query",
       "@react-pdf/renderer",
+      "framer-motion",
     ],
     exclude: ["brotli"],
     esbuildOptions: {
