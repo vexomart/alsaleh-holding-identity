@@ -82,63 +82,52 @@ export function OverviewHeader({
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
         <div className="relative z-10 p-6 md:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-            {/* Left Content */}
-            <div className="flex-1 space-y-5">
-              {/* Date Badge */}
-              <motion.div
-                initial={reducedMotion ? {} : { opacity: 0, x: isRTL ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
-              >
-                <TimeIcon className="h-4 w-4 text-amber-400" />
-                <span className="text-white/70 text-sm font-medium">{currentDate}</span>
-              </motion.div>
-
-              {/* Greeting */}
-              <motion.div
-                initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="space-y-2"
-              >
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                  {greeting}
-                </h1>
-                <div className="flex items-center gap-3">
-                  <p className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            {/* Left Content - Greeting Card */}
+            <motion.div 
+              initial={reducedMotion ? {} : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex-1"
+            >
+              {/* Greeting Header */}
+              <div className="flex items-center gap-4 mb-4">
+                {/* Time Icon with Glow */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber-400/30 rounded-full blur-xl" />
+                  <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 backdrop-blur-sm border border-amber-400/20 flex items-center justify-center">
+                    <TimeIcon className="h-7 w-7 text-amber-400" />
+                  </div>
+                </div>
+                
+                {/* Greeting Text */}
+                <div className="space-y-1">
+                  <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight flex items-center gap-3">
+                    {greeting}
+                    <span className="text-2xl">👋</span>
+                  </h1>
+                  <p className="text-xl md:text-2xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
                     {userName}
                   </p>
-                  <span className="text-3xl">👋</span>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Welcome Message */}
-              <motion.p
-                initial={reducedMotion ? {} : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-white/60 text-base md:text-lg max-w-lg leading-relaxed"
-              >
-                {isRTL
-                  ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
-                  : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
-              </motion.p>
-
-              {/* Status Pills */}
-              <motion.div
-                initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="flex flex-wrap items-center gap-3"
-              >
+              {/* Date & Status Row */}
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                {/* Date Badge */}
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
+                  <span className="text-white/60 text-sm">{currentDate}</span>
+                </div>
+                
+                {/* Active Status */}
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-emerald-400 text-xs font-medium">
                     {isRTL ? "حسابك نشط" : "Account Active"}
                   </span>
                 </div>
+                
+                {/* Verified Badge */}
                 {isVerified && (
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
                     <ShieldCheck className="h-3.5 w-3.5 text-primary" />
@@ -147,8 +136,15 @@ export function OverviewHeader({
                     </span>
                   </div>
                 )}
-              </motion.div>
-            </div>
+              </div>
+
+              {/* Welcome Message */}
+              <p className="text-white/50 text-sm md:text-base max-w-md leading-relaxed">
+                {isRTL
+                  ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
+                  : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
+              </p>
+            </motion.div>
 
             {/* Client ID Card */}
             <motion.div
