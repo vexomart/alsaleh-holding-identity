@@ -174,7 +174,7 @@ export async function downloadInvoicePdf(data: import('./types').InvoiceData): P
   }
 }
 
-// Contract PDF download - using HTML template like invoice
+// Contract PDF download - Enhanced multi-page with smart page breaks
 export async function downloadContractPdf(data: import('./types').ContractData): Promise<boolean> {
   const { renderServiceContractHTML } = await import('@/lib/contracts/service-contract-template');
   const { toast } = await import('sonner');
@@ -184,7 +184,7 @@ export async function downloadContractPdf(data: import('./types').ContractData):
   try {
     console.log('[Contract] Generating PDF for:', data.contractNumber);
     
-    // Create container for rendering - wider for better readability
+    // Create container with A4 width for optimal rendering
     const container = document.createElement('div');
     container.style.cssText = `
       position: absolute;
@@ -199,7 +199,7 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     
     // Wait for fonts to load
     await document.fonts.ready;
-    await new Promise(resolve => setTimeout(resolve, 600));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     // Get the contract container
     const contractEl = container.querySelector('.contract-container') as HTMLElement;
@@ -207,7 +207,7 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     
     // Render to canvas with high quality
     const canvas = await html2canvas(contractEl, {
-      scale: 2,
+      scale: 2.5, // Higher quality for clearer text
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
@@ -217,18 +217,19 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     console.log('[Contract] Canvas size:', canvas.width, 'x', canvas.height);
     
     // A4 dimensions in mm
-    const pageWidth = 210;
-    const pageHeight = 297;
-    const margin = 10; // 10mm margin
+    const pageWidthMM = 210;
+    const pageHeightMM = 297;
+    const marginMM = 8; // Smaller margins for more content
     
     // Calculate printable area
-    const printableWidth = pageWidth - (margin * 2);
-    const printableHeight = pageHeight - (margin * 2);
+    const printableWidthMM = pageWidthMM - (marginMM * 2);
+    const printableHeightMM = pageHeightMM - (marginMM * 2);
     
     // Calculate scale to fit width
-    const imgWidth = printableWidth;
-    const scale = imgWidth / (canvas.width / 2); // /2 because scale is 2
-    const imgHeight = (canvas.height / 2) * scale;
+    const scale = canvas.width / 2.5; // Original width
+    const imgWidthMM = printableWidthMM;
+    const pixelsPerMM = scale / imgWidthMM;
+    const imgHeightMM = (canvas.height / 2.5) / pixelsPerMM;
     
     // Create PDF
     const pdf = new jsPDF({
@@ -237,39 +238,51 @@ export async function downloadContractPdf(data: import('./types').ContractData):
       format: 'a4',
     });
     
-    const imgData = canvas.toDataURL('image/png', 1.0);
-    
     // Check if we need multiple pages
-    if (imgHeight <= printableHeight) {
+    if (imgHeightMM <= printableHeightMM) {
       // Single page - center vertically
-      const offsetY = margin + (printableHeight - imgHeight) / 2;
-      pdf.addImage(imgData, 'PNG', margin, offsetY, imgWidth, imgHeight);
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const offsetY = marginMM + (printableHeightMM - imgHeightMM) / 2;
+      pdf.addImage(imgData, 'PNG', marginMM, Math.max(marginMM, offsetY), imgWidthMM, imgHeightMM);
     } else {
-      // Multi-page - split content
-      const totalPages = Math.ceil(imgHeight / printableHeight);
-      const sourceHeightPerPage = canvas.height / totalPages;
+      // Multi-page - intelligent slicing
+      const totalPages = Math.ceil(imgHeightMM / printableHeightMM);
+      const sourcePixelsPerPage = (printableHeightMM * pixelsPerMM * 2.5); // Account for scale
+      
+      console.log('[Contract] Generating', totalPages, 'pages');
       
       for (let page = 0; page < totalPages; page++) {
         if (page > 0) pdf.addPage();
         
+        // Calculate slice position
+        const sourceY = page * sourcePixelsPerPage;
+        const remainingHeight = canvas.height - sourceY;
+        const sliceHeight = Math.min(sourcePixelsPerPage, remainingHeight);
+        
         // Create a canvas for this page slice
         const pageCanvas = document.createElement('canvas');
         pageCanvas.width = canvas.width;
-        pageCanvas.height = sourceHeightPerPage;
+        pageCanvas.height = sliceHeight;
         const ctx = pageCanvas.getContext('2d');
+        
         if (ctx) {
+          // Fill with white background
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+          
+          // Draw the slice from source canvas
           ctx.drawImage(
             canvas,
-            0, page * sourceHeightPerPage,
-            canvas.width, sourceHeightPerPage,
-            0, 0,
-            canvas.width, sourceHeightPerPage
+            0, sourceY,                    // Source x, y
+            canvas.width, sliceHeight,     // Source width, height
+            0, 0,                          // Dest x, y
+            canvas.width, sliceHeight      // Dest width, height
           );
           
           const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-          pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, printableHeight);
+          const pageImgHeightMM = (sliceHeight / 2.5) / pixelsPerMM;
+          
+          pdf.addImage(pageImgData, 'PNG', marginMM, marginMM, imgWidthMM, pageImgHeightMM);
         }
       }
     }

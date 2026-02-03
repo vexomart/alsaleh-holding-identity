@@ -1,9 +1,11 @@
 /**
  * Service Contract HTML Template - Premium Legal Design
  * قالب عقد الخدمات القانوني الشامل
+ * محسّن للطباعة وتصدير PDF متعدد الصفحات
  */
 
 import { ContractData } from '@/lib/invoices/types';
+import { SELLER_INFO } from '@/lib/invoices/constants';
 
 // Arabic number converter
 function toArabicDigits(num: number | string): string {
@@ -169,9 +171,9 @@ export function renderServiceContractHTML(
   const customerSignedDate = data.customerSignedAt ? formatDate(data.customerSignedAt) : signedDate;
   const customerName = data.customerSignatureName || data.customer?.name || data.customerNameAr || '-';
 
-  // Generate legal articles HTML
-  const articlesHTML = SERVICE_CONTRACT_ARTICLES.map(article => `
-    <div class="article">
+  // Generate legal articles HTML with proper page-break controls
+  const articlesHTML = SERVICE_CONTRACT_ARTICLES.map((article, index) => `
+    <div class="article" ${index === 0 ? 'style="page-break-before: avoid;"' : ''}>
       <div class="article-header">
         <span class="article-number">المادة ${article.number}</span>
         <span class="article-title">${article.title}</span>
@@ -208,29 +210,32 @@ export function renderServiceContractHTML(
       --bg-gradient: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #f0fdf4 100%);
     }
     
+    /* ========================================
+       PAGE SETUP - A4 with proper margins
+       ======================================== */
     @page {
       size: A4;
-      margin: 15mm;
+      margin: 12mm 15mm;
     }
     
     body {
       font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif;
-      background: var(--bg-gradient);
+      background: ${printMode ? 'white' : 'var(--bg-gradient)'};
       min-height: 100vh;
-      padding: 20px;
+      padding: ${printMode ? '0' : '20px'};
       color: var(--navy-dark);
-      line-height: 1.8;
-      font-size: 16px;
+      line-height: 1.7;
+      font-size: 13px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     
     .contract-container {
-      max-width: 850px;
+      max-width: 794px;
       margin: 0 auto;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+      ${printMode ? '' : 'border-radius: 12px; box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.12);'}
       overflow: hidden;
-      ${showAnimations ? 'animation: slideUp 0.6s ease-out;' : ''}
     }
     
     ${showAnimations ? `
@@ -240,15 +245,18 @@ export function renderServiceContractHTML(
     }
     @keyframes stampBounce {
       0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-      60% { transform: scale(1.2) rotate(10deg); }
+      60% { transform: scale(1.1) rotate(5deg); }
       100% { transform: scale(1) rotate(0deg); opacity: 1; }
     }
+    .contract-container { animation: slideUp 0.5s ease-out; }
     ` : ''}
     
-    /* Header */
+    /* ========================================
+       HEADER - Compact but professional
+       ======================================== */
     .contract-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--navy) 100%);
-      padding: 28px 40px;
+      padding: 18px 28px;
       position: relative;
       overflow: hidden;
     }
@@ -260,7 +268,7 @@ export function renderServiceContractHTML(
       right: -50%;
       width: 100%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
     }
     
     .header-content {
@@ -271,109 +279,118 @@ export function renderServiceContractHTML(
       align-items: center;
     }
     
-    .company-info {
-      color: white;
-    }
+    .company-info { color: white; }
     
     .company-name {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 6px;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
     }
     
     .company-subtitle {
-      font-size: 14px;
+      font-size: 11px;
       opacity: 0.85;
     }
     
     .contract-badge {
       background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
       color: var(--navy-dark);
-      padding: 14px 32px;
+      padding: 10px 22px;
       border-radius: 50px;
       font-weight: 700;
-      font-size: 18px;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      font-size: 14px;
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35);
     }
     
     /* Info Bar */
     .contract-info-bar {
       background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
-      padding: 16px 40px;
+      padding: 12px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
-      font-size: 14px;
+      font-size: 11px;
     }
     
     .info-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
     }
     
     .info-label {
       opacity: 0.7;
-      font-size: 12px;
+      font-size: 10px;
     }
     
     .info-value {
       font-weight: 600;
       font-family: 'IBM Plex Sans Arabic', monospace;
-      font-size: 14px;
+      font-size: 11px;
     }
     
-    /* Main Content */
+    /* ========================================
+       MAIN BODY
+       ======================================== */
     .contract-body {
-      padding: 35px 45px;
+      padding: 24px 28px;
     }
     
-    /* Preamble */
+    /* Preamble - Keep together */
     .preamble {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       border: 2px solid var(--gold);
-      border-radius: 14px;
-      padding: 24px 30px;
-      margin-bottom: 30px;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
       text-align: center;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     
     .preamble-title {
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
     .preamble-text {
-      font-size: 15px;
+      font-size: 12px;
       color: var(--navy);
-      line-height: 1.9;
+      line-height: 1.8;
     }
     
-    /* Parties Grid */
+    /* ========================================
+       PARTIES SECTION - Keep together
+       ======================================== */
+    .parties-section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin-bottom: 18px;
+    }
+    
     .parties-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 30px;
+      gap: 16px;
     }
     
     .party-card {
       border: 2px solid #e2e8f0;
-      border-radius: 14px;
+      border-radius: 10px;
       overflow: hidden;
     }
     
     .party-header {
-      padding: 14px 20px;
+      padding: 10px 14px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 12px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     
     .party-header.provider {
@@ -387,117 +404,119 @@ export function renderServiceContractHTML(
     }
     
     .party-icon {
-      width: 28px;
-      height: 28px;
+      width: 22px;
+      height: 22px;
       background: var(--gold);
-      border-radius: 6px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       color: var(--navy-dark);
-      font-size: 14px;
+      font-size: 11px;
     }
     
     .party-body {
-      padding: 18px 20px;
+      padding: 12px 14px;
       background: #fafafa;
     }
     
     .party-name {
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
     .party-detail {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
+      padding: 5px 0;
       border-bottom: 1px dashed #e2e8f0;
-      font-size: 14px;
+      font-size: 11px;
     }
     
-    .party-detail:last-child {
-      border-bottom: none;
-    }
+    .party-detail:last-child { border-bottom: none; }
     
-    .detail-label {
-      color: #64748b;
-    }
+    .detail-label { color: #64748b; }
+    .detail-value { font-weight: 600; color: var(--navy); }
     
-    .detail-value {
-      font-weight: 600;
-      color: var(--navy);
-    }
-    
-    /* Service Section */
+    /* ========================================
+       SERVICE SECTION - Keep together
+       ======================================== */
     .service-section {
       background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
       border: 2px solid var(--primary);
-      border-radius: 14px;
-      padding: 24px 28px;
-      margin-bottom: 30px;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     
     .service-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     
-    .service-icon {
-      font-size: 24px;
-    }
+    .service-icon { font-size: 18px; }
     
     .service-title {
-      font-size: 18px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--primary);
     }
     
     .service-name {
-      font-size: 22px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     
     .service-description {
-      font-size: 15px;
+      font-size: 12px;
       color: #475569;
-      line-height: 1.9;
+      line-height: 1.8;
     }
     
-    /* Amount Box */
+    /* ========================================
+       AMOUNT & PRICING - Keep together
+       ======================================== */
+    .pricing-section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin-bottom: 18px;
+    }
+    
     .amount-box {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 14px;
-      padding: 28px;
+      border-radius: 10px;
+      padding: 18px;
       text-align: center;
       color: white;
-      margin-bottom: 30px;
+      margin-bottom: 14px;
     }
     
     .amount-label {
-      font-size: 15px;
+      font-size: 11px;
       opacity: 0.9;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
     
     .amount-value {
-      font-size: 42px;
+      font-size: 28px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-family: 'IBM Plex Sans Arabic', sans-serif;
     }
     
     .amount-words {
-      font-size: 15px;
+      font-size: 11px;
       opacity: 0.9;
-      padding-top: 12px;
+      padding-top: 8px;
       border-top: 1px solid rgba(255,255,255,0.2);
     }
     
@@ -505,16 +524,20 @@ export function renderServiceContractHTML(
     .pricing-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 30px;
-      font-size: 15px;
+      font-size: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
     }
     
     .pricing-table tr {
       border-bottom: 1px solid #e2e8f0;
     }
     
+    .pricing-table tr:last-child { border-bottom: none; }
+    
     .pricing-table td {
-      padding: 14px 18px;
+      padding: 10px 14px;
     }
     
     .pricing-table td:first-child {
@@ -535,103 +558,121 @@ export function renderServiceContractHTML(
     
     .pricing-table tr.total td {
       font-weight: 700;
-      font-size: 17px;
+      font-size: 13px;
     }
     
     .pricing-table tr.total td:first-child {
       background: transparent;
     }
     
-    /* Legal Articles */
+    /* ========================================
+       LEGAL ARTICLES - CRITICAL: Page breaks
+       ======================================== */
     .legal-section {
-      margin-top: 30px;
+      margin-top: 20px;
     }
     
     .legal-title {
-      font-size: 20px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--navy-dark);
       text-align: center;
-      padding: 18px;
+      padding: 12px 16px;
       background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
-      border-radius: 10px;
-      margin-bottom: 24px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      page-break-after: avoid;
+      break-after: avoid;
     }
     
     .article {
-      margin-bottom: 22px;
-      padding-bottom: 22px;
-      border-bottom: 1px dashed #e2e8f0;
-    }
-    
-    .article:last-child {
-      border-bottom: none;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      background: #fafafa;
+      border-radius: 8px;
+      border-right: 3px solid var(--primary);
+      /* CRITICAL: Prevent article from being split across pages */
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
     
     .article-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 10px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
     
     .article-number {
       background: var(--primary);
       color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 11px;
       font-weight: 700;
+      white-space: nowrap;
     }
     
     .article-title {
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--navy-dark);
     }
     
     .article-content {
-      font-size: 15px;
+      font-size: 12px;
       color: #475569;
-      line-height: 2;
-      padding-right: 30px;
+      line-height: 1.85;
       text-align: justify;
     }
     
-    /* Signatures */
+    /* ========================================
+       SIGNATURES - Keep together ALWAYS
+       ======================================== */
     .signature-section {
-      margin-top: 40px;
-      padding-top: 30px;
+      margin-top: 24px;
+      padding-top: 18px;
       border-top: 3px solid var(--gold);
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-before: auto;
     }
     
     .signature-title {
       text-align: center;
-      font-size: 20px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
     
     .signature-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      gap: 20px;
     }
     
     .signature-box {
       text-align: center;
-      padding: 24px;
+      padding: 16px;
       border: 2px dashed #e2e8f0;
-      border-radius: 14px;
-      min-height: 140px;
+      border-radius: 10px;
+      min-height: 120px;
     }
     
     .signature-label {
-      font-size: 16px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--navy);
-      margin-bottom: 18px;
+      margin-bottom: 12px;
+    }
+    
+    /* Digital Stamps */
+    .stamp-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
     
     .digital-stamp {
@@ -639,442 +680,265 @@ export function renderServiceContractHTML(
     }
     
     .stamp-circle {
-      width: 120px;
-      height: 120px;
-      border: 4px solid var(--success);
+      width: 90px;
+      height: 90px;
+      border: 3px solid var(--success);
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(16, 185, 129, 0.08);
+      background: rgba(16, 185, 129, 0.06);
       margin: 0 auto;
       position: relative;
-      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.5s backwards;' : ''}
+      ${showAnimations ? 'animation: stampBounce 0.4s ease-out 0.5s backwards;' : ''}
     }
     
     .stamp-circle::before {
       content: '';
       position: absolute;
-      inset: 5px;
+      inset: 4px;
       border: 2px solid var(--success);
       border-radius: 50%;
-      opacity: 0.6;
+      opacity: 0.5;
     }
     
     .stamp-text {
-      font-size: 12px;
+      font-size: 9px;
       font-weight: 700;
       color: var(--success);
       text-align: center;
-      line-height: 1.4;
+      line-height: 1.3;
     }
     
     .stamp-check {
-      font-size: 18px;
-      margin-bottom: 4px;
-    }
-    
-    .stamp-date {
-      font-size: 10px;
-      color: var(--success);
-      opacity: 0.8;
-      margin-top: 4px;
-    }
-    
-    .stamp-id {
-      font-size: 9px;
-      color: var(--success);
-      opacity: 0.6;
-      font-family: monospace;
-    }
-    
-    .signature-line {
-      border-top: 2px solid var(--navy);
-      width: 70%;
-      margin: 40px auto 0;
-      padding-top: 12px;
       font-size: 14px;
-      color: #64748b;
+      margin-bottom: 2px;
     }
     
-    /* Admin Stamp - Emerald Green */
+    /* Admin Stamp */
     .admin-stamp {
-      width: 110px;
-      height: 110px;
-      border: 4px solid #059669;
+      width: 85px;
+      height: 85px;
+      border: 3px solid #059669;
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(5, 150, 105, 0.08);
-      margin: 12px auto 0;
+      background: rgba(5, 150, 105, 0.06);
       position: relative;
-      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.7s backwards;' : ''}
+      ${showAnimations ? 'animation: stampBounce 0.4s ease-out 0.6s backwards;' : ''}
     }
     
     .admin-stamp::before {
       content: '';
       position: absolute;
-      inset: 5px;
+      inset: 4px;
       border: 2px solid #059669;
       border-radius: 50%;
-      opacity: 0.5;
+      opacity: 0.4;
     }
     
     .admin-stamp-text {
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 700;
       color: #059669;
       text-align: center;
-      line-height: 1.4;
+      line-height: 1.3;
     }
     
     .admin-stamp-check {
-      font-size: 16px;
+      font-size: 12px;
       color: #059669;
       margin-bottom: 2px;
     }
     
     .admin-stamp-date {
-      font-size: 9px;
+      font-size: 8px;
       color: #059669;
       opacity: 0.8;
       margin-top: 2px;
     }
     
-    /* Customer Stamp - Teal */
+    /* Customer Stamp */
     .customer-stamp {
-      width: 110px;
-      height: 110px;
-      border: 4px solid var(--primary);
+      width: 85px;
+      height: 85px;
+      border: 3px solid var(--primary);
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(15, 118, 110, 0.08);
-      margin: 12px auto 0;
+      background: rgba(15, 118, 110, 0.06);
+      margin: 0 auto;
       position: relative;
-      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.9s backwards;' : ''}
+      ${showAnimations ? 'animation: stampBounce 0.4s ease-out 0.7s backwards;' : ''}
     }
     
     .customer-stamp::before {
       content: '';
       position: absolute;
-      inset: 5px;
+      inset: 4px;
       border: 2px solid var(--primary);
       border-radius: 50%;
-      opacity: 0.5;
+      opacity: 0.4;
     }
     
     .customer-stamp-text {
-      font-size: 11px;
+      font-size: 9px;
       font-weight: 700;
       color: var(--primary);
       text-align: center;
-      line-height: 1.4;
+      line-height: 1.3;
     }
     
     .customer-stamp-check {
-      font-size: 16px;
+      font-size: 12px;
       color: var(--primary);
       margin-bottom: 2px;
     }
     
     .customer-stamp-date {
-      font-size: 9px;
+      font-size: 8px;
       color: var(--primary);
       opacity: 0.8;
       margin-top: 2px;
     }
     
-    /* Footer */
-    .contract-footer {
-      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
-      padding: 20px 40px;
-      text-align: center;
-      color: white;
-      font-size: 14px;
-      opacity: 0.9;
-    }
-    
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-        font-size: 14px;
-      }
-      
-      .contract-container {
-        box-shadow: none;
-        border-radius: 0;
-      }
-      
-      .article {
-        page-break-inside: avoid;
-      }
+    .signature-line {
+      border-top: 2px solid var(--navy);
+      width: 65%;
+      margin: 30px auto 0;
+      padding-top: 8px;
+      font-size: 11px;
+      color: #64748b;
     }
     
     /* ========================================
-       MOBILE RESPONSIVE - TABLET
+       FOOTER
        ======================================== */
-    @media screen and (max-width: 768px) {
+    .contract-footer {
+      background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
+      padding: 12px 28px;
+      text-align: center;
+      color: white;
+      font-size: 10px;
+      opacity: 0.95;
+    }
+    
+    /* ========================================
+       PRINT STYLES - Critical for PDF
+       ======================================== */
+    @media print {
       body {
-        padding: 10px;
+        background: white !important;
+        padding: 0 !important;
+        font-size: 11px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
       
       .contract-container {
-        border-radius: 12px;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        max-width: 100% !important;
       }
       
-      .contract-header {
-        padding: 20px 24px;
+      /* Ensure articles never break */
+      .article {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
+      
+      /* Keep header and preamble together */
+      .contract-header,
+      .contract-info-bar,
+      .preamble {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* Parties should stay together */
+      .parties-section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* Service section together */
+      .service-section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* Pricing together */
+      .pricing-section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* SIGNATURES MUST STAY TOGETHER */
+      .signature-section {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      
+      /* Allow page break before legal section */
+      .legal-section {
+        page-break-before: auto;
+      }
+      
+      /* Adjust for print visibility */
+      .contract-header { print-color-adjust: exact; }
+      .amount-box { print-color-adjust: exact; }
+      .pricing-table tr.total { print-color-adjust: exact; }
+      .party-header { print-color-adjust: exact; }
+      .article-number { print-color-adjust: exact; }
+    }
+    
+    /* ========================================
+       MOBILE RESPONSIVE
+       ======================================== */
+    @media screen and (max-width: 768px) {
+      body { padding: 10px; }
+      
+      .contract-header { padding: 14px 18px; }
       
       .header-content {
         flex-direction: column;
-        gap: 14px;
+        gap: 12px;
         text-align: center;
       }
       
-      .company-name {
-        font-size: 20px;
-      }
-      
-      .contract-badge {
-        font-size: 16px;
-        padding: 12px 26px;
-      }
+      .company-name { font-size: 16px; }
+      .contract-badge { font-size: 13px; padding: 8px 18px; }
       
       .contract-info-bar {
         flex-wrap: wrap;
-        padding: 14px 24px;
-        gap: 14px;
+        padding: 10px 18px;
+        gap: 10px;
       }
       
-      .info-item {
-        flex: 1 1 30%;
-      }
+      .info-item { flex: 1 1 30%; }
       
-      .contract-body {
-        padding: 24px;
-      }
-      
-      .preamble {
-        padding: 20px;
-      }
-      
-      .preamble-title {
-        font-size: 18px;
-      }
-      
-      .parties-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .service-section {
-        padding: 20px;
-      }
-      
-      .amount-box {
-        padding: 22px;
-      }
-      
-      .amount-value {
-        font-size: 32px;
-      }
-      
-      .signature-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
-      .legal-title {
-        font-size: 18px;
-      }
-      
-      .article-header {
-        flex-direction: column;
-        gap: 6px;
-        align-items: flex-start;
-      }
+      .contract-body { padding: 16px; }
+      .preamble { padding: 14px; }
+      .parties-grid { grid-template-columns: 1fr; }
+      .service-section { padding: 14px; }
+      .amount-box { padding: 14px; }
+      .amount-value { font-size: 22px; }
+      .signature-grid { grid-template-columns: 1fr; gap: 14px; }
     }
     
-    /* ========================================
-       MOBILE RESPONSIVE - PHONE
-       ======================================== */
     @media screen and (max-width: 480px) {
-      body {
-        padding: 5px;
-        font-size: 14px;
-      }
-      
-      .contract-container {
-        border-radius: 10px;
-      }
-      
-      .contract-header {
-        padding: 16px;
-      }
-      
-      .company-name {
-        font-size: 16px;
-      }
-      
-      .company-subtitle {
-        font-size: 12px;
-      }
-      
-      .contract-badge {
-        font-size: 14px;
-        padding: 10px 20px;
-      }
-      
-      .contract-info-bar {
-        flex-direction: column;
-        padding: 12px 16px;
-        font-size: 12px;
-      }
-      
-      .info-item {
-        flex: 1 1 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 6px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-      }
-      
-      .info-item:last-child {
-        border-bottom: none;
-      }
-      
-      .contract-body {
-        padding: 16px;
-      }
-      
-      .preamble {
-        padding: 16px;
-        border-radius: 10px;
-      }
-      
-      .preamble-title {
-        font-size: 16px;
-      }
-      
-      .preamble-text {
-        font-size: 13px;
-      }
-      
-      .party-header {
-        padding: 12px 14px;
-        font-size: 13px;
-      }
-      
-      .party-body {
-        padding: 14px;
-      }
-      
-      .party-name {
-        font-size: 15px;
-      }
-      
-      .party-detail {
-        flex-direction: column;
-        gap: 3px;
-        font-size: 12px;
-        padding: 6px 0;
-      }
-      
-      .service-section {
-        padding: 16px;
-        border-radius: 12px;
-      }
-      
-      .service-title {
-        font-size: 14px;
-      }
-      
-      .service-name {
-        font-size: 18px;
-      }
-      
-      .service-description {
-        font-size: 13px;
-      }
-      
-      .amount-box {
-        padding: 18px;
-        border-radius: 12px;
-      }
-      
-      .amount-label {
-        font-size: 12px;
-      }
-      
-      .amount-value {
-        font-size: 26px;
-      }
-      
-      .amount-words {
-        font-size: 12px;
-      }
-      
-      .pricing-table {
-        font-size: 12px;
-      }
-      
-      .pricing-table td {
-        padding: 10px;
-      }
-      
-      .legal-section {
-        margin-bottom: 20px;
-      }
-      
-      .legal-title {
-        font-size: 16px;
-        padding: 10px 14px;
-      }
-      
-      .article {
-        padding: 14px;
-      }
-      
-      .article-header {
-        font-size: 12px;
-      }
-      
-      .article-content {
-        font-size: 12px;
-        line-height: 1.7;
-      }
-      
-      .signature-section {
-        padding: 16px;
-      }
-      
-      .signature-title {
-        font-size: 15px;
-      }
-      
-      .signature-box {
-        padding: 16px;
-      }
-      
-      .digital-stamp {
-        transform: scale(0.8);
-      }
-      
-      .admin-stamp, .customer-stamp {
-        transform: scale(0.85);
-      }
-      
-      .contract-footer {
-        padding: 14px 16px;
-        font-size: 10px;
-      }
+      body { padding: 5px; font-size: 12px; }
+      .contract-header { padding: 12px; }
+      .company-name { font-size: 14px; }
+      .contract-badge { font-size: 12px; padding: 6px 14px; }
+      .contract-body { padding: 12px; }
+      .amount-value { font-size: 20px; }
+      .admin-stamp, .customer-stamp, .stamp-circle { transform: scale(0.85); }
     }
   </style>
 </head>
@@ -1084,8 +948,8 @@ export function renderServiceContractHTML(
     <div class="contract-header">
       <div class="header-content">
         <div class="company-info">
-          <div class="company-name">${data.provider?.name || 'شركة علي صالح الشهري القابضة'}</div>
-          <div class="company-subtitle">${data.provider?.address || 'المملكة العربية السعودية'}</div>
+          <div class="company-name">${data.provider?.name || SELLER_INFO.name_ar}</div>
+          <div class="company-subtitle">${data.provider?.address || SELLER_INFO.address_ar}</div>
         </div>
         <div class="contract-badge">عقد تقديم خدمات</div>
       </div>
@@ -1118,46 +982,46 @@ export function renderServiceContractHTML(
       </div>
       
       <!-- Parties -->
-      <div class="parties-grid">
-        <div class="party-card">
-          <div class="party-header provider">
-            <div class="party-icon">١</div>
-            <span>الطرف الأول (مقدم الخدمة)</span>
+      <div class="parties-section">
+        <div class="parties-grid">
+          <div class="party-card">
+            <div class="party-header provider">
+              <div class="party-icon">١</div>
+              <span>الطرف الأول (مقدم الخدمة)</span>
+            </div>
+            <div class="party-body">
+              <div class="party-name">${data.provider?.name || SELLER_INFO.name_ar}</div>
+              <div class="party-detail">
+                <span class="detail-label">العنوان:</span>
+                <span class="detail-value">${data.provider?.address || SELLER_INFO.address_ar}</span>
+              </div>
+              <div class="party-detail">
+                <span class="detail-label">الهاتف:</span>
+                <span class="detail-value" dir="ltr">${data.provider?.phone || SELLER_INFO.phone}</span>
+              </div>
+            </div>
           </div>
-          <div class="party-body">
-            <div class="party-name">${data.provider?.name || 'شركة علي صالح الشهري القابضة'}</div>
-            <div class="party-detail">
-              <span class="detail-label">العنوان:</span>
-              <span class="detail-value">${data.provider?.address || 'المملكة العربية السعودية'}</span>
+          
+          <div class="party-card">
+            <div class="party-header customer">
+              <div class="party-icon">٢</div>
+              <span>الطرف الثاني (العميل)</span>
             </div>
-            ${data.provider?.phone ? `
-            <div class="party-detail">
-              <span class="detail-label">الهاتف:</span>
-              <span class="detail-value" dir="ltr">${data.provider.phone}</span>
+            <div class="party-body">
+              <div class="party-name">${data.customer?.name || data.customerNameAr || data.customerName || '-'}</div>
+              ${data.customer?.nationalId ? `
+              <div class="party-detail">
+                <span class="detail-label">رقم الهوية:</span>
+                <span class="detail-value" dir="ltr">${data.customer.nationalId}</span>
+              </div>
+              ` : ''}
+              ${data.customer?.phone ? `
+              <div class="party-detail">
+                <span class="detail-label">الهاتف:</span>
+                <span class="detail-value" dir="ltr">${data.customer.phone}</span>
+              </div>
+              ` : ''}
             </div>
-            ` : ''}
-          </div>
-        </div>
-        
-        <div class="party-card">
-          <div class="party-header customer">
-            <div class="party-icon">٢</div>
-            <span>الطرف الثاني (العميل)</span>
-          </div>
-          <div class="party-body">
-            <div class="party-name">${data.customer?.name || data.customerNameAr || data.customerName || '-'}</div>
-            ${data.customer?.nationalId ? `
-            <div class="party-detail">
-              <span class="detail-label">رقم الهوية:</span>
-              <span class="detail-value" dir="ltr">${data.customer.nationalId}</span>
-            </div>
-            ` : ''}
-            ${data.customer?.phone ? `
-            <div class="party-detail">
-              <span class="detail-label">الهاتف:</span>
-              <span class="detail-value" dir="ltr">${data.customer.phone}</span>
-            </div>
-            ` : ''}
           </div>
         </div>
       </div>
@@ -1174,31 +1038,30 @@ export function renderServiceContractHTML(
         </div>
       </div>
       
-      <!-- Amount Box -->
+      <!-- Pricing Section -->
       ${totalAmount > 0 ? `
-      <div class="amount-box">
-        <div class="amount-label">قيمة العقد الإجمالية شاملة ضريبة القيمة المضافة</div>
-        <div class="amount-value" dir="ltr">${formatAmount(totalAmount)} ر.س</div>
-        <div class="amount-words">فقط ${amountInWords} لا غير</div>
+      <div class="pricing-section">
+        <div class="amount-box">
+          <div class="amount-label">قيمة العقد الإجمالية شاملة ضريبة القيمة المضافة</div>
+          <div class="amount-value" dir="ltr">${formatAmount(totalAmount)} ر.س</div>
+          <div class="amount-words">فقط ${amountInWords} لا غير</div>
+        </div>
+        
+        <table class="pricing-table">
+          <tr>
+            <td>المبلغ قبل الضريبة</td>
+            <td dir="ltr">${formatAmount(subtotal)} ر.س</td>
+          </tr>
+          <tr>
+            <td>ضريبة القيمة المضافة (${toArabicDigits(Math.round(vatRate * 100))}٪)</td>
+            <td dir="ltr">${formatAmount(vatAmount)} ر.س</td>
+          </tr>
+          <tr class="total">
+            <td>الإجمالي شامل الضريبة</td>
+            <td dir="ltr">${formatAmount(totalAmount)} ر.س</td>
+          </tr>
+        </table>
       </div>
-      ` : ''}
-      
-      <!-- Pricing Table -->
-      ${totalAmount > 0 ? `
-      <table class="pricing-table">
-        <tr>
-          <td>المبلغ قبل الضريبة</td>
-          <td dir="ltr">${formatAmount(subtotal)} ر.س</td>
-        </tr>
-        <tr>
-          <td>ضريبة القيمة المضافة (${toArabicDigits(Math.round(vatRate * 100))}٪)</td>
-          <td dir="ltr">${formatAmount(vatAmount)} ر.س</td>
-        </tr>
-        <tr class="total">
-          <td>الإجمالي شامل الضريبة</td>
-          <td dir="ltr">${formatAmount(totalAmount)} ر.س</td>
-        </tr>
-      </table>
       ` : ''}
       
       <!-- Legal Articles -->
@@ -1214,19 +1077,20 @@ export function renderServiceContractHTML(
           <!-- Provider Signature + Admin Approval -->
           <div class="signature-box">
             <div class="signature-label">الطرف الأول (مقدم الخدمة)</div>
-            <div class="digital-stamp">
-              <div class="stamp-circle">
-                <div class="stamp-text">شركة علي صالح<br/>الشهري القابضة</div>
+            <div class="stamp-wrapper">
+              <div class="digital-stamp">
+                <div class="stamp-circle">
+                  <div class="stamp-text">شركة علي صالح<br/>الشهري القابضة</div>
+                </div>
               </div>
+              ${adminApprovedDate ? `
+              <div class="admin-stamp">
+                <div class="admin-stamp-check">✓</div>
+                <div class="admin-stamp-text">تمت الموافقة<br/>من الإدارة</div>
+                <div class="admin-stamp-date">${adminApprovedDate}</div>
+              </div>
+              ` : ''}
             </div>
-            ${adminApprovedDate ? `
-            <!-- Admin Approval Stamp -->
-            <div class="admin-stamp">
-              <div class="admin-stamp-check">✓</div>
-              <div class="admin-stamp-text">تمت الموافقة<br/>من الإدارة</div>
-              <div class="admin-stamp-date">${adminApprovedDate}</div>
-            </div>
-            ` : ''}
           </div>
           
           <!-- Customer Signature -->
@@ -1248,7 +1112,7 @@ export function renderServiceContractHTML(
     
     <!-- Footer -->
     <div class="contract-footer">
-      <p>شركة علي صالح الشهري القابضة - جميع الحقوق محفوظة © ${new Date().getFullYear()} | هذا العقد ملزم قانونياً للطرفين</p>
+      <p>${SELLER_INFO.name_ar} - جميع الحقوق محفوظة © ${new Date().getFullYear()} | هذا العقد ملزم قانونياً للطرفين</p>
     </div>
   </div>
 </body>
