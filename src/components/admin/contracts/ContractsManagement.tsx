@@ -14,6 +14,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { sendContractEmail } from '@/lib/api/email-notifications';
 
 import {
   Card,
@@ -326,6 +327,23 @@ export function ContractsManagement() {
       if (error) throw error;
 
       toast.success(isRTL ? 'تمت الموافقة على العقد بنجاح' : 'Contract approved successfully');
+      
+      // Send email notification to customer
+      if (selectedContract.customer?.email) {
+        sendContractEmail({
+          contractId: selectedContract.id,
+          contractNumber: selectedContract.contract_number,
+          customerEmail: selectedContract.customer.email,
+          customerName: selectedContract.customer.full_name || selectedContract.customer.full_name_ar || '',
+          serviceName: selectedContract.service?.name || '',
+          serviceNameAr: selectedContract.service?.name_ar || undefined,
+          totalAmount: selectedContract.pricing_json?.total || 0,
+          currency: selectedContract.pricing_json?.currency || 'SAR',
+          eventType: 'admin_approved',
+          signingUrl: `/app/contracts/${selectedContract.id}/sign`,
+        }).catch(err => console.error('Email notification failed:', err));
+      }
+      
       setIsApproveOpen(false);
       setApprovalNotes('');
       fetchContracts();
@@ -358,6 +376,23 @@ export function ContractsManagement() {
       if (error) throw error;
 
       toast.success(isRTL ? 'تم رفض العقد' : 'Contract rejected');
+      
+      // Send rejection email notification to customer
+      if (selectedContract.customer?.email) {
+        sendContractEmail({
+          contractId: selectedContract.id,
+          contractNumber: selectedContract.contract_number,
+          customerEmail: selectedContract.customer.email,
+          customerName: selectedContract.customer.full_name || selectedContract.customer.full_name_ar || '',
+          serviceName: selectedContract.service?.name || '',
+          serviceNameAr: selectedContract.service?.name_ar || undefined,
+          totalAmount: selectedContract.pricing_json?.total || 0,
+          currency: selectedContract.pricing_json?.currency || 'SAR',
+          eventType: 'rejected',
+          rejectionReason: rejectionReason,
+        }).catch(err => console.error('Email notification failed:', err));
+      }
+      
       setIsRejectOpen(false);
       setRejectionReason('');
       fetchContracts();

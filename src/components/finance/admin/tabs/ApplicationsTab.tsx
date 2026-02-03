@@ -43,6 +43,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { sendFinanceEmail } from "@/lib/api/email-notifications";
 import {
   Search,
   Eye,
@@ -127,10 +128,47 @@ export function ApplicationsTab() {
         .update({ status: "under_review" as FinanceApplicationStatus })
         .eq("id", appId);
       if (error) throw error;
+      return appId;
     },
-    onSuccess: () => {
+    onSuccess: async (appId) => {
       toast.success("تم قبول الطلب للمراجعة");
       queryClient.invalidateQueries({ queryKey: ["admin-finance-applications"] });
+      
+      // Send email notification
+      if (selectedApp) {
+        try {
+          // Get entity owner info
+          const { data: entityData } = await supabase
+            .from("entities")
+            .select("owner_user_id, legal_name_ar")
+            .eq("id", selectedApp.id)
+            .single();
+          
+          if (entityData?.owner_user_id) {
+            const { data: profileData } = await supabase
+              .from("profiles")
+              .select("email, full_name")
+              .eq("id", entityData.owner_user_id)
+              .single();
+            
+            if (profileData?.email) {
+              sendFinanceEmail({
+                applicationId: selectedApp.id,
+                applicationNumber: selectedApp.application_number,
+                customerEmail: profileData.email,
+                customerName: profileData.full_name || '',
+                entityName: selectedApp.entity?.legal_name_ar || '',
+                amountSar: selectedApp.amount_sar,
+                tenorMonths: selectedApp.tenor_months,
+                eventType: 'under_review',
+              }).catch(err => console.error('Email notification failed:', err));
+            }
+          }
+        } catch (err) {
+          console.error('Failed to send email:', err);
+        }
+      }
+      
       setShowApproveDialog(false);
       setSelectedApp(null);
     },
@@ -149,10 +187,49 @@ export function ApplicationsTab() {
         })
         .eq("id", appId);
       if (error) throw error;
+      return { appId, reason };
     },
-    onSuccess: () => {
+    onSuccess: async ({ appId, reason }) => {
       toast.success("تم رفض الطلب");
       queryClient.invalidateQueries({ queryKey: ["admin-finance-applications"] });
+      
+      // Send rejection email notification
+      if (selectedApp) {
+        try {
+          // Get entity owner info
+          const { data: app } = await supabase
+            .from("finance_applications")
+            .select("entity:entities(owner_user_id, legal_name_ar)")
+            .eq("id", appId)
+            .single();
+          
+          const entityOwner = (app?.entity as any)?.owner_user_id;
+          if (entityOwner) {
+            const { data: profileData } = await supabase
+              .from("profiles")
+              .select("email, full_name")
+              .eq("id", entityOwner)
+              .single();
+            
+            if (profileData?.email) {
+              sendFinanceEmail({
+                applicationId: selectedApp.id,
+                applicationNumber: selectedApp.application_number,
+                customerEmail: profileData.email,
+                customerName: profileData.full_name || '',
+                entityName: selectedApp.entity?.legal_name_ar || '',
+                amountSar: selectedApp.amount_sar,
+                tenorMonths: selectedApp.tenor_months,
+                eventType: 'rejected',
+                rejectionReason: reason,
+              }).catch(err => console.error('Email notification failed:', err));
+            }
+          }
+        } catch (err) {
+          console.error('Failed to send email:', err);
+        }
+      }
+      
       setShowRejectDialog(false);
       setSelectedApp(null);
       setRejectReason("");
