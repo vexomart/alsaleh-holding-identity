@@ -1,6 +1,6 @@
 /**
  * Admin Wallets Management - Modern Design
- * Full wallet administration with customer search, balance management, and transactions
+ * Customer list with navigation to detail pages
  */
 
 import { useState, useEffect, useMemo, useCallback } from "react";
@@ -21,14 +21,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import type { CustomerWallet, FinancialTransaction } from "@/types/financial";
+import type { CustomerWallet } from "@/types/financial";
 
-// Modular components
 import { WalletStatsCards } from "./WalletStatsCards";
 import { WalletsFilters } from "./WalletsFilters";
 import { WalletCustomerCard } from "./WalletCustomerCard";
-import { WalletDetailDrawer } from "./WalletDetailDrawer";
-import { WalletAdjustmentDialog } from "./WalletAdjustmentDialog";
 
 interface CustomerWithWallet {
   id: string;
@@ -44,41 +41,27 @@ interface WalletStats {
   activeWallets: number;
   totalBalance: number;
   pendingTransactions: number;
-  monthlyGrowth?: number;
 }
 
 export function WalletsManagement() {
   const { language } = useLanguage();
   const isRTL = language === "ar";
 
-  // Data state
   const [customers, setCustomers] = useState<CustomerWithWallet[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerWithWallet | null>(null);
-  const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
   const [stats, setStats] = useState<WalletStats>({
     totalWallets: 0,
     activeWallets: 0,
     totalBalance: 0,
     pendingTransactions: 0,
   });
-
-  // UI state
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Dialog state
-  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
-  const [isAdjustmentDialogOpen, setIsAdjustmentDialogOpen] = useState(false);
-  const [adjustmentType, setAdjustmentType] = useState<"add" | "deduct">("add");
-
-  // Fetch customers with wallets
   const fetchCustomersWithWallets = useCallback(async () => {
     try {
-      // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, customer_uid, email, full_name, phone")
@@ -86,14 +69,12 @@ export function WalletsManagement() {
 
       if (profilesError) throw profilesError;
 
-      // Fetch all wallets
       const { data: wallets, error: walletsError } = await supabase
         .from("customer_wallets")
         .select("*");
 
       if (walletsError) throw walletsError;
 
-      // Map wallets to customers
       const walletsMap = new Map(
         (wallets as CustomerWallet[]).map((w) => [w.customer_user_id, w])
       );
@@ -105,11 +86,7 @@ export function WalletsManagement() {
 
       setCustomers(customersWithWallets);
 
-      // Calculate stats
       const walletsList = wallets as CustomerWallet[] || [];
-      const totalBalance = walletsList.reduce((sum, w) => sum + Number(w.balance || 0), 0);
-      
-      // Get pending transactions count
       const { count } = await supabase
         .from("financial_transactions")
         .select("*", { count: "exact", head: true })
@@ -118,7 +95,7 @@ export function WalletsManagement() {
       setStats({
         totalWallets: walletsList.length,
         activeWallets: walletsList.filter((w) => w.status === "active").length,
-        totalBalance,
+        totalBalance: walletsList.reduce((sum, w) => sum + Number(w.balance || 0), 0),
         pendingTransactions: count || 0,
       });
     } catch (error) {
@@ -134,27 +111,6 @@ export function WalletsManagement() {
     fetchCustomersWithWallets();
   }, [fetchCustomersWithWallets]);
 
-  // Fetch transactions for selected customer
-  const fetchTransactions = useCallback(async (customerId: string) => {
-    setIsLoadingTransactions(true);
-    try {
-      const { data, error } = await supabase
-        .from("financial_transactions")
-        .select("*")
-        .eq("customer_user_id", customerId)
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      if (error) throw error;
-      setTransactions((data || []) as FinancialTransaction[]);
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
-    } finally {
-      setIsLoadingTransactions(false);
-    }
-  }, []);
-
-  // Filter customers
   const filteredCustomers = useMemo(() => {
     return customers.filter((c) => {
       const matchesSearch =
@@ -175,106 +131,9 @@ export function WalletsManagement() {
     });
   }, [customers, searchQuery, statusFilter]);
 
-  // Handlers
   const handleRefresh = () => {
     setIsRefreshing(true);
     fetchCustomersWithWallets();
-  };
-
-  const handleViewCustomer = (customer: CustomerWithWallet) => {
-    setSelectedCustomer(customer);
-    setIsDetailDrawerOpen(true);
-    if (customer.id) {
-      fetchTransactions(customer.id);
-    }
-  };
-
-  const handleOpenAdjustment = (customer: CustomerWithWallet, type: "add" | "deduct") => {
-    setSelectedCustomer(customer);
-    setAdjustmentType(type);
-    setIsAdjustmentDialogOpen(true);
-  };
-
-  const handleCreateWallet = async (customerId: string) => {
-    try {
-      // Generate wallet number (16 digits starting with 4)
-      const walletNumber = '4' + Array.from({ length: 15 }, () => Math.floor(Math.random() * 10)).join('');
-      
-      const { error } = await supabase
-        .from("customer_wallets")
-        .insert({
-          customer_user_id: customerId,
-          wallet_number: walletNumber,
-          balance: 0,
-          currency: "SAR",
-          status: "active",
-        } as any);
-
-      if (error) throw error;
-
-      toast.success(isRTL ? "تم إنشاء المحفظة بنجاح" : "Wallet created successfully");
-      fetchCustomersWithWallets();
-    } catch (error) {
-      console.error("Error creating wallet:", error);
-      toast.error(isRTL ? "فشل في إنشاء المحفظة" : "Failed to create wallet");
-    }
-  };
-
-  const handleAdjustmentSubmit = async (amount: number, reason: string) => {
-    if (!selectedCustomer?.wallet) return;
-
-    const newBalance =
-      adjustmentType === "add"
-        ? Number(selectedCustomer.wallet.balance) + amount
-        : Number(selectedCustomer.wallet.balance) - amount;
-
-    // Update wallet balance
-    const { error: walletError } = await supabase
-      .from("customer_wallets")
-      .update({ balance: newBalance })
-      .eq("id", selectedCustomer.wallet.id);
-
-    if (walletError) throw walletError;
-
-    // Create transaction record
-    const { error: txError } = await supabase
-      .from("financial_transactions")
-      .insert({
-        customer_user_id: selectedCustomer.id,
-        wallet_id: selectedCustomer.wallet.id,
-        transaction_type: "adjustment",
-        amount: amount,
-        currency: "SAR",
-        status: "succeeded",
-        description: reason,
-        description_ar: reason,
-        processed_at: new Date().toISOString(),
-        metadata: {
-          adjustment_type: adjustmentType,
-          performed_by: "admin",
-        },
-      });
-
-    if (txError) throw txError;
-
-    toast.success(
-      isRTL
-        ? `تم ${adjustmentType === "add" ? "إضافة" : "خصم"} ${amount} ر.س`
-        : `${adjustmentType === "add" ? "Added" : "Deducted"} ${amount} SAR`
-    );
-
-    // Refresh data
-    fetchCustomersWithWallets();
-    if (selectedCustomer.id) {
-      fetchTransactions(selectedCustomer.id);
-    }
-
-    // Update selected customer
-    setSelectedCustomer((prev) =>
-      prev?.wallet
-        ? { ...prev, wallet: { ...prev.wallet, balance: newBalance } }
-        : prev
-    );
   };
 
   return (
@@ -296,22 +155,16 @@ export function WalletsManagement() {
                 <Sparkles className="h-5 w-5 text-amber-500" />
               </h1>
               <p className="text-sm text-muted-foreground">
-                {isRTL
-                  ? "إدارة محافظ العملاء والمعاملات المالية"
-                  : "Manage customer wallets and financial transactions"}
+                {isRTL ? "اضغط على العميل لعرض تفاصيل المحفظة" : "Click on a customer to view wallet details"}
               </p>
             </div>
           </div>
 
-          {/* View Mode Toggle */}
           <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/50">
             <Button
               variant={viewMode === "grid" ? "default" : "ghost"}
               size="sm"
-              className={cn(
-                "h-9 px-3 rounded-lg",
-                viewMode === "grid" && "shadow-sm"
-              )}
+              className={cn("h-9 px-3 rounded-lg", viewMode === "grid" && "shadow-sm")}
               onClick={() => setViewMode("grid")}
             >
               <LayoutGrid className="h-4 w-4 me-2" />
@@ -320,10 +173,7 @@ export function WalletsManagement() {
             <Button
               variant={viewMode === "list" ? "default" : "ghost"}
               size="sm"
-              className={cn(
-                "h-9 px-3 rounded-lg",
-                viewMode === "list" && "shadow-sm"
-              )}
+              className={cn("h-9 px-3 rounded-lg", viewMode === "list" && "shadow-sm")}
               onClick={() => setViewMode("list")}
             >
               <List className="h-4 w-4 me-2" />
@@ -332,14 +182,8 @@ export function WalletsManagement() {
           </div>
         </motion.div>
 
-        {/* Stats Cards */}
-        <WalletStatsCards
-          stats={stats}
-          language={language}
-          isLoading={isLoading}
-        />
+        <WalletStatsCards stats={stats} language={language} isLoading={isLoading} />
 
-        {/* Filters */}
         <Card className="border-border/50 shadow-sm">
           <CardContent className="p-4">
             <WalletsFilters
@@ -356,99 +200,39 @@ export function WalletsManagement() {
           </CardContent>
         </Card>
 
-        {/* Customers List */}
         <Card className="border-border/50 shadow-sm overflow-hidden">
           <CardHeader className="border-b bg-muted/30 py-4">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <Users className="h-5 w-5 text-emerald-600" />
               {isRTL ? "قائمة العملاء" : "Customers List"}
-              <span className="ms-2 text-sm font-normal text-muted-foreground">
-                ({filteredCustomers.length})
-              </span>
+              <span className="ms-2 text-sm font-normal text-muted-foreground">({filteredCustomers.length})</span>
             </CardTitle>
           </CardHeader>
 
           <CardContent className="p-4">
             {isLoading ? (
-              <div className={cn(
-                "grid gap-4",
-                viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
-              )}>
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <Skeleton key={i} className="h-40 rounded-2xl" />
-                ))}
+              <div className={cn("grid gap-4", viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1")}>
+                {[1, 2, 3, 4, 5, 6].map((i) => <Skeleton key={i} className="h-40 rounded-2xl" />)}
               </div>
             ) : filteredCustomers.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-16 text-center"
-              >
+              <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className="p-4 rounded-full bg-muted/50 mb-4">
                   <Wallet className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="font-semibold text-lg mb-1">
-                  {isRTL ? "لا يوجد عملاء" : "No customers found"}
-                </h3>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  {isRTL
-                    ? "لم يتم العثور على عملاء مطابقين للبحث"
-                    : "No customers match your current filters"}
-                </p>
-              </motion.div>
+                <h3 className="font-semibold text-lg mb-1">{isRTL ? "لا يوجد عملاء" : "No customers found"}</h3>
+                <p className="text-sm text-muted-foreground">{isRTL ? "لم يتم العثور على عملاء" : "No customers match your filters"}</p>
+              </div>
             ) : (
-              <motion.div
-                layout
-                className={cn(
-                  "grid gap-4",
-                  viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
-                )}
-              >
+              <motion.div layout className={cn("grid gap-4", viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1")}>
                 <AnimatePresence mode="popLayout">
                   {filteredCustomers.map((customer) => (
-                    <WalletCustomerCard
-                      key={customer.id}
-                      customer={customer}
-                      language={language}
-                      onView={() => handleViewCustomer(customer)}
-                      onAddBalance={() => handleOpenAdjustment(customer, "add")}
-                      onDeductBalance={() => handleOpenAdjustment(customer, "deduct")}
-                      onCreateWallet={() => handleCreateWallet(customer.id)}
-                    />
+                    <WalletCustomerCard key={customer.id} customer={customer} language={language} />
                   ))}
                 </AnimatePresence>
               </motion.div>
             )}
           </CardContent>
         </Card>
-
-        {/* Detail Drawer */}
-        <WalletDetailDrawer
-          isOpen={isDetailDrawerOpen}
-          onClose={() => setIsDetailDrawerOpen(false)}
-          customer={selectedCustomer}
-          transactions={transactions}
-          isLoadingTransactions={isLoadingTransactions}
-          language={language}
-          onAddBalance={() => {
-            setAdjustmentType("add");
-            setIsAdjustmentDialogOpen(true);
-          }}
-          onDeductBalance={() => {
-            setAdjustmentType("deduct");
-            setIsAdjustmentDialogOpen(true);
-          }}
-        />
-
-        {/* Adjustment Dialog */}
-        <WalletAdjustmentDialog
-          isOpen={isAdjustmentDialogOpen}
-          onClose={() => setIsAdjustmentDialogOpen(false)}
-          customer={selectedCustomer}
-          adjustmentType={adjustmentType}
-          onSubmit={handleAdjustmentSubmit}
-          language={language}
-        />
       </div>
     </TooltipProvider>
   );

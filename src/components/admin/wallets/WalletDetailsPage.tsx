@@ -1,0 +1,668 @@
+/**
+ * Admin Wallet Details Page
+ * Comprehensive wallet management for a single customer
+ */
+
+import { useState, useCallback } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/hooks/useLanguage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Wallet,
+  User,
+  Mail,
+  Phone,
+  CreditCard,
+  Plus,
+  Minus,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Receipt,
+  Banknote,
+  RefreshCw,
+  TrendingUp,
+  TrendingDown,
+  Search,
+  Filter,
+  Calendar,
+  ExternalLink,
+  History,
+  Sparkles,
+  Building2,
+  Activity,
+  FileText,
+  ShoppingCart,
+} from "lucide-react";
+import type { CustomerWallet, FinancialTransaction } from "@/types/financial";
+
+// Import adjustment dialog
+import { WalletAdjustmentDialog } from "./WalletAdjustmentDialog";
+
+export function WalletDetailsPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+  const isRTL = language === "ar";
+  const queryClient = useQueryClient();
+
+  // State
+  const [activeTab, setActiveTab] = useState("overview");
+  const [transactionFilter, setTransactionFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAdjustmentDialogOpen, setIsAdjustmentDialogOpen] = useState(false);
+  const [adjustmentType, setAdjustmentType] = useState<"add" | "deduct">("add");
+
+  // Fetch customer data with wallet and transactions
+  const { data: customerData, isLoading, refetch } = useQuery({
+    queryKey: ["admin-wallet-details", id],
+    queryFn: async () => {
+      if (!id) throw new Error("No customer ID");
+
+      const [profileRes, walletRes, transactionsRes, ordersRes, invoicesRes] = await Promise.all([
+        supabase.from("profiles").select("*").eq("id", id).single(),
+        supabase.from("customer_wallets").select("*").eq("customer_user_id", id).maybeSingle(),
+        supabase.from("financial_transactions").select("*").eq("customer_user_id", id).order("created_at", { ascending: false }).limit(100),
+        supabase.from("orders").select("id, order_number, status, total_amount, created_at").eq("customer_id", id).order("created_at", { ascending: false }).limit(10),
+        supabase.from("invoices").select("id, invoice_number, status, total, created_at").eq("customer_id", id).order("created_at", { ascending: false }).limit(10),
+      ]);
+
+      return {
+        profile: profileRes.data,
+        wallet: walletRes.data as CustomerWallet | null,
+        transactions: (transactionsRes.data || []) as FinancialTransaction[],
+        orders: ordersRes.data || [],
+        invoices: invoicesRes.data || [],
+      };
+    },
+    enabled: !!id,
+  });
+
+  // Create wallet mutation
+  const createWalletMutation = useMutation({
+    mutationFn: async () => {
+      const walletNumber = '4' + Array.from({ length: 15 }, () => Math.floor(Math.random() * 10)).join('');
+      
+      const { error } = await supabase
+        .from("customer_wallets")
+        .insert({
+          customer_user_id: id,
+          wallet_number: walletNumber,
+          balance: 0,
+          currency: "SAR",
+          status: "active",
+        } as any);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success(isRTL ? "تم إنشاء المحفظة بنجاح" : "Wallet created successfully");
+      queryClient.invalidateQueries({ queryKey: ["admin-wallet-details", id] });
+    },
+    onError: () => {
+      toast.error(isRTL ? "فشل في إنشاء المحفظة" : "Failed to create wallet");
+    },
+  });
+
+  // Handle adjustment
+  const handleAdjustmentSubmit = async (amount: number, reason: string) => {
+    if (!customerData?.wallet) return;
+
+    const newBalance =
+      adjustmentType === "add"
+        ? Number(customerData.wallet.balance) + amount
+        : Number(customerData.wallet.balance) - amount;
+
+    const { error: walletError } = await supabase
+      .from("customer_wallets")
+      .update({ balance: newBalance } as any)
+      .eq("id", customerData.wallet.id);
+
+    if (walletError) throw walletError;
+
+    const { error: txError } = await supabase
+      .from("financial_transactions")
+      .insert({
+        customer_user_id: id,
+        wallet_id: customerData.wallet.id,
+        transaction_type: "adjustment",
+        amount: amount,
+        currency: "SAR",
+        status: "succeeded",
+        description: reason,
+        description_ar: reason,
+        processed_at: new Date().toISOString(),
+        metadata: { adjustment_type: adjustmentType, performed_by: "admin" },
+      } as any);
+
+    if (txError) throw txError;
+
+    toast.success(
+      isRTL
+        ? `تم ${adjustmentType === "add" ? "إضافة" : "خصم"} ${amount} ر.س`
+        : `${adjustmentType === "add" ? "Added" : "Deducted"} ${amount} SAR`
+    );
+
+    queryClient.invalidateQueries({ queryKey: ["admin-wallet-details", id] });
+  };
+
+  // Formatters
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat(isRTL ? "ar-SA" : "en-US", {
+      style: "currency",
+      currency: "SAR",
+      minimumFractionDigits: 2,
+    }).format(amount);
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Intl.DateTimeFormat(isRTL ? "ar-SA" : "en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(dateStr));
+  };
+
+  const formatWalletNumber = (num: string) => {
+    return num.replace(/(.{4})/g, "$1 ").trim();
+  };
+
+  const getTransactionTypeLabel = (type: string) => {
+    const labels: Record<string, { ar: string; en: string }> = {
+      topup: { ar: "شحن رصيد", en: "Top Up" },
+      invoice_payment: { ar: "دفع فاتورة", en: "Invoice Payment" },
+      refund: { ar: "استرداد", en: "Refund" },
+      withdrawal: { ar: "سحب", en: "Withdrawal" },
+      adjustment: { ar: "تعديل إداري", en: "Adjustment" },
+      transfer: { ar: "تحويل", en: "Transfer" },
+      fee: { ar: "رسوم", en: "Fee" },
+    };
+    return labels[type]?.[isRTL ? "ar" : "en"] || type;
+  };
+
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case "topup": return <ArrowDownLeft className="h-4 w-4 text-emerald-500" />;
+      case "invoice_payment": return <Receipt className="h-4 w-4 text-blue-500" />;
+      case "refund": return <RefreshCw className="h-4 w-4 text-amber-500" />;
+      case "withdrawal": return <ArrowUpRight className="h-4 w-4 text-red-500" />;
+      case "adjustment": return <Banknote className="h-4 w-4 text-purple-500" />;
+      default: return <CreditCard className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
+  const isCredit = (type: string) => ["topup", "refund"].includes(type);
+
+  // Filter transactions
+  const filteredTransactions = customerData?.transactions.filter((tx) => {
+    const matchesFilter = transactionFilter === "all" || tx.transaction_type === transactionFilter;
+    const matchesSearch = !searchQuery || 
+      tx.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tx.description_ar?.includes(searchQuery);
+    return matchesFilter && matchesSearch;
+  }) || [];
+
+  // Calculate stats
+  const stats = {
+    totalDeposits: customerData?.transactions.filter(t => isCredit(t.transaction_type) && t.status === "succeeded").reduce((sum, t) => sum + Number(t.amount), 0) || 0,
+    totalSpent: customerData?.transactions.filter(t => !isCredit(t.transaction_type) && t.status === "succeeded").reduce((sum, t) => sum + Number(t.amount), 0) || 0,
+    transactionCount: customerData?.transactions.length || 0,
+  };
+
+  const BackIcon = isRTL ? ArrowRight : ArrowLeft;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 p-1">
+        <Skeleton className="h-12 w-48" />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <Skeleton className="h-64 lg:col-span-2" />
+          <Skeleton className="h-64" />
+        </div>
+        <Skeleton className="h-96" />
+      </div>
+    );
+  }
+
+  if (!customerData?.profile) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
+        <XCircle className="h-16 w-16 text-destructive/50" />
+        <h2 className="text-xl font-semibold">{isRTL ? "العميل غير موجود" : "Customer not found"}</h2>
+        <Button variant="outline" onClick={() => navigate("/admin/wallets")}>
+          <BackIcon className="h-4 w-4 me-2" />
+          {isRTL ? "العودة للمحافظ" : "Back to Wallets"}
+        </Button>
+      </div>
+    );
+  }
+
+  const { profile, wallet, transactions, orders, invoices } = customerData;
+  const displayName = profile.full_name || profile.email.split("@")[0];
+  const balance = Number(wallet?.balance || 0);
+
+  return (
+    <div className="space-y-6 p-1">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+      >
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-xl"
+            onClick={() => navigate("/admin/wallets")}
+          >
+            <BackIcon className="h-5 w-5" />
+          </Button>
+          
+          <Avatar className="h-14 w-14 ring-2 ring-background shadow-xl">
+            <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-xl font-bold">
+              {displayName.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              {displayName}
+              <Sparkles className="h-5 w-5 text-amber-500" />
+            </h1>
+            <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
+              {profile.customer_uid && (
+                <Badge variant="outline" className="font-mono text-xs">
+                  {profile.customer_uid}
+                </Badge>
+              )}
+              {wallet && (
+                <Badge 
+                  variant="secondary"
+                  className={cn(
+                    wallet.status === "active" 
+                      ? "bg-emerald-500/20 text-emerald-700" 
+                      : "bg-blue-500/20 text-blue-700"
+                  )}
+                >
+                  {wallet.status === "active" ? (isRTL ? "نشط" : "Active") : (isRTL ? "مجمد" : "Frozen")}
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl"
+            onClick={() => navigate(`/admin/clients/${id}`)}
+          >
+            <User className="h-4 w-4 me-2" />
+            {isRTL ? "ملف العميل الكامل" : "Full Client Profile"}
+            <ExternalLink className="h-3 w-3 ms-2" />
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Left Column - Wallet & Stats */}
+        <div className="space-y-6 lg:col-span-2">
+          {/* Wallet Card */}
+          {wallet ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <Card className="overflow-hidden border-0 shadow-xl">
+                <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white">
+                  <div className="flex items-start justify-between mb-6">
+                    <div>
+                      <p className="text-white/80 text-sm font-medium">
+                        {isRTL ? "الرصيد الحالي" : "Current Balance"}
+                      </p>
+                      <p className="text-4xl font-bold mt-1" dir="ltr">
+                        {formatCurrency(balance)}
+                      </p>
+                    </div>
+                    <div className="h-14 w-14 rounded-2xl bg-white/20 flex items-center justify-center">
+                      <Wallet className="h-7 w-7" />
+                    </div>
+                  </div>
+                  
+                  {wallet.wallet_number && (
+                    <div className="font-mono text-lg text-white/90 mb-4" dir="ltr">
+                      {formatWalletNumber(wallet.wallet_number)}
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <Button
+                      className="flex-1 bg-white/20 hover:bg-white/30 text-white border-0"
+                      onClick={() => {
+                        setAdjustmentType("add");
+                        setIsAdjustmentDialogOpen(true);
+                      }}
+                    >
+                      <Plus className="h-4 w-4 me-2" />
+                      {isRTL ? "إضافة رصيد" : "Add Balance"}
+                    </Button>
+                    <Button
+                      className="flex-1 bg-white/20 hover:bg-white/30 text-white border-0"
+                      onClick={() => {
+                        setAdjustmentType("deduct");
+                        setIsAdjustmentDialogOpen(true);
+                      }}
+                    >
+                      <Minus className="h-4 w-4 me-2" />
+                      {isRTL ? "خصم رصيد" : "Deduct Balance"}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Stats Row */}
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center p-3 rounded-xl bg-muted/50">
+                      <TrendingUp className="h-5 w-5 mx-auto mb-1 text-emerald-500" />
+                      <p className="text-lg font-bold" dir="ltr">{formatCurrency(stats.totalDeposits)}</p>
+                      <p className="text-xs text-muted-foreground">{isRTL ? "إجمالي الإيداعات" : "Total Deposits"}</p>
+                    </div>
+                    <div className="text-center p-3 rounded-xl bg-muted/50">
+                      <TrendingDown className="h-5 w-5 mx-auto mb-1 text-red-500" />
+                      <p className="text-lg font-bold" dir="ltr">{formatCurrency(stats.totalSpent)}</p>
+                      <p className="text-xs text-muted-foreground">{isRTL ? "إجمالي المصروفات" : "Total Spent"}</p>
+                    </div>
+                    <div className="text-center p-3 rounded-xl bg-muted/50">
+                      <Activity className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                      <p className="text-lg font-bold">{stats.transactionCount}</p>
+                      <p className="text-xs text-muted-foreground">{isRTL ? "عدد المعاملات" : "Transactions"}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ) : (
+            <Card className="border-dashed">
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                  <Wallet className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">
+                  {isRTL ? "لا توجد محفظة" : "No Wallet"}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {isRTL ? "هذا العميل ليس لديه محفظة بعد" : "This customer doesn't have a wallet yet"}
+                </p>
+                <Button onClick={() => createWalletMutation.mutate()} disabled={createWalletMutation.isPending}>
+                  <Plus className="h-4 w-4 me-2" />
+                  {isRTL ? "إنشاء محفظة" : "Create Wallet"}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Transactions Tab */}
+          <Card>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5 text-primary" />
+                  {isRTL ? "سجل المعاملات" : "Transaction History"}
+                </CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => refetch()}>
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Filters */}
+              <div className="flex gap-3 mb-4">
+                <div className="relative flex-1">
+                  <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder={isRTL ? "بحث في المعاملات..." : "Search transactions..."}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="ps-10 h-10 rounded-xl"
+                  />
+                </div>
+                <Select value={transactionFilter} onValueChange={setTransactionFilter}>
+                  <SelectTrigger className="w-[160px] h-10 rounded-xl">
+                    <Filter className="h-4 w-4 me-2" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{isRTL ? "الكل" : "All"}</SelectItem>
+                    <SelectItem value="topup">{isRTL ? "شحن" : "Top Up"}</SelectItem>
+                    <SelectItem value="invoice_payment">{isRTL ? "دفع فاتورة" : "Payment"}</SelectItem>
+                    <SelectItem value="adjustment">{isRTL ? "تعديل" : "Adjustment"}</SelectItem>
+                    <SelectItem value="refund">{isRTL ? "استرداد" : "Refund"}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Transactions List */}
+              <ScrollArea className="h-[400px]">
+                {filteredTransactions.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Receipt className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p>{isRTL ? "لا توجد معاملات" : "No transactions"}</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {filteredTransactions.map((tx, index) => (
+                      <motion.div
+                        key={tx.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                        className="p-3 rounded-xl border bg-card hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={cn(
+                            "h-10 w-10 rounded-full flex items-center justify-center shrink-0",
+                            isCredit(tx.transaction_type) ? "bg-emerald-500/10" : "bg-red-500/10"
+                          )}>
+                            {getTransactionIcon(tx.transaction_type)}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <p className="font-medium text-sm">
+                                  {getTransactionTypeLabel(tx.transaction_type)}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {formatDate(tx.created_at || "")}
+                                </p>
+                              </div>
+                              <div className="text-end">
+                                <p className={cn(
+                                  "font-bold",
+                                  isCredit(tx.transaction_type) ? "text-emerald-600" : "text-red-600"
+                                )} dir="ltr">
+                                  {isCredit(tx.transaction_type) ? "+" : "-"}
+                                  {formatCurrency(Number(tx.amount))}
+                                </p>
+                                <Badge 
+                                  variant="outline" 
+                                  className={cn(
+                                    "text-xs mt-1",
+                                    tx.status === "succeeded" && "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                    tx.status === "pending" && "bg-amber-500/10 text-amber-600 border-amber-500/30",
+                                    tx.status === "failed" && "bg-red-500/10 text-red-600 border-red-500/30"
+                                  )}
+                                >
+                                  {tx.status === "succeeded" ? (isRTL ? "مكتمل" : "Done") : 
+                                   tx.status === "pending" ? (isRTL ? "معلق" : "Pending") : 
+                                   (isRTL ? "فشل" : "Failed")}
+                                </Badge>
+                              </div>
+                            </div>
+                            {tx.description && (
+                              <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                                {isRTL ? tx.description_ar || tx.description : tx.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Customer Info & Quick Links */}
+        <div className="space-y-6">
+          {/* Customer Info Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <User className="h-5 w-5 text-primary" />
+                {isRTL ? "معلومات العميل" : "Customer Info"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm truncate">{profile.email}</span>
+              </div>
+              {profile.phone && (
+                <div className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm" dir="ltr">{profile.phone}</span>
+                </div>
+              )}
+              {profile.customer_uid && (
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-mono">{profile.customer_uid}</span>
+                </div>
+              )}
+              <Separator />
+              <Button 
+                variant="outline" 
+                className="w-full rounded-xl"
+                onClick={() => navigate(`/admin/clients/${id}`)}
+              >
+                {isRTL ? "عرض الملف الكامل" : "View Full Profile"}
+                <ExternalLink className="h-4 w-4 ms-2" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Recent Orders */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ShoppingCart className="h-5 w-5 text-blue-500" />
+                {isRTL ? "آخر الطلبات" : "Recent Orders"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {orders.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  {isRTL ? "لا توجد طلبات" : "No orders"}
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {orders.slice(0, 5).map((order: any) => (
+                    <div key={order.id} className="p-2 rounded-lg bg-muted/50 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs">{order.order_number}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {order.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Recent Invoices */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <FileText className="h-5 w-5 text-amber-500" />
+                {isRTL ? "آخر الفواتير" : "Recent Invoices"}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {invoices.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  {isRTL ? "لا توجد فواتير" : "No invoices"}
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {invoices.slice(0, 5).map((invoice: any) => (
+                    <div key={invoice.id} className="p-2 rounded-lg bg-muted/50 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs">{invoice.invoice_number}</span>
+                        <span className="font-bold text-xs" dir="ltr">
+                          {formatCurrency(invoice.total)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Adjustment Dialog */}
+      <WalletAdjustmentDialog
+        isOpen={isAdjustmentDialogOpen}
+        onClose={() => setIsAdjustmentDialogOpen(false)}
+        customer={customerData?.profile ? {
+          id: customerData.profile.id,
+          customer_uid: customerData.profile.customer_uid,
+          email: customerData.profile.email,
+          full_name: customerData.profile.full_name,
+          phone: customerData.profile.phone,
+          wallet: customerData.wallet || undefined,
+        } : null}
+        adjustmentType={adjustmentType}
+        onSubmit={handleAdjustmentSubmit}
+        language={language}
+      />
+    </div>
+  );
+}

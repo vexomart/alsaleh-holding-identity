@@ -14,6 +14,7 @@ import { ServicesManagement } from '@/components/admin/services/ServicesManageme
 import { OrdersManagement } from '@/components/admin/orders/OrdersManagement';
 import { ContractsManagement } from '@/components/admin/contracts/ContractsManagement';
 import { WalletsManagement } from '@/components/admin/wallets/WalletsManagement';
+import { WalletDetailsPage } from '@/components/admin/wallets/WalletDetailsPage';
 import { ReportsPage } from '@/components/admin/reports/ReportsPage';
 import { NotificationsPage } from '@/components/admin/notifications/NotificationsPage';
 import { SettingsPage } from '@/components/admin/settings/SettingsPage';
@@ -60,6 +61,7 @@ const AdminDashboard = () => {
         <Route path="orders" element={<OrdersManagement />} />
         <Route path="contracts" element={<ContractsManagement />} />
         <Route path="wallets" element={<WalletsManagement />} />
+        <Route path="wallets/:id" element={<WalletDetailsPage />} />
         <Route path="finance" element={<FinanceCenter />} />
         <Route path="finance-internal" element={<FinanceManagement />} />
         
