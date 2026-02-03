@@ -1,22 +1,20 @@
 /**
- * KPI Cards - Premium Glass Morphism Stats
- * Enterprise-grade animated statistics
+ * KPI Cards - Modern Glass Morphism Stats
+ * Clean minimal design with animated numbers
  */
 
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { AnimatedNumber } from "@/components/ui/animated-number";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Package,
   FileSignature,
   Receipt,
   Wallet,
   ArrowUpRight,
-  TrendingUp,
   LucideIcon,
 } from "lucide-react";
 
@@ -41,8 +39,9 @@ interface KPIConfig {
   subtitleAr: string;
   subtitleEn: string;
   icon: LucideIcon;
-  gradient: string;
+  iconColor: string;
   iconBg: string;
+  accentColor: string;
   path: string;
   isAmount?: boolean;
   highlightWhen?: (value: number) => boolean;
@@ -56,8 +55,9 @@ const kpiConfigs: KPIConfig[] = [
     subtitleAr: "قيد التنفيذ",
     subtitleEn: "In Progress",
     icon: Package,
-    gradient: "from-blue-500 to-blue-600",
-    iconBg: "bg-blue-500/20",
+    iconColor: "text-blue-500",
+    iconBg: "bg-blue-500/10",
+    accentColor: "group-hover:border-blue-500/30",
     path: "/app/orders",
   },
   {
@@ -67,8 +67,9 @@ const kpiConfigs: KPIConfig[] = [
     subtitleAr: "بانتظار الإجراء",
     subtitleEn: "Awaiting Action",
     icon: FileSignature,
-    gradient: "from-emerald-500 to-emerald-600",
-    iconBg: "bg-emerald-500/20",
+    iconColor: "text-emerald-500",
+    iconBg: "bg-emerald-500/10",
+    accentColor: "group-hover:border-emerald-500/30",
     path: "/app/contracts",
   },
   {
@@ -78,8 +79,9 @@ const kpiConfigs: KPIConfig[] = [
     subtitleAr: "غير مدفوعة",
     subtitleEn: "Unpaid",
     icon: Receipt,
-    gradient: "from-amber-500 to-orange-500",
-    iconBg: "bg-amber-500/20",
+    iconColor: "text-amber-500",
+    iconBg: "bg-amber-500/10",
+    accentColor: "group-hover:border-amber-500/30",
     path: "/app/orders",
     highlightWhen: (v) => v > 0,
   },
@@ -90,8 +92,9 @@ const kpiConfigs: KPIConfig[] = [
     subtitleAr: "متاح للاستخدام",
     subtitleEn: "Available",
     icon: Wallet,
-    gradient: "from-purple-500 to-violet-600",
-    iconBg: "bg-purple-500/20",
+    iconColor: "text-violet-500",
+    iconBg: "bg-violet-500/10",
+    accentColor: "group-hover:border-violet-500/30",
     path: "/app/wallet",
     isAmount: true,
   },
@@ -106,18 +109,18 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: reducedMotion ? 0 : 0.1,
+        staggerChildren: reducedMotion ? 0 : 0.08,
       },
     },
   };
 
   const item = {
-    hidden: reducedMotion ? {} : { opacity: 0, y: 25, scale: 0.95 },
+    hidden: reducedMotion ? {} : { opacity: 0, y: 20, scale: 0.98 },
     show: { 
       opacity: 1, 
       y: 0, 
       scale: 1,
-      transition: { duration: 0.4, ease: "easeOut" as const }
+      transition: { duration: 0.35, ease: "easeOut" as const }
     },
   };
 
@@ -125,13 +128,11 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
     return (
       <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="rounded-2xl overflow-hidden">
-            <div className="p-5">
-              <Skeleton className="h-12 w-12 rounded-xl mb-4" />
-              <Skeleton className="h-4 w-24 mb-2" />
-              <Skeleton className="h-8 w-20" />
-            </div>
-          </Card>
+          <div key={i} className="rounded-2xl border bg-card p-5">
+            <Skeleton className="h-10 w-10 rounded-xl mb-4" />
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-8 w-20" />
+          </div>
         ))}
       </div>
     );
@@ -144,57 +145,44 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
       animate="show"
       className="grid gap-4 grid-cols-2 lg:grid-cols-4"
     >
-      {kpiConfigs.map((kpi, index) => {
+      {kpiConfigs.map((kpi) => {
         const value = data?.[kpi.key] ?? 0;
         const isHighlighted = kpi.highlightWhen?.(value);
 
         return (
           <motion.div key={kpi.key} variants={item}>
-            <Card
+            <button
               onClick={() => navigate(kpi.path)}
               className={cn(
-                "relative overflow-hidden rounded-2xl cursor-pointer group",
+                "group relative w-full text-start overflow-hidden rounded-2xl cursor-pointer",
+                "bg-card border border-border",
                 "transition-all duration-300 ease-out",
-                "hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1",
-                "active:scale-[0.98]",
-                "border-0 bg-card",
-                isHighlighted && "ring-2 ring-amber-400/50"
+                "hover:shadow-lg hover:shadow-black/5 hover:-translate-y-0.5",
+                "active:scale-[0.99]",
+                "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+                kpi.accentColor,
+                isHighlighted && "ring-1 ring-amber-400/40"
               )}
             >
-              {/* Top gradient bar */}
-              <div className={cn(
-                "absolute top-0 inset-x-0 h-1",
-                `bg-gradient-to-r ${kpi.gradient}`
-              )} />
-
-              {/* Hover gradient overlay */}
-              <div className={cn(
-                "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-                `bg-gradient-to-br ${kpi.gradient}`,
-                "opacity-[0.03]"
-              )} />
+              {/* Hover Gradient */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-primary/[0.02] to-transparent" />
 
               <div className="relative p-5 md:p-6">
-                {/* Header Row */}
+                {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className={cn(
-                    "p-3 rounded-xl transition-transform duration-300 group-hover:scale-110",
+                    "p-2.5 rounded-xl transition-transform duration-300 group-hover:scale-105",
                     kpi.iconBg
                   )}>
-                    <kpi.icon className={cn(
-                      "h-6 w-6",
-                      kpi.gradient.includes('blue') && "text-blue-500",
-                      kpi.gradient.includes('emerald') && "text-emerald-500",
-                      kpi.gradient.includes('amber') && "text-amber-500",
-                      kpi.gradient.includes('purple') && "text-purple-500",
-                    )} />
+                    <kpi.icon className={cn("h-5 w-5", kpi.iconColor)} />
                   </div>
+                  
                   <div className={cn(
-                    "p-2 rounded-full transition-all duration-300",
-                    "opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0",
+                    "p-1.5 rounded-full transition-all duration-300",
+                    "opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0",
                     "bg-muted"
                   )}>
-                    <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+                    <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
                   </div>
                 </div>
 
@@ -206,7 +194,7 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
                   
                   {/* Value */}
                   <div className="flex items-baseline gap-2">
-                    <span dir="ltr" className="text-3xl md:text-4xl font-bold tabular-nums tracking-tight">
+                    <span dir="ltr" className="text-3xl font-bold tabular-nums tracking-tight text-foreground">
                       {kpi.isAmount ? (
                         <AnimatedNumber
                           value={value}
@@ -214,22 +202,20 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
                           formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
                         />
                       ) : (
-                        reducedMotion ? value : (
-                          <AnimatedNumber
-                            value={value}
-                            duration={200}
-                            formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
-                          />
-                        )
+                        <AnimatedNumber
+                          value={value}
+                          duration={200}
+                          formatOptions={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+                        />
                       )}
                     </span>
                     {kpi.isAmount && (
-                      <span className="text-sm text-muted-foreground font-medium">SAR</span>
+                      <span className="text-xs text-muted-foreground font-medium">SAR</span>
                     )}
                   </div>
 
                   {/* Subtitle */}
-                  <p className="text-xs text-muted-foreground/70 flex items-center gap-1">
+                  <p className="text-xs text-muted-foreground/60 flex items-center gap-1.5">
                     {isHighlighted && (
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     )}
@@ -237,7 +223,7 @@ export function KPICards({ data, isLoading, isRTL, formatCurrency }: KPICardsPro
                   </p>
                 </div>
               </div>
-            </Card>
+            </button>
           </motion.div>
         );
       })}

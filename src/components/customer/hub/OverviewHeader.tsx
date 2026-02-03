@@ -1,6 +1,6 @@
 /**
- * Overview Header - Premium Enterprise Dashboard Header
- * Teal/Gold corporate theme with glassmorphism
+ * Overview Header - Modern Premium Dashboard Header
+ * Clean, minimal design with gradient accents
  */
 
 import { useState } from "react";
@@ -13,9 +13,9 @@ import {
   CheckCircle2,
   ShieldCheck,
   Sparkles,
-  Crown,
-  TrendingUp,
-  Calendar,
+  Sun,
+  Moon,
+  Cloud,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -56,149 +56,164 @@ export function OverviewHeader({
     day: 'numeric',
   });
 
+  const hour = new Date().getHours();
+  const TimeIcon = hour < 12 ? Sun : hour < 18 ? Cloud : Moon;
+
   return (
     <motion.section
       initial={reducedMotion ? {} : { opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="relative overflow-hidden rounded-3xl"
+      className="relative"
     >
-      {/* Premium gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-700 via-teal-600 to-emerald-700" />
-      
-      {/* Decorative patterns */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 end-0 w-96 h-96 bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 start-0 w-64 h-64 bg-amber-300 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
-      </div>
-      
-      {/* Gold accent line */}
-      <div className="absolute top-0 start-0 end-0 h-1 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400" />
+      {/* Main Card */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        {/* Background Pattern */}
+        <div className="absolute inset-0">
+          {/* Gradient Orbs */}
+          <div className="absolute top-0 end-0 w-[500px] h-[500px] bg-gradient-to-br from-primary/30 via-emerald-500/20 to-transparent rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 start-0 w-[400px] h-[400px] bg-gradient-to-tr from-amber-500/20 via-primary/10 to-transparent rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/4" />
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+        </div>
 
-      <div className="relative z-10 p-6 md:p-8 lg:p-10">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          {/* Main content */}
-          <div className="space-y-4 flex-1">
-            {/* Date & Badge Row */}
-            <motion.div
-              initial={reducedMotion ? {} : { opacity: 0, x: isRTL ? 20 : -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="flex items-center gap-3 flex-wrap"
-            >
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                <Calendar className="h-3.5 w-3.5 text-amber-300" />
-                <span className="text-white/90 text-xs font-medium">{currentDate}</span>
-              </div>
-              <div className="flex items-center gap-2 bg-amber-400/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-amber-400/30">
-                <Crown className="h-3.5 w-3.5 text-amber-300" />
-                <span className="text-amber-100 text-xs font-semibold">
-                  {isRTL ? "عميل مميز" : "Premium Client"}
-                </span>
-              </div>
-            </motion.div>
+        {/* Top Accent Line */}
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-            {/* Greeting */}
-            <motion.div
-              initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-            >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                {greeting}
-              </h1>
-              <p className="text-2xl md:text-3xl font-semibold text-amber-300 mt-1">
-                {userName} 👋
-              </p>
-            </motion.div>
+        <div className="relative z-10 p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            {/* Left Content */}
+            <div className="flex-1 space-y-5">
+              {/* Date Badge */}
+              <motion.div
+                initial={reducedMotion ? {} : { opacity: 0, x: isRTL ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
+              >
+                <TimeIcon className="h-4 w-4 text-amber-400" />
+                <span className="text-white/70 text-sm font-medium">{currentDate}</span>
+              </motion.div>
 
-            {/* Welcome message */}
-            <motion.p
-              initial={reducedMotion ? {} : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-white/80 text-base md:text-lg max-w-xl leading-relaxed"
-            >
-              {isRTL
-                ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
-                : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
-            </motion.p>
+              {/* Greeting */}
+              <motion.div
+                initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="space-y-2"
+              >
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                  {greeting}
+                </h1>
+                <div className="flex items-center gap-3">
+                  <p className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-primary via-emerald-400 to-primary bg-clip-text text-transparent">
+                    {userName}
+                  </p>
+                  <span className="text-3xl">👋</span>
+                </div>
+              </motion.div>
 
-            {/* Quick Stats Row */}
-            <motion.div
-              initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
-              className="flex items-center gap-4 pt-2"
-            >
-              <div className="flex items-center gap-2 text-white/70">
-                <TrendingUp className="h-4 w-4 text-emerald-300" />
-                <span className="text-sm">
-                  {isRTL ? "حسابك نشط ومحدث" : "Your account is active & up to date"}
-                </span>
-              </div>
-            </motion.div>
-          </div>
+              {/* Welcome Message */}
+              <motion.p
+                initial={reducedMotion ? {} : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-white/60 text-base md:text-lg max-w-lg leading-relaxed"
+              >
+                {isRTL
+                  ? "مرحباً بك في بوابة العميل. تابع طلباتك وعقودك وفواتيرك من مكان واحد."
+                  : "Welcome to your portal. Track orders, contracts, and invoices all in one place."}
+              </motion.p>
 
-          {/* Client ID Card - Premium Glass Design */}
-          <motion.div
-            initial={reducedMotion ? {} : { opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/30 to-amber-500/10 rounded-2xl blur-xl" />
-            <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-5 min-w-[220px] border border-white/20 shadow-2xl">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-lg">
-                    <Sparkles className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="text-white/80 text-sm font-medium">
-                    {isRTL ? "رقم العميل" : "Client ID"}
+              {/* Status Pills */}
+              <motion.div
+                initial={reducedMotion ? {} : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="flex flex-wrap items-center gap-3"
+              >
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-emerald-400 text-xs font-medium">
+                    {isRTL ? "حسابك نشط" : "Account Active"}
                   </span>
                 </div>
                 {isVerified && (
-                  <div className="flex items-center gap-1 bg-emerald-500/20 px-2 py-1 rounded-full">
-                    <ShieldCheck className="h-3 w-3 text-emerald-300" />
-                    <span className="text-xs text-emerald-300 font-medium">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                    <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-primary text-xs font-medium">
                       {isRTL ? "موثق" : "Verified"}
                     </span>
                   </div>
                 )}
-              </div>
+              </motion.div>
+            </div>
 
-              {/* Client ID Display */}
-              <div className="bg-slate-900/50 rounded-xl p-3 mb-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span dir="ltr" className="font-mono text-lg text-white tracking-wider tabular-nums">
-                    {customerId || "---"}
+            {/* Client ID Card */}
+            <motion.div
+              initial={reducedMotion ? {} : { opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              className="relative lg:self-center"
+            >
+              {/* Glow Effect */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-emerald-500/20 to-primary/20 rounded-2xl blur-xl opacity-50" />
+              
+              <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-5 min-w-[260px] border border-white/10 shadow-2xl">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg">
+                      <Sparkles className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white/50 text-xs uppercase tracking-wider">
+                        {isRTL ? "رقم العميل" : "Client ID"}
+                      </p>
+                      <p className="text-white/80 text-sm font-semibold">
+                        {isRTL ? "معرّف فريد" : "Unique Identifier"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ID Display */}
+                <div className="bg-slate-900/60 rounded-xl p-4 border border-white/5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span dir="ltr" className="font-mono text-lg text-white tracking-widest tabular-nums">
+                      {customerId || "---"}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={copyClientId}
+                      className="h-9 w-9 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      {copiedId ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-center gap-2 pt-4 mt-4 border-t border-white/5">
+                  <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium">
+                    ASH Holding Group
                   </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={copyClientId}
-                    className="h-9 w-9 p-0 text-white/60 hover:text-white hover:bg-white/10 rounded-lg"
-                  >
-                    {copiedId ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
+                  <div className="w-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 </div>
               </div>
-
-              {/* Decorative bottom */}
-              <div className="flex items-center justify-center gap-2 pt-2 border-t border-white/10">
-                <span className="text-[10px] text-white/50 uppercase tracking-widest">
-                  ASH Holding Group
-                </span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
+
+        {/* Bottom Gradient Line */}
+        <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       </div>
     </motion.section>
   );
