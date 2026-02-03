@@ -1,6 +1,6 @@
 /**
- * Mobile Drawer - Full Navigation Drawer
- * RTL-aware side drawer with all sections
+ * Mobile Drawer - Premium Full Navigation Drawer
+ * 100% RTL-aware side drawer with all sections
  * Opens from RIGHT in RTL, LEFT in LTR
  */
 
@@ -99,6 +99,7 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
       items: [
         { titleAr: "التمويل", titleEn: "Finance", icon: Landmark, href: "/app/finance" },
         { titleAr: "الإحالات", titleEn: "Referrals", icon: Users, href: "/app/referrals" },
+        { titleAr: "مركز العميل", titleEn: "Client Hub", icon: Building2, href: "/app/client-hub" },
       ],
     },
     {
@@ -137,9 +138,11 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         {trigger || (
-          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
-            <Settings className="h-5 w-5" />
-          </Button>
+          <motion.div whileTap={{ scale: 0.9 }}>
+            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </motion.div>
         )}
       </SheetTrigger>
       <SheetContent
@@ -147,13 +150,13 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
         className="w-[300px] sm:w-[340px] p-0 overflow-hidden flex flex-col"
         style={{ direction: isRTL ? "rtl" : "ltr" }}
       >
-        {/* User Header */}
+        {/* User Header with gradient */}
         <SheetHeader className="p-5 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-b shrink-0">
-          <div className={cn(
-            "flex items-center gap-4",
-            isRTL && "flex-row"
-          )}>
-            <Avatar className="h-14 w-14 border-2 border-primary/30 shrink-0">
+          <div 
+            className="flex items-center gap-4"
+            style={{ direction: isRTL ? "rtl" : "ltr" }}
+          >
+            <Avatar className="h-14 w-14 border-2 border-primary/30 shrink-0 ring-4 ring-primary/10">
               <AvatarImage src={profile?.avatar_url || undefined} />
               <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
                 {userInitial}
@@ -202,12 +205,12 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
                         className={cn(
                           "w-full flex items-center gap-3 px-3 py-3 rounded-xl",
                           "transition-all duration-200",
-                          "min-h-[48px]",
-                          isRTL && "flex-row",
+                          "min-h-[52px]",
                           active
                             ? "bg-primary/10 text-primary font-medium"
                             : "text-foreground hover:bg-muted"
                         )}
+                        style={{ direction: isRTL ? "rtl" : "ltr" }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <Icon className={cn(
@@ -245,13 +248,14 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
               </p>
 
               {/* Theme Toggle */}
-              <button
+              <motion.button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-3 rounded-xl",
-                  "text-foreground hover:bg-muted transition-all min-h-[48px]",
-                  isRTL && "flex-row"
+                  "text-foreground hover:bg-muted transition-all min-h-[52px]"
                 )}
+                style={{ direction: isRTL ? "rtl" : "ltr" }}
+                whileTap={{ scale: 0.98 }}
               >
                 {theme === "dark" ? (
                   <Sun className="h-5 w-5 shrink-0" />
@@ -263,16 +267,17 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
                     ? theme === "dark" ? "الوضع الفاتح" : "الوضع الداكن"
                     : theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </span>
-              </button>
+              </motion.button>
 
               {/* Language Toggle */}
-              <button
+              <motion.button
                 onClick={() => setLanguage(language === "ar" ? "en" : "ar")}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-3 rounded-xl",
-                  "text-foreground hover:bg-muted transition-all min-h-[48px]",
-                  isRTL && "flex-row"
+                  "text-foreground hover:bg-muted transition-all min-h-[52px]"
                 )}
+                style={{ direction: isRTL ? "rtl" : "ltr" }}
+                whileTap={{ scale: 0.98 }}
               >
                 <Globe className="h-5 w-5 shrink-0" />
                 <span className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
@@ -281,33 +286,32 @@ export function MobileDrawer({ trigger }: MobileDrawerProps) {
                 <span className="text-sm text-muted-foreground">
                   {language === "ar" ? "🇺🇸" : "🇸🇦"}
                 </span>
-              </button>
+              </motion.button>
             </div>
 
             <Separator />
 
             {/* Sign Out */}
-            <button
+            <motion.button
               onClick={handleSignOut}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-3 rounded-xl",
-                "text-destructive hover:bg-destructive/10 transition-all min-h-[48px]",
-                isRTL && "flex-row"
+                "text-destructive hover:bg-destructive/10 transition-all min-h-[52px]"
               )}
+              style={{ direction: isRTL ? "rtl" : "ltr" }}
+              whileTap={{ scale: 0.98 }}
             >
               <LogOut className={cn("h-5 w-5 shrink-0", isRTL && "scale-x-[-1]")} />
               <span className={cn("flex-1", isRTL ? "text-right" : "text-left")}>
                 {isRTL ? "تسجيل الخروج" : "Sign Out"}
               </span>
-            </button>
+            </motion.button>
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-4 border-t bg-muted/30 shrink-0">
-          <div className={cn(
-            "flex items-center gap-2 justify-center text-xs text-muted-foreground"
-          )}>
+          <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
             <Building2 className="h-4 w-4" />
             <span>ASH {isRTL ? "بوابة العميل" : "Customer Portal"}</span>
           </div>

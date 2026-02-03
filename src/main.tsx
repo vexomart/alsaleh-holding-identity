@@ -6,6 +6,7 @@ import './index.css';
  * RTL INITIALIZATION - CRITICAL
  * Apply RTL direction IMMEDIATELY at document level before React renders
  * This ensures the page loads with correct direction from the start
+ * HARD RTL ENFORCEMENT for 100% Arabic support
  */
 const initializeDirection = () => {
   if (typeof document === 'undefined') return;
@@ -15,16 +16,19 @@ const initializeDirection = () => {
   const isRTL = savedLang === 'ar';
   const dir = isRTL ? 'rtl' : 'ltr';
   
-  // Apply to document root (html element)
+  // Apply to document root (html element) - CRITICAL
   document.documentElement.dir = dir;
   document.documentElement.lang = savedLang;
   document.documentElement.setAttribute('data-direction', dir);
+  document.documentElement.style.direction = dir;
   
-  // Apply to body
+  // Apply to body - CRITICAL
   document.body.dir = dir;
   document.body.setAttribute('data-lang', savedLang);
+  document.body.style.direction = dir;
+  document.body.style.textAlign = isRTL ? 'right' : 'left';
   
-  // Add RTL/LTR classes
+  // Add RTL/LTR classes for CSS targeting
   if (isRTL) {
     document.documentElement.classList.add('rtl');
     document.documentElement.classList.remove('ltr');
@@ -37,14 +41,18 @@ const initializeDirection = () => {
     document.body.classList.remove('rtl');
   }
   
+  // Add CSS custom property for direction
+  document.documentElement.style.setProperty('--direction', dir);
+  document.documentElement.style.setProperty('--text-align', isRTL ? 'right' : 'left');
+  
   console.log(`[RTL] Direction initialized: ${dir}, Language: ${savedLang}`);
 };
 
-// Initialize direction immediately
+// Initialize direction IMMEDIATELY before anything else
 initializeDirection();
 
 // Force cache bust on version change
-const CACHE_KEY = 'app_cache_v35';
+const CACHE_KEY = 'app_cache_v36';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
