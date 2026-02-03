@@ -381,7 +381,7 @@ const TechProjects = () => {
                           </div>
 
                           {/* Action Button */}
-                          <Link to={`/tech-project/${project.id}`} className="block">
+                          <Link to={`/tech-projects/${project.id}`} className="block">
                             <Button 
                               size="lg"
                               className={`w-full bg-gradient-to-r ${project.gradient} hover:opacity-90 text-white shadow-lg group-hover:shadow-xl transition-all duration-300`}
