@@ -271,11 +271,7 @@ const DepartmentsIconsSection = () => {
   };
 
   return (
-    <section 
-      dir="rtl" 
-      className="py-8 sm:py-12 md:py-16 lg:py-20 relative overflow-hidden"
-      style={{ direction: 'rtl', textAlign: 'right' }}
-    >
+    <section className="py-8 sm:py-12 md:py-16 lg:py-20 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/2 to-secondary/3"></div>
       

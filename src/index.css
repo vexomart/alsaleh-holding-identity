@@ -5,7 +5,6 @@
 @import url('./styles/typography.css');
 @import url('./styles/rtl-fixes.css');
 @import url('./styles/finance-animations.css');
-@import url('./styles/mobile-app.css');
 
 /* ===========================================
    RTL ROOT BOUNDARY - Hard RTL Isolation
@@ -30,120 +29,6 @@
 /* Prevent horizontal overflow in RTL */
 .rtl-root {
   overflow-x: hidden;
-}
-
-/* ===========================================
-   HARD RTL ENFORCEMENT - Homepage & All Pages
-   =========================================== */
-html[dir="rtl"],
-html.rtl,
-[dir="rtl"] {
-  direction: rtl !important;
-  text-align: right !important;
-}
-
-/* Force RTL on all containers when dir=rtl */
-[dir="rtl"] * {
-  direction: inherit;
-}
-
-/* RTL Flex Row Reverse - Critical for button/icon order */
-[dir="rtl"] .flex-row {
-  flex-direction: row-reverse;
-}
-
-[dir="rtl"] .flex-row-reverse {
-  flex-direction: row;
-}
-
-/* RTL-aware margins and paddings */
-[dir="rtl"] .ml-auto { margin-inline-end: auto; margin-inline-start: 0; }
-[dir="rtl"] .mr-auto { margin-inline-start: auto; margin-inline-end: 0; }
-[dir="rtl"] .ml-2 { margin-inline-end: 0.5rem; margin-inline-start: 0; }
-[dir="rtl"] .mr-2 { margin-inline-start: 0.5rem; margin-inline-end: 0; }
-[dir="rtl"] .ml-3 { margin-inline-end: 0.75rem; margin-inline-start: 0; }
-[dir="rtl"] .mr-3 { margin-inline-start: 0.75rem; margin-inline-end: 0; }
-[dir="rtl"] .ml-4 { margin-inline-end: 1rem; margin-inline-start: 0; }
-[dir="rtl"] .mr-4 { margin-inline-start: 1rem; margin-inline-end: 0; }
-
-[dir="rtl"] .pl-4 { padding-inline-end: 1rem; padding-inline-start: 0; }
-[dir="rtl"] .pr-4 { padding-inline-start: 1rem; padding-inline-end: 0; }
-[dir="rtl"] .pl-6 { padding-inline-end: 1.5rem; padding-inline-start: 0; }
-[dir="rtl"] .pr-6 { padding-inline-start: 1.5rem; padding-inline-end: 0; }
-
-/* RTL-aware positioning */
-[dir="rtl"] .left-0 { left: auto; right: 0; }
-[dir="rtl"] .right-0 { right: auto; left: 0; }
-[dir="rtl"] .left-4 { left: auto; right: 1rem; }
-[dir="rtl"] .right-4 { right: auto; left: 1rem; }
-
-/* RTL Text alignment */
-[dir="rtl"] .text-left { text-align: right !important; }
-[dir="rtl"] .text-right { text-align: left !important; }
-[dir="rtl"] .text-center { text-align: center !important; }
-
-/* RTL Icon flip for directional icons */
-[dir="rtl"] .rtl-flip {
-  transform: scaleX(-1);
-}
-
-/* Chevron and Arrow icons should flip in RTL - Only for navigation arrows */
-[dir="rtl"] .rtl-arrow-flip {
-  transform: scaleX(-1);
-}
-
-/* DO NOT auto-reverse buttons - let JSX control order */
-/* Buttons will have text first, then icon in JSX for RTL */
-
-/* RTL Grid alignment - Only for specific classes */
-[dir="rtl"] .rtl-justify-start { justify-content: flex-end; }
-[dir="rtl"] .rtl-justify-end { justify-content: flex-start; }
-
-/* RTL-safe border radius */
-[dir="rtl"] .rounded-l-lg { border-radius: 0 0.5rem 0.5rem 0; }
-[dir="rtl"] .rounded-r-lg { border-radius: 0.5rem 0 0 0.5rem; }
-
-/* Homepage specific RTL enforcement */
-#root[dir="rtl"],
-.homepage-rtl {
-  direction: rtl !important;
-  text-align: right !important;
-}
-
-/* Navigation RTL - Only container not children */
-[dir="rtl"] nav,
-[dir="rtl"] header {
-  direction: rtl;
-}
-
-/* Hero Section RTL */
-[dir="rtl"] .hero-section,
-[dir="rtl"] section[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-}
-
-/* Cards RTL alignment */
-[dir="rtl"] .card,
-[dir="rtl"] [class*="Card"] {
-  text-align: right;
-}
-
-/* Badge RTL position */
-[dir="rtl"] .badge-position-right {
-  right: auto;
-  left: 0.75rem;
-}
-
-[dir="rtl"] .badge-position-left {
-  left: auto;
-  right: 0.75rem;
-}
-
-/* Footer RTL */
-[dir="rtl"] footer {
-  direction: rtl;
-  text-align: right;
 }
 
 /* ===========================================
