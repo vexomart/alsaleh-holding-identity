@@ -44,7 +44,7 @@ const initializeDirection = () => {
 initializeDirection();
 
 // Force cache bust on version change
-const CACHE_KEY = 'app_cache_v35';
+const CACHE_KEY = 'app_cache_v36';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
