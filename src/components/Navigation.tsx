@@ -98,7 +98,7 @@ const Navigation = () => {
   ];
 
   return (
-    <>
+    <div dir="rtl" className="rtl">
       {/* Corporate Top Bar */}
       <div className="hidden lg:block bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700/50">
         <div className="container mx-auto px-6">
@@ -662,7 +662,7 @@ const Navigation = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
