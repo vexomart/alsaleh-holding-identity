@@ -134,6 +134,13 @@ const businessNavItems: NavItem[] = [
     href: ROUTES.ADMIN.WALLETS,
   },
   {
+    titleKey: "referrals",
+    titleAr: "إدارة الإحالات",
+    titleEn: "Referral Management",
+    icon: Users,
+    href: ROUTES.ADMIN.REFERRALS,
+  },
+  {
     titleKey: "finance",
     titleAr: "المركز المالي",
     titleEn: "Finance Center",

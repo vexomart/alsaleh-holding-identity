@@ -31,6 +31,9 @@ const NewFinanceApplicationPage = lazy(() => import('@/pages/app/finance/NewAppl
 const NewEntityPage = lazy(() => import('@/pages/app/finance/NewEntityPage'));
 const ApplicationDetailsPage = lazy(() => import('@/pages/app/finance/ApplicationDetailsPage'));
 
+// Referrals Page
+const CustomerReferralsPage = lazy(() => import('@/components/customer/referrals/CustomerReferralsPage'));
+
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
     <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -54,6 +57,9 @@ const CustomerDashboard = () => {
         <Route path="invoices" element={<CustomerInvoicesCenter />} />
         <Route path="wallet" element={<CustomerWallet />} />
         <Route path="transactions" element={<CustomerTransactions />} />
+        
+        {/* Referrals */}
+        <Route path="referrals" element={<Suspense fallback={<PageLoader />}><CustomerReferralsPage /></Suspense>} />
         
         {/* Finance Routes */}
         <Route path="finance" element={<FinanceCenter />} />

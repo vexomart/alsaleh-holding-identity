@@ -11,6 +11,9 @@ export { ServicesManagement } from "./services/ServicesManagement";
 export { OrdersManagement } from "./orders/OrdersManagement";
 export { ContractsManagement } from "./contracts/ContractsManagement";
 
+// Referrals Management
+export { AdminReferralsPage } from "./referrals/AdminReferralsPage";
+
 // System Pages
 export { ReportsPage } from "./reports/ReportsPage";
 export { NotificationsPage } from "./notifications/NotificationsPage";

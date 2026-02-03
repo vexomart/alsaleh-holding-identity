@@ -94,6 +94,12 @@ export function CustomerSidebar() {
       href: "/app/wallet",
     },
     {
+      titleAr: "الإحالات",
+      titleEn: "Referrals",
+      icon: User,
+      href: "/app/referrals",
+    },
+    {
       titleAr: "التمويل",
       titleEn: "Finance",
       icon: Landmark,

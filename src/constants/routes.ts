@@ -26,6 +26,7 @@ export const ROUTES = {
     CONTRACTS: '/admin/contracts',
     WALLETS: '/admin/wallets',
     FINANCE: '/admin/finance',
+    REFERRALS: '/admin/referrals',
     CMS: {
       ROOT: '/admin/cms',
       PAGES: '/admin/cms/pages',
@@ -47,6 +48,7 @@ export const ROUTES = {
     ORDER_DETAIL: (id: string) => `/app/orders/${id}`,
     SERVICES: '/app/services',
     WALLET: '/app/wallet',
+    REFERRALS: '/app/referrals',
     PROFILE: '/app/profile',
     NOTIFICATIONS: '/app/notifications',
     SUPPORT: '/app/support',
