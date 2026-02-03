@@ -62,7 +62,7 @@ export function ReportsPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(language === 'ar' ? 'ar-SA' : 'en-US', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'SAR',
       minimumFractionDigits: 0,
@@ -134,13 +134,13 @@ export function ReportsPage() {
     },
     {
       title: language === 'ar' ? 'إجمالي الطلبات' : 'Total Orders',
-      value: analytics.totalOrders.toLocaleString(),
+      value: analytics.totalOrders.toLocaleString('en-US'),
       icon: ShoppingCart,
       color: 'blue',
     },
     {
       title: language === 'ar' ? 'إجمالي العملاء' : 'Total Customers',
-      value: analytics.totalUsers.toLocaleString(),
+      value: analytics.totalUsers.toLocaleString('en-US'),
       icon: Users,
       color: 'violet',
     },

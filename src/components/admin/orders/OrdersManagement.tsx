@@ -380,7 +380,7 @@ export function OrdersManagement() {
 
   const formatCurrency = (amount: number | null) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'SAR',
       minimumFractionDigits: 0,
@@ -389,7 +389,7 @@ export function OrdersManagement() {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
+    return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -398,7 +398,7 @@ export function OrdersManagement() {
 
   const formatTime = (dateString: string | null) => {
     if (!dateString) return '';
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
+    return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(dateString));

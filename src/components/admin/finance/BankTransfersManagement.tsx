@@ -317,7 +317,7 @@ export function BankTransfersManagement() {
                         <span dir="ltr">{transfer.reference_code}</span>
                       </TableCell>
                       <TableCell className={cn("font-semibold", isRTL ? "text-right" : "text-left")}>
-                        <span dir="ltr">{transfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}</span>
+                        <span dir="ltr">{transfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}</span>
                       </TableCell>
                       <TableCell className={cn("text-sm", isRTL ? "text-right" : "text-left")}>{getBankName(transfer.bank_name)}</TableCell>
                       <TableCell className={isRTL ? "text-right" : "text-left"}>
@@ -433,7 +433,7 @@ export function BankTransfersManagement() {
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <span className="text-muted-foreground">{isRTL ? "المبلغ" : "Amount"}</span>
                     <span className="font-bold text-green-600">
-                      {selectedTransfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                      {selectedTransfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                     </span>
                     
                     <span className="text-muted-foreground">{isRTL ? "البنك" : "Bank"}</span>
@@ -565,7 +565,7 @@ export function BankTransfersManagement() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{isRTL ? "المبلغ" : "Amount"}</span>
                   <span className="font-bold text-green-600">
-                    {selectedTransfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                    {selectedTransfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                   </span>
                 </div>
               </div>
@@ -625,7 +625,7 @@ export function BankTransfersManagement() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{isRTL ? "المبلغ" : "Amount"}</span>
                   <span className="font-bold">
-                    {selectedTransfer.amount.toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                    {selectedTransfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                   </span>
                 </div>
               </div>

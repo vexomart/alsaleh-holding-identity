@@ -177,7 +177,7 @@ export function AdminOverview() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat(language === "ar" ? "ar-SA" : "en-US", {
+    return new Intl.NumberFormat('en-US', {
       style: "currency",
       currency: "SAR",
       minimumFractionDigits: 0,
@@ -318,7 +318,7 @@ export function AdminOverview() {
                       <div className="h-8 w-20 bg-muted animate-pulse rounded" />
                     ) : stat.titleEn === "Revenue" 
                       ? formatCurrency(stat.value)
-                      : stat.value.toLocaleString()}
+                      : stat.value.toLocaleString('en-US')}
                   </div>
                 </div>
               </div>

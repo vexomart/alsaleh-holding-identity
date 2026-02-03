@@ -350,13 +350,13 @@ export function AdminClientHub() {
         {[
           { 
             label: isRTL ? "إجمالي الإنفاق" : "Total Spent", 
-            value: `${totalSpent.toLocaleString()} ${isRTL ? "ر.س" : "SAR"}`,
+            value: `${totalSpent.toLocaleString('en-US')} ${isRTL ? "ر.س" : "SAR"}`,
             icon: CreditCard,
             color: "text-emerald-600"
           },
           { 
             label: isRTL ? "رصيد المحفظة" : "Wallet Balance", 
-            value: `${(clientData.wallet?.balance || 0).toLocaleString()} ${isRTL ? "ر.س" : "SAR"}`,
+            value: `${(clientData.wallet?.balance || 0).toLocaleString('en-US')} ${isRTL ? "ر.س" : "SAR"}`,
             icon: Wallet,
             color: "text-blue-600"
           },
@@ -566,13 +566,13 @@ export function AdminClientHub() {
                       <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
                         <span className="text-muted-foreground">{isRTL ? "الرصيد المتاح" : "Available Balance"}</span>
                         <span className="text-xl font-bold ltr-token">
-                          {(clientData.wallet?.balance || 0).toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                          {(clientData.wallet?.balance || 0).toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
                         <span className="text-muted-foreground">{isRTL ? "الرصيد المحجوز" : "Reserved Balance"}</span>
                         <span className="text-lg font-semibold ltr-token">
-                          {(clientData.wallet?.reserved_balance || 0).toLocaleString()} {isRTL ? "ر.س" : "SAR"}
+                          {(clientData.wallet?.reserved_balance || 0).toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/30 rounded-lg">
@@ -653,7 +653,7 @@ export function AdminClientHub() {
                             </p>
                           </div>
                           <p className="text-xs text-muted-foreground ltr-token shrink-0">
-                            {new Date(log.created_at).toLocaleString()}
+                            {new Date(log.created_at).toLocaleString('en-US')}
                           </p>
                         </div>
                       ))}

@@ -167,7 +167,7 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2, type: "spring" }}
                 >
-                  {card.value.toLocaleString(language === "ar" ? "ar-SA" : "en-US")}
+                  {card.value.toLocaleString('en-US')}
                 </motion.span>
                 <p className="text-sm text-muted-foreground mt-1">
                   {language === "ar" ? card.titleAr : card.titleEn}
