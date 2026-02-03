@@ -113,6 +113,12 @@ export interface ContractData {
   provider?: { name: string; address?: string; phone?: string; role?: string };
   customer?: { name: string; nationalId?: string; phone?: string; role?: string };
   status?: string;
+  // Admin approval info
+  adminApprovedAt?: string | Date | null;
+  adminApprovedBy?: string | null;
+  // Customer signature info
+  customerSignedAt?: string | Date | null;
+  customerSignatureName?: string | null;
   [key: string]: unknown;
 }
 

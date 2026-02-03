@@ -107,23 +107,28 @@ export function CustomerContractsCenter() {
         .eq('contract_id', contract.id)
         .maybeSingle();
 
-      const pricing: any = (contract as any).pricing_json || {};
+      const pricing = contract.pricing_json || { subtotal: 0, vat_rate: 15, vat_amount: 0, total: 0, currency: 'SAR' };
 
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
         date: contract.created_at,
         serviceName: contract.service?.name_ar || contract.service?.name || 'خدمة',
+        serviceNameAr: contract.service?.name_ar || undefined,
+        scopeSummaryAr: contract.scope_summary_ar || undefined,
         provider: { name: 'شركة علي صالح الشهري القابضة', address: 'المملكة العربية السعودية - الرياض', role: 'provider' as const },
         customer: { name: sig?.signer_name || '', nationalId: sig?.signer_national_id || undefined, phone: sig?.signer_phone || undefined, role: 'customer' as const },
-        amount: pricing.subtotal || 0,
-        vatRate: (pricing.vat_rate || 15) / 100,
-        vatAmount: pricing.vat_amount || 0,
-        totalAmount: pricing.total || 0,
+        pricing: {
+          subtotal: pricing.subtotal || 0,
+          vatRate: (pricing.vat_rate || 15) / 100,
+          vatAmount: pricing.vat_amount || 0,
+          total: pricing.total || 0,
+        },
         currency: pricing.currency || 'SAR',
-        clauses: [
-          { title: 'نطاق العمل', content: contract.service ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.` : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.' },
-          { title: 'المقابل المالي', content: `يلتزم الطرف الثاني بدفع المبلغ المتفق عليه شاملاً ضريبة القيمة المضافة.` },
-        ],
+        // Admin approval stamp
+        adminApprovedAt: contract.admin_approved_at || null,
+        // Customer signature stamp
+        customerSignedAt: contract.signed_at || null,
+        customerSignatureName: sig?.signer_name || null,
       };
 
       const success = await downloadContractPdf(contractData);

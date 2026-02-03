@@ -172,8 +172,8 @@ export function CustomerContractDetails() {
   };
 
   const handleDownloadPdf = async () => {
-    if (!contract || contract.status !== 'signed') {
-      toast.error('العقد غير موقع بعد');
+    if (!contract) {
+      toast.error('لا يوجد عقد');
       return;
     }
 
@@ -183,12 +183,15 @@ export function CustomerContractDetails() {
     setIsGeneratingPdf(true);
 
     try {
-      // Build contract data for PDF using new PDF2 structure
+      // Build contract data for PDF
       const contractData: ContractData = {
         contractNumber: contract.contract_number,
         date: contract.created_at,
         serviceName: contract.service?.name_ar || contract.service?.name || 'خدمة',
+        serviceNameAr: contract.service?.name_ar || undefined,
         serviceDescription: contract.scope_summary_ar || contract.scope_summary || undefined,
+        scopeSummary: contract.scope_summary || undefined,
+        scopeSummaryAr: contract.scope_summary_ar || undefined,
         
         provider: {
           name: 'شركة علي صالح الشهري القابضة',
@@ -204,39 +207,24 @@ export function CustomerContractDetails() {
           role: 'customer' as const,
         },
         
-        amount: contract.pricing_json?.subtotal || 0,
-        vatRate: (contract.pricing_json?.vat_rate || 15) / 100,
-        vatAmount: contract.pricing_json?.vat_amount || 0,
-        totalAmount: contract.pricing_json?.total || 0,
+        // Pricing in the format expected by the template
+        pricing: {
+          subtotal: contract.pricing_json?.subtotal || 0,
+          vatRate: (contract.pricing_json?.vat_rate || 15) / 100,
+          vatAmount: contract.pricing_json?.vat_amount || 0,
+          total: contract.pricing_json?.total || 0,
+        },
         currency: contract.pricing_json?.currency || 'SAR',
-        
-        clauses: [
-          {
-            title: 'نطاق العمل',
-            content: contract.service 
-              ? `تقديم خدمة ${contract.service.name_ar || contract.service.name} وفقاً للمواصفات المتفق عليها.`
-              : 'تقديم الخدمات المتفق عليها وفقاً للمواصفات.',
-          },
-          {
-            title: 'المقابل المالي',
-            content: `يلتزم الطرف الثاني بدفع مبلغ ${formatCurrency(contract.pricing_json?.total || 0, contract.pricing_json?.currency || 'SAR')} شاملاً ضريبة القيمة المضافة.`,
-          },
-          {
-            title: 'الالتزامات',
-            content: 'يلتزم الطرف الأول بتقديم الخدمة وفق أعلى معايير الجودة. يلتزم الطرف الثاني بتوفير المعلومات والمستندات المطلوبة.',
-          },
-          {
-            title: 'السرية',
-            content: 'يتعهد الطرفان بالحفاظ على سرية المعلومات المتبادلة بينهما.',
-          },
-          {
-            title: 'فض النزاعات',
-            content: 'في حال نشوء أي خلاف، يتم حله ودياً، وإلا تختص محاكم المملكة العربية السعودية بالفصل فيه.',
-          },
-        ],
         
         status: contract.status,
         signedAt: contract.signed_at || undefined,
+        
+        // Admin approval stamp
+        adminApprovedAt: contract.admin_approved_at || null,
+        
+        // Customer signature stamp  
+        customerSignedAt: contract.signed_at || null,
+        customerSignatureName: signature?.signer_name || profile?.full_name || null,
       };
 
       const success = await downloadContractPdf(contractData);
