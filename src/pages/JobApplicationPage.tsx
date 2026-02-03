@@ -143,55 +143,44 @@ const JobApplicationPage = () => {
       // Generate job application number
       const jobNumber = `JOB-${Date.now().toString().slice(-6)}`;
 
-      // Send to edge function with HR email
-      const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/job-application",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            cvUrl,
-            cvFileName,
-            jobNumber,
-            message: formData.coverLetter,
-            hrEmail: "hr@masteredupath.com" // Official HR email
-          }),
+      // Send to edge function
+      const { error } = await supabase.functions.invoke('job-application', {
+        body: {
+          ...formData,
+          cvUrl,
+          cvFileName,
+          jobNumber,
+          message: formData.coverLetter,
+          hrEmail: "info@ash-holding.sa"
         }
-      );
+      });
 
-      const result = await response.json();
+      if (error) throw error;
 
-      if (response.ok) {
-        toast.success("تم إرسال طلب التوظيف بنجاح! ✅", {
-          description: `رقم الطلب: ${result.jobNumber || jobNumber} - سيتم التواصل معك خلال 10 أيام عمل 📧`,
-          duration: 10000,
-        });
-        
-        // Reset form
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          city: "",
-          position: "",
-          experience: "",
-          education: "",
-          coverLetter: "",
-          portfolio: "",
-          linkedIn: ""
-        });
-        setCvFile(null);
-        
-        // Reset file input
-        const fileInput = document.getElementById('cv-file') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-        
-      } else {
-        throw new Error(result.error || "حدث خطأ أثناء إرسال الطلب");
-      }
+      toast.success("تم إرسال طلب التوظيف بنجاح! ✅", {
+        description: `رقم الطلب: ${jobNumber} - سيتم التواصل معك خلال 10 أيام عمل 📧`,
+        duration: 10000,
+      });
+      
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        city: "",
+        position: "",
+        experience: "",
+        education: "",
+        coverLetter: "",
+        portfolio: "",
+        linkedIn: ""
+      });
+      setCvFile(null);
+      
+      // Reset file input
+      const fileInput = document.getElementById('cv-file') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
     } catch (error) {
       console.error("Job application error:", error);
       toast.error("خطأ في إرسال الطلب ❌", {

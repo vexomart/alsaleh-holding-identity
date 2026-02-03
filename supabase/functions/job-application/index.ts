@@ -8,7 +8,7 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY")!);
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface JobApplicationData {
@@ -237,7 +237,7 @@ const handler = async (req: Request): Promise<Response> => {
     const hrEmail = data.hrEmail || "jobs@ash-holding.sa";
     
     const { error: emailError } = await resend.emails.send({
-      from: "نظام التوظيف - ASH HOLDING <info@ash-holding.sa>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       replyTo: "jobs@ash-holding.sa",
       to: [hrEmail, "jobs@ash-holding.sa"],
       subject: `طلب توظيف جديد - ${data.position} - ${applicationNumber}`,
@@ -332,14 +332,14 @@ const handler = async (req: Request): Promise<Response> => {
             شكراً لاهتمامك بالعمل معنا! 🤝
           </p>
           <p style="margin: 0; color: #64748b; font-size: 14px;">
-            © 2025 شركة علي صالح الشهري القابضة - قسم الموارد البشرية
+            © 2025 ASH HOLDING - قسم الموارد البشرية
           </p>
         </div>
       </div>
     `;
 
     const { error: confirmationEmailError } = await resend.emails.send({
-      from: "قسم التوظيف - ASH HOLDING <info@ash-holding.sa>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       replyTo: "jobs@ash-holding.sa",
       to: [data.email],
       subject: `تأكيد استلام طلب التوظيف - ${applicationNumber}`,
