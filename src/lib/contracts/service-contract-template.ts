@@ -153,7 +153,7 @@ export function renderServiceContractHTML(
     });
   };
 
-  const formatDate = (dateStr: string | Date | undefined) => {
+  const formatDate = (dateStr: string | Date | undefined | null) => {
     if (!dateStr) return '-';
     const date = new Date(dateStr);
     return date.toLocaleDateString('ar-SA', {
@@ -165,6 +165,9 @@ export function renderServiceContractHTML(
 
   const contractDate = formatDate(data.date || data.createdAt);
   const signedDate = data.signedAt ? formatDate(data.signedAt) : null;
+  const adminApprovedDate = data.adminApprovedAt ? formatDate(data.adminApprovedAt) : null;
+  const customerSignedDate = data.customerSignedAt ? formatDate(data.customerSignedAt) : signedDate;
+  const customerName = data.customerSignatureName || data.customer?.name || data.customerNameAr || '-';
 
   // Generate legal articles HTML
   const articlesHTML = SERVICE_CONTRACT_ARTICLES.map(article => `
@@ -611,12 +614,12 @@ export function renderServiceContractHTML(
     .signature-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 30px;
+      gap: 20px;
     }
     
     .signature-box {
       text-align: center;
-      padding: 16px;
+      padding: 14px;
       border: 2px dashed #e2e8f0;
       border-radius: 12px;
       min-height: 100px;
@@ -626,7 +629,7 @@ export function renderServiceContractHTML(
       font-size: 11px;
       font-weight: 600;
       color: var(--navy);
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     
     .digital-stamp {
@@ -634,17 +637,27 @@ export function renderServiceContractHTML(
     }
     
     .stamp-circle {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       border: 3px solid var(--success);
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(16, 185, 129, 0.1);
+      background: rgba(16, 185, 129, 0.08);
       margin: 0 auto;
+      position: relative;
       ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.5s backwards;' : ''}
+    }
+    
+    .stamp-circle::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 2px solid var(--success);
+      border-radius: 50%;
+      opacity: 0.6;
     }
     
     .stamp-text {
@@ -655,11 +668,23 @@ export function renderServiceContractHTML(
       line-height: 1.3;
     }
     
+    .stamp-check {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    
     .stamp-date {
       font-size: 7px;
       color: var(--success);
       opacity: 0.8;
       margin-top: 2px;
+    }
+    
+    .stamp-id {
+      font-size: 6px;
+      color: var(--success);
+      opacity: 0.6;
+      font-family: monospace;
     }
     
     .signature-line {
@@ -669,6 +694,98 @@ export function renderServiceContractHTML(
       padding-top: 8px;
       font-size: 10px;
       color: #64748b;
+    }
+    
+    /* Admin Stamp - Emerald Green */
+    .admin-stamp {
+      width: 85px;
+      height: 85px;
+      border: 3px solid #059669;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 150, 105, 0.08);
+      margin: 8px auto 0;
+      position: relative;
+      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.7s backwards;' : ''}
+    }
+    
+    .admin-stamp::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 2px solid #059669;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    
+    .admin-stamp-text {
+      font-size: 7px;
+      font-weight: 700;
+      color: #059669;
+      text-align: center;
+      line-height: 1.3;
+    }
+    
+    .admin-stamp-check {
+      font-size: 11px;
+      color: #059669;
+      margin-bottom: 1px;
+    }
+    
+    .admin-stamp-date {
+      font-size: 6px;
+      color: #059669;
+      opacity: 0.8;
+      margin-top: 1px;
+    }
+    
+    /* Customer Stamp - Teal */
+    .customer-stamp {
+      width: 85px;
+      height: 85px;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 118, 110, 0.08);
+      margin: 8px auto 0;
+      position: relative;
+      ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.9s backwards;' : ''}
+    }
+    
+    .customer-stamp::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    
+    .customer-stamp-text {
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      line-height: 1.3;
+    }
+    
+    .customer-stamp-check {
+      font-size: 11px;
+      color: var(--primary);
+      margin-bottom: 1px;
+    }
+    
+    .customer-stamp-date {
+      font-size: 6px;
+      color: var(--primary);
+      opacity: 0.8;
+      margin-top: 1px;
     }
     
     /* Footer */
@@ -830,24 +947,34 @@ export function renderServiceContractHTML(
       
       <!-- Signatures -->
       <div class="signature-section">
-        <div class="signature-title">التوقيعات</div>
+        <div class="signature-title">التوقيعات والأختام</div>
         <div class="signature-grid">
+          <!-- Provider Signature + Admin Approval -->
           <div class="signature-box">
-            <div class="signature-label">توقيع الطرف الأول (مقدم الخدمة)</div>
+            <div class="signature-label">الطرف الأول (مقدم الخدمة)</div>
             <div class="digital-stamp">
               <div class="stamp-circle">
                 <div class="stamp-text">شركة علي صالح<br/>الشهري القابضة</div>
               </div>
             </div>
+            ${adminApprovedDate ? `
+            <!-- Admin Approval Stamp -->
+            <div class="admin-stamp">
+              <div class="admin-stamp-check">✓</div>
+              <div class="admin-stamp-text">تمت الموافقة<br/>من الإدارة</div>
+              <div class="admin-stamp-date">${adminApprovedDate}</div>
+            </div>
+            ` : ''}
           </div>
+          
+          <!-- Customer Signature -->
           <div class="signature-box">
-            <div class="signature-label">توقيع الطرف الثاني (العميل)</div>
-            ${signedDate ? `
-            <div class="digital-stamp">
-              <div class="stamp-circle" style="border-color: var(--primary); background: rgba(15, 118, 110, 0.1);">
-                <div class="stamp-text" style="color: var(--primary);">تم التوقيع<br/>إلكترونياً</div>
-                <div class="stamp-date" style="color: var(--primary);">${signedDate}</div>
-              </div>
+            <div class="signature-label">الطرف الثاني (العميل)</div>
+            ${customerSignedDate ? `
+            <div class="customer-stamp">
+              <div class="customer-stamp-check">✓</div>
+              <div class="customer-stamp-text">تم التوقيع<br/>${customerName.split(' ').slice(0, 2).join(' ')}</div>
+              <div class="customer-stamp-date">${customerSignedDate}</div>
             </div>
             ` : `
             <div class="signature-line">التوقيع</div>
