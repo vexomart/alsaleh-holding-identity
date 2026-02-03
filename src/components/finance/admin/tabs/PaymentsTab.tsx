@@ -43,6 +43,8 @@ import {
 } from "@/types/finance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { ReceiptVoucherButton } from "@/components/finance/shared/ReceiptVoucherButton";
+import type { ReceiptVoucherData } from "@/lib/finance/receipt-voucher/types";
 
 interface Payment {
   id: string;
@@ -50,11 +52,16 @@ interface Payment {
   amount_sar: number;
   due_date: string;
   status: FinancePaymentStatus;
+  paid_at?: string | null;
+  method?: string | null;
+  reference?: string | null;
   contract?: {
     contract_number: string;
     application?: {
       entity?: {
         legal_name_ar: string;
+        national_id?: string;
+        phone?: string;
       };
     };
   };
@@ -78,7 +85,7 @@ export function PaymentsTab() {
           contract:finance_contracts(
             contract_number,
             application:finance_applications(
-              entity:entities(legal_name_ar)
+              entity:entities(legal_name_ar, national_id, phone)
             )
           )
         `)
@@ -231,6 +238,40 @@ export function PaymentsTab() {
                         >
                           <TableCell>
                             <div className="flex items-center gap-2">
+                              {payment.status === "paid" && (
+                                <ReceiptVoucherButton
+                                  iconOnly
+                                  voucherData={{
+                                    voucherNumber: `RV-${payment.contract?.contract_number || 'N/A'}-${payment.installment_no}`,
+                                    issueDate: payment.paid_at || new Date().toISOString(),
+                                    receiver: {
+                                      name: 'شركة علي صالح الشهري القابضة',
+                                      identityType: 'commercial_registration',
+                                      identityNumber: '1010123456',
+                                      phone: '0555812567',
+                                    },
+                                    payer: {
+                                      name: payment.contract?.application?.entity?.legal_name_ar || 'العميل',
+                                      identityNumber: payment.contract?.application?.entity?.national_id,
+                                      phone: payment.contract?.application?.entity?.phone,
+                                    },
+                                    financials: {
+                                      amount: payment.amount_sar,
+                                      currency: 'SAR',
+                                      purpose: `سداد القسط رقم ${payment.installment_no}`,
+                                      contractNumber: payment.contract?.contract_number,
+                                      installmentNumber: payment.installment_no,
+                                    },
+                                    receiverSignature: {
+                                      signerName: 'شركة علي صالح الشهري القابضة',
+                                      isSigned: true,
+                                      signedAt: payment.paid_at || new Date().toISOString(),
+                                    },
+                                    paymentMethod: (payment.method as any) || 'wallet',
+                                    transactionReference: payment.reference || undefined,
+                                  }}
+                                />
+                              )}
                               {(payment.status === "scheduled" || payment.status === "overdue") && (
                                 <Button
                                   size="sm"
