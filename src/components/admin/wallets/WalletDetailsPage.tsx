@@ -472,72 +472,200 @@ export function WalletDetailsPage() {
                 </Select>
               </div>
 
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ArrowDownLeft className="h-4 w-4 text-emerald-600" />
+                    <span className="text-xs text-emerald-700 font-medium">{isRTL ? "الداخل" : "Income"}</span>
+                  </div>
+                  <p className="text-lg font-bold text-emerald-600" dir="ltr">
+                    +{formatCurrency(filteredTransactions.filter(t => isCredit(t.transaction_type) && t.status === "succeeded").reduce((s, t) => s + Number(t.amount), 0))}
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ArrowUpRight className="h-4 w-4 text-red-600" />
+                    <span className="text-xs text-red-700 font-medium">{isRTL ? "الخارج" : "Outcome"}</span>
+                  </div>
+                  <p className="text-lg font-bold text-red-600" dir="ltr">
+                    -{formatCurrency(filteredTransactions.filter(t => !isCredit(t.transaction_type) && t.status === "succeeded").reduce((s, t) => s + Number(t.amount), 0))}
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                    <span className="text-xs text-blue-700 font-medium">{isRTL ? "مكتملة" : "Completed"}</span>
+                  </div>
+                  <p className="text-lg font-bold text-blue-600">
+                    {filteredTransactions.filter(t => t.status === "succeeded").length}
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock className="h-4 w-4 text-amber-600" />
+                    <span className="text-xs text-amber-700 font-medium">{isRTL ? "معلقة" : "Pending"}</span>
+                  </div>
+                  <p className="text-lg font-bold text-amber-600">
+                    {filteredTransactions.filter(t => t.status === "pending").length}
+                  </p>
+                </div>
+              </div>
+
               {/* Transactions List */}
-              <ScrollArea className="h-[400px]">
+              <ScrollArea className="h-[500px]">
                 {filteredTransactions.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Receipt className="h-12 w-12 mx-auto mb-3 opacity-30" />
                     <p>{isRTL ? "لا توجد معاملات" : "No transactions"}</p>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    {filteredTransactions.map((tx, index) => (
-                      <motion.div
-                        key={tx.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                        className="p-3 rounded-xl border bg-card hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className={cn(
-                            "h-10 w-10 rounded-full flex items-center justify-center shrink-0",
-                            isCredit(tx.transaction_type) ? "bg-emerald-500/10" : "bg-red-500/10"
-                          )}>
-                            {getTransactionIcon(tx.transaction_type)}
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <p className="font-medium text-sm">
-                                  {getTransactionTypeLabel(tx.transaction_type)}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {formatDate(tx.created_at || "")}
-                                </p>
-                              </div>
-                              <div className="text-end">
-                                <p className={cn(
-                                  "font-bold",
-                                  isCredit(tx.transaction_type) ? "text-emerald-600" : "text-red-600"
-                                )} dir="ltr">
-                                  {isCredit(tx.transaction_type) ? "+" : "-"}
-                                  {formatCurrency(Number(tx.amount))}
-                                </p>
-                                <Badge 
-                                  variant="outline" 
-                                  className={cn(
-                                    "text-xs mt-1",
-                                    tx.status === "succeeded" && "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
-                                    tx.status === "pending" && "bg-amber-500/10 text-amber-600 border-amber-500/30",
-                                    tx.status === "failed" && "bg-red-500/10 text-red-600 border-red-500/30"
-                                  )}
-                                >
-                                  {tx.status === "succeeded" ? (isRTL ? "مكتمل" : "Done") : 
-                                   tx.status === "pending" ? (isRTL ? "معلق" : "Pending") : 
-                                   (isRTL ? "فشل" : "Failed")}
-                                </Badge>
-                              </div>
-                            </div>
-                            {tx.description && (
-                              <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
-                                {isRTL ? tx.description_ar || tx.description : tx.description}
-                              </p>
-                            )}
+                  <div className="space-y-3">
+                    {/* Group by date */}
+                    {Object.entries(
+                      filteredTransactions.reduce((groups, tx) => {
+                        const date = new Date(tx.created_at || "").toLocaleDateString(isRTL ? "ar-SA" : "en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        });
+                        if (!groups[date]) groups[date] = [];
+                        groups[date].push(tx);
+                        return groups;
+                      }, {} as Record<string, typeof filteredTransactions>)
+                    ).map(([date, txs], groupIndex) => (
+                      <div key={date}>
+                        {/* Date Header */}
+                        <div className="sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-2 mb-2">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium text-muted-foreground">{date}</span>
+                            <Badge variant="secondary" className="text-xs">
+                              {txs.length} {isRTL ? "معاملة" : "tx"}
+                            </Badge>
                           </div>
                         </div>
-                      </motion.div>
+                        
+                        {/* Day Transactions */}
+                        <div className="space-y-2">
+                          {txs.map((tx, index) => (
+                            <motion.div
+                              key={tx.id}
+                              initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: (groupIndex * txs.length + index) * 0.02 }}
+                              className={cn(
+                                "group p-4 rounded-xl border transition-all duration-200",
+                                "hover:shadow-md hover:border-primary/30",
+                                tx.status === "pending" && "border-amber-500/30 bg-amber-500/5",
+                                tx.status === "failed" && "border-red-500/30 bg-red-500/5",
+                                tx.status === "succeeded" && "bg-card"
+                              )}
+                            >
+                              <div className="flex items-start gap-4">
+                                {/* Icon with animation */}
+                                <div className={cn(
+                                  "relative h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110",
+                                  isCredit(tx.transaction_type) 
+                                    ? "bg-gradient-to-br from-emerald-500/20 to-teal-500/20" 
+                                    : "bg-gradient-to-br from-red-500/20 to-orange-500/20"
+                                )}>
+                                  {getTransactionIcon(tx.transaction_type)}
+                                  {/* Direction indicator */}
+                                  <div className={cn(
+                                    "absolute -top-1 -end-1 h-5 w-5 rounded-full flex items-center justify-center text-white text-xs font-bold",
+                                    isCredit(tx.transaction_type) ? "bg-emerald-500" : "bg-red-500"
+                                  )}>
+                                    {isCredit(tx.transaction_type) ? "+" : "-"}
+                                  </div>
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="space-y-1">
+                                      <p className="font-semibold text-sm">
+                                        {getTransactionTypeLabel(tx.transaction_type)}
+                                      </p>
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-xs text-muted-foreground">
+                                          {new Date(tx.created_at || "").toLocaleTimeString(isRTL ? "ar-SA" : "en-US", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                          })}
+                                        </span>
+                                        {tx.provider_reference && (
+                                          <Badge variant="outline" className="text-[10px] font-mono h-5">
+                                            #{tx.provider_reference.slice(0, 8)}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Amount */}
+                                    <div className="text-end shrink-0">
+                                      <p className={cn(
+                                        "text-xl font-bold tabular-nums",
+                                        isCredit(tx.transaction_type) ? "text-emerald-600" : "text-red-600"
+                                      )} dir="ltr">
+                                        {isCredit(tx.transaction_type) ? "+" : "-"}
+                                        {formatCurrency(Number(tx.amount))}
+                                      </p>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={cn(
+                                          "text-xs mt-1 gap-1",
+                                          tx.status === "succeeded" && "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+                                          tx.status === "pending" && "bg-amber-500/10 text-amber-600 border-amber-500/30 animate-pulse",
+                                          tx.status === "failed" && "bg-red-500/10 text-red-600 border-red-500/30"
+                                        )}
+                                      >
+                                        {tx.status === "succeeded" && <CheckCircle2 className="h-3 w-3" />}
+                                        {tx.status === "pending" && <Clock className="h-3 w-3" />}
+                                        {tx.status === "failed" && <XCircle className="h-3 w-3" />}
+                                        {tx.status === "succeeded" ? (isRTL ? "مكتمل" : "Completed") : 
+                                         tx.status === "pending" ? (isRTL ? "قيد المعالجة" : "Processing") : 
+                                         (isRTL ? "فشل" : "Failed")}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Description & Metadata */}
+                                  {(tx.description || tx.description_ar || tx.related_invoice_id || tx.related_order_id) && (
+                                    <div className="mt-3 pt-3 border-t border-dashed space-y-2">
+                                      {(tx.description || tx.description_ar) && (
+                                        <p className="text-sm text-muted-foreground">
+                                          {isRTL ? tx.description_ar || tx.description : tx.description}
+                                        </p>
+                                      )}
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        {tx.related_invoice_id && (
+                                          <Badge variant="secondary" className="text-xs gap-1">
+                                            <FileText className="h-3 w-3" />
+                                            {isRTL ? "فاتورة مرتبطة" : "Invoice linked"}
+                                          </Badge>
+                                        )}
+                                        {tx.related_order_id && (
+                                          <Badge variant="secondary" className="text-xs gap-1">
+                                            <ShoppingCart className="h-3 w-3" />
+                                            {isRTL ? "طلب مرتبط" : "Order linked"}
+                                          </Badge>
+                                        )}
+                                        {tx.provider && (
+                                          <Badge variant="outline" className="text-xs gap-1">
+                                            <Building2 className="h-3 w-3" />
+                                            {tx.provider}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
