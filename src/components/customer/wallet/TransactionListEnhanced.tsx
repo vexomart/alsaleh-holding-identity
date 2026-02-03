@@ -1,10 +1,10 @@
 /**
- * Enhanced Transaction List with Receipt Downloads
- * قائمة المعاملات المحسنة مع تحميل الإيصالات
+ * Enhanced Transaction List with Receipt Downloads - Full RTL Support
+ * قائمة المعاملات المحسنة مع تحميل الإيصالات - دعم RTL كامل
  */
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { format } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
@@ -22,7 +22,6 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PaymentReceiptDialog } from "./PaymentReceiptDialog";
@@ -34,6 +33,7 @@ interface TransactionListEnhancedProps {
   customerUid: string;
   isLoading?: boolean;
   newTransactionIds?: Set<string>;
+  isRTL?: boolean;
 }
 
 const transactionConfig: Record<string, {
@@ -85,6 +85,13 @@ const transactionConfig: Record<string, {
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
   },
+  fee: {
+    icon: FileText,
+    label_ar: 'رسوم',
+    label_en: 'Fee',
+    color: 'text-orange-500',
+    bgColor: 'bg-orange-500/10',
+  },
 };
 
 const statusConfig: Record<string, {
@@ -131,15 +138,39 @@ const statusConfig: Record<string, {
   },
 };
 
+// Animation variants
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut" as const,
+    },
+  },
+};
+
 export function TransactionListEnhanced({
   transactions,
   walletNumber,
   customerUid,
   isLoading,
   newTransactionIds = new Set(),
+  isRTL: isRTLProp,
 }: TransactionListEnhancedProps) {
   const { language } = useLanguage();
-  const isRTL = language === "ar";
+  const isRTL = isRTLProp ?? language === "ar";
   const [selectedTransaction, setSelectedTransaction] = useState<FinancialTransaction | null>(null);
   const [showReceipt, setShowReceipt] = useState(false);
 
@@ -148,10 +179,6 @@ export function TransactionListEnhanced({
       style: 'decimal',
       minimumFractionDigits: 2,
     }).format(amount);
-  };
-
-  const formatDate = (dateStr: string) => {
-    return format(new Date(dateStr), "dd MMM", { locale: isRTL ? ar : enUS });
   };
 
   const formatTime = (dateStr: string) => {
@@ -175,14 +202,17 @@ export function TransactionListEnhanced({
 
   return (
     <>
-      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm" dir={isRTL ? "rtl" : "ltr"}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center"
+              >
                 <Receipt className="h-4 w-4 text-primary" />
-              </div>
-              <span className="text-base">{isRTL ? "آخر المعاملات" : "Recent Transactions"}</span>
+              </motion.div>
+              <span className="text-base">{isRTL ? "سجل المعاملات" : "Transaction History"}</span>
             </div>
             <Badge variant="outline" className="text-xs">
               {transactions.length} {isRTL ? "معاملة" : "transactions"}
@@ -190,93 +220,120 @@ export function TransactionListEnhanced({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[500px]">
             {Object.keys(groupedTransactions).length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-8 text-center text-muted-foreground"
+              >
                 <Receipt className="h-12 w-12 mx-auto mb-3 opacity-30" />
                 <p className="font-medium">{isRTL ? "لا توجد معاملات" : "No transactions yet"}</p>
                 <p className="text-xs mt-1">{isRTL ? "ستظهر معاملاتك هنا" : "Your transactions will appear here"}</p>
-              </div>
+              </motion.div>
             ) : (
-              <div className="divide-y divide-border/50">
+              <motion.div 
+                variants={listVariants}
+                initial="hidden"
+                animate="visible"
+                className="divide-y divide-border/50"
+              >
                 {Object.entries(groupedTransactions).map(([date, txs]) => (
                   <div key={date}>
                     {/* Date Header */}
-                    <div className="px-4 py-2 bg-muted/30 sticky top-0 z-10">
+                    <div className="px-4 py-2 bg-muted/30 sticky top-0 z-10 backdrop-blur-sm">
                       <p className="text-xs font-medium text-muted-foreground">
                         {format(new Date(date), "EEEE, dd MMMM yyyy", { locale: isRTL ? ar : enUS })}
                       </p>
                     </div>
                     
                     {/* Transactions */}
-                    {txs.map((tx, index) => {
-                      const config = transactionConfig[tx.transaction_type] || transactionConfig.adjustment;
-                      const status = statusConfig[tx.status || 'pending'] || statusConfig.pending;
-                      const Icon = config.icon;
-                      const StatusIcon = status.icon;
-                      const isCredit = ['topup', 'refund'].includes(tx.transaction_type);
-                      const isNew = newTransactionIds.has(tx.id);
+                    <AnimatePresence>
+                      {txs.map((tx, index) => {
+                        const config = transactionConfig[tx.transaction_type] || transactionConfig.adjustment;
+                        const status = statusConfig[tx.status || 'pending'] || statusConfig.pending;
+                        const Icon = config.icon;
+                        const StatusIcon = status.icon;
+                        const isCredit = ['topup', 'refund'].includes(tx.transaction_type);
+                        const isNew = newTransactionIds.has(tx.id);
 
-                      return (
-                        <motion.div
-                          key={tx.id}
-                          initial={isNew ? { opacity: 0, x: isRTL ? -20 : 20 } : false}
-                          animate={{ opacity: 1, x: 0 }}
-                          className={cn(
-                            "px-4 py-3 flex items-center justify-between gap-3 hover:bg-muted/30 transition-colors cursor-pointer group",
-                            isNew && "bg-primary/5 animate-pulse"
-                          )}
-                          onClick={() => tx.status === 'succeeded' && handleViewReceipt(tx)}
-                        >
-                          {/* Left: Icon & Info */}
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0", config.bgColor)}>
-                              <Icon className={cn("h-5 w-5", config.color)} />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2">
-                                <p className="font-medium text-sm truncate">
-                                  {isRTL ? config.label_ar : config.label_en}
-                                </p>
-                                <Badge variant="outline" className={cn("text-[10px] gap-1 px-1.5 py-0", status.bgColor)}>
-                                  <StatusIcon className={cn("h-2.5 w-2.5", status.color)} />
-                                  {isRTL ? status.label_ar : status.label_en}
-                                </Badge>
-                              </div>
-                              <p className="text-xs text-muted-foreground truncate">
-                                {formatTime(tx.created_at)} • {tx.description_ar || tx.description || '-'}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Right: Amount & Download */}
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className={cn(
-                              "font-bold text-sm whitespace-nowrap",
-                              isCredit ? "text-emerald-600" : "text-red-600"
-                            )} dir="ltr">
-                              {isCredit ? "+" : "-"}{formatCurrency(tx.amount)} {tx.currency}
-                            </span>
-                            {tx.status === 'succeeded' && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleViewReceipt(tx);
-                                }}
-                              >
-                                <Download className="h-4 w-4" />
-                              </Button>
+                        return (
+                          <motion.div
+                            key={tx.id}
+                            variants={itemVariants}
+                            initial={isNew ? { opacity: 0, scale: 0.95, backgroundColor: "hsl(var(--primary) / 0.2)" } : "hidden"}
+                            animate="visible"
+                            whileHover={{ backgroundColor: "hsl(var(--muted) / 0.5)" }}
+                            className={cn(
+                              "px-4 py-3 flex items-center justify-between gap-3 cursor-pointer group transition-colors",
+                              isNew && "bg-primary/5"
                             )}
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                            onClick={() => tx.status === 'succeeded' && handleViewReceipt(tx)}
+                          >
+                            {/* Icon & Info */}
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              <motion.div 
+                                whileHover={{ scale: 1.1 }}
+                                className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0", config.bgColor)}
+                              >
+                                <Icon className={cn("h-5 w-5", config.color)} />
+                              </motion.div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <p className="font-medium text-sm truncate">
+                                    {isRTL ? config.label_ar : config.label_en}
+                                  </p>
+                                  <Badge variant="outline" className={cn("text-[10px] gap-1 px-1.5 py-0", status.bgColor)}>
+                                    <StatusIcon className={cn("h-2.5 w-2.5", status.color)} />
+                                    {isRTL ? status.label_ar : status.label_en}
+                                  </Badge>
+                                </div>
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {formatTime(tx.created_at)} • {isRTL ? (tx.description_ar || tx.description || '-') : (tx.description || tx.description_ar || '-')}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Amount & Download */}
+                            <div className="flex items-center gap-2 shrink-0">
+                              <motion.span 
+                                initial={isNew ? { scale: 1.2 } : false}
+                                animate={{ scale: 1 }}
+                                className={cn(
+                                  "font-bold text-sm whitespace-nowrap",
+                                  isCredit ? "text-emerald-600" : "text-red-600"
+                                )} 
+                                dir="ltr"
+                              >
+                                {isCredit ? "+" : "-"}{formatCurrency(tx.amount)} {tx.currency}
+                              </motion.span>
+                              {tx.status === 'succeeded' && (
+                                <motion.div
+                                  initial={{ opacity: 0 }}
+                                  whileHover={{ scale: 1.1 }}
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleViewReceipt(tx);
+                                    }}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </Button>
+                                </motion.div>
+                              )}
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
                   </div>
                 ))}
-              </div>
+              </motion.div>
             )}
           </ScrollArea>
         </CardContent>

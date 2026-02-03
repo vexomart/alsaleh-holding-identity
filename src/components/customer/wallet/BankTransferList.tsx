@@ -87,7 +87,7 @@ export function BankTransferList() {
 
   if (isLoading) {
     return (
-      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm" dir={isRTL ? "rtl" : "ltr"}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
@@ -107,7 +107,7 @@ export function BankTransferList() {
 
   if (!transfers || transfers.length === 0) {
     return (
-      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm" dir={isRTL ? "rtl" : "ltr"}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
@@ -117,7 +117,11 @@ export function BankTransferList() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-12 text-muted-foreground">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-12 text-muted-foreground"
+          >
             <div className="h-16 w-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
               <Banknote className="h-8 w-8 opacity-50" />
             </div>
@@ -127,19 +131,22 @@ export function BankTransferList() {
             <p className="text-xs text-muted-foreground mt-1">
               {isRTL ? "ستظهر طلباتك هنا" : "Your requests will appear here"}
             </p>
-          </div>
+          </motion.div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+    <Card className="border border-border/50 bg-card/50 backdrop-blur-sm" dir={isRTL ? "rtl" : "ltr"}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+          <motion.div 
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center"
+          >
             <Building2 className="h-4 w-4 text-amber-500" />
-          </div>
+          </motion.div>
           {isRTL ? "طلبات التحويل البنكي" : "Bank Transfer Requests"}
         </CardTitle>
       </CardHeader>
@@ -153,6 +160,7 @@ export function BankTransferList() {
               key={transfer.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.2, delay: index * 0.05 }}
               className="p-4 border border-border/50 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
             >
