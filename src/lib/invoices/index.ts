@@ -75,31 +75,67 @@ export {
 } from './audit';
 
 /**
- * Combined function: Generate and download invoice (HTML version - like voucher)
+ * Combined function: Generate and download invoice as PDF directly
  */
 export async function downloadInvoicePdf(data: import('./types').InvoiceData): Promise<boolean> {
   const { normalizeInvoiceData, isLegacyInvoice } = await import('./types');
-  const { downloadInvoiceAsHtml, previewInvoice } = await import('./invoice-template');
+  const { renderInvoiceHTML } = await import('./invoice-template');
   const { toast } = await import('sonner');
+  const html2canvas = (await import('html2canvas')).default;
+  const { jsPDF } = await import('jspdf');
   
   try {
     const invoiceNumber = isLegacyInvoice(data) ? data.invoiceNumber : data.invoice_number;
     const normalizedData = normalizeInvoiceData(data);
     
-    console.log('[Invoice] Opening invoice preview for:', invoiceNumber);
+    console.log('[Invoice] Generating PDF for:', invoiceNumber);
     
-    // Open in preview window (same as voucher behavior)
-    const win = previewInvoice(normalizedData);
+    // Create hidden container for rendering
+    const container = document.createElement('div');
+    container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 800px; background: white;';
+    container.innerHTML = renderInvoiceHTML(normalizedData, { showAnimations: false, printMode: true });
+    document.body.appendChild(container);
     
-    if (win) {
-      toast.success('تم فتح الفاتورة - يمكنك الطباعة أو الحفظ كـ PDF');
-      return true;
-    } else {
-      // Fallback to HTML download
-      downloadInvoiceAsHtml(normalizedData);
-      toast.success('تم تحميل الفاتورة');
-      return true;
-    }
+    // Wait for fonts to load
+    await document.fonts.ready;
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Get the invoice container
+    const invoiceEl = container.querySelector('.invoice-container') as HTMLElement;
+    if (!invoiceEl) throw new Error('Invoice container not found');
+    
+    // Render to canvas
+    const canvas = await html2canvas(invoiceEl, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      allowTaint: true,
+    });
+    
+    // Create PDF
+    const imgWidth = 210; // A4 width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    const pdf = new jsPDF({
+      orientation: imgHeight > 297 ? 'portrait' : 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+    
+    const imgData = canvas.toDataURL('image/png', 1.0);
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    
+    // Download
+    const filename = `invoice-${invoiceNumber}.pdf`;
+    pdf.save(filename);
+    
+    // Cleanup
+    document.body.removeChild(container);
+    
+    console.log('[Invoice] ✅ PDF downloaded:', filename);
+    toast.success('تم تحميل الفاتورة بنجاح');
+    return true;
   } catch (error) {
     console.error('[Invoice] Download failed:', error);
     toast.error('فشل تحميل الفاتورة');
