@@ -5,6 +5,7 @@
 @import url('./styles/typography.css');
 @import url('./styles/rtl-fixes.css');
 @import url('./styles/finance-animations.css');
+@import url('./styles/mobile-app.css');
 
 /* ===========================================
    RTL ROOT BOUNDARY - Hard RTL Isolation

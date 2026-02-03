@@ -1,0 +1,373 @@
+/**
+ * Mobile-First App-like Styles
+ * Enhanced touch, safe areas, and app-like UI
+ */
+
+/* ===================================
+   SAFE AREA INSETS (notch/home bar)
+   =================================== */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-all {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* ===================================
+   TOUCH OPTIMIZATIONS
+   =================================== */
+@media (pointer: coarse) {
+  /* Larger touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* No hover effects on touch */
+  .hover\:scale-105:hover {
+    transform: none;
+  }
+
+  /* Remove hover shadows on touch */
+  .hover\:shadow-lg:hover {
+    box-shadow: none;
+  }
+}
+
+/* Active state feedback */
+.touch-feedback:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* ===================================
+   BOTTOM NAVIGATION
+   =================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid hsl(var(--border) / 0.5);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 56px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.bottom-nav-item.active {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.1);
+}
+
+/* ===================================
+   APP-LIKE CARDS
+   =================================== */
+.app-card {
+  background: hsl(var(--card));
+  border-radius: 16px;
+  border: 1px solid hsl(var(--border) / 0.5);
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.app-card:active {
+  transform: scale(0.98);
+}
+
+.app-card.interactive {
+  cursor: pointer;
+}
+
+.app-card.interactive:hover {
+  border-color: hsl(var(--primary) / 0.3);
+  box-shadow: 0 8px 24px -8px hsl(var(--primary) / 0.1);
+}
+
+/* ===================================
+   MOBILE HEADER
+   =================================== */
+.mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: 56px;
+  background: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid hsl(var(--border) / 0.5);
+  padding-top: env(safe-area-inset-top);
+  display: flex;
+  align-items: center;
+  padding-inline: 16px;
+}
+
+/* ===================================
+   BOTTOM SHEETS
+   =================================== */
+.bottom-sheet-content {
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 2px;
+  margin: 8px auto 16px;
+}
+
+/* ===================================
+   STICKY FOOTER ACTIONS
+   =================================== */
+.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid hsl(var(--border) / 0.5);
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+/* ===================================
+   SEARCH BAR
+   =================================== */
+.search-bar {
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 12px;
+  height: 48px;
+  padding-inline: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--primary) / 0.5);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+/* ===================================
+   SKELETON LOADING
+   =================================== */
+.skeleton-pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ===================================
+   EMPTY STATE
+   =================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: hsl(var(--muted) / 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+/* ===================================
+   MOBILE RESPONSIVE UTILITIES
+   =================================== */
+@media (max-width: 767px) {
+  /* Hide on mobile */
+  .hide-mobile {
+    display: none !important;
+  }
+
+  /* Mobile-specific spacing */
+  .p-mobile {
+    padding: 16px;
+  }
+
+  .gap-mobile {
+    gap: 12px;
+  }
+
+  /* Mobile card adjustments */
+  .card-mobile {
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  /* Mobile text sizes */
+  .text-mobile-lg {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .text-mobile-sm {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  /* Mobile button sizes */
+  .btn-mobile {
+    min-height: 48px;
+    padding-inline: 24px;
+    font-size: 1rem;
+  }
+
+  /* Content with bottom nav space */
+  .content-with-nav {
+    padding-bottom: 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  /* Show on desktop only */
+  .show-desktop {
+    display: block;
+  }
+
+  /* Hide on desktop */
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ===================================
+   RTL MOBILE ADJUSTMENTS
+   =================================== */
+[dir="rtl"] {
+  .bottom-nav {
+    direction: rtl;
+  }
+
+  .mobile-header {
+    direction: rtl;
+  }
+
+  /* Chevron flip for RTL */
+  .rtl-flip {
+    transform: scaleX(-1);
+  }
+}
+
+/* ===================================
+   PULL TO REFRESH INDICATOR
+   =================================== */
+.pull-indicator {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.pull-indicator.active {
+  opacity: 1;
+}
+
+/* ===================================
+   SWIPE ACTIONS
+   =================================== */
+.swipe-action-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-action {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.swipe-action.start {
+  right: 100%;
+}
+
+.swipe-action.end {
+  left: 100%;
+}
+
+/* ===================================
+   KEYBOARD AWARE
+   =================================== */
+@media (max-height: 500px) {
+  /* Compact mode when keyboard is open */
+  .keyboard-aware {
+    padding-bottom: 0 !important;
+  }
+
+  .sticky-footer {
+    position: relative;
+  }
+}
+
+/* ===================================
+   DARK MODE MOBILE
+   =================================== */
+.dark {
+  .bottom-nav {
+    background: hsl(var(--background) / 0.98);
+    border-color: hsl(var(--border) / 0.3);
+  }
+
+  .mobile-header {
+    background: hsl(var(--background) / 0.98);
+    border-color: hsl(var(--border) / 0.3);
+  }
+
+  .app-card {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border) / 0.3);
+  }
+}
