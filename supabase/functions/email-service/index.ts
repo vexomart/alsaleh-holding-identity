@@ -33,8 +33,8 @@ class EmailProvider {
 
   constructor() {
     this.resendApiKey = Deno.env.get('RESEND_API_KEY') || '';
-    this.fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'no-reply@ash-holding.sa';
-    this.fromName = Deno.env.get('RESEND_FROM_NAME') || 'ASH Holding';
+    this.fromEmail = Deno.env.get('RESEND_FROM_EMAIL') || 'info@ash-holding.sa';
+    this.fromName = Deno.env.get('RESEND_FROM_NAME') || 'ASH HOLDING';
   }
 
   async sendViaResend(to: string, subject: string, html: string): Promise<{

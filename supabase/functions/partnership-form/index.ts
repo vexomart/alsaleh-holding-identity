@@ -56,9 +56,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to company
     const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
+      from: "ASH HOLDING <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl">
@@ -300,9 +300,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to customer
     const customerEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [formData.email],
-      bcc: ["info@alialshehriholding.com"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl">

@@ -91,7 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
       const resetUrl = `${req.headers.get('origin') || 'https://alialshehriholding.com'}/reset-password?token=${resetToken}`;
       
       const emailResponse = await resend.emails.send({
-        from: "شركة الشهري للتطوير <noreply@alialshehriholding.com>",
+        from: "ASH HOLDING <info@ash-holding.sa>",
         to: [email],
         subject: "إعادة تعيين كلمة المرور - ASH Holding",
         html: `

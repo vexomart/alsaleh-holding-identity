@@ -635,8 +635,8 @@ serve(async (req: Request) => {
 
     // Send admin notification email
     const adminEmailResponse = await resend.emails.send({
-      from: "ASH HOLDING - نظام الاستشارات <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "ASH HOLDING - نظام الاستشارات <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `🔔 طلب استشارة عاجل - ${serviceName} من ${requestData.name}`,
       html: adminEmailTemplate,
     });
@@ -650,11 +650,11 @@ serve(async (req: Request) => {
 
     // Send client confirmation email
     const clientEmailResponse = await resend.emails.send({
-      from: "ASH HOLDING <info@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [requestData.email],
       subject: `✅ تأكيد طلب الاستشارة - ASH HOLDING`,
       html: clientEmailTemplate,
-      replyTo: "info@alialshehriholding.com"
+      replyTo: "info@ash-holding.sa"
     });
 
     console.log("استجابة إيميل العميل:", clientEmailResponse);

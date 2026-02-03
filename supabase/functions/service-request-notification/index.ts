@@ -130,8 +130,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل للشركة
     const companyEmailResponse = await resend.emails.send({
-      from: "نظام طلبات الخدمة <noreply@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
+      from: "نظام طلبات الخدمة - ASH HOLDING <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
       subject: `طلب خدمة جديد - ${getServiceTypeInArabic(requestData.serviceType)}`,
       html: `
         <!DOCTYPE html>
@@ -231,9 +231,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال إيميل تأكيد للعميل
     const customerEmailResponse = await resend.emails.send({
-      from: "آل الشهري القابضة <noreply@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [requestData.customerInfo.email],
-      subject: "تأكيد استلام طلب الخدمة - آل الشهري القابضة",
+      subject: "تأكيد استلام طلب الخدمة - ASH HOLDING",
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">

@@ -83,9 +83,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد إلكتروني للشركة
     const companyEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
-      to: ["info@alialshehriholding.com"],
-      bcc: ["info@alialshehriholding.com"],
+      from: "ASH HOLDING <info@ash-holding.sa>",
+      to: ["info@ash-holding.sa"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
@@ -481,9 +481,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // إرسال بريد تأكيد للعميل
     const customerEmailResponse = await resend.emails.send({
-      from: "Ali AlShehri Holding <info@alialshehriholding.com>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [customerInfo.email],
-      bcc: ["info@alialshehriholding.com"],
+      bcc: ["info@ash-holding.sa"],
       html: `
         <!DOCTYPE html>
         <html dir="rtl" lang="ar">
