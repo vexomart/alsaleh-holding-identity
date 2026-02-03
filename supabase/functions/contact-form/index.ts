@@ -5,7 +5,7 @@ const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 interface ContactFormData {
@@ -346,7 +346,7 @@ const handler = async (req: Request): Promise<Response> => {
                             <div class="contact-item">
                                 <span style="font-size: 18px; margin-left: 10px;">📧</span>
                                 <span style="color: #374151; margin-left: 8px; font-weight: 500;">البريد الإلكتروني:</span>
-                                <a href="mailto:info@alialshehriholding.com" style="direction: ltr;">info@alialshehriholding.com</a>
+                                <a href="mailto:info@ash-holding.sa" style="direction: ltr;">info@ash-holding.sa</a>
                             </div>
                             <div class="contact-item">
                                 <span style="font-size: 18px; margin-left: 10px;">📞</span>
@@ -376,7 +376,7 @@ const handler = async (req: Request): Promise<Response> => {
                     </p>
                     <div style="color: #64748b; font-size: 14px; margin: 15px 0;">
                         🌐 للمزيد من المعلومات: 
-                        <a href="https://alialshehriholding.com" style="color: #059669; direction: ltr;">alialshehriholding.com</a>
+                        <a href="https://ash-holding.sa" style="color: #059669; direction: ltr;">ash-holding.sa</a>
                     </div>
                     <div style="border-top: 1px solid #374151; padding-top: 15px; font-size: 12px; opacity: 0.8;">
                         نظام المراسلات التلقائي - تم الإرسال من النظام
