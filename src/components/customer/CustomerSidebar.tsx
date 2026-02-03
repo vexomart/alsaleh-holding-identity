@@ -1,12 +1,14 @@
 /**
  * Customer Dashboard Sidebar
  * TRUE RTL - Sidebar on RIGHT in Arabic mode
+ * Mobile-optimized with premium design
  */
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
   Sidebar,
@@ -24,6 +26,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -38,6 +41,8 @@ import {
   FileSignature,
   Receipt,
   Landmark,
+  Trash2,
+  X,
 } from "lucide-react";
 
 interface NavItem {
@@ -46,6 +51,7 @@ interface NavItem {
   icon: React.ElementType;
   href: string;
   badge?: number;
+  section?: "main" | "finance" | "account";
 }
 
 export function CustomerSidebar() {
@@ -54,7 +60,8 @@ export function CustomerSidebar() {
   const { language, isRTL } = useLanguage();
   const { user, profile, signOut } = useAuth();
   const { unreadCount } = useNotifications({ userId: user?.id });
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
 
   const navItems: NavItem[] = [
     {
@@ -62,48 +69,56 @@ export function CustomerSidebar() {
       titleEn: "Overview",
       icon: LayoutDashboard,
       href: "/app",
+      section: "main",
     },
     {
       titleAr: "طلباتي",
       titleEn: "My Orders",
       icon: ShoppingCart,
       href: "/app/orders",
+      section: "main",
     },
     {
       titleAr: "الخدمات",
       titleEn: "Services",
       icon: Package,
       href: "/app/services",
+      section: "main",
     },
     {
       titleAr: "عقودي",
       titleEn: "My Contracts",
       icon: FileSignature,
       href: "/app/contracts",
+      section: "main",
     },
     {
       titleAr: "فواتيري",
       titleEn: "My Invoices",
       icon: Receipt,
       href: "/app/invoices",
+      section: "main",
     },
     {
       titleAr: "المحفظة",
       titleEn: "Wallet",
       icon: Wallet,
       href: "/app/wallet",
-    },
-    {
-      titleAr: "الإحالات",
-      titleEn: "Referrals",
-      icon: User,
-      href: "/app/referrals",
+      section: "finance",
     },
     {
       titleAr: "التمويل",
       titleEn: "Finance",
       icon: Landmark,
       href: "/app/finance",
+      section: "finance",
+    },
+    {
+      titleAr: "الإحالات",
+      titleEn: "Referrals",
+      icon: User,
+      href: "/app/referrals",
+      section: "account",
     },
     {
       titleAr: "الإشعارات",
@@ -111,14 +126,20 @@ export function CustomerSidebar() {
       icon: Bell,
       href: "/app/notifications",
       badge: unreadCount,
+      section: "account",
     },
     {
       titleAr: "الملف الشخصي",
       titleEn: "Profile",
       icon: User,
       href: "/app/profile",
+      section: "account",
     },
   ];
+
+  const mainItems = navItems.filter(item => item.section === "main");
+  const financeItems = navItems.filter(item => item.section === "finance");
+  const accountItems = navItems.filter(item => item.section === "account");
 
   const isActive = (href: string) => {
     if (href === "/app") {
@@ -129,6 +150,10 @@ export function CustomerSidebar() {
 
   const handleNavigation = (href: string) => {
     navigate(href);
+    // Close mobile sidebar after navigation
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -139,6 +164,57 @@ export function CustomerSidebar() {
   // RTL-aware collapse icons - flip direction
   const CollapseIcon = isRTL ? ChevronRight : ChevronLeft;
   const ExpandIcon = isRTL ? ChevronLeft : ChevronRight;
+
+  const renderNavItem = (item: NavItem) => {
+    const Icon = item.icon;
+    const active = isActive(item.href);
+
+    return (
+      <SidebarMenuItem key={item.href}>
+        <SidebarMenuButton
+          onClick={() => handleNavigation(item.href)}
+          tooltip={isRTL ? item.titleAr : item.titleEn}
+          className={cn(
+            "w-full rounded-xl transition-all duration-200 gap-3",
+            // Mobile: larger touch targets
+            isMobile ? "h-12 px-4" : "h-11",
+            active
+              ? "bg-primary/15 text-primary font-medium border border-primary/20"
+              : "text-slate-300 hover:bg-white/5 hover:text-white"
+          )}
+        >
+          <Icon className={cn("h-5 w-5 shrink-0", active && "text-primary")} />
+          <span className="flex-1 text-start text-sm">
+            {isRTL ? item.titleAr : item.titleEn}
+          </span>
+          {item.badge && item.badge > 0 && (
+            <Badge 
+              variant="destructive" 
+              className="h-5 min-w-5 px-1.5 text-xs font-bold"
+            >
+              {item.badge > 99 ? "99+" : item.badge}
+            </Badge>
+          )}
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  };
+
+  const renderSection = (items: NavItem[], labelAr: string, labelEn: string) => (
+    <SidebarGroup className="mb-2">
+      <SidebarGroupLabel className={cn(
+        "text-slate-500 text-xs font-semibold uppercase tracking-wider mb-2 px-3",
+        isRTL && "text-right"
+      )}>
+        {isRTL ? labelAr : labelEn}
+      </SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu className="space-y-1">
+          {items.map(renderNavItem)}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 
   return (
     <Sidebar 
@@ -151,120 +227,148 @@ export function CustomerSidebar() {
       )}
     >
       {/* Header */}
-      <SidebarHeader className="border-b border-white/10 p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
-            <Building2 className="h-5 w-5 text-white" />
-          </div>
-          {state === "expanded" && (
-            <div className="flex flex-col text-start">
-              <span className="font-bold text-sm text-white">
-                ASH
-              </span>
-              <span className="text-xs text-slate-400">
-                {isRTL ? "بوابة العميل" : "Customer Portal"}
-              </span>
+      <SidebarHeader className={cn(
+        "border-b border-white/10",
+        isMobile ? "p-4" : "p-4"
+      )}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className={cn(
+              "rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg",
+              isMobile ? "w-11 h-11" : "w-10 h-10"
+            )}>
+              <Building2 className={cn("text-white", isMobile ? "h-6 w-6" : "h-5 w-5")} />
             </div>
+            {(state === "expanded" || isMobile) && (
+              <div className="flex flex-col text-start">
+                <span className={cn("font-bold text-white", isMobile ? "text-base" : "text-sm")}>
+                  ASH
+                </span>
+                <span className={cn("text-slate-400", isMobile ? "text-sm" : "text-xs")}>
+                  {isRTL ? "بوابة العميل" : "Customer Portal"}
+                </span>
+              </div>
+            )}
+          </div>
+          
+          {/* Mobile close button */}
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpenMobile(false)}
+              className="h-10 w-10 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl"
+            >
+              <X className="h-5 w-5" />
+            </Button>
           )}
         </div>
       </SidebarHeader>
 
       {/* Navigation */}
-      <SidebarContent className="px-2 py-4">
-        <SidebarGroup>
-          <SidebarGroupLabel className={cn(
-            "text-slate-400 text-xs mb-2",
-            isRTL && "text-right"
-          )}>
-            {isRTL ? "القائمة الرئيسية" : "Main Menu"}
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.href);
-
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      onClick={() => handleNavigation(item.href)}
-                      tooltip={isRTL ? item.titleAr : item.titleEn}
-                      className={cn(
-                        "w-full h-11 rounded-lg transition-all duration-200 gap-3",
-                        active
-                          ? "bg-amber-500/20 text-amber-400 font-medium"
-                          : "text-slate-300 hover:bg-white/5 hover:text-white"
-                      )}
-                    >
-                      <Icon className={cn("h-5 w-5 shrink-0", active && "text-amber-400")} />
-                      <span className="flex-1 text-start">
-                        {isRTL ? item.titleAr : item.titleEn}
-                      </span>
-                      {item.badge && item.badge > 0 && (
-                        <Badge 
-                          variant="destructive" 
-                          className="h-5 min-w-5 px-1.5 text-xs font-bold"
-                        >
-                          {item.badge > 99 ? "99+" : item.badge}
-                        </Badge>
-                      )}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarContent className={cn(
+        "flex-1 overflow-y-auto",
+        isMobile ? "px-3 py-4" : "px-2 py-4"
+      )}>
+        {/* Main Navigation */}
+        {renderSection(mainItems, "القائمة الرئيسية", "Main Menu")}
+        
+        {/* Finance Section */}
+        {renderSection(financeItems, "المالية", "Finance")}
+        
+        {/* Account Section */}
+        {renderSection(accountItems, "الحساب", "Account")}
       </SidebarContent>
 
       {/* Footer */}
-      <SidebarFooter className="border-t border-white/10 p-3">
-        {/* User Info - No flex-row-reverse needed, dir handles it */}
+      <SidebarFooter className={cn(
+        "border-t border-white/10",
+        isMobile ? "p-4 pb-safe" : "p-3"
+      )}>
+        {/* User Info */}
         <div className={cn(
-          "flex items-center gap-3 p-2 rounded-lg bg-white/5 mb-2",
-          state === "collapsed" && "justify-center"
+          "flex items-center gap-3 rounded-xl bg-white/5 mb-3",
+          isMobile ? "p-3" : "p-2",
+          state === "collapsed" && !isMobile && "justify-center"
         )}>
-          <Avatar className="h-9 w-9 border-2 border-amber-500/30">
+          <Avatar className={cn(
+            "border-2 border-primary/30",
+            isMobile ? "h-11 w-11" : "h-9 w-9"
+          )}>
             <AvatarImage src={profile?.avatar_url || undefined} />
-            <AvatarFallback className="bg-amber-500/20 text-amber-400 text-sm font-bold">
+            <AvatarFallback className="bg-primary/20 text-primary font-bold">
               {(profile?.full_name || profile?.email)?.[0]?.toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
-          {state === "expanded" && (
+          {(state === "expanded" || isMobile) && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">
+              <p className={cn(
+                "font-medium text-white truncate",
+                isMobile ? "text-base" : "text-sm"
+              )}>
                 {profile?.full_name || profile?.email?.split("@")[0]}
               </p>
-              <p className="text-xs text-slate-400 truncate" dir="ltr">
+              <p className={cn(
+                "text-slate-400 truncate",
+                isMobile ? "text-sm" : "text-xs"
+              )} dir="ltr">
                 {profile?.email}
               </p>
             </div>
           )}
         </div>
 
-        {/* Actions - dir handles order */}
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleSidebar}
-            className="flex-1 h-9 text-slate-300 hover:text-white hover:bg-white/10"
-          >
-            {state === "expanded" ? (
-              <CollapseIcon className="h-4 w-4" />
-            ) : (
-              <ExpandIcon className="h-4 w-4" />
-            )}
-          </Button>
+        {/* Actions */}
+        <div className={cn(
+          "flex gap-2",
+          isMobile && "flex-col"
+        )}>
+          {/* Collapse toggle - only on desktop */}
+          {!isMobile && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleSidebar}
+              className="flex-1 h-9 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl"
+            >
+              {state === "expanded" ? (
+                <CollapseIcon className="h-4 w-4" />
+              ) : (
+                <ExpandIcon className="h-4 w-4" />
+              )}
+            </Button>
+          )}
+          
+          {/* Clear Cache - Mobile */}
+          {isMobile && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                sessionStorage.clear();
+                localStorage.removeItem('app_cache_v36');
+                window.location.reload();
+              }}
+              className="h-11 text-slate-300 hover:text-amber-400 hover:bg-amber-500/10 rounded-xl justify-start gap-3 px-4"
+            >
+              <Trash2 className="h-5 w-5" />
+              <span>{isRTL ? "مسح الكاش" : "Clear Cache"}</span>
+            </Button>
+          )}
+          
+          {/* Sign Out */}
           <Button
             variant="ghost"
             size="sm"
             onClick={handleSignOut}
-            className="flex-1 h-9 text-slate-300 hover:text-red-400 hover:bg-red-500/10"
+            className={cn(
+              "text-slate-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl",
+              isMobile ? "h-11 justify-start gap-3 px-4" : "flex-1 h-9"
+            )}
           >
-            <LogOut className={cn("h-4 w-4", isRTL && "scale-x-[-1]")} />
-            {state === "expanded" && (
-              <span className="ms-2">{isRTL ? "خروج" : "Logout"}</span>
+            <LogOut className={cn(isMobile ? "h-5 w-5" : "h-4 w-4", isRTL && "scale-x-[-1]")} />
+            {(state === "expanded" || isMobile) && (
+              <span className={cn(!isMobile && "ms-2")}>{isRTL ? "خروج" : "Logout"}</span>
             )}
           </Button>
         </div>
