@@ -142,12 +142,12 @@ export function QuickActionPillsV2({ isRTL }: QuickActionPillsV2Props) {
         <div className="flex-1 h-px bg-gradient-to-r from-border via-border to-transparent" />
       </motion.div>
 
-      {/* Pills Grid */}
+      {/* Pills Grid - Responsive */}
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="flex flex-wrap gap-3"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-wrap gap-2 sm:gap-3"
       >
         {actions.map((action, index) => (
           <motion.button
@@ -158,9 +158,12 @@ export function QuickActionPillsV2({ isRTL }: QuickActionPillsV2Props) {
             whileTap={{ scale: 0.97 }}
             className={cn(
               "group relative overflow-hidden",
-              "inline-flex items-center gap-3 h-12 px-5 rounded-xl font-medium",
+              "inline-flex items-center justify-center gap-2 sm:gap-3",
+              "h-11 sm:h-12 px-3 sm:px-5 rounded-xl font-medium",
               "transition-all duration-300 ease-out",
               "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+              // Make primary and accent full width on mobile
+              (action.variant === "primary" || action.variant === "accent") && "col-span-2 sm:col-span-1",
               action.variant === "primary" && [
                 "bg-gradient-to-r from-primary to-emerald-500 text-white",
                 "shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40",
@@ -188,25 +191,26 @@ export function QuickActionPillsV2({ isRTL }: QuickActionPillsV2Props) {
             {/* Icon */}
             <motion.div
               className={cn(
-                "relative",
+                "relative shrink-0",
                 action.variant === "secondary" && "text-muted-foreground group-hover:text-primary"
               )}
               animate={reducedMotion ? {} : index === 0 ? { rotate: [0, 90, 0] } : {}}
               transition={{ duration: 0.5, delay: 1 }}
             >
-              <action.icon className="h-4.5 w-4.5 shrink-0" />
+              <action.icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
             </motion.div>
 
             {/* Text */}
-            <span className="text-sm font-semibold">
+            <span className="text-xs sm:text-sm font-semibold truncate">
               {isRTL ? action.titleAr : action.titleEn}
             </span>
 
-            {/* Arrow */}
+            {/* Arrow - Hidden on mobile for space */}
             <motion.div
               initial={{ x: 0, opacity: 0.5 }}
               whileHover={{ x: 3, opacity: 1 }}
               className={cn(
+                "hidden sm:block shrink-0",
                 action.variant === "secondary" ? "text-muted-foreground/50" : "text-white/70"
               )}
             >
@@ -216,7 +220,7 @@ export function QuickActionPillsV2({ isRTL }: QuickActionPillsV2Props) {
             {/* Sparkle for primary */}
             {action.variant === "primary" && (
               <motion.div
-                className="absolute -top-1 -end-1"
+                className="absolute -top-1 -end-1 hidden sm:block"
                 animate={reducedMotion ? {} : { scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
