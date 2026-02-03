@@ -43,13 +43,18 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Simple cache versioning (no reload loop)
-const CACHE_KEY = 'app_cache_v32';
+// Force cache bust on version change
+const CACHE_KEY = 'app_cache_v35';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
+  // Clear old session keys
+  Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
   sessionStorage.setItem(CACHE_KEY, '1');
+  // Clear all caches
   if ('caches' in window) {
     caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
   }
+  // Force reload on first visit with new version
+  window.location.reload();
 }
 
 const root = document.getElementById("root");
