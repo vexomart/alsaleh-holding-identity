@@ -89,64 +89,75 @@ export function InvoiceTotalsCard({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className={cn('space-y-4 invoice-container', className)}
+      className={cn('space-y-4', className)}
     >
       {/* Featured Amount Box - Like Voucher */}
-      <div className="bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30 border-3 border-teal-600 rounded-2xl p-6 text-center relative overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="relative bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-950/40 dark:to-emerald-950/40 border-[3px] border-teal-600 rounded-2xl p-6 sm:p-8 text-center overflow-hidden"
+      >
         {/* Shimmer effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" 
-             style={{ backgroundSize: '200% 100%' }} />
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+          style={{ 
+            backgroundSize: '200% 100%',
+            animation: 'shimmer 3s ease-in-out infinite'
+          }} 
+        />
         
-        <p className="text-sm font-bold text-teal-700 dark:text-teal-400 mb-2">
+        <p className="relative text-sm font-bold text-teal-700 dark:text-teal-400 mb-2 flex items-center justify-center gap-2">
+          <span>💰</span>
           {isRTL ? 'إجمالي المبلغ المستحق' : 'Total Amount Due'}
         </p>
-        <p dir="ltr" className="font-mono font-bold text-4xl text-teal-700 dark:text-teal-400 ltr-token mb-2">
+        <p dir="ltr" className="relative font-mono font-extrabold text-3xl sm:text-4xl text-teal-700 dark:text-teal-400 mb-2">
           {formatCurrency(total)}
         </p>
-        <p className="text-sm text-teal-600 dark:text-teal-500">
+        <p className="relative text-sm text-teal-600 dark:text-teal-500">
           {isRTL ? 'ريال سعودي' : currency}
         </p>
         {isRTL && (
-          <p className="text-sm text-slate-700 dark:text-slate-300 mt-3 font-medium">
+          <p className="relative text-sm text-slate-700 dark:text-slate-300 mt-4 pt-4 border-t border-dashed border-teal-400 font-medium">
             {numberToArabicWords(total)}
           </p>
         )}
-      </div>
+      </motion.div>
 
       {/* Totals Breakdown */}
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <div className="w-full max-w-md">
-          <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-lg">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-lg">
             {/* Subtotal */}
-            <div className="flex justify-between items-center px-5 py-3.5 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">
+            <div className="flex justify-between items-center px-5 py-4 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">
               <span className="text-sm text-muted-foreground">
-                {isRTL ? 'الإجمالي قبل الضريبة' : 'Subtotal'}
+                {isRTL ? 'المجموع الفرعي (قبل الضريبة)' : 'Subtotal'}
               </span>
-              <span dir="ltr" className="font-mono text-sm tabular-nums text-foreground ltr-token">
+              <span dir="ltr" className="font-mono text-sm font-semibold tabular-nums text-foreground">
                 {formatCurrency(subtotal)} {currency}
               </span>
             </div>
 
             {/* VAT */}
-            <div className="flex justify-between items-center px-5 py-3.5 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+            <div className="flex justify-between items-center px-5 py-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
               <span className="text-sm text-muted-foreground">
                 {isRTL 
                   ? `ضريبة القيمة المضافة (${Math.round(vatRate * 100)}%)`
                   : `VAT (${Math.round(vatRate * 100)}%)`
                 }
               </span>
-              <span dir="ltr" className="font-mono text-sm tabular-nums text-foreground ltr-token">
+              <span dir="ltr" className="font-mono text-sm font-semibold tabular-nums text-foreground">
                 {formatCurrency(vatAmount)} {currency}
               </span>
             </div>
 
-            {/* Grand Total - Teal Theme */}
-            <div className="flex justify-between items-center px-5 py-4 bg-gradient-to-r from-teal-700 to-emerald-600 text-white">
+            {/* Grand Total - Teal Theme like Voucher */}
+            <div className="flex justify-between items-center px-5 py-5 bg-gradient-to-r from-teal-700 to-emerald-600 text-white">
               <span className="font-bold text-sm uppercase tracking-widest">
                 {isRTL ? 'الإجمالي شامل الضريبة' : 'Total Due'}
               </span>
               <div className="text-end">
-                <span dir="ltr" className="font-mono font-bold text-2xl tabular-nums ltr-token text-amber-400">
+                <span dir="ltr" className="font-mono font-extrabold text-xl sm:text-2xl tabular-nums text-amber-400">
                   {formatCurrency(total)}
                 </span>
                 <span className="text-sm text-white/70 ms-2">{currency}</span>
@@ -163,6 +174,13 @@ export function InvoiceTotalsCard({
           : 'All amounts in SAR and include VAT'
         }
       </p>
+
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </motion.div>
   );
 }

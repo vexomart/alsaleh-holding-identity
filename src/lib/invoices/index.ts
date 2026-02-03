@@ -1,6 +1,7 @@
 /**
  * INVOICES MODULE
  * Clean export for invoice PDF generation system
+ * Now using HTML template like disbursement voucher
  */
 
 // Types
@@ -46,10 +47,17 @@ export {
   smartDirection,
 } from './rtl';
 
-// PDF Component
-export { InvoicePdf } from './InvoicePdf';
+// HTML Template System (NEW - Like Voucher)
+export {
+  renderInvoiceHTML,
+  previewInvoice,
+  downloadInvoiceAsHtml,
+  printInvoice,
+  type InvoiceRenderOptions,
+} from './invoice-template';
 
-// Generator
+// Legacy PDF Component (kept for backward compatibility)
+export { InvoicePdf } from './InvoicePdf';
 export { generateInvoicePdf, generateInvoicePdfDataUrl } from './generateInvoicePdf';
 
 // Download
@@ -67,26 +75,30 @@ export {
 } from './audit';
 
 /**
- * Combined function: Generate and download invoice PDF
+ * Combined function: Generate and download invoice (HTML version - like voucher)
  */
 export async function downloadInvoicePdf(data: import('./types').InvoiceData): Promise<boolean> {
-  const { generateInvoicePdf } = await import('./generateInvoicePdf');
-  const { downloadBlob } = await import('./download');
-  const { isLegacyInvoice } = await import('./types');
+  const { normalizeInvoiceData, isLegacyInvoice } = await import('./types');
+  const { downloadInvoiceAsHtml, previewInvoice } = await import('./invoice-template');
   const { toast } = await import('sonner');
   
   try {
     const invoiceNumber = isLegacyInvoice(data) ? data.invoiceNumber : data.invoice_number;
-    console.log('[Invoice] Generating PDF for:', invoiceNumber);
+    const normalizedData = normalizeInvoiceData(data);
     
-    const blob = await generateInvoicePdf(data);
-    const result = downloadBlob(blob, `فاتورة-${invoiceNumber}.pdf`);
+    console.log('[Invoice] Opening invoice preview for:', invoiceNumber);
     
-    if (result.success) {
-      toast.success('تم تحميل الفاتورة بنجاح');
+    // Open in preview window (same as voucher behavior)
+    const win = previewInvoice(normalizedData);
+    
+    if (win) {
+      toast.success('تم فتح الفاتورة - يمكنك الطباعة أو الحفظ كـ PDF');
       return true;
     } else {
-      throw new Error(result.error || 'Download failed');
+      // Fallback to HTML download
+      downloadInvoiceAsHtml(normalizedData);
+      toast.success('تم تحميل الفاتورة');
+      return true;
     }
   } catch (error) {
     console.error('[Invoice] Download failed:', error);
