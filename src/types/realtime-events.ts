@@ -120,6 +120,30 @@ export interface BankTransferEventPayload {
   status?: string;
 }
 
+// Notification Events (Bidirectional Admin-Customer)
+export type NotificationEventType =
+  | 'notification.new'
+  | 'notification.read'
+  | 'notification.deleted'
+  | 'notification.bulk_read';
+
+export interface NotificationEventPayload {
+  event: NotificationEventType;
+  notification_id?: string;
+  user_id?: string;
+  tenant_id?: string;
+  timestamp: string;
+  notification?: {
+    id: string;
+    title: string;
+    title_ar?: string;
+    message?: string;
+    type: string;
+    severity?: string;
+    role_target?: string;
+  };
+}
+
 // Combined Event Types
 export type RealtimeEventType = 
   | ServiceEventType 
@@ -127,7 +151,8 @@ export type RealtimeEventType =
   | CustomerNotificationEvent
   | WalletEventType
   | TransactionEventType
-  | BankTransferEventType;
+  | BankTransferEventType
+  | NotificationEventType;
 
 export interface RealtimeEvent<T = unknown> {
   type: RealtimeEventType;

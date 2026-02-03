@@ -1,50 +1,30 @@
 /**
- * Notifications Center - Enterprise Grade Design
- * Real-time notification management with proactive alerts
+ * Notifications Center - Redesigned Enterprise UI
+ * Full real-time bidirectional notifications between Admin & Customers
  */
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bell, 
   Check,
   CheckCheck,
   Trash2,
-  Filter,
   Search,
-  AlertCircle,
-  Info,
-  CheckCircle,
-  AlertTriangle,
-  Settings,
   RefreshCw,
-  MoreVertical,
-  Clock,
-  Mail,
-  MessageSquare,
-  Receipt,
-  CreditCard,
-  Wallet,
-  Package,
-  FileSignature,
-  FileCheck,
-  FileX,
   Wifi,
   WifiOff,
+  Send,
+  Filter,
+  X,
+  Sparkles,
+  Zap,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
@@ -52,42 +32,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
-import { useProactiveNotifications } from '@/hooks/useProactiveNotifications';
+import { useNotificationsRealtime } from '@/hooks/useNotificationsRealtime';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { NotificationStats } from './NotificationStats';
+import { NotificationItem } from './NotificationItem';
+import { SendNotificationDialog } from './SendNotificationDialog';
 import type { NotificationType, NotificationSeverity } from '@/types/notifications';
 
-const typeConfig: Record<NotificationType, { 
-  icon: React.ElementType; 
-  color: string; 
-  bgColor: string;
-  labelAr: string;
-  labelEn: string;
-}> = {
-  info: { icon: Info, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30', labelAr: 'معلومات', labelEn: 'Info' },
-  warning: { icon: AlertTriangle, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30', labelAr: 'تحذير', labelEn: 'Warning' },
-  success: { icon: CheckCircle, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30', labelAr: 'نجاح', labelEn: 'Success' },
-  error: { icon: AlertCircle, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30', labelAr: 'خطأ', labelEn: 'Error' },
-  system: { icon: Settings, color: 'text-purple-600', bgColor: 'bg-purple-100 dark:bg-purple-900/30', labelAr: 'نظام', labelEn: 'System' },
-  invoice_due: { icon: Receipt, color: 'text-orange-600', bgColor: 'bg-orange-100 dark:bg-orange-900/30', labelAr: 'فاتورة مستحقة', labelEn: 'Invoice Due' },
-  payment_failed: { icon: CreditCard, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30', labelAr: 'فشل الدفع', labelEn: 'Payment Failed' },
-  low_wallet_balance: { icon: Wallet, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30', labelAr: 'رصيد منخفض', labelEn: 'Low Balance' },
-  order_status_changed: { icon: Package, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30', labelAr: 'تغيير حالة الطلب', labelEn: 'Order Status' },
-  order_delayed: { icon: Clock, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30', labelAr: 'طلب متأخر', labelEn: 'Order Delayed' },
-  contract_pending_signature: { icon: FileSignature, color: 'text-indigo-600', bgColor: 'bg-indigo-100 dark:bg-indigo-900/30', labelAr: 'عقد بانتظار التوقيع', labelEn: 'Pending Signature' },
-  contract_signed: { icon: FileCheck, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30', labelAr: 'عقد موقع', labelEn: 'Contract Signed' },
-  contract_expired: { icon: FileX, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30', labelAr: 'عقد منتهي', labelEn: 'Contract Expired' },
-  admin_message: { icon: MessageSquare, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30', labelAr: 'رسالة إدارية', labelEn: 'Admin Message' },
+const typeLabels: Record<NotificationType, { ar: string; en: string }> = {
+  info: { ar: 'معلومات', en: 'Info' },
+  warning: { ar: 'تحذير', en: 'Warning' },
+  success: { ar: 'نجاح', en: 'Success' },
+  error: { ar: 'خطأ', en: 'Error' },
+  system: { ar: 'نظام', en: 'System' },
+  invoice_due: { ar: 'فاتورة مستحقة', en: 'Invoice Due' },
+  payment_failed: { ar: 'فشل الدفع', en: 'Payment Failed' },
+  low_wallet_balance: { ar: 'رصيد منخفض', en: 'Low Balance' },
+  order_status_changed: { ar: 'تغيير حالة الطلب', en: 'Order Status' },
+  order_delayed: { ar: 'طلب متأخر', en: 'Order Delayed' },
+  contract_pending_signature: { ar: 'عقد بانتظار التوقيع', en: 'Pending Signature' },
+  contract_signed: { ar: 'عقد موقع', en: 'Contract Signed' },
+  contract_expired: { ar: 'عقد منتهي', en: 'Contract Expired' },
+  admin_message: { ar: 'رسالة إدارية', en: 'Admin Message' },
 };
 
-const severityConfig: Record<NotificationSeverity, { label: string; labelAr: string; color: string }> = {
-  info: { label: 'Info', labelAr: 'معلومات', color: 'text-blue-600' },
-  warning: { label: 'Warning', labelAr: 'تحذير', color: 'text-amber-600' },
-  critical: { label: 'Critical', labelAr: 'حرج', color: 'text-red-600' },
+const severityLabels: Record<NotificationSeverity, { ar: string; en: string }> = {
+  info: { ar: 'عادي', en: 'Normal' },
+  warning: { ar: 'تحذير', en: 'Warning' },
+  critical: { ar: 'حرج', en: 'Critical' },
 };
 
 export function NotificationsPage() {
@@ -99,82 +76,67 @@ export function NotificationsPage() {
   const [severityFilter, setSeverityFilter] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sendDialogOpen, setSendDialogOpen] = useState(false);
 
   const {
     notifications,
     unreadCount,
     isLoading,
     isConnected,
+    connectionStatus,
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    sendNotification,
     refetch,
-  } = useProactiveNotifications({
+  } = useNotificationsRealtime({
     userId: user?.id,
     tenantId: profile?.tenant_id || undefined,
     roleTarget: 'admin',
     limit: 100,
-    enableRealtime: true,
     showToasts: true,
   });
 
-  // Stats
-  const stats = {
+  // Calculate stats
+  const stats = useMemo(() => ({
     total: notifications.length,
     unread: unreadCount,
     info: notifications.filter(n => n.severity === 'info').length,
     warning: notifications.filter(n => n.severity === 'warning').length,
     critical: notifications.filter(n => n.severity === 'critical').length,
-  };
+  }), [notifications, unreadCount]);
 
   // Filter notifications
-  const filteredNotifications = notifications.filter(notif => {
-    const matchesSearch = 
-      (notif.title?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
-      (notif.title_ar?.includes(searchQuery) || false) ||
-      (notif.message?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
-    
-    const matchesType = typeFilter === 'all' || notif.type === typeFilter;
-    const matchesSeverity = severityFilter === 'all' || notif.severity === severityFilter;
-    const matchesTab = activeTab === 'all' || (activeTab === 'unread' && !notif.is_read);
-    
-    return matchesSearch && matchesType && matchesSeverity && matchesTab;
-  });
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter(notif => {
+      const matchesSearch = 
+        (notif.title?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+        (notif.title_ar?.includes(searchQuery) || false) ||
+        (notif.message?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
+      
+      const matchesType = typeFilter === 'all' || notif.type === typeFilter;
+      const matchesSeverity = severityFilter === 'all' || notif.severity === severityFilter;
+      const matchesTab = activeTab === 'all' || (activeTab === 'unread' && !notif.is_read);
+      
+      return matchesSearch && matchesType && matchesSeverity && matchesTab;
+    });
+  }, [notifications, searchQuery, typeFilter, severityFilter, activeTab]);
 
   // Bulk actions
-  const handleMarkAsRead = async (ids: string[]) => {
-    for (const id of ids) {
+  const handleBulkMarkAsRead = async () => {
+    for (const id of selectedIds) {
       await markAsRead(id);
     }
     setSelectedIds([]);
     toast({ title: language === 'ar' ? 'تم التحديث' : 'Updated' });
   };
 
-  const handleDeleteNotifications = async (ids: string[]) => {
-    for (const id of ids) {
+  const handleBulkDelete = async () => {
+    for (const id of selectedIds) {
       await deleteNotification(id);
     }
     setSelectedIds([]);
     toast({ title: language === 'ar' ? 'تم الحذف' : 'Deleted' });
-  };
-
-  // Format time
-  const formatTime = (dateString: string | null) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 60) {
-      return language === 'ar' ? `منذ ${diffMins} دقيقة` : `${diffMins}m ago`;
-    } else if (diffHours < 24) {
-      return language === 'ar' ? `منذ ${diffHours} ساعة` : `${diffHours}h ago`;
-    } else {
-      return language === 'ar' ? `منذ ${diffDays} يوم` : `${diffDays}d ago`;
-    }
   };
 
   const toggleSelect = (id: string) => {
@@ -183,13 +145,28 @@ export function NotificationsPage() {
     );
   };
 
-  const selectAll = () => {
-    if (selectedIds.length === filteredNotifications.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(filteredNotifications.map(n => n.id));
+  // Send notification handler
+  const handleSendNotification = async (data: any) => {
+    try {
+      await sendNotification({
+        ...data,
+        body_ar: data.message_ar,
+        body_en: data.message,
+      });
+      toast({
+        title: language === 'ar' ? 'تم الإرسال بنجاح' : 'Sent Successfully',
+        description: language === 'ar' ? 'تم إرسال الإشعار للمستخدمين' : 'Notification sent to users',
+      });
+    } catch (error) {
+      toast({
+        title: language === 'ar' ? 'خطأ' : 'Error',
+        description: language === 'ar' ? 'فشل إرسال الإشعار' : 'Failed to send notification',
+        variant: 'destructive',
+      });
     }
   };
+
+  const hasActiveFilters = typeFilter !== 'all' || severityFilter !== 'all' || searchQuery;
 
   if (isLoading) {
     return (
@@ -200,10 +177,10 @@ export function NotificationsPage() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} className="h-20" />
+            <Skeleton key={i} className="h-24" />
           ))}
         </div>
-        <Skeleton className="h-96" />
+        <Skeleton className="h-[500px]" />
       </div>
     );
   }
@@ -214,264 +191,264 @@ export function NotificationsPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <motion.div
+              initial={{ rotate: -20 }}
+              animate={{ rotate: 0 }}
+              className="p-2 rounded-xl bg-primary/10"
+            >
               <Bell className="h-6 w-6 text-primary" />
-              {language === 'ar' ? 'مركز الإشعارات' : 'Notification Center'}
-            </h1>
-            {isConnected ? (
-              <Badge variant="outline" className="gap-1 text-green-600 border-green-600">
-                <Wifi className="h-3 w-3" />
-                {language === 'ar' ? 'مباشر' : 'Live'}
-              </Badge>
-            ) : (
-              <Badge variant="outline" className="gap-1 text-muted-foreground">
-                <WifiOff className="h-3 w-3" />
-                {language === 'ar' ? 'غير متصل' : 'Offline'}
-              </Badge>
-            )}
+            </motion.div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">
+                {language === 'ar' ? 'مركز الإشعارات' : 'Notification Center'}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {language === 'ar' ? 'إدارة الإشعارات والتنبيهات الفورية' : 'Manage instant notifications & alerts'}
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">
-            {language === 'ar' ? 'إدارة جميع الإشعارات والتنبيهات الاستباقية' : 'Manage all notifications and proactive alerts'}
-          </p>
         </div>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center gap-3">
+          {/* Connection Status */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium",
+              isConnected 
+                ? "bg-green-500/10 text-green-600 dark:text-green-400" 
+                : connectionStatus === 'connecting'
+                  ? "bg-amber-500/10 text-amber-600"
+                  : "bg-muted text-muted-foreground"
+            )}
+          >
+            {isConnected ? (
+              <>
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                >
+                  <Zap className="h-4 w-4" />
+                </motion.div>
+                {language === 'ar' ? 'متصل مباشر' : 'Live'}
+              </>
+            ) : connectionStatus === 'connecting' ? (
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" />
+                {language === 'ar' ? 'جاري الاتصال' : 'Connecting'}
+              </>
+            ) : (
+              <>
+                <WifiOff className="h-4 w-4" />
+                {language === 'ar' ? 'غير متصل' : 'Offline'}
+              </>
+            )}
+          </motion.div>
+
           <Button variant="outline" size="sm" onClick={refetch} className="gap-2">
             <RefreshCw className="h-4 w-4" />
             {language === 'ar' ? 'تحديث' : 'Refresh'}
           </Button>
+
           {stats.unread > 0 && (
             <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-2">
               <CheckCheck className="h-4 w-4" />
-              {language === 'ar' ? 'تحديد الكل كمقروء' : 'Mark all as read'}
+              {language === 'ar' ? 'قراءة الكل' : 'Read all'}
             </Button>
           )}
+
+          <Button onClick={() => setSendDialogOpen(true)} className="gap-2">
+            <Send className="h-4 w-4" />
+            {language === 'ar' ? 'إرسال إشعار' : 'Send Notification'}
+          </Button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {[
-          { label: language === 'ar' ? 'الإجمالي' : 'Total', value: stats.total, icon: Bell, color: 'text-primary' },
-          { label: language === 'ar' ? 'غير مقروء' : 'Unread', value: stats.unread, icon: Mail, color: 'text-blue-500' },
-          { label: language === 'ar' ? 'معلومات' : 'Info', value: stats.info, icon: Info, color: 'text-sky-500' },
-          { label: language === 'ar' ? 'تحذيرات' : 'Warnings', value: stats.warning, icon: AlertTriangle, color: 'text-amber-500' },
-          { label: language === 'ar' ? 'حرج' : 'Critical', value: stats.critical, icon: AlertCircle, color: 'text-red-500' },
-        ].map((stat, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <stat.icon className={cn("h-5 w-5", stat.color)} />
-                  <span className="text-2xl font-bold">{stat.value}</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">{stat.label}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+      {/* Stats */}
+      <NotificationStats 
+        {...stats} 
+        language={language} 
+      />
 
       {/* Main Content */}
-      <Card className="border-0 shadow-lg">
-        <CardHeader className="border-b">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <Card className="border shadow-lg overflow-hidden">
+        <CardHeader className="border-b bg-muted/30 p-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            {/* Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="all" className="gap-2">
+              <TabsList className="bg-background">
+                <TabsTrigger value="all" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {language === 'ar' ? 'الكل' : 'All'}
-                  <Badge variant="secondary" className="h-5 text-xs">{stats.total}</Badge>
+                  <Badge variant="secondary" className="h-5 px-1.5 text-xs">{stats.total}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value="unread" className="gap-2">
+                <TabsTrigger value="unread" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   {language === 'ar' ? 'غير مقروء' : 'Unread'}
                   {stats.unread > 0 && (
-                    <Badge className="h-5 text-xs bg-primary">{stats.unread}</Badge>
+                    <Badge className="h-5 px-1.5 text-xs bg-red-500">{stats.unread}</Badge>
                   )}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
 
+            {/* Filters */}
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="relative flex-1 md:w-64">
+              <div className="relative flex-1 lg:w-64">
                 <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder={language === 'ar' ? 'بحث...' : 'Search...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="ps-10"
+                  className="ps-10 bg-background"
                 />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute end-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                    onClick={() => setSearchQuery('')}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
               </div>
+              
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-[130px]">
+                <SelectTrigger className="w-[140px] bg-background">
+                  <Filter className="h-4 w-4 me-2 text-muted-foreground" />
                   <SelectValue placeholder={language === 'ar' ? 'النوع' : 'Type'} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{language === 'ar' ? 'جميع الأنواع' : 'All Types'}</SelectItem>
-                  {Object.entries(typeConfig).map(([key, config]) => (
+                  {Object.entries(typeLabels).map(([key, labels]) => (
                     <SelectItem key={key} value={key}>
-                      {language === 'ar' ? config.labelAr : config.labelEn}
+                      {language === 'ar' ? labels.ar : labels.en}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              
               <Select value={severityFilter} onValueChange={setSeverityFilter}>
-                <SelectTrigger className="w-[130px]">
+                <SelectTrigger className="w-[120px] bg-background">
                   <SelectValue placeholder={language === 'ar' ? 'الأهمية' : 'Severity'} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{language === 'ar' ? 'الكل' : 'All'}</SelectItem>
-                  {Object.entries(severityConfig).map(([key, config]) => (
+                  {Object.entries(severityLabels).map(([key, labels]) => (
                     <SelectItem key={key} value={key}>
-                      {language === 'ar' ? config.labelAr : config.label}
+                      {language === 'ar' ? labels.ar : labels.en}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setTypeFilter('all');
+                    setSeverityFilter('all');
+                  }}
+                  className="text-muted-foreground"
+                >
+                  <X className="h-4 w-4 me-1" />
+                  {language === 'ar' ? 'مسح الفلاتر' : 'Clear'}
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>
 
         <CardContent className="p-0">
           {/* Bulk Actions */}
-          {selectedIds.length > 0 && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 p-4 bg-muted/50 border-b"
-            >
-              <span className="text-sm text-muted-foreground">
-                {selectedIds.length} {language === 'ar' ? 'محدد' : 'selected'}
-              </span>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => handleMarkAsRead(selectedIds)}
-                className="gap-2"
+          <AnimatePresence>
+            {selectedIds.length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="flex items-center gap-3 px-4 py-3 bg-primary/5 border-b"
               >
-                <Check className="h-4 w-4" />
-                {language === 'ar' ? 'تحديد كمقروء' : 'Mark as read'}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => handleDeleteNotifications(selectedIds)}
-                className="gap-2 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-                {language === 'ar' ? 'حذف' : 'Delete'}
-              </Button>
-            </motion.div>
-          )}
+                <Badge variant="secondary">
+                  {selectedIds.length} {language === 'ar' ? 'محدد' : 'selected'}
+                </Badge>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleBulkMarkAsRead}
+                  className="gap-2"
+                >
+                  <Check className="h-4 w-4" />
+                  {language === 'ar' ? 'تحديد كمقروء' : 'Mark as read'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleBulkDelete}
+                  className="gap-2 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  {language === 'ar' ? 'حذف' : 'Delete'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedIds([])}
+                >
+                  {language === 'ar' ? 'إلغاء التحديد' : 'Clear selection'}
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Notifications List */}
           <ScrollArea className="h-[500px]">
             {filteredNotifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                <Bell className="h-12 w-12 mb-3 opacity-50" />
-                <p>{language === 'ar' ? 'لا توجد إشعارات' : 'No notifications'}</p>
-              </div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center justify-center py-16 text-muted-foreground"
+              >
+                <div className="p-4 rounded-full bg-muted/50 mb-4">
+                  <Sparkles className="h-10 w-10 opacity-50" />
+                </div>
+                <p className="text-lg font-medium">
+                  {language === 'ar' ? 'لا توجد إشعارات' : 'No notifications'}
+                </p>
+                <p className="text-sm">
+                  {language === 'ar' ? 'ستظهر الإشعارات الجديدة هنا' : 'New notifications will appear here'}
+                </p>
+              </motion.div>
             ) : (
-              <div className="divide-y">
-                <AnimatePresence>
-                  {filteredNotifications.map((notif, index) => {
-                    const config = typeConfig[notif.type] || typeConfig.info;
-                    const Icon = config.icon;
-
-                    return (
-                      <motion.div
-                        key={notif.id}
-                        initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: isRTL ? -20 : 20 }}
-                        transition={{ delay: index * 0.02 }}
-                        className={cn(
-                          "flex items-start gap-4 p-4 hover:bg-muted/50 transition-colors cursor-pointer",
-                          !notif.is_read && "bg-primary/5"
-                        )}
-                        dir={isRTL ? "rtl" : "ltr"}
-                      >
-                        <Checkbox
-                          checked={selectedIds.includes(notif.id)}
-                          onCheckedChange={() => toggleSelect(notif.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-
-                        <div className={cn("p-2.5 rounded-lg shrink-0", config.bgColor)}>
-                          <Icon className={cn("h-5 w-5", config.color)} />
-                        </div>
-
-                        <div className="flex-1 min-w-0" onClick={() => !notif.is_read && markAsRead(notif.id)}>
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <p className={cn("font-medium", !notif.is_read && "text-foreground")}>
-                                  {language === 'ar' ? notif.title_ar || notif.title : notif.title}
-                                </p>
-                                {notif.severity === 'critical' && (
-                                  <Badge variant="destructive" className="text-xs">
-                                    {language === 'ar' ? 'حرج' : 'Critical'}
-                                  </Badge>
-                                )}
-                                {notif.severity === 'warning' && (
-                                  <Badge variant="outline" className="text-xs text-amber-600 border-amber-600">
-                                    {language === 'ar' ? 'تحذير' : 'Warning'}
-                                  </Badge>
-                                )}
-                              </div>
-                              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                                {language === 'ar' 
-                                  ? notif.body_ar || notif.message_ar || notif.message 
-                                  : notif.body_en || notif.message}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              {!notif.is_read && (
-                                <div className="w-2 h-2 rounded-full bg-primary" />
-                              )}
-                              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {formatTime(notif.created_at)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align={isRTL ? "start" : "end"}>
-                            {!notif.is_read && (
-                              <DropdownMenuItem onClick={() => markAsRead(notif.id)}>
-                                <Check className="h-4 w-4 me-2" />
-                                {language === 'ar' ? 'تحديد كمقروء' : 'Mark as read'}
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => deleteNotification(notif.id)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4 me-2" />
-                              {language === 'ar' ? 'حذف' : 'Delete'}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
+              <AnimatePresence mode="popLayout">
+                {filteredNotifications.map((notif, index) => (
+                  <NotificationItem
+                    key={notif.id}
+                    notification={notif}
+                    isSelected={selectedIds.includes(notif.id)}
+                    onSelect={() => toggleSelect(notif.id)}
+                    onMarkAsRead={() => markAsRead(notif.id)}
+                    onDelete={() => deleteNotification(notif.id)}
+                    language={language}
+                    isRTL={isRTL}
+                    index={index}
+                  />
+                ))}
+              </AnimatePresence>
             )}
           </ScrollArea>
         </CardContent>
       </Card>
+
+      {/* Send Dialog */}
+      <SendNotificationDialog
+        open={sendDialogOpen}
+        onOpenChange={setSendDialogOpen}
+        onSend={handleSendNotification}
+        language={language}
+      />
     </div>
   );
 }
