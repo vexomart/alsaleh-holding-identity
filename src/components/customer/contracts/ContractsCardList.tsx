@@ -1,9 +1,10 @@
 /**
  * ContractsCardList - Premium mobile-first card view
- * RTL-first with glassmorphism design
+ * Navigates to internal details page
  */
 
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,10 +13,7 @@ import {
   Calendar, 
   ArrowLeft, 
   ArrowRight, 
-  FileSignature, 
-  Download,
   ExternalLink,
-  Clock,
   CheckCircle2,
 } from 'lucide-react';
 import { CustomerContract } from './types';
@@ -48,13 +46,11 @@ const cardVariants = {
 export function ContractsCardList({
   contracts,
   isLoading,
-  onCardClick,
-  onSign,
-  onDownload,
   onViewOrder,
   selectedContractId,
 }: ContractsCardListProps) {
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const isRTL = language === 'ar';
 
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -75,6 +71,10 @@ export function ContractsCardList({
       month: 'short',
       day: 'numeric',
     }).format(new Date(dateString));
+  };
+
+  const handleNavigateToDetails = (contract: CustomerContract) => {
+    navigate(`/app/contracts/${contract.id}`);
   };
 
   if (isLoading) {
@@ -103,7 +103,7 @@ export function ContractsCardList({
                 ? 'border-teal-500 ring-2 ring-teal-500/20 shadow-lg shadow-teal-500/10' 
                 : 'border-border'
             )}
-            onClick={() => onCardClick(contract)}
+            onClick={() => handleNavigateToDetails(contract)}
           >
             {/* Top gradient bar based on status */}
             <div className={cn(
@@ -123,7 +123,6 @@ export function ContractsCardList({
                 isRTL && "flex-row-reverse"
               )}>
                 <div className="flex-1 min-w-0">
-                  {/* Service/Contract Name */}
                   <h3 className="font-semibold text-base truncate mb-2 text-foreground">
                     {contract.service
                       ? (isRTL 
@@ -177,7 +176,7 @@ export function ContractsCardList({
                 )}
               </div>
 
-              {/* Footer: Dates + Actions */}
+              {/* Footer: Dates + View Button */}
               <div className={cn(
                 "flex items-center justify-between gap-2 pt-3 border-t border-border/50",
                 isRTL && "flex-row-reverse"
@@ -187,65 +186,20 @@ export function ContractsCardList({
                     <Calendar className="h-3.5 w-3.5" />
                     {formatDate(contract.created_at)}
                   </span>
-                  {contract.updated_at !== contract.created_at && (
-                    <span className={cn("flex items-center gap-1.5", isRTL && "flex-row-reverse")}>
-                      <Clock className="h-3.5 w-3.5" />
-                      {formatDate(contract.updated_at)}
-                    </span>
-                  )}
                 </div>
                 
-                <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
-                  {/* Primary CTA based on status */}
-                  {contract.status === 'pending_signature' && onSign ? (
-                    <Button 
-                      variant="default" 
-                      size="sm" 
-                      className={cn(
-                        "gap-1.5 h-9",
-                        "bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700",
-                        "shadow-md shadow-indigo-500/30"
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSign(contract);
-                      }}
-                    >
-                      <FileSignature className="h-3.5 w-3.5" />
-                      {isRTL ? 'توقيع' : 'Sign'}
-                    </Button>
-                  ) : contract.status === 'signed' && onDownload ? (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className={cn(
-                        "gap-1.5 h-9",
-                        "border-teal-500 text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30",
-                        "shadow-sm"
-                      )}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDownload(contract);
-                      }}
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      PDF
-                    </Button>
-                  ) : null}
-                  
-                  {/* View Details */}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className={cn(
-                      "gap-1 text-muted-foreground hover:text-teal-600 h-9",
-                      isRTL && "flex-row-reverse"
-                    )}
-                  >
-                    {isRTL ? 'التفاصيل' : 'Details'}
-                    <ArrowIcon className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
+                {/* View Details Button */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className={cn(
+                    "gap-1.5 text-teal-600 dark:text-teal-400 hover:text-teal-700 hover:bg-teal-50 dark:hover:bg-teal-900/30 h-9",
+                    isRTL && "flex-row-reverse"
+                  )}
+                >
+                  {isRTL ? 'عرض التفاصيل' : 'View Details'}
+                  <ArrowIcon className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             
@@ -277,23 +231,15 @@ function ContractsCardSkeleton() {
                 <Skeleton className="h-5 w-3/4 mb-2" />
                 <Skeleton className="h-6 w-28 rounded-full" />
               </div>
-              <div className="space-y-1">
-                <Skeleton className="h-12 w-28 rounded-lg" />
-              </div>
+              <Skeleton className="h-14 w-28 rounded-lg" />
             </div>
             <div className="flex gap-2 mb-3">
               <Skeleton className="h-7 w-32 rounded-lg" />
               <Skeleton className="h-7 w-24 rounded-lg" />
             </div>
             <div className="flex items-center justify-between pt-3 border-t">
-              <div className="flex gap-3">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton className="h-9 w-20 rounded-lg" />
-                <Skeleton className="h-9 w-24 rounded-lg" />
-              </div>
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-9 w-28 rounded-lg" />
             </div>
           </div>
         </div>

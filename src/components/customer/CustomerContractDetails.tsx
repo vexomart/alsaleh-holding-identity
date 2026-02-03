@@ -307,24 +307,41 @@ export function CustomerContractDetails() {
               {contract.status === 'pending_signature' && (
                 <Button
                   onClick={() => setIsSignDialogOpen(true)}
-                  className="gap-2"
+                  className="gap-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700"
                 >
                   <FileSignature className="h-4 w-4" />
                   توقيع العقد
                 </Button>
               )}
+              {/* Download button for signed contracts */}
               {contract.status === 'signed' && (
                 <Button
                   onClick={handleDownloadPdf}
                   disabled={isGeneratingPdf}
-                  className="gap-2"
+                  className="gap-2 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700"
                 >
                   {isGeneratingPdf ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <Download className="h-4 w-4" />
                   )}
-                  تحميل PDF
+                  تحميل عقد الخدمة PDF
+                </Button>
+              )}
+              {/* Download button for approved/pending_admin_approval contracts */}
+              {(contract.status === 'pending_admin_approval' || contract.status === 'pre_approved_by_customer') && (
+                <Button
+                  onClick={handleDownloadPdf}
+                  disabled={isGeneratingPdf}
+                  variant="outline"
+                  className="gap-2 border-teal-500 text-teal-600 hover:bg-teal-50"
+                >
+                  {isGeneratingPdf ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                  معاينة العقد PDF
                 </Button>
               )}
             </div>

@@ -155,7 +155,7 @@ export function CustomerContractsCenter() {
   return (
     <section 
       dir={isRTL ? 'rtl' : 'ltr'} 
-      className={cn("space-y-6 pb-6", isRTL ? "text-right" : "text-left")}
+      className={cn("space-y-4 pb-6", isRTL ? "text-right" : "text-left")}
     >
       {/* Premium Header */}
       <ContractsHeader
@@ -169,17 +169,17 @@ export function CustomerContractsCenter() {
         hasActiveFilters={hasActiveFilters}
       />
 
-      {/* Content Area */}
-      <div className="space-y-6">
-        {/* KPI Strip */}
-        <AnimationWrapper {...pageAnimation}>
-          <ContractsKPIStrip 
-            data={kpiStripData}
-            isLoading={isLoading && contracts.length === 0}
-            onFilterByStatus={handleFilterByStatus}
-          />
-        </AnimationWrapper>
+      {/* KPI Strip - directly after header */}
+      <AnimationWrapper {...pageAnimation}>
+        <ContractsKPIStrip 
+          data={kpiStripData}
+          isLoading={isLoading && contracts.length === 0}
+          onFilterByStatus={handleFilterByStatus}
+        />
+      </AnimationWrapper>
 
+      {/* Content Area */}
+      <div className="space-y-4">
         {/* Filters (Desktop inline, Mobile sheet) */}
         <ContractsFilters
           filters={filters}

@@ -1,10 +1,10 @@
 /**
  * ContractsTable - Enterprise data table for desktop view
- * RTL-first with proper column ordering and order reference
- * Uses BidiNumber for LTR numeric values in RTL context
+ * RTL-first - navigates to internal details page
  */
 
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
   Table,
@@ -26,19 +26,10 @@ import { cn } from '@/lib/utils';
 import { 
   ChevronUp, 
   ChevronDown,
-  Eye,
-  Download,
-  FileSignature,
-  MoreHorizontal,
+  ArrowLeft,
+  ArrowRight,
   ExternalLink,
 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { CustomerContract, ContractsSort, SortField } from './types';
 import { ContractStatusBadge } from './ContractStatusBadge';
 
@@ -54,7 +45,6 @@ interface ContractsTableProps {
   selectedContractId?: string;
 }
 
-// Table row animation variants
 const rowVariants = {
   hidden: { opacity: 0, y: 10 },
   visible: (i: number) => ({
@@ -74,22 +64,14 @@ export function ContractsTable({
   sort,
   onSort,
   onRowClick,
-  onSign,
-  onDownload,
   onViewOrder,
   selectedContractId,
 }: ContractsTableProps) {
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const isRTL = language === 'ar';
 
-  const formatCurrency = (amount: number | null, currency: string | null) => {
-    if (!amount) return '-';
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-US', {
-      style: 'currency',
-      currency: currency || 'SAR',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
@@ -126,6 +108,10 @@ export function ContractsTable({
     </button>
   );
 
+  const handleNavigateToDetails = (contract: CustomerContract) => {
+    navigate(`/app/contracts/${contract.id}`);
+  };
+
   if (isLoading) {
     return <ContractsTableSkeleton />;
   }
@@ -136,7 +122,6 @@ export function ContractsTable({
         <Table>
           <TableHeader className="bg-muted/40 sticky top-0 z-10">
             <TableRow className="hover:bg-transparent">
-              {/* RTL Column Order: Status - Service - Contract# - Order# - Created - Updated - Actions */}
               <TableHead className={cn("w-[140px]", isRTL && "text-right")}>
                 <SortableHeader field="status">
                   {isRTL ? 'الحالة' : 'Status'}
@@ -161,9 +146,8 @@ export function ContractsTable({
                   {isRTL ? 'آخر تحديث' : 'Updated'}
                 </SortableHeader>
               </TableHead>
-              {/* Actions column - Always on far left in RTL */}
               <TableHead className={cn("w-[100px]", isRTL ? "text-left" : "text-right")}>
-                {isRTL ? 'إجراءات' : 'Actions'}
+                {isRTL ? '' : ''}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -175,11 +159,11 @@ export function ContractsTable({
                 initial="hidden"
                 animate="visible"
                 variants={rowVariants}
-                onClick={() => onRowClick(contract)}
+                onClick={() => handleNavigateToDetails(contract)}
                 className={cn(
                   'cursor-pointer transition-colors border-b',
-                  'hover:bg-muted/50',
-                  selectedContractId === contract.id && 'bg-primary/5 hover:bg-primary/10'
+                  'hover:bg-teal-50/50 dark:hover:bg-teal-900/10',
+                  selectedContractId === contract.id && 'bg-teal-50 dark:bg-teal-900/20'
                 )}
               >
                 {/* Status */}
@@ -198,7 +182,7 @@ export function ContractsTable({
                   </span>
                 </TableCell>
                 
-                {/* Contract Number - Always LTR using BidiNumber */}
+                {/* Contract Number */}
                 <TableCell className={cn(isRTL && "text-right")}>
                   <BidiNumber 
                     value={contract.contract_number}
@@ -207,7 +191,7 @@ export function ContractsTable({
                   />
                 </TableCell>
                 
-                {/* Order Reference - LTR using BidiNumber */}
+                {/* Order Reference */}
                 <TableCell className={cn(isRTL && "text-right")}>
                   {contract.order ? (
                     <Tooltip>
@@ -217,7 +201,7 @@ export function ContractsTable({
                             e.stopPropagation();
                             onViewOrder?.(contract.order!.id);
                           }}
-                          className="inline-flex items-center gap-1 text-primary hover:underline"
+                          className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:underline"
                         >
                           <BidiNumber 
                             value={contract.order.order_number}
@@ -245,103 +229,16 @@ export function ContractsTable({
                   {formatDate(contract.updated_at)}
                 </TableCell>
                 
-                {/* Actions */}
+                {/* View Details Arrow */}
                 <TableCell className={cn(isRTL ? "text-left" : "text-right")}>
-                  <div className={cn("flex items-center gap-1", isRTL ? "justify-start" : "justify-end")}>
-                    {/* Quick Sign Button for pending_signature */}
-                    {contract.status === 'pending_signature' && onSign && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="default"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSign(contract);
-                            }}
-                          >
-                            <FileSignature className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {isRTL ? 'توقيع العقد' : 'Sign Contract'}
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-
-                    {/* Quick Download for signed */}
-                    {contract.status === 'signed' && onDownload && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onDownload(contract);
-                            }}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {isRTL ? 'تحميل PDF' : 'Download PDF'}
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-
-                    {/* More Actions Dropdown */}
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align={isRTL ? "start" : "end"}>
-                        <DropdownMenuItem onClick={() => onRowClick(contract)}>
-                          <Eye className="h-4 w-4 me-2" />
-                          {isRTL ? 'عرض التفاصيل' : 'View Details'}
-                        </DropdownMenuItem>
-                        {contract.status === 'pending_signature' && onSign && (
-                          <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            onSign(contract);
-                          }}>
-                            <FileSignature className="h-4 w-4 me-2" />
-                            {isRTL ? 'توقيع العقد' : 'Sign Contract'}
-                          </DropdownMenuItem>
-                        )}
-                        {contract.status === 'signed' && onDownload && (
-                          <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            onDownload(contract);
-                          }}>
-                            <Download className="h-4 w-4 me-2" />
-                            {isRTL ? 'تحميل PDF' : 'Download PDF'}
-                          </DropdownMenuItem>
-                        )}
-                        {contract.order && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              onViewOrder?.(contract.order!.id);
-                            }}>
-                              <ExternalLink className="h-4 w-4 me-2" />
-                              {isRTL ? 'عرض الطلب' : 'View Order'}
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700"
+                  >
+                    {isRTL ? 'عرض' : 'View'}
+                    <ArrowIcon className="h-4 w-4" />
+                  </Button>
                 </TableCell>
               </motion.tr>
             ))}
@@ -352,12 +249,10 @@ export function ContractsTable({
   );
 }
 
-// Skeleton loader for table
 function ContractsTableSkeleton() {
   return (
     <div className="rounded-xl border bg-card overflow-hidden">
       <div className="p-4 space-y-4">
-        {/* Header skeleton */}
         <div className="flex gap-4 pb-2 border-b">
           <Skeleton className="h-8 w-28" />
           <Skeleton className="h-8 flex-1" />
@@ -365,9 +260,8 @@ function ContractsTableSkeleton() {
           <Skeleton className="h-8 w-28" />
           <Skeleton className="h-8 w-24" />
           <Skeleton className="h-8 w-24" />
-          <Skeleton className="h-8 w-20" />
+          <Skeleton className="h-8 w-16" />
         </div>
-        {/* Row skeletons */}
         {[...Array(5)].map((_, i) => (
           <div key={i} className="flex gap-4 py-3 items-center">
             <Skeleton className="h-6 w-28 rounded-full" />
@@ -376,7 +270,7 @@ function ContractsTableSkeleton() {
             <Skeleton className="h-6 w-28" />
             <Skeleton className="h-6 w-24" />
             <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-6 w-16" />
           </div>
         ))}
       </div>
