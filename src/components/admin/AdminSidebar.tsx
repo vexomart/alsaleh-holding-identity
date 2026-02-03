@@ -373,7 +373,7 @@ export function AdminSidebar() {
                 className="flex flex-col overflow-hidden"
               >
               <span className="font-bold text-base text-white tracking-tight leading-tight">
-                  {language === "ar" ? "الصالح القابضة" : "AlSaleh Holding"}
+                  ASH HOLDING
                 </span>
                 <span className="text-xs text-slate-400 flex items-center gap-1.5 mt-0.5">
                   <Sparkles className="h-3 w-3 text-amber-400 animate-pulse" />
