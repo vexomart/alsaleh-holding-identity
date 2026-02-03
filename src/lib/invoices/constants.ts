@@ -10,7 +10,7 @@ export const SELLER_INFO = {
   cr: '1010123456',
   address_ar: 'الرياض، المملكة العربية السعودية',
   address_en: 'Riyadh, Kingdom of Saudi Arabia',
-  phone: '+966 11 123 4567',
+  phone: '0555812567',
   email: 'info@ash-holding.sa',
   website: 'ash-holding.sa',
 } as const;
