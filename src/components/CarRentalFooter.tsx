@@ -2,7 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { 
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
   Car,
   Phone,
   Mail,
@@ -28,11 +30,27 @@ const CarRentalFooter = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubscribed(true);
-    setEmail('');
-    setTimeout(() => setIsSubscribed(false), 3000);
+    
+    try {
+      const { error } = await supabase.functions.invoke('newsletter-subscribe', {
+        body: {
+          email,
+          source: 'car-rental-footer'
+        }
+      });
+
+      if (error) throw error;
+      
+      setIsSubscribed(true);
+      setEmail('');
+      toast.success('تم الاشتراك في النشرة الإخبارية بنجاح!');
+      setTimeout(() => setIsSubscribed(false), 3000);
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      toast.error('حدث خطأ أثناء الاشتراك. يرجى المحاولة مرة أخرى.');
+    }
   };
 
   const quickLinks = [

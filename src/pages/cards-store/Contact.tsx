@@ -43,36 +43,48 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const whatsappMessage = `
-🆔 رسالة جديدة من موقع البطاقات الإلكترونية
-
-👤 الاسم: ${formData.name}
-📧 البريد: ${formData.email}
-📱 الهاتف: ${formData.phone}
-📋 الموضوع: ${formData.subject}
-
-💬 الرسالة:
-${formData.message}
-    `;
+    setIsSubmitting(true);
     
-    const whatsappUrl = `https://wa.me/966500000000?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    toast({
-      title: "تم إرسال رسالتك بنجاح! 🎉",
-      description: "سيتم تحويلك لواتساب لإكمال المحادثة",
-    });
+    try {
+      const { error } = await (await import('@/integrations/supabase/client')).supabase.functions.invoke('contact-form', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          source: 'cards-store-contact'
+        }
+      });
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: ""
-    });
+      if (error) throw error;
+      
+      toast({
+        title: "تم إرسال رسالتك بنجاح! 🎉",
+        description: "سنتواصل معك في أقرب وقت ممكن",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "حدث خطأ",
+        description: "يرجى المحاولة مرة أخرى",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactMethods = [

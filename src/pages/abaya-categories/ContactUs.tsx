@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,12 +6,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { 
   Phone, Mail, MapPin, Clock, MessageCircle, Send, 
-  Instagram, Facebook, Twitter, Heart, Crown, Flower 
+  Instagram, Facebook, Twitter, Heart, Crown, Flower,
+  CheckCircle
 } from 'lucide-react';
 import AbayaHeader from '@/components/abaya-store/AbayaHeader';
 import AbayaFooter from '@/components/abaya-store/AbayaFooter';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const handleWhatsAppContact = () => {
     const message = "👗 أرغب في التواصل مع فريق متجر عبايتي";
     const phoneNumber = '966500000000';
@@ -19,10 +31,48 @@ const ContactUs = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted');
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('contact-form', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          source: 'abaya-store-contact'
+        }
+      });
+
+      if (error) throw error;
+      
+      setIsSubmitted(true);
+      toast.success('تم إرسال رسالتك بنجاح!');
+      
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      }, 3000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -115,65 +165,98 @@ const ContactUs = () => {
                   <p className="text-gray-600">سنتواصل معك في أقرب وقت ممكن</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {isSubmitted ? (
+                  <div className="text-center py-8">
+                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold mb-2">تم إرسال رسالتك بنجاح!</h3>
+                    <p className="text-gray-600">سنتواصل معك قريباً</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-gray-700 font-semibold mb-2">الاسم الكريم</label>
+                        <Input 
+                          name="name"
+                          type="text" 
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          placeholder="اكتبي اسمك هنا"
+                          className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-gray-700 font-semibold mb-2">رقم الهاتف</label>
+                        <Input 
+                          name="phone"
+                          type="tel" 
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="رقم هاتفك"
+                          className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                          required 
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">الاسم الكريم</label>
+                      <label className="block text-gray-700 font-semibold mb-2">البريد الإلكتروني</label>
                       <Input 
+                        name="email"
+                        type="email" 
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="بريدك الإلكتروني"
+                        className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                        required 
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-700 font-semibold mb-2">الموضوع</label>
+                      <Input 
+                        name="subject"
                         type="text" 
-                        placeholder="اكتبي اسمك هنا"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        placeholder="موضوع رسالتك"
                         className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
                         required 
                       />
                     </div>
+
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">رقم الهاتف</label>
-                      <Input 
-                        type="tel" 
-                        placeholder="رقم هاتفك"
-                        className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
+                      <label className="block text-gray-700 font-semibold mb-2">الرسالة</label>
+                      <Textarea 
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder="اكتبي رسالتك أو استفسارك هنا..."
+                        className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors min-h-32"
                         required 
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">البريد الإلكتروني</label>
-                    <Input 
-                      type="email" 
-                      placeholder="بريدك الإلكتروني"
-                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
-                      required 
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">الموضوع</label>
-                    <Input 
-                      type="text" 
-                      placeholder="موضوع رسالتك"
-                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors"
-                      required 
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">الرسالة</label>
-                    <Textarea 
-                      placeholder="اكتبي رسالتك أو استفسارك هنا..."
-                      className="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 transition-colors min-h-32"
-                      required 
-                    />
-                  </div>
-
-                  <Button 
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg"
-                  >
-                    <Send className="w-5 h-5 ml-2" />
-                    إرسال الرسالة
-                  </Button>
-                </form>
+                    <Button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-purple-600 to-rose-600 hover:from-purple-700 hover:to-rose-700 text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:shadow-lg disabled:opacity-50"
+                    >
+                      {isSubmitting ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          جاري الإرسال...
+                        </div>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5 ml-2" />
+                          إرسال الرسالة
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                )}
               </CardContent>
             </Card>
           </div>
