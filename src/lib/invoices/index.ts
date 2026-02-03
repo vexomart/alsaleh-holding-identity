@@ -90,41 +90,101 @@ export async function downloadInvoicePdf(data: import('./types').InvoiceData): P
     
     console.log('[Invoice] Generating PDF for:', invoiceNumber);
     
-    // Create hidden container for rendering
+    // Create visible container for proper rendering
     const container = document.createElement('div');
-    container.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 800px; background: white;';
+    container.style.cssText = `
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 794px;
+      min-height: 1123px;
+      background: white;
+      overflow: visible;
+      z-index: -1;
+    `;
     container.innerHTML = renderInvoiceHTML(normalizedData, { showAnimations: false, printMode: true });
     document.body.appendChild(container);
     
-    // Wait for fonts to load
+    // Wait for fonts and images to load
     await document.fonts.ready;
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     // Get the invoice container
     const invoiceEl = container.querySelector('.invoice-container') as HTMLElement;
     if (!invoiceEl) throw new Error('Invoice container not found');
     
-    // Render to canvas
+    // Force layout recalculation
+    invoiceEl.style.width = '794px';
+    invoiceEl.style.maxWidth = 'none';
+    invoiceEl.style.overflow = 'visible';
+    
+    // Get actual height
+    const actualHeight = invoiceEl.scrollHeight;
+    console.log('[Invoice] Content height:', actualHeight);
+    
+    // Render to canvas with full height
     const canvas = await html2canvas(invoiceEl, {
       scale: 2,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
       allowTaint: true,
+      width: 794,
+      height: actualHeight,
+      windowWidth: 794,
+      windowHeight: actualHeight,
+      scrollX: 0,
+      scrollY: 0,
     });
     
-    // Create PDF
-    const imgWidth = 210; // A4 width in mm
+    console.log('[Invoice] Canvas size:', canvas.width, 'x', canvas.height);
+    
+    // A4 dimensions in mm
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 10;
+    
+    // Calculate image dimensions
+    const imgWidth = pageWidth - (margin * 2);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
+    // Create PDF
     const pdf = new jsPDF({
-      orientation: imgHeight > 297 ? 'portrait' : 'portrait',
+      orientation: 'portrait',
       unit: 'mm',
       format: 'a4',
     });
     
-    const imgData = canvas.toDataURL('image/png', 1.0);
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    // Handle multi-page if content is too long
+    const usablePageHeight = pageHeight - (margin * 2);
+    
+    if (imgHeight <= usablePageHeight) {
+      // Single page
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+    } else {
+      // Multi-page
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      let heightLeft = imgHeight;
+      let position = margin;
+      let page = 0;
+      
+      while (heightLeft > 0) {
+        if (page > 0) {
+          pdf.addPage();
+          position = margin;
+        }
+        
+        const sourceY = page * usablePageHeight * (canvas.height / imgHeight);
+        const sourceHeight = Math.min(usablePageHeight * (canvas.height / imgHeight), canvas.height - sourceY);
+        const destHeight = Math.min(usablePageHeight, heightLeft);
+        
+        pdf.addImage(imgData, 'PNG', margin, position - (page * usablePageHeight), imgWidth, imgHeight);
+        
+        heightLeft -= usablePageHeight;
+        page++;
+      }
+    }
     
     // Download
     const filename = `invoice-${invoiceNumber}.pdf`;
