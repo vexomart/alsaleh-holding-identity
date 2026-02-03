@@ -72,19 +72,22 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "base64-js": path.resolve(__dirname, "./src/shims/base64-js.ts"),
-      "unicode-trie": path.resolve(__dirname, "./src/shims/unicode-trie.ts"),
-      "brotli/decompress": brotliDecompressShimPath,
-      "brotli": brotliShimPath,
+    alias: [
+      // Order matters! More specific paths first
+      { find: /^@\//, replacement: path.resolve(__dirname, "./src") + "/" },
+      { find: /^base64-js$/, replacement: path.resolve(__dirname, "./src/shims/base64-js.ts") },
+      { find: /^unicode-trie$/, replacement: path.resolve(__dirname, "./src/shims/unicode-trie.ts") },
+      // Brotli - subpaths MUST come before main package
+      { find: /^brotli\/decompress(\.js)?$/, replacement: brotliDecompressShimPath },
+      { find: /^brotli\//, replacement: brotliDecompressShimPath },
+      { find: /^brotli$/, replacement: brotliShimPath },
       // Critical: Force single React instance
-      "react": reactPath,
-      "react-dom": reactDomPath,
-      "react/jsx-runtime": path.resolve(reactPath, "jsx-runtime"),
-      "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
-      "react-dom/client": path.resolve(reactDomPath, "client"),
-    },
+      { find: /^react$/, replacement: reactPath },
+      { find: /^react-dom$/, replacement: reactDomPath },
+      { find: /^react\/jsx-runtime$/, replacement: path.resolve(reactPath, "jsx-runtime.js") },
+      { find: /^react\/jsx-dev-runtime$/, replacement: path.resolve(reactPath, "jsx-dev-runtime.js") },
+      { find: /^react-dom\/client$/, replacement: path.resolve(reactDomPath, "client.js") },
+    ],
     dedupe: [
       "react", 
       "react-dom", 

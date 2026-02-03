@@ -1,3 +1,11 @@
+/* Google Fonts - IBM Plex Sans Arabic + Inter */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Enterprise Typography & RTL System */
+@import url('./styles/typography.css');
+@import url('./styles/rtl-fixes.css');
+@import url('./styles/finance-animations.css');
+
 /* ===========================================
    RTL ROOT BOUNDARY - Hard RTL Isolation
    =========================================== */
@@ -218,14 +226,6 @@
 .backdrop-blur-xl {
   backdrop-filter: blur(16px);
 }
-
-/* Enterprise Typography & RTL System */
-@import url('./styles/typography.css');
-@import url('./styles/rtl-fixes.css');
-@import url('./styles/finance-animations.css');
-
-/* Google Fonts - IBM Plex Sans Arabic + Inter */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
