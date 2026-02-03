@@ -210,21 +210,21 @@ export function renderServiceContractHTML(
     
     @page {
       size: A4;
-      margin: 12mm;
+      margin: 15mm;
     }
     
     body {
       font-family: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', sans-serif;
       background: var(--bg-gradient);
       min-height: 100vh;
-      padding: 15px;
+      padding: 20px;
       color: var(--navy-dark);
-      line-height: 1.7;
-      font-size: 12px;
+      line-height: 1.8;
+      font-size: 16px;
     }
     
     .contract-container {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
       background: white;
       border-radius: 16px;
@@ -248,7 +248,7 @@ export function renderServiceContractHTML(
     /* Header */
     .contract-header {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 50%, var(--navy) 100%);
-      padding: 20px 30px;
+      padding: 28px 40px;
       position: relative;
       overflow: hidden;
     }
@@ -276,103 +276,104 @@ export function renderServiceContractHTML(
     }
     
     .company-name {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     
     .company-subtitle {
-      font-size: 11px;
+      font-size: 14px;
       opacity: 0.85;
     }
     
     .contract-badge {
       background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
       color: var(--navy-dark);
-      padding: 10px 24px;
+      padding: 14px 32px;
       border-radius: 50px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 18px;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
     }
     
     /* Info Bar */
     .contract-info-bar {
       background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
-      padding: 12px 30px;
+      padding: 16px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
-      font-size: 11px;
+      font-size: 14px;
     }
     
     .info-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
     }
     
     .info-label {
       opacity: 0.7;
-      font-size: 9px;
+      font-size: 12px;
     }
     
     .info-value {
       font-weight: 600;
       font-family: 'IBM Plex Sans Arabic', monospace;
+      font-size: 14px;
     }
     
     /* Main Content */
     .contract-body {
-      padding: 25px 30px;
+      padding: 35px 45px;
     }
     
     /* Preamble */
     .preamble {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
+      border-radius: 14px;
+      padding: 24px 30px;
+      margin-bottom: 30px;
       text-align: center;
     }
     
     .preamble-title {
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     
     .preamble-text {
-      font-size: 11px;
+      font-size: 15px;
       color: var(--navy);
-      line-height: 1.8;
+      line-height: 1.9;
     }
     
     /* Parties Grid */
     .parties-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 24px;
+      margin-bottom: 30px;
     }
     
     .party-card {
       border: 2px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
     }
     
     .party-header {
-      padding: 10px 16px;
+      padding: 14px 20px;
       font-weight: 700;
-      font-size: 11px;
+      font-size: 15px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
     
     .party-header.provider {
@@ -386,36 +387,36 @@ export function renderServiceContractHTML(
     }
     
     .party-icon {
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       background: var(--gold);
-      border-radius: 4px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       color: var(--navy-dark);
-      font-size: 10px;
+      font-size: 14px;
     }
     
     .party-body {
-      padding: 12px 16px;
+      padding: 18px 20px;
       background: #fafafa;
     }
     
     .party-name {
-      font-size: 13px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     
     .party-detail {
       display: flex;
       justify-content: space-between;
-      padding: 4px 0;
+      padding: 8px 0;
       border-bottom: 1px dashed #e2e8f0;
-      font-size: 10px;
+      font-size: 14px;
     }
     
     .party-detail:last-child {
@@ -435,68 +436,68 @@ export function renderServiceContractHTML(
     .service-section {
       background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
       border: 2px solid var(--primary);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin-bottom: 20px;
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 30px;
     }
     
     .service-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 16px;
     }
     
     .service-icon {
-      font-size: 18px;
+      font-size: 24px;
     }
     
     .service-title {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--primary);
     }
     
     .service-name {
-      font-size: 16px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     
     .service-description {
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.7;
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.9;
     }
     
     /* Amount Box */
     .amount-box {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 28px;
       text-align: center;
       color: white;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     
     .amount-label {
-      font-size: 11px;
+      font-size: 15px;
       opacity: 0.9;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
     
     .amount-value {
-      font-size: 32px;
+      font-size: 42px;
       font-weight: 800;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       font-family: 'IBM Plex Sans Arabic', sans-serif;
     }
     
     .amount-words {
-      font-size: 11px;
-      opacity: 0.85;
-      padding-top: 8px;
+      font-size: 15px;
+      opacity: 0.9;
+      padding-top: 12px;
       border-top: 1px solid rgba(255,255,255,0.2);
     }
     
@@ -504,8 +505,8 @@ export function renderServiceContractHTML(
     .pricing-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
-      font-size: 11px;
+      margin-bottom: 30px;
+      font-size: 15px;
     }
     
     .pricing-table tr {
@@ -513,7 +514,7 @@ export function renderServiceContractHTML(
     }
     
     .pricing-table td {
-      padding: 10px 12px;
+      padding: 14px 18px;
     }
     
     .pricing-table td:first-child {
@@ -534,6 +535,7 @@ export function renderServiceContractHTML(
     
     .pricing-table tr.total td {
       font-weight: 700;
+      font-size: 17px;
     }
     
     .pricing-table tr.total td:first-child {
@@ -542,23 +544,23 @@ export function renderServiceContractHTML(
     
     /* Legal Articles */
     .legal-section {
-      margin-top: 20px;
+      margin-top: 30px;
     }
     
     .legal-title {
-      font-size: 14px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--navy-dark);
       text-align: center;
-      padding: 12px;
+      padding: 18px;
       background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
-      border-radius: 8px;
-      margin-bottom: 16px;
+      border-radius: 10px;
+      margin-bottom: 24px;
     }
     
     .article {
-      margin-bottom: 14px;
-      padding-bottom: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 22px;
       border-bottom: 1px dashed #e2e8f0;
     }
     
@@ -569,67 +571,67 @@ export function renderServiceContractHTML(
     .article-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 6px;
+      gap: 14px;
+      margin-bottom: 10px;
     }
     
     .article-number {
       background: var(--primary);
       color: white;
-      padding: 3px 10px;
+      padding: 6px 16px;
       border-radius: 20px;
-      font-size: 10px;
+      font-size: 14px;
       font-weight: 700;
     }
     
     .article-title {
-      font-size: 12px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--navy-dark);
     }
     
     .article-content {
-      font-size: 10px;
+      font-size: 15px;
       color: #475569;
-      line-height: 1.8;
-      padding-right: 20px;
+      line-height: 2;
+      padding-right: 30px;
       text-align: justify;
     }
     
     /* Signatures */
     .signature-section {
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 2px solid var(--gold);
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 3px solid var(--gold);
     }
     
     .signature-title {
       text-align: center;
-      font-size: 13px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--navy-dark);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
     
     .signature-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 30px;
     }
     
     .signature-box {
       text-align: center;
-      padding: 14px;
+      padding: 24px;
       border: 2px dashed #e2e8f0;
-      border-radius: 12px;
-      min-height: 100px;
+      border-radius: 14px;
+      min-height: 140px;
     }
     
     .signature-label {
-      font-size: 11px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--navy);
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
     
     .digital-stamp {
@@ -637,9 +639,9 @@ export function renderServiceContractHTML(
     }
     
     .stamp-circle {
-      width: 90px;
-      height: 90px;
-      border: 3px solid var(--success);
+      width: 120px;
+      height: 120px;
+      border: 4px solid var(--success);
       border-radius: 50%;
       display: flex;
       flex-direction: column;
@@ -654,34 +656,34 @@ export function renderServiceContractHTML(
     .stamp-circle::before {
       content: '';
       position: absolute;
-      inset: 4px;
+      inset: 5px;
       border: 2px solid var(--success);
       border-radius: 50%;
       opacity: 0.6;
     }
     
     .stamp-text {
-      font-size: 8px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--success);
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.4;
     }
     
     .stamp-check {
-      font-size: 12px;
-      margin-bottom: 2px;
+      font-size: 18px;
+      margin-bottom: 4px;
     }
     
     .stamp-date {
-      font-size: 7px;
+      font-size: 10px;
       color: var(--success);
       opacity: 0.8;
-      margin-top: 2px;
+      margin-top: 4px;
     }
     
     .stamp-id {
-      font-size: 6px;
+      font-size: 9px;
       color: var(--success);
       opacity: 0.6;
       font-family: monospace;
@@ -690,24 +692,24 @@ export function renderServiceContractHTML(
     .signature-line {
       border-top: 2px solid var(--navy);
       width: 70%;
-      margin: 30px auto 0;
-      padding-top: 8px;
-      font-size: 10px;
+      margin: 40px auto 0;
+      padding-top: 12px;
+      font-size: 14px;
       color: #64748b;
     }
     
     /* Admin Stamp - Emerald Green */
     .admin-stamp {
-      width: 85px;
-      height: 85px;
-      border: 3px solid #059669;
+      width: 110px;
+      height: 110px;
+      border: 4px solid #059669;
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       background: rgba(5, 150, 105, 0.08);
-      margin: 8px auto 0;
+      margin: 12px auto 0;
       position: relative;
       ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.7s backwards;' : ''}
     }
@@ -715,45 +717,45 @@ export function renderServiceContractHTML(
     .admin-stamp::before {
       content: '';
       position: absolute;
-      inset: 4px;
+      inset: 5px;
       border: 2px solid #059669;
       border-radius: 50%;
       opacity: 0.5;
     }
     
     .admin-stamp-text {
-      font-size: 7px;
+      font-size: 11px;
       font-weight: 700;
       color: #059669;
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.4;
     }
     
     .admin-stamp-check {
-      font-size: 11px;
+      font-size: 16px;
       color: #059669;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
     
     .admin-stamp-date {
-      font-size: 6px;
+      font-size: 9px;
       color: #059669;
       opacity: 0.8;
-      margin-top: 1px;
+      margin-top: 2px;
     }
     
     /* Customer Stamp - Teal */
     .customer-stamp {
-      width: 85px;
-      height: 85px;
-      border: 3px solid var(--primary);
+      width: 110px;
+      height: 110px;
+      border: 4px solid var(--primary);
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       background: rgba(15, 118, 110, 0.08);
-      margin: 8px auto 0;
+      margin: 12px auto 0;
       position: relative;
       ${showAnimations ? 'animation: stampBounce 0.5s ease-out 0.9s backwards;' : ''}
     }
@@ -761,40 +763,40 @@ export function renderServiceContractHTML(
     .customer-stamp::before {
       content: '';
       position: absolute;
-      inset: 4px;
+      inset: 5px;
       border: 2px solid var(--primary);
       border-radius: 50%;
       opacity: 0.5;
     }
     
     .customer-stamp-text {
-      font-size: 7px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--primary);
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.4;
     }
     
     .customer-stamp-check {
-      font-size: 11px;
+      font-size: 16px;
       color: var(--primary);
-      margin-bottom: 1px;
+      margin-bottom: 2px;
     }
     
     .customer-stamp-date {
-      font-size: 6px;
+      font-size: 9px;
       color: var(--primary);
       opacity: 0.8;
-      margin-top: 1px;
+      margin-top: 2px;
     }
     
     /* Footer */
     .contract-footer {
       background: linear-gradient(90deg, var(--navy) 0%, var(--navy-dark) 100%);
-      padding: 14px 30px;
+      padding: 20px 40px;
       text-align: center;
       color: white;
-      font-size: 10px;
+      font-size: 14px;
       opacity: 0.9;
     }
     
@@ -802,7 +804,7 @@ export function renderServiceContractHTML(
       body {
         background: white;
         padding: 0;
-        font-size: 11px;
+        font-size: 14px;
       }
       
       .contract-container {

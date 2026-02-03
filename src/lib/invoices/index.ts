@@ -184,7 +184,7 @@ export async function downloadContractPdf(data: import('./types').ContractData):
   try {
     console.log('[Contract] Generating PDF for:', data.contractNumber);
     
-    // Create container for rendering
+    // Create container for rendering - wider for better readability
     const container = document.createElement('div');
     container.style.cssText = `
       position: absolute;
@@ -205,7 +205,7 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     const contractEl = container.querySelector('.contract-container') as HTMLElement;
     if (!contractEl) throw new Error('Contract container not found');
     
-    // Render to canvas
+    // Render to canvas with high quality
     const canvas = await html2canvas(contractEl, {
       scale: 2,
       useCORS: true,
@@ -219,27 +219,18 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     // A4 dimensions in mm
     const pageWidth = 210;
     const pageHeight = 297;
+    const margin = 10; // 10mm margin
     
-    // Calculate dimensions to fit content in single page
-    const imgRatio = canvas.width / canvas.height;
-    const pageRatio = pageWidth / pageHeight;
+    // Calculate printable area
+    const printableWidth = pageWidth - (margin * 2);
+    const printableHeight = pageHeight - (margin * 2);
     
-    let imgWidth: number;
-    let imgHeight: number;
-    let offsetX = 0;
-    let offsetY = 0;
+    // Calculate scale to fit width
+    const imgWidth = printableWidth;
+    const scale = imgWidth / (canvas.width / 2); // /2 because scale is 2
+    const imgHeight = (canvas.height / 2) * scale;
     
-    if (imgRatio > pageRatio) {
-      imgWidth = pageWidth;
-      imgHeight = pageWidth / imgRatio;
-      offsetY = (pageHeight - imgHeight) / 2;
-    } else {
-      imgHeight = pageHeight;
-      imgWidth = pageHeight * imgRatio;
-      offsetX = (pageWidth - imgWidth) / 2;
-    }
-    
-    // Create PDF - single page
+    // Create PDF
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -247,7 +238,41 @@ export async function downloadContractPdf(data: import('./types').ContractData):
     });
     
     const imgData = canvas.toDataURL('image/png', 1.0);
-    pdf.addImage(imgData, 'PNG', offsetX, offsetY, imgWidth, imgHeight);
+    
+    // Check if we need multiple pages
+    if (imgHeight <= printableHeight) {
+      // Single page - center vertically
+      const offsetY = margin + (printableHeight - imgHeight) / 2;
+      pdf.addImage(imgData, 'PNG', margin, offsetY, imgWidth, imgHeight);
+    } else {
+      // Multi-page - split content
+      const totalPages = Math.ceil(imgHeight / printableHeight);
+      const sourceHeightPerPage = canvas.height / totalPages;
+      
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) pdf.addPage();
+        
+        // Create a canvas for this page slice
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = sourceHeightPerPage;
+        const ctx = pageCanvas.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+          ctx.drawImage(
+            canvas,
+            0, page * sourceHeightPerPage,
+            canvas.width, sourceHeightPerPage,
+            0, 0,
+            canvas.width, sourceHeightPerPage
+          );
+          
+          const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+          pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, printableHeight);
+        }
+      }
+    }
     
     // Download
     const filename = `contract-${data.contractNumber}.pdf`;
