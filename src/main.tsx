@@ -1,14 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-
-// Global React singleton
-if (typeof window !== 'undefined') {
-  (window as any).React = React;
-  (window as any).ReactDOM = ReactDOM;
-}
 
 /**
  * RTL INITIALIZATION - CRITICAL
