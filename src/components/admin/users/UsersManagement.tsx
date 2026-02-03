@@ -90,6 +90,11 @@ export function UsersManagement() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
+  const [editingName, setEditingName] = useState("");
+  const [editingPhone, setEditingPhone] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -214,10 +219,92 @@ export function UsersManagement() {
           ? `تم ${user.is_active ? 'تعطيل' : 'تفعيل'} المستخدم` 
           : `User ${user.is_active ? 'deactivated' : 'activated'}`
       );
+      fetchUsers();
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error(language === "ar" ? "خطأ في تحديث المستخدم" : "Error updating user");
     }
+  };
+
+  const handleEditUser = async () => {
+    if (!selectedUser) return;
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ 
+          full_name: editingName,
+          phone: editingPhone 
+        })
+        .eq("id", selectedUser.id);
+
+      if (error) throw error;
+
+      toast.success(language === "ar" ? "تم تحديث بيانات المستخدم" : "User updated successfully");
+      setIsEditDialogOpen(false);
+      fetchUsers();
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error(language === "ar" ? "خطأ في تحديث المستخدم" : "Error updating user");
+    }
+  };
+
+  const handleChangeRole = async () => {
+    if (!selectedUser || !selectedRole) return;
+    try {
+      // First remove existing roles
+      await supabase
+        .from("user_roles")
+        .delete()
+        .eq("user_id", selectedUser.id);
+
+      // Then add the new role
+      const { error } = await supabase
+        .from("user_roles")
+        .insert({ user_id: selectedUser.id, role: selectedRole as any });
+
+      if (error) throw error;
+
+      toast.success(language === "ar" ? "تم تغيير دور المستخدم" : "User role changed successfully");
+      setIsRoleDialogOpen(false);
+      fetchUsers();
+    } catch (error) {
+      console.error("Error changing role:", error);
+      toast.error(language === "ar" ? "خطأ في تغيير الدور" : "Error changing role");
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return;
+    try {
+      // Delete from profiles (cascade should handle user_roles)
+      const { error } = await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", selectedUser.id);
+
+      if (error) throw error;
+
+      toast.success(language === "ar" ? "تم حذف المستخدم" : "User deleted successfully");
+      setIsDeleteDialogOpen(false);
+      setSelectedUser(null);
+      fetchUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error(language === "ar" ? "خطأ في حذف المستخدم" : "Error deleting user");
+    }
+  };
+
+  const openEditDialog = (user: User) => {
+    setSelectedUser(user);
+    setEditingName(user.full_name || "");
+    setEditingPhone(user.phone || "");
+    setIsEditDialogOpen(true);
+  };
+
+  const openRoleDialog = (user: User) => {
+    setSelectedUser(user);
+    setSelectedRole(user.roles[0] || "customer");
+    setIsRoleDialogOpen(true);
   };
 
   const formatDate = (dateString: string | null) => {
@@ -545,7 +632,7 @@ export function UsersManagement() {
                       <Button 
                         variant="ghost" 
                         size="icon"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                       >
                         <MoreVertical className="h-4 w-4" />
                       </Button>
@@ -564,11 +651,11 @@ export function UsersManagement() {
                         <Eye className="h-4 w-4 me-2" />
                         {language === "ar" ? "عرض التفاصيل" : "View Details"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openEditDialog(user)}>
                         <Edit className="h-4 w-4 me-2" />
                         {language === "ar" ? "تعديل" : "Edit"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openRoleDialog(user)}>
                         <Shield className="h-4 w-4 me-2" />
                         {language === "ar" ? "تغيير الدور" : "Change Role"}
                       </DropdownMenuItem>
@@ -687,7 +774,10 @@ export function UsersManagement() {
             <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
               {language === "ar" ? "إغلاق" : "Close"}
             </Button>
-            <Button>
+            <Button onClick={() => {
+              setIsViewDialogOpen(false);
+              if (selectedUser) openEditDialog(selectedUser);
+            }}>
               <Edit className="h-4 w-4 me-2" />
               {language === "ar" ? "تعديل" : "Edit"}
             </Button>
@@ -713,9 +803,95 @@ export function UsersManagement() {
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               {language === "ar" ? "إلغاء" : "Cancel"}
             </Button>
-            <Button variant="destructive">
+            <Button variant="destructive" onClick={handleDeleteUser}>
               <Trash2 className="h-4 w-4 me-2" />
               {language === "ar" ? "حذف" : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5 text-primary" />
+              {language === "ar" ? "تعديل المستخدم" : "Edit User"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                {language === "ar" ? "الاسم الكامل" : "Full Name"}
+              </label>
+              <Input
+                value={editingName}
+                onChange={(e) => setEditingName(e.target.value)}
+                placeholder={language === "ar" ? "أدخل الاسم" : "Enter name"}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                {language === "ar" ? "رقم الهاتف" : "Phone Number"}
+              </label>
+              <Input
+                value={editingPhone}
+                onChange={(e) => setEditingPhone(e.target.value)}
+                placeholder={language === "ar" ? "أدخل رقم الهاتف" : "Enter phone"}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              {language === "ar" ? "إلغاء" : "Cancel"}
+            </Button>
+            <Button onClick={handleEditUser}>
+              <CheckCircle2 className="h-4 w-4 me-2" />
+              {language === "ar" ? "حفظ" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Role Dialog */}
+      <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              {language === "ar" ? "تغيير دور المستخدم" : "Change User Role"}
+            </DialogTitle>
+            <DialogDescription>
+              {language === "ar" 
+                ? `تغيير دور "${selectedUser?.full_name || selectedUser?.email}"`
+                : `Change role for "${selectedUser?.full_name || selectedUser?.email}"`}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
+              <SelectTrigger>
+                <SelectValue placeholder={language === "ar" ? "اختر الدور" : "Select role"} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="super_admin">{language === "ar" ? "مدير النظام" : "Super Admin"}</SelectItem>
+                <SelectItem value="admin">{language === "ar" ? "مدير" : "Admin"}</SelectItem>
+                <SelectItem value="manager">{language === "ar" ? "مشرف" : "Manager"}</SelectItem>
+                <SelectItem value="support">{language === "ar" ? "دعم فني" : "Support"}</SelectItem>
+                <SelectItem value="finance">{language === "ar" ? "مالية" : "Finance"}</SelectItem>
+                <SelectItem value="content_editor">{language === "ar" ? "محرر محتوى" : "Content Editor"}</SelectItem>
+                <SelectItem value="staff">{language === "ar" ? "موظف" : "Staff"}</SelectItem>
+                <SelectItem value="customer">{language === "ar" ? "عميل" : "Customer"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsRoleDialogOpen(false)}>
+              {language === "ar" ? "إلغاء" : "Cancel"}
+            </Button>
+            <Button onClick={handleChangeRole}>
+              <CheckCircle2 className="h-4 w-4 me-2" />
+              {language === "ar" ? "تغيير الدور" : "Change Role"}
             </Button>
           </DialogFooter>
         </DialogContent>
