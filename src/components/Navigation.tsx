@@ -532,20 +532,6 @@ const Navigation = () => {
           </div>
         </div>
       )}
-
-      {/* Animation Styles */}
-      <style>{`
-        @keyframes slide-in-right {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
-        }
-        .animate-slide-in-right {
-          animation: slide-in-right 0.3s ease-out;
-        }
-        .safe-area-inset-bottom {
-          padding-bottom: max(1rem, env(safe-area-inset-bottom));
-        }
-      `}</style>
     </>
   );
 };
