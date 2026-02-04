@@ -43,6 +43,7 @@ import {
   Landmark,
   Trash2,
   X,
+  Shield,
 } from "lucide-react";
 
 interface NavItem {
@@ -126,6 +127,13 @@ export function CustomerSidebar() {
       icon: Bell,
       href: "/app/notifications",
       badge: unreadCount,
+      section: "account",
+    },
+    {
+      titleAr: "الأمان",
+      titleEn: "Security",
+      icon: Shield,
+      href: "/app/security",
       section: "account",
     },
     {

@@ -24,6 +24,7 @@ import { CustomerInvoicesCenter } from '@/components/customer/invoices';
 import { FinanceCenter } from '@/components/finance/customer/FinanceCenter';
 import ClientHubPage from '@/pages/customer/ClientHubPage';
 import VersionPage from '@/pages/app/Version';
+import SecurityPage from '@/pages/app/SecurityPage';
 import { Loader2 } from 'lucide-react';
 
 // Finance Pages
@@ -69,6 +70,7 @@ const CustomerDashboard = () => {
         
         <Route path="notifications" element={<CustomerNotifications />} />
         <Route path="profile" element={<CustomerProfile />} />
+        <Route path="security" element={<SecurityPage />} />
         <Route path="version" element={<VersionPage />} />
       </Routes>
     </CustomerLayout>
