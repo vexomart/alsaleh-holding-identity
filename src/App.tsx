@@ -269,12 +269,12 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <TooltipProvider>
-          <ReCaptchaProvider>
-            <MobileOptimizer>
-              <BrowserRouter>
-                <AuthProvider>
-                  <LanguageProvider>
+        <ReCaptchaProvider>
+          <MobileOptimizer>
+            <BrowserRouter>
+              <AuthProvider>
+                <LanguageProvider>
+                  <TooltipProvider>
                     <RTLAppShell>
                       <SecurityHeaders />
                       <TemplateVariableBlocker />
@@ -492,12 +492,12 @@ const App = () => {
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
                     </Routes>
                     </RTLAppShell>
-                  </LanguageProvider>
-                </AuthProvider>
-              </BrowserRouter>
-            </MobileOptimizer>
-          </ReCaptchaProvider>
-        </TooltipProvider>
+                  </TooltipProvider>
+                </LanguageProvider>
+              </AuthProvider>
+            </BrowserRouter>
+          </MobileOptimizer>
+        </ReCaptchaProvider>
       </HelmetProvider>
     </QueryClientProvider>
   );
