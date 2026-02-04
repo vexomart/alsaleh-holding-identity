@@ -60,6 +60,9 @@ const SEOServices = lazy(() => import("./pages/services/SEOServices"));
 const FacebookAds = lazy(() => import("./pages/services/FacebookAds"));
 const ProductPhotography = lazy(() => import("./pages/services/ProductPhotography"));
 const ContentWriting = lazy(() => import("./pages/services/ContentWriting"));
+const VideoProduction = lazy(() => import("./pages/services/VideoProduction"));
+const GoogleAdsPage = lazy(() => import("./pages/services/GoogleAds"));
+const CRMSystem = lazy(() => import("./pages/services/CRMSystem"));
 const RemoteWork = lazy(() => import("./pages/RemoteWork"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
 const AIIntelligence = lazy(() => import("./pages/AIIntelligence"));
@@ -331,10 +334,22 @@ const App = () => {
                       <Route path="/hosting-services" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                       <Route path="/services/hosting" element={<Suspense fallback={<PageLoader />}><HostingServices /></Suspense>} />
                       <Route path="/services/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
+                      <Route path="/social-media" element={<Suspense fallback={<PageLoader />}><SocialMediaManagement /></Suspense>} />
                       <Route path="/services/seo" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
+                      <Route path="/seo-services" element={<Suspense fallback={<PageLoader />}><SEOServices /></Suspense>} />
                       <Route path="/services/facebook-ads" element={<Suspense fallback={<PageLoader />}><FacebookAds /></Suspense>} />
+                      <Route path="/facebook-ads" element={<Suspense fallback={<PageLoader />}><FacebookAds /></Suspense>} />
                       <Route path="/services/photography" element={<Suspense fallback={<PageLoader />}><ProductPhotography /></Suspense>} />
+                      <Route path="/product-photography" element={<Suspense fallback={<PageLoader />}><ProductPhotography /></Suspense>} />
                       <Route path="/services/content-writing" element={<Suspense fallback={<PageLoader />}><ContentWriting /></Suspense>} />
+                      <Route path="/content-writing" element={<Suspense fallback={<PageLoader />}><ContentWriting /></Suspense>} />
+                      <Route path="/video-production" element={<Suspense fallback={<PageLoader />}><VideoProduction /></Suspense>} />
+                      <Route path="/services/video" element={<Suspense fallback={<PageLoader />}><VideoProduction /></Suspense>} />
+                      <Route path="/google-ads" element={<Suspense fallback={<PageLoader />}><GoogleAdsPage /></Suspense>} />
+                      <Route path="/services/google-ads" element={<Suspense fallback={<PageLoader />}><GoogleAdsPage /></Suspense>} />
+                      <Route path="/crm-system" element={<Suspense fallback={<PageLoader />}><CRMSystem /></Suspense>} />
+                      <Route path="/services/crm" element={<Suspense fallback={<PageLoader />}><CRMSystem /></Suspense>} />
+                      <Route path="/brand-identity" element={<Suspense fallback={<PageLoader />}><DesignSolutions /></Suspense>} />
                       <Route path="/remote-work" element={<Suspense fallback={<PageLoader />}><RemoteWork /></Suspense>} />
                       <Route path="/services-catalog" element={<Suspense fallback={<PageLoader />}><ServicesCatalog /></Suspense>} />
                       
