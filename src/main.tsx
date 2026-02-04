@@ -43,8 +43,8 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Force cache bust on version change - v46 for new service pages
-const CACHE_KEY = 'app_cache_v46';
+// Force cache bust on version change - v47 for video production page update
+const CACHE_KEY = 'app_cache_v47';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
