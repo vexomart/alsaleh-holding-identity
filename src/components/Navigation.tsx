@@ -125,13 +125,53 @@ const Navigation = () => {
   ];
 
   return (
-    <>
+    <div dir="rtl">
       {/* ===== TOP UTILITY BAR ===== */}
       <div className="hidden lg:block fixed top-0 inset-x-0 z-50 h-11 bg-slate-50 border-b border-slate-200">
         <div className="container mx-auto h-full px-6">
-          <div className="flex h-full items-center justify-between">
-            {/* Right Side - Primary Tabs (Like Riyad Bank) */}
-            <div className="flex items-center gap-1">
+          <div className="flex h-full items-center justify-between flex-row-reverse">
+            {/* Left Side (appears on left in RTL) - Utility Links */}
+            <div className="flex items-center gap-4 flex-row-reverse">
+              {/* Sign Up Button */}
+              <Link 
+                to="/auth/register"
+                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition-all flex-row-reverse"
+              >
+                <span>إنشاء حساب</span>
+                <UserPlus className="w-4 h-4" />
+              </Link>
+              
+              {/* Login Button */}
+              <Link 
+                to="/auth/login"
+                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-slate-700 border border-slate-300 rounded-lg hover:border-violet-400 hover:text-violet-600 transition-all flex-row-reverse"
+              >
+                <span>تسجيل الدخول</span>
+                <LogIn className="w-4 h-4" />
+              </Link>
+              
+              <div className="w-px h-4 bg-slate-300" />
+              
+              {/* Contact */}
+              <a 
+                href="/contact" 
+                className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-violet-600 transition-colors flex-row-reverse"
+              >
+                <span className="font-medium">الدعم والتواصل</span>
+                <HeadphonesIcon className="w-4 h-4" />
+              </a>
+              
+              <div className="w-px h-4 bg-slate-300" />
+              
+              {/* Language Toggle */}
+              <button className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-violet-600 transition-colors flex-row-reverse">
+                <span className="font-medium">English</span>
+                <Globe className="w-4 h-4" />
+              </button>
+            </div>
+            
+            {/* Right Side (appears on right in RTL) - Primary Tabs */}
+            <div className="flex items-center gap-1 flex-row-reverse">
               {primaryNavItems.map((item) => (
                 <button
                   key={item.key}
@@ -151,62 +191,18 @@ const Navigation = () => {
                 </button>
               ))}
             </div>
-            
-            {/* Left Side - Utility Links */}
-            <div className="flex items-center gap-4">
-              {/* Language Toggle */}
-              <button className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-violet-600 transition-colors">
-                <Globe className="w-4 h-4" />
-                <span className="font-medium">English</span>
-              </button>
-              
-              <div className="w-px h-4 bg-slate-300" />
-              
-              {/* Contact */}
-              <a 
-                href="/contact" 
-                className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-violet-600 transition-colors"
-              >
-                <HeadphonesIcon className="w-4 h-4" />
-                <span className="font-medium">الدعم والتواصل</span>
-              </a>
-              
-              <div className="w-px h-4 bg-slate-300" />
-              
-              {/* Login Button */}
-              <Link 
-                to="/auth/login"
-                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-slate-700 border border-slate-300 rounded-lg hover:border-violet-400 hover:text-violet-600 transition-all"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>تسجيل الدخول</span>
-              </Link>
-              
-              {/* Sign Up Button */}
-              <Link 
-                to="/auth/register"
-                className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700 transition-all"
-              >
-                <UserPlus className="w-4 h-4" />
-                <span>إنشاء حساب</span>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
 
       {/* ===== MAIN HEADER WITH LOGO ===== */}
       <header 
-        className={`
-          fixed inset-x-0 z-40 
-          transition-all duration-300 ease-out
-          ${isScrolled ? 'top-0 shadow-lg' : 'top-0 lg:top-11'}
-        `}
+        className="fixed inset-x-0 z-40 top-0 lg:top-11"
       >
-        <div className="bg-white border-b border-slate-200">
+        <div className="bg-white border-b border-slate-200 shadow-sm">
           <div className="container mx-auto px-4 lg:px-6">
             {/* Main Nav Container */}
-            <div className="flex items-center justify-between h-16 lg:h-20">
+            <div className="flex items-center justify-between h-16 lg:h-20 flex-row-reverse">
               
               {/* ===== LOGO (Right in RTL) ===== */}
               <Link to="/" className="flex items-center gap-3 shrink-0 group">
@@ -316,7 +312,7 @@ const Navigation = () => {
               </nav>
 
               {/* ===== SEARCH & MOBILE TOGGLE (Left in RTL) ===== */}
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-3 shrink-0 flex-row-reverse">
                 {/* Search Button (Desktop) */}
                 <button className="hidden lg:flex items-center justify-center w-11 h-11 text-slate-600 hover:text-violet-600 hover:bg-violet-50 rounded-xl transition-colors">
                   <Search className="w-5 h-5" />
@@ -325,10 +321,10 @@ const Navigation = () => {
                 {/* Contact CTA (Desktop) */}
                 <a 
                   href="/book-consultation"
-                  className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-l from-violet-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex-row-reverse"
                 >
-                  <span>احجز استشارة</span>
                   <HeadphonesIcon className="w-4 h-4" />
+                  <span>احجز استشارة</span>
                 </a>
 
                 {/* Mobile Menu Toggle */}
@@ -532,7 +528,7 @@ const Navigation = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
