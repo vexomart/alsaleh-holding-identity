@@ -43,8 +43,8 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Force cache bust on version change - Updated to v42 for comprehensive fix
-const CACHE_KEY = 'app_cache_v42';
+// Force cache bust on version change - v43 for final React fix
+const CACHE_KEY = 'app_cache_v43';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));

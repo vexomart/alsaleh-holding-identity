@@ -42,14 +42,14 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force single React instance
+      // Force single React instance - absolute paths
       "react": reactPath,
       "react-dom": reactDomPath,
       "react/jsx-runtime": path.resolve(reactPath, "jsx-runtime"),
       "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
       "react-dom/client": path.resolve(reactDomPath, "client"),
     },
-  dedupe: [
+    dedupe: [
       "react", 
       "react-dom", 
       "react/jsx-runtime",
@@ -59,6 +59,7 @@ export default defineConfig(({ mode }) => ({
       "framer-motion",
       "react-router-dom",
       "react-helmet-async",
+      // All Radix UI packages
       "@radix-ui/react-tooltip",
       "@radix-ui/react-primitive",
       "@radix-ui/react-context",
@@ -74,12 +75,22 @@ export default defineConfig(({ mode }) => ({
       "@radix-ui/react-select",
       "@radix-ui/react-accordion",
       "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-label",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-avatar",
+      "@radix-ui/react-scroll-area",
+      "@radix-ui/react-separator",
+      "@radix-ui/react-progress",
+      "@radix-ui/react-radio-group",
+      "@radix-ui/react-alert-dialog",
+      "@radix-ui/react-collapsible",
     ],
   },
   optimizeDeps: {
     force: true,
     esbuildOptions: {
-      // Force single React instance in pre-bundling
       define: {
         global: 'globalThis',
       },
@@ -95,6 +106,11 @@ export default defineConfig(({ mode }) => ({
       "react-router-dom",
       "react-helmet-async",
       "@radix-ui/react-tooltip",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-select",
+      "@radix-ui/react-slot",
+      "@radix-ui/react-primitive",
     ],
     exclude: ["brotli"],
   },
