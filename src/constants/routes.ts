@@ -50,6 +50,7 @@ export const ROUTES = {
     WALLET: '/app/wallet',
     REFERRALS: '/app/referrals',
     PROFILE: '/app/profile',
+    SECURITY: '/app/security',
     NOTIFICATIONS: '/app/notifications',
     SUPPORT: '/app/support',
   },

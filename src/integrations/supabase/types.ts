@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_activity_log: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          device_fingerprint: string | null
+          id: string
+          ip_address: unknown
+          location: string | null
+          metadata: Json | null
+          risk_level: string | null
+          tenant_id: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: unknown
+          location?: string | null
+          metadata?: Json | null
+          risk_level?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          device_fingerprint?: string | null
+          id?: string
+          ip_address?: unknown
+          location?: string | null
+          metadata?: Json | null
+          risk_level?: string | null
+          tenant_id?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_activity_log_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: Database["public"]["Enums"]["audit_action"]
@@ -472,6 +522,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      device_verification_codes: {
+        Row: {
+          code: string
+          created_at: string | null
+          device_fingerprint: string
+          expires_at: string
+          id: string
+          used: boolean | null
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          device_fingerprint: string
+          expires_at: string
+          id?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          device_fingerprint?: string
+          expires_at?: string
+          id?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       entities: {
         Row: {
@@ -2690,6 +2773,101 @@ export type Database = {
           },
         ]
       }
+      trusted_devices: {
+        Row: {
+          browser: string | null
+          created_at: string | null
+          device_fingerprint: string
+          device_name: string | null
+          device_type: string | null
+          id: string
+          ip_address: unknown
+          is_current: boolean | null
+          is_trusted: boolean | null
+          last_used_at: string | null
+          location: string | null
+          os: string | null
+          tenant_id: string | null
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown
+          is_current?: boolean | null
+          is_trusted?: boolean | null
+          last_used_at?: string | null
+          location?: string | null
+          os?: string | null
+          tenant_id?: string | null
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint?: string
+          device_name?: string | null
+          device_type?: string | null
+          id?: string
+          ip_address?: unknown
+          is_current?: boolean | null
+          is_trusted?: boolean | null
+          last_used_at?: string | null
+          location?: string | null
+          os?: string | null
+          tenant_id?: string | null
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trusted_devices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      two_factor_settings: {
+        Row: {
+          backup_codes: string[] | null
+          created_at: string | null
+          id: string
+          is_enabled: boolean | null
+          last_verified_at: string | null
+          method: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          backup_codes?: string[] | null
+          created_at?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          last_verified_at?: string | null
+          method?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          backup_codes?: string[] | null
+          created_at?: string | null
+          id?: string
+          is_enabled?: boolean | null
+          last_verified_at?: string | null
+          method?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           expires_at: string | null
@@ -2784,6 +2962,10 @@ export type Database = {
       generate_bank_transfer_reference: { Args: never; Returns: string }
       generate_contract_number: {
         Args: { p_tenant_id?: string }
+        Returns: string
+      }
+      generate_device_verification_code: {
+        Args: { p_device_fingerprint: string; p_user_id: string }
         Returns: string
       }
       generate_finance_application_number: {
@@ -2971,6 +3153,14 @@ export type Database = {
           p_current_status: string
           p_new_status: string
           p_transaction_type: string
+        }
+        Returns: boolean
+      }
+      verify_device_code: {
+        Args: {
+          p_code: string
+          p_device_fingerprint: string
+          p_user_id: string
         }
         Returns: boolean
       }
