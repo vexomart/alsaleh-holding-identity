@@ -111,11 +111,27 @@ const VideoProduction = () => {
     }
   ];
 
-  const portfolio = [
-    { title: "فيديو إطلاق منتج", category: "ترويجي", views: "50K+" },
-    { title: "موشن جرافيك شركة", category: "موشن", views: "25K+" },
-    { title: "فيلم وثائقي قصير", category: "سينمائي", views: "100K+" },
-    { title: "فيديو تدريبي", category: "تعليمي", views: "30K+" }
+  const stats = [
+    { value: "500+", label: "مشروع منجز", icon: Film },
+    { value: "150+", label: "عميل سعيد", icon: Star },
+    { value: "10+", label: "سنوات خبرة", icon: Award },
+    { value: "24/7", label: "دعم فني", icon: Clock }
+  ];
+
+  const process = [
+    { step: "01", title: "الاستشارة", description: "نستمع لفكرتك ونفهم أهدافك ورؤيتك للمشروع" },
+    { step: "02", title: "التخطيط", description: "نضع خطة إنتاج مفصلة وسيناريو احترافي" },
+    { step: "03", title: "الإنتاج", description: "تصوير ومونتاج وتأثيرات بصرية احترافية" },
+    { step: "04", title: "التسليم", description: "مراجعة نهائية وتسليم بجودة عالية" }
+  ];
+
+  const whyChooseUs = [
+    { title: "فريق محترف", description: "مخرجين ومصورين ومصممين ذوي خبرة عالية", icon: Camera },
+    { title: "معدات حديثة", description: "كاميرات 4K/8K وأحدث برامج المونتاج", icon: Monitor },
+    { title: "إبداع لا محدود", description: "أفكار مبتكرة وتصاميم فريدة لكل مشروع", icon: Palette },
+    { title: "التزام بالمواعيد", description: "نحترم جدولك الزمني ونسلم في الوقت المحدد", icon: Clock },
+    { title: "دعم متواصل", description: "نقدم تعديلات ودعم حتى بعد التسليم", icon: Target },
+    { title: "أسعار تنافسية", description: "جودة عالية بأسعار مناسبة لجميع الميزانيات", icon: Award }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -280,8 +296,31 @@ const VideoProduction = () => {
         </div>
       </section>
 
-      {/* Portfolio Preview */}
+      {/* Stats Section */}
       <section className="py-16 bg-slate-900 text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          >
+            {stats.map((stat, index) => (
+              <motion.div key={stat.label} variants={itemVariants} className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+                  <stat.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-3xl sm:text-4xl font-black mb-2">{stat.value}</div>
+                <div className="text-white/70">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -289,8 +328,11 @@ const VideoProduction = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="bg-white/10 text-white mb-4">أعمالنا</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">معرض الأعمال</h2>
+            <Badge className="bg-gradient-to-l from-orange-500 to-red-500 text-white mb-4">خطوات العمل</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">كيف نعمل؟</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              نتبع منهجية احترافية مدروسة لضمان أفضل النتائج
+            </p>
           </motion.div>
 
           <motion.div 
@@ -300,19 +342,61 @@ const VideoProduction = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {portfolio.map((item, index) => (
+            {process.map((item, index) => (
+              <motion.div key={item.step} variants={itemVariants}>
+                <Card className="h-full text-center hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-orange-500/30 group">
+                  <CardContent className="p-6">
+                    <div className="text-5xl font-black bg-gradient-to-l from-orange-500 to-red-500 bg-clip-text text-transparent mb-4">
+                      {item.step}
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-orange-500 transition-colors">{item.title}</h3>
+                    <p className="text-muted-foreground">{item.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge className="bg-gradient-to-l from-orange-500 to-red-500 text-white mb-4">لماذا نحن؟</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">لماذا تختار ASH HOLDING؟</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              نتميز بخبرة واسعة وفريق محترف يضمن لك أفضل النتائج
+            </p>
+          </motion.div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {whyChooseUs.map((item, index) => (
               <motion.div key={item.title} variants={itemVariants}>
-                <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/10 transition-colors group cursor-pointer">
-                  <div className="aspect-video bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl mb-4 flex items-center justify-center group-hover:scale-105 transition-transform">
-                    <Play className="w-12 h-12 text-white/50 group-hover:text-white transition-colors" />
-                  </div>
-                  <Badge className="bg-orange-500/20 text-orange-300 mb-2">{item.category}</Badge>
-                  <h3 className="font-bold mb-1">{item.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-white/60">
-                    <Eye className="w-4 h-4" />
-                    <span>{item.views} مشاهدة</span>
-                  </div>
-                </div>
+                <Card className="h-full hover:shadow-xl transition-all duration-300 group border-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <item.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold mb-2 group-hover:text-orange-500 transition-colors">{item.title}</h3>
+                        <p className="text-muted-foreground">{item.description}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </motion.div>
