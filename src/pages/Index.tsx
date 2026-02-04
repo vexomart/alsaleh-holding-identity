@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
-import DepartmentsIconsSection from "@/components/DepartmentsIconsSection";
+import ServicesPreviewSection from "@/components/ServicesPreviewSection";
 import Footer from "@/components/Footer";
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer";
 import { ImageOptimizer } from "@/components/ImageOptimizer";
@@ -93,7 +93,7 @@ const Index = () => {
 
         {/* Services Section */}
         <section id="services">
-          <DepartmentsIconsSection />
+          <ServicesPreviewSection />
         </section>
       </main>
 

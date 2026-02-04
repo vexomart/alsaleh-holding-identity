@@ -180,6 +180,7 @@ const DigitalMarketing = lazy(() => import("./pages/DigitalMarketing"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
+const IntegratedServicesPage = lazy(() => import("./pages/IntegratedServicesPage"));
 
 // NEW DASHBOARDS - Clean Architecture
 const AuthLogin = lazy(() => import("./pages/auth/Login"));
@@ -352,6 +353,7 @@ const App = () => {
                       <Route path="/brand-identity" element={<Suspense fallback={<PageLoader />}><DesignSolutions /></Suspense>} />
                       <Route path="/remote-work" element={<Suspense fallback={<PageLoader />}><RemoteWork /></Suspense>} />
                       <Route path="/services-catalog" element={<Suspense fallback={<PageLoader />}><ServicesCatalog /></Suspense>} />
+                      <Route path="/integrated-services" element={<Suspense fallback={<PageLoader />}><IntegratedServicesPage /></Suspense>} />
                       
                       {/* AI Services */}
                       <Route path="/ai-solutions" element={<Suspense fallback={<PageLoader />}><AIIntelligence /></Suspense>} />
