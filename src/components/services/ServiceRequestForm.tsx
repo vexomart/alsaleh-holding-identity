@@ -151,8 +151,8 @@ const ServiceRequestForm = ({
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x: 30 }}
+      whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
@@ -160,79 +160,75 @@ const ServiceRequestForm = ({
         "border-0 shadow-2xl overflow-hidden",
         `ring-2 ${theme.ring}`
       )}>
-        {/* Header */}
+        {/* Header - RTL gradient direction */}
         <div className={cn("p-6 text-white bg-gradient-to-l", theme.gradient)}>
-          <h3 className="text-2xl font-bold mb-2">{title}</h3>
-          <p className="text-white/80 text-sm">
+          <h3 className="text-2xl font-bold mb-2 text-right">{title}</h3>
+          <p className="text-white/80 text-sm text-right">
             {serviceName} - استشارة مجانية ورد سريع
           </p>
         </div>
         
-        <CardContent className="p-6 sm:p-8">
-          <form onSubmit={handleSubmit} className="space-y-5" dir="rtl">
-            {/* Row 1: Name & Email - RTL order (Name right, Email left) */}
+        <CardContent className="p-6 sm:p-8" dir="rtl">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Row 1: Name (Right) & Email (Left) - Native RTL Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2 sm:order-2">
-                <Label className="block font-medium text-end">الاسم الكامل *</Label>
+              <div className="space-y-2">
+                <Label className="block font-medium">الاسم الكامل *</Label>
                 <Input 
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required
-                  className="text-end"
                   placeholder="أدخل اسمك الكامل"
-                  dir="rtl"
                 />
               </div>
-              <div className="space-y-2 sm:order-1">
-                <Label className="block font-medium text-end">البريد الإلكتروني *</Label>
+              <div className="space-y-2">
+                <Label className="block font-medium">البريد الإلكتروني *</Label>
                 <Input 
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   required
-                  className="text-start"
+                  className="text-left"
                   placeholder="example@email.com"
                   dir="ltr"
                 />
               </div>
             </div>
 
-            {/* Row 2: Phone & Company - RTL order (Phone right, Company left) */}
+            {/* Row 2: Phone (Right) & Company (Left) - Native RTL Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2 sm:order-2">
-                <Label className="block font-medium text-end">رقم الجوال *</Label>
+              <div className="space-y-2">
+                <Label className="block font-medium">رقم الجوال *</Label>
                 <Input 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   required
-                  className="text-start"
+                  className="text-left"
                   placeholder="05XXXXXXXX"
                   dir="ltr"
                 />
               </div>
-              <div className="space-y-2 sm:order-1">
-                <Label className="block font-medium text-end">اسم الشركة / المؤسسة</Label>
+              <div className="space-y-2">
+                <Label className="block font-medium">اسم الشركة / المؤسسة</Label>
                 <Input 
                   value={formData.company}
                   onChange={(e) => setFormData({...formData, company: e.target.value})}
-                  className="text-end"
                   placeholder="اسم الشركة (اختياري)"
-                  dir="rtl"
                 />
               </div>
             </div>
 
-            {/* Service Option */}
+            {/* Service Option - Native RTL Select */}
             {serviceOptions.length > 0 && (
               <div className="space-y-2">
-                <Label className="block font-medium text-end">نوع الخدمة المطلوبة</Label>
+                <Label className="block font-medium">نوع الخدمة المطلوبة</Label>
                 <Select value={formData.serviceOption} onValueChange={(v) => setFormData({...formData, serviceOption: v})}>
-                  <SelectTrigger className="text-end flex-row-reverse" dir="rtl">
+                  <SelectTrigger>
                     <SelectValue placeholder="اختر نوع الخدمة" />
                   </SelectTrigger>
-                  <SelectContent dir="rtl" className="text-end">
+                  <SelectContent>
                     {serviceOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-end justify-end">{option.label}</SelectItem>
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -241,26 +237,26 @@ const ServiceRequestForm = ({
 
             {/* Description */}
             <div className="space-y-2">
-              <Label className="block font-medium text-end">تفاصيل المشروع</Label>
+              <Label className="block font-medium">تفاصيل المشروع</Label>
               <Textarea 
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={4}
-                className="text-end resize-none"
+                className="resize-none"
                 placeholder="اشرح متطلباتك بالتفصيل..."
-                dir="rtl"
               />
             </div>
 
-            {/* Features Selection */}
+            {/* Features Selection - Native RTL Grid */}
             {features.length > 0 && (
               <div className="space-y-3">
-                <Label className="block font-medium text-end">الخدمات الإضافية المطلوبة</Label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" dir="rtl">
+                <Label className="block font-medium">الخدمات الإضافية المطلوبة</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {features.slice(0, 6).map((feature) => (
-                    <motion.div 
+                    <motion.label 
                       key={feature}
-                      className="flex flex-row-reverse items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      htmlFor={feature}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                       whileHover={{ scale: 1.02 }}
                     >
                       <Checkbox 
@@ -269,53 +265,48 @@ const ServiceRequestForm = ({
                         onCheckedChange={(checked) => handleFeatureToggle(feature, checked as boolean)}
                         className={cn("border-2", theme.text)}
                       />
-                      <Label 
-                        htmlFor={feature} 
-                        className="text-sm cursor-pointer flex-1 text-end"
-                      >
-                        {feature}
-                      </Label>
-                    </motion.div>
+                      <span className="text-sm flex-1">{feature}</span>
+                    </motion.label>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Submit Button - Native RTL: text first, icon second */}
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button 
                 type="submit" 
                 size="lg" 
                 className={cn(
-                  "w-full text-white font-bold py-6 text-lg bg-gradient-to-r flex-row-reverse gap-2",
+                  "w-full text-white font-bold py-6 text-lg bg-gradient-to-l gap-2",
                   theme.gradient
                 )}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
                     <span>جاري الإرسال...</span>
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   </>
                 ) : (
                   <>
-                    <Send className="w-5 h-5" />
                     <span>إرسال الطلب</span>
+                    <Send className="w-5 h-5" />
                   </>
                 )}
               </Button>
             </motion.div>
 
-            {/* Customer Portal Link */}
+            {/* Customer Portal Link - Native RTL: text first, icon second */}
             <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
               <Link to="/app">
                 <Button 
                   type="button"
                   variant="outline" 
-                  className="w-full gap-2 flex-row-reverse"
+                  className="w-full gap-2"
                 >
-                  <LogIn className="w-4 h-4" />
                   <span>بوابة العملاء - تتبع طلباتك</span>
+                  <LogIn className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
