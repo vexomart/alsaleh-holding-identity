@@ -1,6 +1,6 @@
 /**
  * Trusted Devices Hook
- * Manages user's trusted devices
+ * Manages user's trusted devices with real-time updates
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -54,6 +54,42 @@ export const useTrustedDevices = () => {
     } finally {
       setIsLoading(false);
     }
+  }, [user?.id]);
+
+  // Real-time subscription for trusted_devices
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel(`trusted_devices_${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'trusted_devices',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('Device change:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            setDevices(prev => [payload.new as TrustedDevice, ...prev]);
+            toast.info('تم إضافة جهاز جديد');
+          } else if (payload.eventType === 'UPDATE') {
+            setDevices(prev => 
+              prev.map(d => d.id === payload.new.id ? payload.new as TrustedDevice : d)
+            );
+          } else if (payload.eventType === 'DELETE') {
+            setDevices(prev => prev.filter(d => d.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user?.id]);
 
   const registerDevice = useCallback(async () => {

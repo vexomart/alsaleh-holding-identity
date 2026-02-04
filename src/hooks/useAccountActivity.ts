@@ -1,6 +1,6 @@
 /**
  * Account Activity Hook
- * Tracks and retrieves user account activity
+ * Tracks and retrieves user account activity with real-time updates
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -74,6 +74,32 @@ export const useAccountActivity = (limit = 50) => {
     } finally {
       setIsLoading(false);
     }
+  }, [user?.id, limit]);
+
+  // Real-time subscription for account_activity_log
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel(`activity_log_${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'account_activity_log',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('New activity:', payload);
+          setActivities(prev => [payload.new as ActivityLog, ...prev].slice(0, limit));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user?.id, limit]);
 
   const logActivity = useCallback(async (
