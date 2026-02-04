@@ -254,28 +254,28 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
         
-        {/* Main Title */}
+        {/* Main Title - RTL Order: ASH on right, HOLDING on left */}
         <motion.div variants={itemVariants} className="mb-4 sm:mb-6 lg:mb-8">
           <motion.h1 
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight"
             style={{ textShadow: "0 4px 30px rgba(0,0,0,0.5)" }}
           >
             <motion.span
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="inline-block"
+              className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
             >
-              ASH
+              HOLDING
             </motion.span>
             {" "}
             <motion.span
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="inline-block bg-gradient-to-l from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+              className="inline-block"
             >
-              HOLDING
+              ASH
             </motion.span>
           </motion.h1>
           
@@ -284,7 +284,7 @@ const HeroSection = () => {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-            className="h-1 sm:h-1.5 bg-gradient-to-l from-blue-500 via-purple-500 to-pink-500 mx-auto mt-4 rounded-full max-w-xs sm:max-w-md"
+            className="h-1 sm:h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mx-auto mt-4 rounded-full max-w-xs sm:max-w-md"
           />
         </motion.div>
         
