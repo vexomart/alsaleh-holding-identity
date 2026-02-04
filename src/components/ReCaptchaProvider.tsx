@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import * as React from 'react';
 
 interface ReCaptchaProviderProps {
   children: React.ReactNode;
 }
 
-export const ReCaptchaProvider = ({ children }: ReCaptchaProviderProps) => {
-  useEffect(() => {
+export const ReCaptchaProvider: React.FC<ReCaptchaProviderProps> = ({ children }) => {
+  React.useEffect(() => {
     // Add reCAPTCHA v3 script
     const script = document.createElement('script');
     script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
