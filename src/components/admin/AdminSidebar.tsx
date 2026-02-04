@@ -23,7 +23,8 @@ import {
   Wallet,
   Landmark,
   FileText,
-  CreditCard
+  CreditCard,
+  Link2
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -162,6 +163,14 @@ const businessNavItems: NavItem[] = [
 // Will be added back when CMS is fully built
 
 const systemNavItems: NavItem[] = [
+  {
+    titleKey: "integrations",
+    titleAr: "التكاملات",
+    titleEn: "Integrations",
+    icon: Link2,
+    href: "/admin/integrations",
+    permission: "settings.view",
+  },
   {
     titleKey: "reports",
     titleAr: "التقارير والتحليلات",

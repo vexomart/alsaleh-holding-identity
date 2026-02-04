@@ -27,6 +27,7 @@ export const ROUTES = {
     WALLETS: '/admin/wallets',
     FINANCE: '/admin/finance',
     REFERRALS: '/admin/referrals',
+    INTEGRATIONS: '/admin/integrations',
     CMS: {
       ROOT: '/admin/cms',
       PAGES: '/admin/cms/pages',

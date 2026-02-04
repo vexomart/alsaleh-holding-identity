@@ -1232,6 +1232,112 @@ export type Database = {
           },
         ]
       }
+      integration_logs: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          integration_id: string
+          message: string | null
+          metadata: Json | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          integration_id: string
+          message?: string | null
+          metadata?: Json | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          integration_id?: string
+          message?: string | null
+          metadata?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrations: {
+        Row: {
+          api_key: string | null
+          api_secret: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          integration_type: string
+          is_active: boolean | null
+          is_connected: boolean | null
+          last_error: string | null
+          last_sync_at: string | null
+          name_ar: string
+          name_en: string
+          provider: string
+          settings: Json | null
+          tenant_id: string | null
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          api_key?: string | null
+          api_secret?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          integration_type: string
+          is_active?: boolean | null
+          is_connected?: boolean | null
+          last_error?: string | null
+          last_sync_at?: string | null
+          name_ar: string
+          name_en: string
+          provider: string
+          settings?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          api_key?: string | null
+          api_secret?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          integration_type?: string
+          is_active?: boolean | null
+          is_connected?: boolean | null
+          last_error?: string | null
+          last_sync_at?: string | null
+          name_ar?: string
+          name_en?: string
+          provider?: string
+          settings?: Json | null
+          tenant_id?: string | null
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           created_at: string

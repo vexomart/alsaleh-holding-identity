@@ -26,8 +26,9 @@ import { AdminClientHub } from '@/components/admin/clients';
 import { Card, CardContent } from '@/components/ui/card';
 import { Construction, Loader2 } from 'lucide-react';
 
-// Lazy load referrals page
+// Lazy load pages
 const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/AdminReferralsPage'));
+const IntegrationsPage = lazy(() => import('@/components/admin/integrations/IntegrationsPage'));
 
 // Page loader
 const PageLoader = () => (
@@ -79,8 +80,8 @@ const AdminDashboard = () => {
         {/* Referrals Management */}
         <Route path="referrals" element={<Suspense fallback={<PageLoader />}><AdminReferralsPage /></Suspense>} />
         
-        {/* CMS Routes */}
-        {/* CMS routes removed - module not implemented */}
+        {/* Integrations Management */}
+        <Route path="integrations" element={<Suspense fallback={<PageLoader />}><IntegrationsPage /></Suspense>} />
         
         {/* System Routes */}
         <Route path="reports" element={<ReportsPage />} />
