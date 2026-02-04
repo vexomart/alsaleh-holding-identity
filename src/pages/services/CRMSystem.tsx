@@ -1,56 +1,29 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import ServiceRequestForm from "@/components/services/ServiceRequestForm";
 import {
   Settings,
   Users,
-  Database,
   BarChart3,
   Shield,
   Zap,
   CheckCircle,
   Star,
-  Send,
-  Monitor,
   ArrowLeft,
-  LineChart,
-  PieChart,
   UserCheck,
-  Bell,
-  Calendar,
-  FileText,
+  PieChart,
   TrendingUp,
-  Layers
+  LogIn
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CRMSystem = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    companySize: "",
-    industry: "",
-    timeline: "",
-    description: "",
-    requiredFeatures: [] as string[],
-    currentSystem: "",
-    budget: ""
-  });
 
   useEffect(() => {
     document.title = "نظام إدارة العملاء CRM | ASH HOLDING";
@@ -118,31 +91,6 @@ const CRMSystem = () => {
     { value: "90%", label: "رضا العملاء", icon: Star },
     { value: "100+", label: "شركة تستخدمه", icon: Users }
   ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      toast({
-        title: "تم إرسال طلبك بنجاح!",
-        description: "سنتواصل معك خلال 24 ساعة",
-      });
-      setFormData({
-        name: "", email: "", phone: "", company: "", companySize: "",
-        industry: "", timeline: "", description: "", requiredFeatures: [],
-        currentSystem: "", budget: ""
-      });
-    } catch (error) {
-      toast({
-        title: "حدث خطأ",
-        description: "يرجى المحاولة مرة أخرى",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -361,138 +309,33 @@ const CRMSystem = () => {
         </div>
       </section>
 
-      {/* Request Form */}
-      <section className="py-20 bg-slate-50/50 dark:bg-slate-900/50">
+      {/* Request Form Section */}
+      <section className="py-20 bg-gradient-to-b from-violet-50/50 to-white dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge className="bg-gradient-to-l from-violet-500 to-purple-600 text-white mb-4">تواصل معنا</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">اطلب نظام CRM</h2>
+          </motion.div>
+
           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Form */}
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Card className="border-0 shadow-xl">
-                <CardContent className="p-6 sm:p-8">
-                  <h3 className="text-2xl font-bold mb-6">اطلب نظام CRM</h3>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل</Label>
-                        <Input 
-                          value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني</Label>
-                        <Input 
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input 
-                          value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>اسم الشركة</Label>
-                        <Input 
-                          value={formData.company}
-                          onChange={(e) => setFormData({...formData, company: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label>حجم الشركة</Label>
-                        <Select value={formData.companySize} onValueChange={(v) => setFormData({...formData, companySize: v})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر الحجم" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1-10">1-10 موظفين</SelectItem>
-                            <SelectItem value="11-50">11-50 موظف</SelectItem>
-                            <SelectItem value="51-200">51-200 موظف</SelectItem>
-                            <SelectItem value="200+">أكثر من 200</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>القطاع</Label>
-                        <Select value={formData.industry} onValueChange={(v) => setFormData({...formData, industry: v})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر القطاع" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="retail">تجارة التجزئة</SelectItem>
-                            <SelectItem value="services">خدمات</SelectItem>
-                            <SelectItem value="tech">تقنية</SelectItem>
-                            <SelectItem value="healthcare">صحة</SelectItem>
-                            <SelectItem value="education">تعليم</SelectItem>
-                            <SelectItem value="other">أخرى</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>وصف الاحتياجات</Label>
-                      <Textarea 
-                        value={formData.description}
-                        onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        rows={4}
-                        placeholder="اشرح احتياجاتك من نظام CRM..."
-                      />
-                    </div>
-
-                    <div>
-                      <Label className="mb-3 block">الميزات المطلوبة</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {crmFeatures.slice(0, 6).map((feature) => (
-                          <div key={feature} className="flex items-center gap-2">
-                            <Checkbox 
-                              id={feature}
-                              checked={formData.requiredFeatures.includes(feature)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setFormData({...formData, requiredFeatures: [...formData.requiredFeatures, feature]});
-                                } else {
-                                  setFormData({...formData, requiredFeatures: formData.requiredFeatures.filter(f => f !== feature)});
-                                }
-                              }}
-                            />
-                            <Label htmlFor={feature} className="text-sm">{feature}</Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="w-full bg-gradient-to-l from-violet-500 to-purple-600"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
-                      <Send className="w-5 h-5 mr-2" />
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ServiceRequestForm
+              serviceName="نظام إدارة العملاء CRM"
+              serviceType="crm_system"
+              colorTheme="violet"
+              title="اطلب نظام CRM"
+              serviceOptions={[
+                { value: "basic", label: "نظام أساسي" },
+                { value: "pro", label: "نظام متقدم" },
+                { value: "enterprise", label: "نظام مؤسسي" },
+                { value: "custom", label: "حلول مخصصة" }
+              ]}
+              features={crmFeatures}
+            />
 
             {/* Features List */}
             <motion.div 
@@ -509,13 +352,30 @@ const CRMSystem = () => {
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800/50 rounded-xl shadow-sm"
+                    className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800/50 rounded-xl shadow-sm border border-violet-100 dark:border-slate-700"
                   >
                     <CheckCircle className="w-5 h-5 text-violet-500 flex-shrink-0" />
                     <span>{feature}</span>
                   </motion.div>
                 ))}
               </div>
+              
+              {/* Customer Portal CTA */}
+              <Card className="mt-8 border-2 border-violet-200 dark:border-violet-900/50 bg-gradient-to-br from-violet-50 to-white dark:from-slate-800 dark:to-slate-900">
+                <CardContent className="p-6 text-center">
+                  <LogIn className="w-10 h-10 mx-auto mb-4 text-violet-500" />
+                  <h4 className="text-lg font-bold mb-2">هل لديك حساب؟</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    ادخل إلى بوابة العملاء لإدارة نظامك
+                  </p>
+                  <Link to="/app">
+                    <Button className="w-full bg-gradient-to-l from-violet-500 to-purple-600 text-white">
+                      بوابة العملاء
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
         </div>
