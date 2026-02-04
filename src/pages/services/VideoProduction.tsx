@@ -1,55 +1,34 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import ServiceRequestForm from "@/components/services/ServiceRequestForm";
 import {
   Video,
   Film,
   Clapperboard,
   Play,
   Sparkles,
-  Zap,
   CheckCircle,
   Star,
   Clock,
-  Send,
   Monitor,
   Palette,
-  Music,
   Camera,
   ArrowLeft,
   Layers,
   Eye,
   Award,
-  Target
+  Target,
+  LogIn
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const VideoProduction = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    videoType: "",
-    duration: "",
-    timeline: "",
-    description: "",
-    requiredFeatures: [] as string[],
-    budget: ""
-  });
 
   useEffect(() => {
     document.title = "إنتاج الفيديو وموشن جرافيك | ASH HOLDING";
@@ -133,30 +112,6 @@ const VideoProduction = () => {
     { title: "دعم متواصل", description: "نقدم تعديلات ودعم حتى بعد التسليم", icon: Target },
     { title: "أسعار تنافسية", description: "جودة عالية بأسعار مناسبة لجميع الميزانيات", icon: Award }
   ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      toast({
-        title: "تم إرسال طلبك بنجاح!",
-        description: "سنتواصل معك خلال 24 ساعة",
-      });
-      setFormData({
-        name: "", email: "", phone: "", company: "", videoType: "",
-        duration: "", timeline: "", description: "", requiredFeatures: [], budget: ""
-      });
-    } catch (error) {
-      toast({
-        title: "حدث خطأ",
-        description: "يرجى المحاولة مرة أخرى",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -403,112 +358,38 @@ const VideoProduction = () => {
         </div>
       </section>
 
-      {/* Request Form */}
-      <section className="py-20">
+      {/* Request Form Section */}
+      <section className="py-20 bg-gradient-to-b from-orange-50/50 to-white dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge className="bg-gradient-to-l from-orange-500 to-red-500 text-white mb-4">تواصل معنا</Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">اطلب خدمة إنتاج الفيديو</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              املأ النموذج وسيتواصل معك فريقنا خلال 24 ساعة
+            </p>
+          </motion.div>
+
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Form */}
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Card className="border-0 shadow-xl">
-                <CardContent className="p-6 sm:p-8">
-                  <h3 className="text-2xl font-bold mb-6">اطلب خدمة إنتاج الفيديو</h3>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label>الاسم الكامل</Label>
-                        <Input 
-                          value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>البريد الإلكتروني</Label>
-                        <Input 
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label>رقم الهاتف</Label>
-                        <Input 
-                          value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label>نوع الفيديو</Label>
-                        <Select value={formData.videoType} onValueChange={(v) => setFormData({...formData, videoType: v})}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="اختر النوع" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="promo">فيديو ترويجي</SelectItem>
-                            <SelectItem value="motion">موشن جرافيك</SelectItem>
-                            <SelectItem value="educational">فيديو تعليمي</SelectItem>
-                            <SelectItem value="documentary">فيلم وثائقي</SelectItem>
-                            <SelectItem value="social">محتوى سوشيال ميديا</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>وصف المشروع</Label>
-                      <Textarea 
-                        value={formData.description}
-                        onChange={(e) => setFormData({...formData, description: e.target.value})}
-                        rows={4}
-                        placeholder="اشرح فكرة الفيديو المطلوب..."
-                      />
-                    </div>
-
-                    <div>
-                      <Label className="mb-3 block">الخدمات المطلوبة</Label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {videoFeatures.slice(0, 6).map((feature) => (
-                          <div key={feature} className="flex items-center gap-2">
-                            <Checkbox 
-                              id={feature}
-                              checked={formData.requiredFeatures.includes(feature)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setFormData({...formData, requiredFeatures: [...formData.requiredFeatures, feature]});
-                                } else {
-                                  setFormData({...formData, requiredFeatures: formData.requiredFeatures.filter(f => f !== feature)});
-                                }
-                              }}
-                            />
-                            <Label htmlFor={feature} className="text-sm">{feature}</Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="w-full bg-gradient-to-l from-orange-500 to-red-500"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
-                      <Send className="w-5 h-5 mr-2" />
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <ServiceRequestForm
+              serviceName="إنتاج الفيديو والموشن جرافيك"
+              serviceType="video_production"
+              colorTheme="orange"
+              title="اطلب خدمة إنتاج الفيديو"
+              serviceOptions={[
+                { value: "promo", label: "فيديو ترويجي" },
+                { value: "motion", label: "موشن جرافيك" },
+                { value: "educational", label: "فيديو تعليمي" },
+                { value: "documentary", label: "فيلم وثائقي" },
+                { value: "social", label: "محتوى سوشيال ميديا" }
+              ]}
+              features={videoFeatures}
+            />
 
             {/* Features List */}
             <motion.div 
@@ -525,13 +406,30 @@ const VideoProduction = () => {
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl"
+                    className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800/50 rounded-xl shadow-sm border border-orange-100 dark:border-slate-700"
                   >
                     <CheckCircle className="w-5 h-5 text-orange-500 flex-shrink-0" />
                     <span>{feature}</span>
                   </motion.div>
                 ))}
               </div>
+              
+              {/* Customer Portal CTA */}
+              <Card className="mt-8 border-2 border-orange-200 dark:border-orange-900/50 bg-gradient-to-br from-orange-50 to-white dark:from-slate-800 dark:to-slate-900">
+                <CardContent className="p-6 text-center">
+                  <LogIn className="w-10 h-10 mx-auto mb-4 text-orange-500" />
+                  <h4 className="text-lg font-bold mb-2">هل لديك حساب؟</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    ادخل إلى بوابة العملاء لتتبع طلباتك ومشاريعك
+                  </p>
+                  <Link to="/app">
+                    <Button className="w-full bg-gradient-to-l from-orange-500 to-red-500 text-white">
+                      بوابة العملاء
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
         </div>
