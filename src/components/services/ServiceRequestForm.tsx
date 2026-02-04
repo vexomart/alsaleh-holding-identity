@@ -168,54 +168,54 @@ const ServiceRequestForm = ({
           </p>
         </div>
         
-        <CardContent className="p-6 sm:p-8" dir="rtl">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Row 1: Name & Email */}
+        <CardContent className="p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="space-y-5" dir="rtl">
+            {/* Row 1: Name & Email - RTL order (Name right, Email left) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-right block font-medium">الاسم الكامل *</Label>
+              <div className="space-y-2 sm:order-2">
+                <Label className="block font-medium text-end">الاسم الكامل *</Label>
                 <Input 
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   required
-                  className="text-right"
+                  className="text-end"
                   placeholder="أدخل اسمك الكامل"
                   dir="rtl"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-right block font-medium">البريد الإلكتروني *</Label>
+              <div className="space-y-2 sm:order-1">
+                <Label className="block font-medium text-end">البريد الإلكتروني *</Label>
                 <Input 
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   required
-                  className="text-right"
+                  className="text-start"
                   placeholder="example@email.com"
                   dir="ltr"
                 />
               </div>
             </div>
 
-            {/* Row 2: Phone & Company */}
+            {/* Row 2: Phone & Company - RTL order (Phone right, Company left) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-right block font-medium">رقم الجوال *</Label>
+              <div className="space-y-2 sm:order-2">
+                <Label className="block font-medium text-end">رقم الجوال *</Label>
                 <Input 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   required
-                  className="text-right"
+                  className="text-start"
                   placeholder="05XXXXXXXX"
                   dir="ltr"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-right block font-medium">اسم الشركة / المؤسسة</Label>
+              <div className="space-y-2 sm:order-1">
+                <Label className="block font-medium text-end">اسم الشركة / المؤسسة</Label>
                 <Input 
                   value={formData.company}
                   onChange={(e) => setFormData({...formData, company: e.target.value})}
-                  className="text-right"
+                  className="text-end"
                   placeholder="اسم الشركة (اختياري)"
                   dir="rtl"
                 />
@@ -225,14 +225,14 @@ const ServiceRequestForm = ({
             {/* Service Option */}
             {serviceOptions.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-right block font-medium">نوع الخدمة المطلوبة</Label>
+                <Label className="block font-medium text-end">نوع الخدمة المطلوبة</Label>
                 <Select value={formData.serviceOption} onValueChange={(v) => setFormData({...formData, serviceOption: v})}>
-                  <SelectTrigger className="text-right" dir="rtl">
+                  <SelectTrigger className="text-end flex-row-reverse" dir="rtl">
                     <SelectValue placeholder="اختر نوع الخدمة" />
                   </SelectTrigger>
-                  <SelectContent dir="rtl">
+                  <SelectContent dir="rtl" className="text-end">
                     {serviceOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      <SelectItem key={option.value} value={option.value} className="text-end justify-end">{option.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -241,12 +241,12 @@ const ServiceRequestForm = ({
 
             {/* Description */}
             <div className="space-y-2">
-              <Label className="text-right block font-medium">تفاصيل المشروع</Label>
+              <Label className="block font-medium text-end">تفاصيل المشروع</Label>
               <Textarea 
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={4}
-                className="text-right resize-none"
+                className="text-end resize-none"
                 placeholder="اشرح متطلباتك بالتفصيل..."
                 dir="rtl"
               />
@@ -255,12 +255,12 @@ const ServiceRequestForm = ({
             {/* Features Selection */}
             {features.length > 0 && (
               <div className="space-y-3">
-                <Label className="text-right block font-medium">الخدمات الإضافية المطلوبة</Label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Label className="block font-medium text-end">الخدمات الإضافية المطلوبة</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" dir="rtl">
                   {features.slice(0, 6).map((feature) => (
                     <motion.div 
                       key={feature}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="flex flex-row-reverse items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                       whileHover={{ scale: 1.02 }}
                     >
                       <Checkbox 
@@ -271,7 +271,7 @@ const ServiceRequestForm = ({
                       />
                       <Label 
                         htmlFor={feature} 
-                        className="text-sm cursor-pointer flex-1 text-right"
+                        className="text-sm cursor-pointer flex-1 text-end"
                       >
                         {feature}
                       </Label>
@@ -287,20 +287,20 @@ const ServiceRequestForm = ({
                 type="submit" 
                 size="lg" 
                 className={cn(
-                  "w-full text-white font-bold py-6 text-lg bg-gradient-to-l",
+                  "w-full text-white font-bold py-6 text-lg bg-gradient-to-r flex-row-reverse gap-2",
                   theme.gradient
                 )}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 ml-2 animate-spin" />
-                    جاري الإرسال...
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>جاري الإرسال...</span>
                   </>
                 ) : (
                   <>
-                    إرسال الطلب
-                    <Send className="w-5 h-5 mr-2" />
+                    <Send className="w-5 h-5" />
+                    <span>إرسال الطلب</span>
                   </>
                 )}
               </Button>
@@ -312,10 +312,10 @@ const ServiceRequestForm = ({
                 <Button 
                   type="button"
                   variant="outline" 
-                  className="w-full gap-2"
+                  className="w-full gap-2 flex-row-reverse"
                 >
                   <LogIn className="w-4 h-4" />
-                  بوابة العملاء - تتبع طلباتك
+                  <span>بوابة العملاء - تتبع طلباتك</span>
                 </Button>
               </Link>
             </div>
