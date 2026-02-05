@@ -67,6 +67,17 @@ export function HeaderDesktopNav() {
       <NavLink href="/contact" isActive={isActiveRoute('/contact')}>
         تواصل معنا
       </NavLink>
+
+      {/* Customer Portal */}
+      <Link
+        to="/app"
+        className={cn(
+          'relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+          'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'
+        )}
+      >
+        بوابة العملاء
+      </Link>
     </nav>
   );
 }

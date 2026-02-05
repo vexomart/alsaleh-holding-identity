@@ -180,6 +180,15 @@ export function HeaderMobileMenu({ isOpen, onClose }: HeaderMobileMenuProps) {
           >
             تواصل معنا
           </MobileNavItem>
+
+          {/* Customer Portal */}
+          <MobileNavItem 
+            icon={Users}
+            isActive={isActiveRoute('/app')}
+            onClick={() => handleNavigate('/app')}
+          >
+            بوابة العملاء
+          </MobileNavItem>
         </div>
 
         {/* Footer CTA */}
