@@ -513,22 +513,25 @@ const Navigation = () => {
 
 // ===== SUB-COMPONENTS =====
 
- // Desktop Nav Link using React Router
- const NavLinkItem = ({ to, isActive, children }: { to: string; isActive: boolean; children: React.ReactNode }) => (
-   <Link 
+ // Desktop Nav Link
+ const NavLinkItem = ({
+   to,
+   children,
+   isActive = false,
+ }: {
+   to: string;
+   children: React.ReactNode;
+   isActive?: boolean;
+ }) => (
+   <Link
      to={to}
-     className={`relative px-3 py-2 text-sm font-medium rounded-lg transition-all group ${
-       isActive 
-         ? 'text-blue-600 bg-blue-50' 
-         : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50/70'
+     className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+       isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
      }`}
-  >
-    {children}
-     <span className={`absolute bottom-1 start-1/2 -translate-x-1/2 h-0.5 bg-blue-600 rounded-full transition-all ${
-       isActive ? 'w-2/3' : 'w-0 group-hover:w-2/3'
-     }`} />
+   >
+     {children}
    </Link>
-);
+ );
 
 // Desktop Dropdown Menu
 const DropdownMenu = ({ 
