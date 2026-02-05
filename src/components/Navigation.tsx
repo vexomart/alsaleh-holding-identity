@@ -627,48 +627,42 @@ const DropdownMenu = ({
  );
 
 // Mobile Accordion
-const MobileAccordion = ({ 
-  label, 
-  icon: Icon, 
-  isOpen, 
-  onToggle, 
+ const MobileAccordion = ({
+   label,
+   icon: Icon,
+   isOpen,
+   onToggle,
    children,
-   isActive = false
-}: { 
-  label: string; 
-  icon: React.ElementType; 
-  isOpen: boolean; 
-  onToggle: () => void; 
-  children: React.ReactNode;
+   isActive = false,
+ }: {
+   label: string;
+   icon: React.ElementType;
+   isOpen: boolean;
+   onToggle: () => void;
+   children: React.ReactNode;
    isActive?: boolean;
-}) => (
-  <div>
-    <button
-      onClick={onToggle}
-       className={`w-full flex items-center justify-between gap-3 p-3.5 rounded-xl transition-colors active:scale-[0.98] ${
-         isActive || isOpen
-           ? 'text-blue-600 bg-blue-50' 
-           : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50'
+ }) => (
+   <div className="w-full">
+     <button
+       onClick={onToggle}
+       className={`w-full flex flex-row-reverse items-center justify-between p-3 rounded-xl transition-colors ${
+         isActive 
+           ? "bg-blue-50 text-blue-600" 
+           : "text-slate-700 hover:bg-slate-100"
        }`}
-    >
-      <div className="flex items-center gap-3">
-         <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-           isActive || isOpen ? 'bg-blue-100' : 'bg-slate-100'
-         }`}>
-          <Icon className="w-5 h-5" />
-        </div>
-        <span className="font-medium">{label}</span>
-      </div>
-       <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${
-         isOpen ? 'rotate-180 text-blue-600' : 'text-slate-400'
-       }`} />
-    </button>
-    {isOpen && (
-       <div className="mt-1 me-5 ps-2 space-y-0.5 border-e-2 border-blue-200">
-        {children}
-      </div>
-    )}
-  </div>
-);
+     >
+       <div className="flex flex-row-reverse items-center gap-3">
+         <Icon className="w-4 h-4" />
+         <span className="font-medium">{label}</span>
+       </div>
+       <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+     </button>
+     {isOpen && (
+       <div className="mt-2 space-y-1 pr-4 border-r border-slate-200">
+         {children}
+       </div>
+     )}
+   </div>
+ );
 
 export default Navigation;
