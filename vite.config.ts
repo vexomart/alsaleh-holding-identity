@@ -89,7 +89,7 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   optimizeDeps: {
-    force: true,
+    force: mode === 'development',
     esbuildOptions: {
       define: {
         global: 'globalThis',
