@@ -574,36 +574,30 @@ const DropdownMenu = ({
   </div>
 );
 
- // Desktop Dropdown Item using React Router
-const DropdownItem = ({ 
-   to, 
-  icon: Icon, 
+ // Desktop Dropdown Item
+ const DropdownItem = ({
+   to,
+   icon: Icon,
    children,
-   isActive = false
-}: { 
-   to: string; 
-  icon: React.ElementType; 
-  children: React.ReactNode;
+   isActive = false,
+ }: {
+   to: string;
+   icon: React.ElementType;
+   children: React.ReactNode;
    isActive?: boolean;
-}) => (
+ }) => (
    <Link
      to={to}
-     className={`flex items-center gap-2.5 p-2.5 rounded-xl transition-colors group ${
-       isActive ? 'bg-blue-100' : 'hover:bg-blue-50'
+     className={`flex flex-row-reverse items-center gap-3 px-4 py-2 rounded-lg text-sm transition-colors ${
+       isActive 
+         ? "bg-blue-50 text-blue-600 font-medium" 
+         : "text-slate-600 hover:bg-slate-100"
      }`}
-  >
-     <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
-       isActive ? 'bg-blue-600' : 'bg-blue-100 group-hover:bg-blue-600'
-     }`}>
-       <Icon className={`w-4 h-4 transition-colors ${
-         isActive ? 'text-white' : 'text-blue-600 group-hover:text-white'
-       }`} />
-    </div>
-     <span className={`text-sm transition-colors ${
-       isActive ? 'text-blue-600 font-medium' : 'text-slate-700 group-hover:text-blue-600'
-     }`}>{children}</span>
+   >
+     <Icon className="w-4 h-4 shrink-0" />
+     <span className="text-start">{children}</span>
    </Link>
-);
+ );
 
  // Mobile Nav Link
 const MobileNavLink = ({ 
