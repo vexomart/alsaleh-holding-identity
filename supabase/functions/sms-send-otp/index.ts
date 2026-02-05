@@ -62,8 +62,16 @@
    const apiKey = Deno.env.get("MSEGAT_API_KEY");
    const senderId = Deno.env.get("MSEGAT_SENDER_ID");
  
+  console.log("Msegat config check:", {
+    hasUsername: !!username,
+    hasApiKey: !!apiKey,
+    hasSenderId: !!senderId,
+    senderId: senderId,
+  });
+
    if (!username || !apiKey || !senderId) {
-     return { success: false, error: "Msegat credentials not configured" };
+    console.error("Missing Msegat credentials");
+    return { success: false, error: "بيانات Msegat غير مكتملة" };
    }
  
    const payload = {
@@ -77,14 +85,26 @@
  
    for (let attempt = 1; attempt <= retries; attempt++) {
      try {
+      console.log(`Msegat attempt ${attempt}: sending to ${phone}`);
+      
        const response = await fetch(MSEGAT_API_URL, {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify(payload),
        });
  
-       const result = await response.json();
-       console.log(`Msegat response (attempt ${attempt}):`, result);
+      const responseText = await response.text();
+      console.log(`Msegat raw response (attempt ${attempt}):`, responseText);
+      
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        console.error("Failed to parse Msegat response:", responseText);
+        return { success: false, error: "Invalid response from SMS provider" };
+      }
+      
+      console.log(`Msegat parsed response (attempt ${attempt}):`, result);
  
        // Msegat returns code 1 for success
        if (result.code === "1" || result.code === 1) {
@@ -97,7 +117,7 @@
          continue;
        }
  
-       return { success: false, response: result, error: result.message || "SMS send failed" };
+      return { success: false, response: result, error: result.message || result.Message || "فشل إرسال الرسالة" };
      } catch (error) {
        console.error(`Msegat error (attempt ${attempt}):`, error);
        if (attempt === retries) {
