@@ -1,12 +1,14 @@
 /**
  * HeaderDesktopNav - Premium Desktop Navigation
+ * Professional navigation with dropdowns
  */
 
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { HeaderDropdown } from './HeaderDropdown';
-import { headerConfig, mainNavItems } from './config';
+import { headerConfig } from './config';
+import { LogIn, Headphones } from 'lucide-react';
 
 export function HeaderDesktopNav() {
   const location = useLocation();
@@ -67,17 +69,6 @@ export function HeaderDesktopNav() {
       <NavLink href="/contact" isActive={isActiveRoute('/contact')}>
         تواصل معنا
       </NavLink>
-
-      {/* Customer Portal */}
-      <Link
-        to="/app"
-        className={cn(
-          'relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
-          'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'
-        )}
-      >
-        بوابة العملاء
-      </Link>
     </nav>
   );
 }
@@ -96,14 +87,13 @@ function NavLink({
     <Link
       to={href}
       className={cn(
-        'relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+        'relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200',
         isActive 
           ? 'text-primary bg-primary/5' 
           : 'text-foreground hover:text-primary hover:bg-muted'
       )}
     >
       {children}
-      {/* Active Indicator */}
       {isActive && (
         <span className="absolute bottom-0 start-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
       )}

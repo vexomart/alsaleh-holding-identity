@@ -2,27 +2,18 @@
  * Navigation - Premium Enterprise Header Component
  * ================================================
  * Complete RTL-native header system for ASH HOLDING
- * 
- * Features:
- * - Full RTL support with logical properties
- * - Responsive design (Mobile → Tablet → Desktop → Large screens)
- * - Transparent-to-solid scroll transition
- * - Premium dropdown navigation with mega menus
- * - Slide-in mobile menu from right (RTL)
- * - Sticky header with smooth animations
- * - WCAG accessible
  */
 
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Headphones } from 'lucide-react';
+import { Menu, Headphones, LogIn, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { HeaderLogo } from './header/HeaderLogo';
 import { HeaderTopBar } from './header/HeaderTopBar';
 import { HeaderDesktopNav } from './header/HeaderDesktopNav';
 import { HeaderMobileMenu } from './header/HeaderMobileMenu';
 
-const Navigation = () => {
+function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isScrolled, setIsScrolled] = React.useState(false);
   const location = useLocation();
@@ -73,14 +64,14 @@ const Navigation = () => {
               {/* ===== DESKTOP NAVIGATION (Center) ===== */}
               <HeaderDesktopNav />
 
-              {/* ===== CTA & MOBILE TOGGLE (Left Side in RTL) ===== */}
+              {/* ===== CTA BUTTONS & MOBILE TOGGLE (Left Side in RTL) ===== */}
               <div className="flex items-center gap-2 lg:gap-3 shrink-0">
                 
                 {/* Mobile Menu Toggle */}
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className={cn(
-                    'lg:hidden flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-200',
+                    'lg:hidden flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200',
                     'hover:bg-muted active:scale-95',
                     isMobileMenuOpen && 'bg-muted'
                   )}
@@ -88,10 +79,10 @@ const Navigation = () => {
                   aria-expanded={isMobileMenuOpen}
                   aria-controls="mobile-menu"
                 >
-                  <div className="w-6 h-5 flex flex-col justify-center items-center gap-1.5">
+                  <div className="w-5 h-4 flex flex-col justify-center items-center gap-1">
                     <span className={cn(
                       'block w-5 h-0.5 bg-foreground rounded-full transition-all duration-300',
-                      isMobileMenuOpen && 'rotate-45 translate-y-2'
+                      isMobileMenuOpen && 'rotate-45 translate-y-1.5'
                     )} />
                     <span className={cn(
                       'block w-5 h-0.5 bg-foreground rounded-full transition-all duration-300',
@@ -99,24 +90,37 @@ const Navigation = () => {
                     )} />
                     <span className={cn(
                       'block w-5 h-0.5 bg-foreground rounded-full transition-all duration-300',
-                      isMobileMenuOpen && '-rotate-45 -translate-y-2'
+                      isMobileMenuOpen && '-rotate-45 -translate-y-1.5'
                     )} />
                   </div>
                 </button>
 
-                {/* Desktop CTA Button */}
+                {/* Customer Portal Button - Desktop */}
+                <Link 
+                  to="/app"
+                  className={cn(
+                    'hidden lg:inline-flex items-center gap-2 px-4 py-2',
+                    'bg-muted border border-border text-foreground text-sm font-medium rounded-xl',
+                    'hover:bg-primary/10 hover:border-primary/30 hover:text-primary',
+                    'transition-all duration-200'
+                  )}
+                >
+                  <User className="w-4 h-4" />
+                  <span>بوابة العملاء</span>
+                </Link>
+
+                {/* CTA Button - Desktop */}
                 <Link 
                   to="/book-consultation"
                   className={cn(
-                    'hidden lg:inline-flex items-center gap-2 px-5 py-2.5',
-                    'bg-gradient-to-l from-primary to-primary-variant',
-                    'text-primary-foreground text-sm font-semibold rounded-xl',
-                    'hover:from-primary-variant hover:to-primary',
-                    'transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02]'
+                    'hidden lg:inline-flex items-center gap-2 px-4 py-2',
+                    'bg-primary text-primary-foreground text-sm font-semibold rounded-xl',
+                    'hover:bg-primary/90 shadow-lg hover:shadow-xl',
+                    'transition-all duration-200'
                   )}
                 >
                   <Headphones className="w-4 h-4" />
-                  <span>احجز استشارة مجانية</span>
+                  <span>احجز استشارة</span>
                 </Link>
               </div>
             </div>
@@ -131,6 +135,6 @@ const Navigation = () => {
       />
     </>
   );
-};
+}
 
 export default Navigation;
