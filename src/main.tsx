@@ -44,7 +44,7 @@ const initializeDirection = () => {
 initializeDirection();
 
 // Force cache bust on version change - v52 for React hooks fix
-const CACHE_KEY = 'app_cache_v54';
+const CACHE_KEY = 'app_cache_v56';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));

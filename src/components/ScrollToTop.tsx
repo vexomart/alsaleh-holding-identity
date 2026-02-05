@@ -1,10 +1,14 @@
-import { useEffect } from "react";
+/**
+ * ScrollToTop - التمرير لأعلى عند التنقل
+ */
+
+import * as React from 'react';
 import { useLocation } from "react-router-dom";
 
-const ScrollToTop = () => {
+function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (hash) {
       // Scroll to hash target after route renders
       setTimeout(() => {
@@ -25,6 +29,6 @@ const ScrollToTop = () => {
   }, [pathname, hash]);
 
   return null;
-};
+}
 
 export default ScrollToTop;

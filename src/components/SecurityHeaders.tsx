@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+/**
+ * SecurityHeaders - إعدادات الأمان
+ */
 
-export const SecurityHeaders = () => {
-  useEffect(() => {
+import * as React from 'react';
+
+export function SecurityHeaders() {
+  React.useEffect(() => {
     // Add security meta tags if not already present
     const addMetaTag = (name: string, content: string) => {
       if (!document.querySelector(`meta[name="${name}"]`)) {
@@ -78,7 +82,7 @@ export const SecurityHeaders = () => {
     }
 
     // Security: Disable right-click context menu on production
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       const handleContextMenu = (e: MouseEvent) => {
         e.preventDefault();
         return false;
@@ -109,4 +113,4 @@ export const SecurityHeaders = () => {
   }, []);
 
   return null;
-};
+}

@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+/**
+ * TemplateVariableBlocker - حظر متغيرات القوالب
+ */
 
-export const TemplateVariableBlocker = () => {
-  useEffect(() => {
+import * as React from 'react';
+
+export function TemplateVariableBlocker() {
+  React.useEffect(() => {
     // Check current URL for template variables
     const checkTemplateVariables = () => {
       const currentUrl = window.location.href;
@@ -65,4 +69,4 @@ export const TemplateVariableBlocker = () => {
   }, []);
 
   return null;
-};
+}
