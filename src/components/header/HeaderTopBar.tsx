@@ -1,44 +1,47 @@
 /**
- * HeaderTopBar - Premium Top Info Bar (Desktop Only)
+ * HeaderTopBar - Premium Top Info Bar
+ * Displays contact info, working hours, and status
  */
 
 import * as React from 'react';
-import { Clock, MapPin, Mail, Phone } from 'lucide-react';
+import { Clock, MapPin, Mail, Phone, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function HeaderTopBar() {
   return (
-    <div className="hidden lg:block fixed top-0 inset-x-0 z-50 h-10 bg-gradient-to-l from-primary via-primary-variant to-primary border-b border-primary-variant/50">
-      <div className="container mx-auto h-full px-6">
+    <div className="hidden lg:block fixed top-0 inset-x-0 z-50 h-10 bg-foreground">
+      <div className="container mx-auto h-full px-4 lg:px-6">
         <div className="flex h-full items-center justify-between" dir="rtl">
-          {/* Right Side (RTL) - Time & Location */}
-          <div className="flex items-center gap-6 text-xs text-primary-foreground/90">
-            <div className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors">
-              <Clock className="w-3.5 h-3.5 text-secondary" />
-              <span className="font-medium">الأحد - الخميس • 8:00 ص - 6:00 م</span>
-            </div>
-            <div className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors">
-              <MapPin className="w-3.5 h-3.5 text-secondary" />
-              <span className="font-medium">جدة، المملكة العربية السعودية</span>
-            </div>
-          </div>
           
-          {/* Left Side (RTL) - Contact & Status */}
-          <div className="flex items-center gap-4">
+          {/* Right Side - Contact Info */}
+          <div className="flex items-center gap-6 text-xs">
             <a 
               href="mailto:info@ash-holding.sa" 
-              className="flex items-center gap-1.5 text-primary-foreground/90 hover:text-primary-foreground transition-colors"
+              className="flex items-center gap-1.5 text-background/80 hover:text-background transition-colors"
             >
               <Mail className="w-3.5 h-3.5" />
-              <span className="font-medium text-xs">info@ash-holding.sa</span>
+              <span>info@ash-holding.sa</span>
             </a>
             <a 
               href="tel:0555812567" 
-              className="flex items-center gap-1.5 text-primary-foreground/90 hover:text-primary-foreground transition-colors"
+              className="flex items-center gap-1.5 text-background/80 hover:text-background transition-colors"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span className="font-medium text-xs ltr-token">0555812567</span>
+              <span className="ltr-token">0555812567</span>
             </a>
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-success/20 rounded-full border border-success/30">
+            <div className="flex items-center gap-1.5 text-background/70">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>جدة، المملكة العربية السعودية</span>
+            </div>
+          </div>
+          
+          {/* Left Side - Status & Working Hours */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5 text-background/70 text-xs">
+              <Clock className="w-3.5 h-3.5" />
+              <span>الأحد - الخميس • 8:00 ص - 6:00 م</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-success/20 rounded-full">
               <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
               <span className="text-success font-semibold text-xs">متاح الآن</span>
             </div>

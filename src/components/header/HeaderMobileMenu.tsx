@@ -1,5 +1,6 @@
 /**
  * HeaderMobileMenu - Premium Mobile Navigation
+ * Full-screen slide-in menu for mobile devices
  */
 
 import * as React from 'react';
@@ -15,6 +16,7 @@ import {
   Settings,
   Package,
   MoreHorizontal,
+  User,
   LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -72,13 +74,13 @@ export function HeaderMobileMenu({ isOpen, onClose }: HeaderMobileMenuProps) {
       
       {/* Slide-in Panel from RIGHT (RTL) */}
       <div 
-        className="absolute top-0 end-0 h-full w-[85vw] max-w-sm bg-card shadow-2xl animate-slide-in-rtl"
+        className="absolute top-0 end-0 h-full w-[85vw] max-w-sm bg-card shadow-2xl animate-slide-in-rtl flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-label="قائمة التنقل"
       >
         {/* Header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-border bg-muted/30">
+        <div className="flex items-center justify-between h-14 px-4 border-b border-border bg-muted/30 shrink-0">
           <HeaderLogo variant="mobile" />
           <button
             onClick={onClose}
@@ -90,7 +92,7 @@ export function HeaderMobileMenu({ isOpen, onClose }: HeaderMobileMenuProps) {
         </div>
 
         {/* Navigation Items */}
-        <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-1 max-h-[calc(100vh-180px)]">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-1">
           {/* Home */}
           <MobileNavItem 
             icon={Home}
@@ -181,21 +183,25 @@ export function HeaderMobileMenu({ isOpen, onClose }: HeaderMobileMenuProps) {
             تواصل معنا
           </MobileNavItem>
 
+          {/* Divider */}
+          <div className="my-4 border-t border-border" />
+
           {/* Customer Portal */}
           <MobileNavItem 
-            icon={Users}
+            icon={User}
             isActive={isActiveRoute('/app')}
             onClick={() => handleNavigate('/app')}
+            variant="highlighted"
           >
             بوابة العملاء
           </MobileNavItem>
         </div>
 
         {/* Footer CTA */}
-        <div className="p-4 border-t border-border bg-muted/30 safe-bottom">
+        <div className="p-4 border-t border-border bg-muted/30 shrink-0 safe-bottom">
           <button 
             onClick={() => handleNavigate('/book-consultation')}
-            className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-to-l from-primary to-primary-variant text-primary-foreground font-semibold rounded-xl shadow-lg active:scale-[0.98] transition-transform"
+            className="flex items-center justify-center gap-2 w-full py-3.5 bg-primary text-primary-foreground font-semibold rounded-xl shadow-lg active:scale-[0.98] transition-transform"
           >
             <Headphones className="w-5 h-5" />
             <span>احجز استشارة مجانية</span>
@@ -235,21 +241,24 @@ function MobileNavItem({
   icon: Icon, 
   isActive, 
   onClick, 
-  children 
+  children,
+  variant = 'default'
 }: { 
   icon: LucideIcon;
   isActive: boolean; 
   onClick: () => void;
   children: React.ReactNode;
+  variant?: 'default' | 'highlighted';
 }) {
   return (
     <button
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 p-3 rounded-xl text-start transition-all duration-200',
-        isActive 
-          ? 'bg-primary/10 text-primary font-medium' 
-          : 'text-foreground hover:bg-muted'
+        variant === 'highlighted' && !isActive && 'bg-primary/5 border border-primary/20 text-primary',
+        variant === 'highlighted' && isActive && 'bg-primary text-primary-foreground',
+        variant === 'default' && isActive && 'bg-primary/10 text-primary font-medium',
+        variant === 'default' && !isActive && 'text-foreground hover:bg-muted'
       )}
     >
       <Icon className="w-5 h-5 shrink-0" />
