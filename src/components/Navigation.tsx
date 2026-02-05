@@ -600,36 +600,31 @@ const DropdownMenu = ({
  );
 
  // Mobile Nav Link
-const MobileNavLink = ({ 
-   to, 
-  icon: Icon, 
-  onClick, 
+ const MobileNavLink = ({
+   to,
+   icon: Icon,
+   onClick,
    children,
-   isActive = false
-}: { 
-   to: string; 
-  icon: React.ElementType; 
-  onClick: () => void; 
-  children: React.ReactNode;
+   isActive = false,
+ }: {
+   to: string;
+   icon?: React.ElementType;
+   onClick: () => void;
+   children: React.ReactNode;
    isActive?: boolean;
-}) => (
+ }) => (
    <button
-    onClick={onClick}
-     className={`w-full flex items-center gap-3 p-3.5 rounded-xl transition-colors active:scale-[0.98] ${
+     onClick={onClick}
+     className={`w-full flex flex-row-reverse items-center gap-3 p-3 rounded-xl text-start transition-colors ${
        isActive 
-         ? 'text-blue-600 bg-blue-50' 
-         : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50'
+         ? "bg-blue-50 text-blue-600 font-medium" 
+         : "text-slate-700 hover:bg-slate-100"
      }`}
-  >
-     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-       isActive ? 'bg-blue-100' : 'bg-slate-100'
-     }`}>
-      <Icon className="w-5 h-5" />
-    </div>
-     <span className={`font-medium ${isActive ? 'text-blue-600' : ''}`}>{children}</span>
-     {isActive && <ChevronLeft className="w-4 h-4 ms-auto text-blue-600" />}
+   >
+     {Icon && <Icon className="w-4 h-4" />}
+     <span className="flex-1">{children}</span>
    </button>
-);
+ );
 
 // Mobile Accordion
 const MobileAccordion = ({ 
