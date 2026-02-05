@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+/**
+ * AnalyticsProvider - تحليلات الموقع
+ */
 
-export const AnalyticsProvider = () => {
-  useEffect(() => {
+import * as React from 'react';
+
+export function AnalyticsProvider() {
+  React.useEffect(() => {
     // Google Analytics 4 (replace with your actual GA4 measurement ID)
     const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // Replace with actual ID
     
@@ -49,4 +53,4 @@ export const AnalyticsProvider = () => {
   }, []);
 
   return null;
-};
+}
