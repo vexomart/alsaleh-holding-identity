@@ -1,16 +1,17 @@
- import { useEffect, type ReactNode } from 'react';
+ import * as React from 'react';
 
 interface MobileOptimizerProps {
-   children: ReactNode;
+   children: React.ReactNode;
 }
 
- export const MobileOptimizer = ({ children }: MobileOptimizerProps) => {
-  useEffect(() => {
-     // تحسينات خاصة بالجوال - مع التحقق من توفر Capacitor
+ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) => {
+   React.useEffect(() => {
+     // تحسينات خاصة بالجوال - Capacitor يتم استيراده ديناميكياً لتجنب مشاكل الويب
      const initCapacitor = async () => {
        try {
-         const { Capacitor } = await import('@capacitor/core');
-         if (Capacitor.isNativePlatform()) {
+         const capacitorModule = await import('@capacitor/core');
+         const Capacitor = capacitorModule.Capacitor;
+         if (Capacitor && typeof Capacitor.isNativePlatform === 'function' && Capacitor.isNativePlatform()) {
            document.body.classList.add('native-app', 'mobile-optimized');
            document.body.style.fontSize = '16px';
            document.body.style.lineHeight = '1.6';
@@ -20,24 +21,21 @@ interface MobileOptimizerProps {
              viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
            }
          }
-       } catch {
-         // Capacitor not available in this environment
-      }
+       } catch (e) {
+         // Capacitor not available - safe to ignore in web environment
+         console.debug('[MobileOptimizer] Capacitor not available');
+       }
      };
  
      initCapacitor();
 
     // تحسينات للويب على الجوال
-    if (window.innerWidth <= 768) {
+     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
       document.body.classList.add('mobile-web');
-      
-      // تحسين اللمس
-      document.addEventListener('touchstart', function() {}, {passive: true});
-      document.addEventListener('touchmove', function() {}, {passive: true});
     }
     
     // تحسين الأداء للأجهزة الضعيفة
-    if (navigator.hardwareConcurrency <= 2) {
+     if (typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) {
       document.body.classList.add('low-performance');
     }
 
