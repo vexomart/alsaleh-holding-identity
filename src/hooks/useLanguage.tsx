@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+ import * as React from 'react';
 
 export type Language = 'ar' | 'en';
 
@@ -10,7 +10,7 @@ interface LanguageContextType {
   isRTL: boolean;
 }
 
-const translations: Record<Language, Record<string, string>> = {
+ const translations: Readonly<Record<Language, Record<string, string>>> = {
   ar: {
     // Auth
     'auth.login': 'تسجيل الدخول',
@@ -151,10 +151,10 @@ const translations: Record<Language, Record<string, string>> = {
   },
 };
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+ const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguageState] = useState<Language>(() => {
+ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+   const [language, setLanguageState] = React.useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('ash_language');
       return (saved as Language) || 'ar';
@@ -216,7 +216,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const isRTL = language === 'ar';
 
   // Apply direction on mount and language change
-  useEffect(() => {
+   React.useEffect(() => {
     applyDirection(language);
   }, [language]);
 
@@ -230,7 +230,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
+   const context = React.useContext(LanguageContext);
   if (!context) {
     // Safe fallback for components outside provider
     return {
