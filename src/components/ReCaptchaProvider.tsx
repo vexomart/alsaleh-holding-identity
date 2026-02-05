@@ -1,11 +1,11 @@
-import * as React from 'react';
+ import { useEffect, ReactNode } from 'react';
 
 interface ReCaptchaProviderProps {
-  children: React.ReactNode;
+   children: ReactNode;
 }
 
-export const ReCaptchaProvider: React.FC<ReCaptchaProviderProps> = ({ children }) => {
-  React.useEffect(() => {
+ export function ReCaptchaProvider({ children }: ReCaptchaProviderProps) {
+   useEffect(() => {
     // Add reCAPTCHA v3 script
     const script = document.createElement('script');
     script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
@@ -30,8 +30,8 @@ export const ReCaptchaProvider: React.FC<ReCaptchaProviderProps> = ({ children }
     };
   }, []);
 
-  return <>{children}</>;
-};
+   return children;
+ }
 
 // Global type declaration for reCAPTCHA
 declare global {
