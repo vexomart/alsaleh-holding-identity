@@ -2696,6 +2696,118 @@ export type Database = {
           },
         ]
       }
+      sms_logs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          message_content: string | null
+          message_type: string
+          phone: string
+          provider: string
+          provider_response: Json | null
+          retry_count: number
+          sent_at: string | null
+          status: string
+          tenant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_content?: string | null
+          message_type: string
+          phone: string
+          provider?: string
+          provider_response?: Json | null
+          retry_count?: number
+          sent_at?: string | null
+          status?: string
+          tenant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          message_content?: string | null
+          message_type?: string
+          phone?: string
+          provider?: string
+          provider_response?: Json | null
+          retry_count?: number
+          sent_at?: string | null
+          status?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sms_otp_codes: {
+        Row: {
+          attempts: number
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: unknown
+          max_attempts: number
+          otp_hash: string
+          phone: string
+          purpose: string
+          tenant_id: string | null
+          updated_at: string
+          user_agent: string | null
+          verified: boolean
+          verified_at: string | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown
+          max_attempts?: number
+          otp_hash: string
+          phone: string
+          purpose?: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          verified?: boolean
+          verified_at?: string | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown
+          max_attempts?: number
+          otp_hash?: string
+          phone?: string
+          purpose?: string
+          tenant_id?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          verified?: boolean
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_otp_codes_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       system_settings: {
         Row: {
           category: string
@@ -3035,6 +3147,7 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_nafath_states: { Args: never; Returns: undefined }
+      cleanup_expired_otps: { Args: never; Returns: undefined }
       create_pre_approved_contract: {
         Args: {
           p_customer_id: string
