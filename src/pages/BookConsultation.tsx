@@ -293,7 +293,7 @@ export default function BookConsultation() {
         </div>
 
         {/* Booking Form */}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto" dir="rtl">
           <Card className="shadow-xl">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl gradient-text">احجز استشارتك الآن</CardTitle>
@@ -302,14 +302,15 @@ export default function BookConsultation() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" dir="rtl">
                 {/* معلومات شخصية */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold border-b pb-2">المعلومات الشخصية</h3>
+                  <h3 className="text-lg font-semibold border-b pb-2 text-start">المعلومات الشخصية</h3>
                   
                   <div className="grid md:grid-cols-2 gap-6">
+                    {/* الاسم الكامل - يظهر على اليمين في RTL */}
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-sm font-medium">
+                      <Label htmlFor="name" className="text-sm font-medium text-start block">
                         الاسم الكامل <span className="text-destructive">*</span>
                       </Label>
                       <Input
@@ -317,18 +318,20 @@ export default function BookConsultation() {
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         placeholder="أدخل اسمك الكامل"
-                        className={errors.name ? "border-destructive focus:border-destructive" : ""}
+                        className={`text-start ${errors.name ? "border-destructive focus:border-destructive" : ""}`}
+                        dir="rtl"
                       />
                       {errors.name && (
                         <p className="text-sm text-destructive flex items-center mt-1">
-                          <AlertCircle className="w-4 h-4 ml-1" />
+                          <AlertCircle className="w-4 h-4 ms-1" />
                           {errors.name}
                         </p>
                       )}
                     </div>
                     
+                    {/* البريد الإلكتروني - يظهر على اليسار في RTL */}
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium">
+                      <Label htmlFor="email" className="text-sm font-medium text-start block">
                         البريد الإلكتروني <span className="text-destructive">*</span>
                       </Label>
                       <Input
@@ -337,11 +340,12 @@ export default function BookConsultation() {
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
                         placeholder="your@email.com"
-                        className={errors.email ? "border-destructive focus:border-destructive" : ""}
+                        className={`text-start ${errors.email ? "border-destructive focus:border-destructive" : ""}`}
+                        dir="ltr"
                       />
                       {errors.email && (
                         <p className="text-sm text-destructive flex items-center mt-1">
-                          <AlertCircle className="w-4 h-4 ml-1" />
+                          <AlertCircle className="w-4 h-4 ms-1" />
                           {errors.email}
                         </p>
                       )}
@@ -349,8 +353,9 @@ export default function BookConsultation() {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
+                    {/* رقم الهاتف - يظهر على اليمين في RTL */}
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-sm font-medium">
+                      <Label htmlFor="phone" className="text-sm font-medium text-start block">
                         رقم الهاتف <span className="text-destructive">*</span>
                       </Label>
                       <Input
@@ -358,41 +363,47 @@ export default function BookConsultation() {
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
                         placeholder="05xxxxxxxx"
-                        className={errors.phone ? "border-destructive focus:border-destructive" : ""}
+                        className={`text-start ${errors.phone ? "border-destructive focus:border-destructive" : ""}`}
+                        dir="ltr"
                       />
                       {errors.phone && (
                         <p className="text-sm text-destructive flex items-center mt-1">
-                          <AlertCircle className="w-4 h-4 ml-1" />
+                          <AlertCircle className="w-4 h-4 ms-1" />
                           {errors.phone}
                         </p>
                       )}
                     </div>
                     
+                    {/* اسم الشركة - يظهر على اليسار في RTL */}
                     <div className="space-y-2">
-                      <Label htmlFor="company">اسم الشركة/المؤسسة</Label>
+                      <Label htmlFor="company" className="text-start block">اسم الشركة/المؤسسة</Label>
                       <Input
                         id="company"
                         value={formData.company}
                         onChange={(e) => handleInputChange('company', e.target.value)}
                         placeholder="اسم شركتك أو مؤسستك"
+                        className="text-start"
+                        dir="rtl"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="position">المنصب/الوظيفة</Label>
+                    <Label htmlFor="position" className="text-start block">المنصب/الوظيفة</Label>
                     <Input
                       id="position"
                       value={formData.position}
                       onChange={(e) => handleInputChange('position', e.target.value)}
                       placeholder="منصبك في الشركة"
+                      className="text-start"
+                      dir="rtl"
                     />
                   </div>
                 </div>
 
                 {/* تفاصيل الاستشارة */}
                 <div className="space-y-6">
-                  <h3 className="text-lg font-semibold border-b pb-2">تفاصيل الاستشارة</h3>
+                  <h3 className="text-lg font-semibold border-b pb-2 text-start">تفاصيل الاستشارة</h3>
                   
                   {!formData.service && (
                     <Alert>
@@ -413,14 +424,15 @@ export default function BookConsultation() {
                   )}
 
                   <div className="space-y-2">
-                    <Label htmlFor="consultationType" className="text-sm font-medium">
+                    <Label htmlFor="consultationType" className="text-sm font-medium text-start block">
                       نوع الاستشارة <span className="text-destructive">*</span>
                     </Label>
                     <Select 
                       onValueChange={(value) => handleInputChange('consultationType', value)}
                       value={formData.consultationType}
+                      dir="rtl"
                     >
-                      <SelectTrigger className={errors.consultationType ? "border-destructive" : ""}>
+                      <SelectTrigger className={`text-start ${errors.consultationType ? "border-destructive" : ""}`}>
                         <SelectValue placeholder="اختر نوع الاستشارة" />
                       </SelectTrigger>
                       <SelectContent>
@@ -433,16 +445,17 @@ export default function BookConsultation() {
                     </Select>
                     {errors.consultationType && (
                       <p className="text-sm text-destructive flex items-center mt-1">
-                        <AlertCircle className="w-4 h-4 ml-1" />
+                        <AlertCircle className="w-4 h-4 ms-1" />
                         {errors.consultationType}
                       </p>
                     )}
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
+                    {/* التاريخ المفضل - على اليمين */}
                     <div className="space-y-2">
-                      <Label htmlFor="preferredDate" className="flex items-center">
-                        <Calendar className="w-4 h-4 ml-1" />
+                      <Label htmlFor="preferredDate" className="flex items-center text-start">
+                        <Calendar className="w-4 h-4 ms-1" />
                         التاريخ المفضل
                       </Label>
                       <Input
@@ -451,15 +464,18 @@ export default function BookConsultation() {
                         value={formData.preferredDate}
                         onChange={(e) => handleInputChange('preferredDate', e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
+                        dir="ltr"
+                        className="text-start"
                       />
                     </div>
+                    {/* الوقت المفضل - على اليسار */}
                     <div className="space-y-2">
-                      <Label htmlFor="preferredTime" className="flex items-center">
-                        <Clock className="w-4 h-4 ml-1" />
+                      <Label htmlFor="preferredTime" className="flex items-center text-start">
+                        <Clock className="w-4 h-4 ms-1" />
                         الوقت المفضل
                       </Label>
-                      <Select onValueChange={(value) => handleInputChange('preferredTime', value)}>
-                        <SelectTrigger>
+                      <Select onValueChange={(value) => handleInputChange('preferredTime', value)} dir="rtl">
+                        <SelectTrigger className="text-start">
                           <SelectValue placeholder="اختر الوقت المناسب" />
                         </SelectTrigger>
                         <SelectContent>
@@ -474,13 +490,15 @@ export default function BookConsultation() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="message">تفاصيل إضافية</Label>
+                    <Label htmlFor="message" className="text-start block">تفاصيل إضافية</Label>
                     <Textarea
                       id="message"
                       value={formData.message}
                       onChange={(e) => handleInputChange('message', e.target.value)}
                       placeholder="أخبرنا عن التحديات التي تواجهها أو أهدافك المحددة..."
                       rows={4}
+                      className="text-start"
+                      dir="rtl"
                     />
                   </div>
                 </div>
@@ -493,7 +511,7 @@ export default function BookConsultation() {
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ms-2"></div>
                       جاري الإرسال...
                     </>
                   ) : (
