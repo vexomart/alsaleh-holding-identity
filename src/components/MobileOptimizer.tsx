@@ -1,27 +1,31 @@
-import React, { useEffect } from 'react';
-import { Capacitor } from '@capacitor/core';
+ import { useEffect, type ReactNode } from 'react';
 
 interface MobileOptimizerProps {
-  children: React.ReactNode;
+   children: ReactNode;
 }
 
-export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) => {
+ export const MobileOptimizer = ({ children }: MobileOptimizerProps) => {
   useEffect(() => {
-    // تحسينات خاصة بالجوال
-    if (Capacitor.isNativePlatform()) {
-      // إضافة كلاسات للتطبيق الأصلي
-      document.body.classList.add('native-app', 'mobile-optimized');
-      
-      // تحسين الخط للجوال
-      document.body.style.fontSize = '16px';
-      document.body.style.lineHeight = '1.6';
-      
-      // منع التكبير والتصغير
-      const viewport = document.querySelector('meta[name=viewport]');
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+     // تحسينات خاصة بالجوال - مع التحقق من توفر Capacitor
+     const initCapacitor = async () => {
+       try {
+         const { Capacitor } = await import('@capacitor/core');
+         if (Capacitor.isNativePlatform()) {
+           document.body.classList.add('native-app', 'mobile-optimized');
+           document.body.style.fontSize = '16px';
+           document.body.style.lineHeight = '1.6';
+           
+           const viewport = document.querySelector('meta[name=viewport]');
+           if (viewport) {
+             viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+           }
+         }
+       } catch {
+         // Capacitor not available in this environment
       }
-    }
+     };
+ 
+     initCapacitor();
 
     // تحسينات للويب على الجوال
     if (window.innerWidth <= 768) {
