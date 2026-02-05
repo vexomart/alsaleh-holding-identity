@@ -3,7 +3,7 @@
  */
 
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown, ChevronLeft, LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NavItem } from './types';
@@ -38,7 +38,15 @@ export function HeaderDropdown({
   const handleMouseLeave = () => {
     hideTimeoutRef.current = window.setTimeout(() => {
       onClose();
-    }, 150);
+    }, 200);
+  };
+
+  const handleTriggerClick = () => {
+    if (isOpen) {
+      onClose();
+    } else {
+      onOpen();
+    }
   };
 
   const isActive = items.some(item => {
@@ -54,6 +62,7 @@ export function HeaderDropdown({
     >
       {/* Trigger Button */}
       <button 
+        onClick={handleTriggerClick}
         className={cn(
           'flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
           isActive || isOpen
@@ -85,13 +94,13 @@ export function HeaderDropdown({
             {variant === 'mega' ? (
               <div className="grid grid-cols-2 gap-1">
                 {items.map((item, index) => (
-                  <DropdownMegaItem key={index} item={item} />
+                  <DropdownMegaItem key={index} item={item} onNavigate={onClose} />
                 ))}
               </div>
             ) : (
               <div className="space-y-0.5">
                 {items.map((item, index) => (
-                  <DropdownItem key={index} item={item} />
+                  <DropdownItem key={index} item={item} onNavigate={onClose} />
                 ))}
               </div>
             )}
@@ -103,18 +112,27 @@ export function HeaderDropdown({
 }
 
 // Standard Dropdown Item
-function DropdownItem({ item }: { item: NavItem }) {
+function DropdownItem({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = item.href === '/' 
     ? location.pathname === '/' 
     : location.pathname.startsWith(item.href);
   const Icon = item.icon;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onNavigate();
+    navigate(item.href);
+  };
+
   return (
-    <Link
-      to={item.href}
+    <a
+      href={item.href}
+      onClick={handleClick}
       className={cn(
-        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group',
+        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group cursor-pointer',
         isActive 
           ? 'bg-primary/10 text-primary font-medium' 
           : 'text-foreground hover:bg-muted hover:text-primary'
@@ -129,23 +147,32 @@ function DropdownItem({ item }: { item: NavItem }) {
         </div>
       )}
       <span>{item.name}</span>
-    </Link>
+    </a>
   );
 }
 
 // Mega Menu Item with Description
-function DropdownMegaItem({ item }: { item: NavItem }) {
+function DropdownMegaItem({ item, onNavigate }: { item: NavItem; onNavigate: () => void }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = item.href === '/' 
     ? location.pathname === '/' 
     : location.pathname.startsWith(item.href);
   const Icon = item.icon;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onNavigate();
+    navigate(item.href);
+  };
+
   return (
-    <Link
-      to={item.href}
+    <a
+      href={item.href}
+      onClick={handleClick}
       className={cn(
-        'flex items-start gap-3 p-3 rounded-xl text-sm transition-all duration-200 group',
+        'flex items-start gap-3 p-3 rounded-xl text-sm transition-all duration-200 group cursor-pointer',
         isActive 
           ? 'bg-primary/10' 
           : 'hover:bg-muted'
@@ -179,6 +206,6 @@ function DropdownMegaItem({ item }: { item: NavItem }) {
         'group-hover:opacity-100 group-hover:translate-x-0',
         isActive ? 'text-primary' : 'text-muted-foreground'
       )} />
-    </Link>
+    </a>
   );
 }
