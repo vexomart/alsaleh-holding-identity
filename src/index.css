@@ -6,6 +6,17 @@
 @import url('./styles/rtl-fixes.css');
 @import url('./styles/finance-animations.css');
 
+ /* ===========================================
+    RTL BASE - Document Level
+    =========================================== */
+ html {
+   direction: rtl;
+ }
+
+ html[dir="ltr"] {
+   direction: ltr;
+ }
+
 /* ===========================================
    RTL ROOT BOUNDARY - Hard RTL Isolation
    =========================================== */
@@ -18,13 +29,56 @@
   direction: ltr;
 }
 
-/* Logical properties for RTL-safe spacing */
-.rtl-root .ms-auto { margin-inline-start: auto; }
-.rtl-root .me-auto { margin-inline-end: auto; }
-.rtl-root .ps-4 { padding-inline-start: 1rem; }
-.rtl-root .pe-4 { padding-inline-end: 1rem; }
-.rtl-root .start-0 { inset-inline-start: 0; }
-.rtl-root .end-0 { inset-inline-end: 0; }
+ /* ===========================================
+    LOGICAL PROPERTIES - RTL-Safe Spacing
+    =========================================== */
+ /* Margin Logical */
+ .ms-auto { margin-inline-start: auto; }
+ .me-auto { margin-inline-end: auto; }
+ .ms-1 { margin-inline-start: 0.25rem; }
+ .me-1 { margin-inline-end: 0.25rem; }
+ .ms-2 { margin-inline-start: 0.5rem; }
+ .me-2 { margin-inline-end: 0.5rem; }
+ .ms-3 { margin-inline-start: 0.75rem; }
+ .me-3 { margin-inline-end: 0.75rem; }
+ .ms-4 { margin-inline-start: 1rem; }
+ .me-4 { margin-inline-end: 1rem; }
+ .ms-5 { margin-inline-start: 1.25rem; }
+ .me-5 { margin-inline-end: 1.25rem; }
+ .ms-6 { margin-inline-start: 1.5rem; }
+ .me-6 { margin-inline-end: 1.5rem; }
+
+ /* Padding Logical */
+ .ps-1 { padding-inline-start: 0.25rem; }
+ .pe-1 { padding-inline-end: 0.25rem; }
+ .ps-2 { padding-inline-start: 0.5rem; }
+ .pe-2 { padding-inline-end: 0.5rem; }
+ .ps-3 { padding-inline-start: 0.75rem; }
+ .pe-3 { padding-inline-end: 0.75rem; }
+ .ps-4 { padding-inline-start: 1rem; }
+ .pe-4 { padding-inline-end: 1rem; }
+ .ps-5 { padding-inline-start: 1.25rem; }
+ .pe-5 { padding-inline-end: 1.25rem; }
+ .ps-6 { padding-inline-start: 1.5rem; }
+ .pe-6 { padding-inline-end: 1.5rem; }
+
+ /* Position Logical */
+ .start-0 { inset-inline-start: 0; }
+ .end-0 { inset-inline-end: 0; }
+ .start-1 { inset-inline-start: 0.25rem; }
+ .end-1 { inset-inline-end: 0.25rem; }
+ .start-2 { inset-inline-start: 0.5rem; }
+ .end-2 { inset-inline-end: 0.5rem; }
+ .start-4 { inset-inline-start: 1rem; }
+ .end-4 { inset-inline-end: 1rem; }
+
+ /* Border Logical */
+ .border-s { border-inline-start-width: 1px; }
+ .border-e { border-inline-end-width: 1px; }
+ .border-s-2 { border-inline-start-width: 2px; }
+ .border-e-2 { border-inline-end-width: 2px; }
+ .rounded-s { border-start-start-radius: 0.25rem; border-end-start-radius: 0.25rem; }
+ .rounded-e { border-start-end-radius: 0.25rem; border-end-end-radius: 0.25rem; }
 
 /* Prevent horizontal overflow in RTL */
 .rtl-root {
