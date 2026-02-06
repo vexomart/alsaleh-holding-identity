@@ -183,6 +183,7 @@ const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
 const IntegratedServicesPage = lazy(() => import("./pages/IntegratedServicesPage"));
 
 // NEW DASHBOARDS - Clean Architecture
+const AuthEntry = lazy(() => import("./pages/auth/Entry"));
 const AuthLogin = lazy(() => import("./pages/auth/Login"));
 const AuthRegister = lazy(() => import("./pages/auth/Register"));
 const AuthForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
@@ -313,18 +314,20 @@ const App = () => {
                       {/* Public Website - Lazy loaded with optimized skeleton */}
                       <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
-{/* Auth Routes - CLEAN */}
+                      {/* Auth Routes - Entry point with smart redirect */}
+                      <Route path="/entry" element={<Suspense fallback={<PageLoader />}><AuthEntry /></Suspense>} />
+                      <Route path="/auth" element={<Suspense fallback={<PageLoader />}><AuthEntry /></Suspense>} />
                       <Route path="/auth/login" element={<Suspense fallback={<PageLoader />}><AuthLogin /></Suspense>} />
                       <Route path="/auth/register" element={<Suspense fallback={<PageLoader />}><AuthRegister /></Suspense>} />
                       <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
                       <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
                       
-                      {/* Admin Dashboard - /admin/* */}
-                      <Route path="/admin/*" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>} />
+                      {/* Admin Dashboard - /admin/* (Protected by AdminGuard in Layout) */}
+                      <Route path="/admin/*" element={<Suspense fallback={<DashboardLoader />}><AdminDashboard /></Suspense>} />
                       
-                      {/* Customer Dashboard - /app/* */}
-                      <Route path="/app/orders/:id" element={<Suspense fallback={<PageLoader />}><CustomerOrderDetails /></Suspense>} />
-                      <Route path="/app/*" element={<Suspense fallback={<PageLoader />}><CustomerDashboard /></Suspense>} />
+                      {/* Customer Dashboard - /app/* (Protected by CustomerGuard in Layout) */}
+                      <Route path="/app/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
+                      <Route path="/app/*" element={<Suspense fallback={<DashboardLoader />}><CustomerDashboard /></Suspense>} />
                       
                       {/* Company Pages */}
                       <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />

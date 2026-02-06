@@ -2,73 +2,34 @@
  * Admin Dashboard Layout
  * HARD RTL BOUNDARY - dir attribute enforced at root
  * Uses CSS Grid for proper sidebar placement
+ * 
+ * OPTIMIZED: Uses centralized RouteGuard for auth checks
  */
 
-import { useEffect, type ReactNode } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useRBAC } from "@/hooks/useRBAC";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAdminRealtime } from "@/hooks/useAdminRealtime";
-import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
-import { Loader2 } from "lucide-react";
+import { AdminGuard } from "@/components/auth/RouteGuard";
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
-export function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, profile, isLoading: authLoading } = useAuth();
-  const { canAccessAdmin, isLoading: rbacLoading } = useRBAC();
+function AdminLayoutContent({ children }: AdminLayoutProps) {
+  const { user, profile } = useAuth();
   const { isRTL, language } = useLanguage();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const isLoading = authLoading || rbacLoading;
 
   // Real-time subscriptions for services and delivery confirmations
   const { isServicesConnected, isDeliveryConnected } = useAdminRealtime({
     tenantId: profile?.tenant_id || undefined,
-    enabled: !!user && canAccessAdmin,
+    enabled: !!user,
     showDeliveryToasts: true,
   });
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        navigate(ROUTES.AUTH.LOGIN, { replace: true });
-      } else if (!canAccessAdmin) {
-        // If user doesn't have admin access, redirect to customer app
-        navigate(ROUTES.APP.ROOT, { replace: true });
-      }
-    }
-  }, [user, canAccessAdmin, isLoading, navigate]);
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div 
-        className="min-h-screen flex items-center justify-center bg-background"
-        dir={isRTL ? 'rtl' : 'ltr'}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
-            {isRTL ? "جاري التحميل..." : "Loading..."}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Not authorized
-  if (!user || !canAccessAdmin) {
-    return null;
-  }
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -126,5 +87,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </SidebarInset>
       </div>
     </SidebarProvider>
+  );
+}
+
+// Wrap with AdminGuard for auth + role protection
+export function AdminLayout({ children }: AdminLayoutProps) {
+  return (
+    <AdminGuard>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </AdminGuard>
   );
 }

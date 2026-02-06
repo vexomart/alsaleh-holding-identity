@@ -2,10 +2,11 @@
  * Customer Dashboard Layout
  * HARD RTL BOUNDARY - True RTL at layout, grid, and component levels
  * CSS Grid respects dir attribute for sidebar placement
+ * 
+ * OPTIMIZED: Uses centralized RouteGuard for auth checks
  */
 
-import { ReactNode, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCustomerRealtime } from "@/hooks/useCustomerRealtime";
@@ -13,17 +14,16 @@ import { cn } from "@/lib/utils";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { CustomerSidebar } from "./CustomerSidebar";
 import { CustomerHeader } from "./CustomerHeader";
-import { Loader2 } from "lucide-react";
 import { CacheBuster } from "@/components/CacheBuster";
+import { CustomerGuard } from "@/components/auth/RouteGuard";
 
 interface CustomerLayoutProps {
   children: ReactNode;
 }
 
-export function CustomerLayout({ children }: CustomerLayoutProps) {
-  const { user, profile, isLoading } = useAuth();
+function CustomerLayoutContent({ children }: CustomerLayoutProps) {
+  const { user, profile } = useAuth();
   const { isRTL } = useLanguage();
-  const navigate = useNavigate();
 
   // Real-time subscriptions for services and invoices
   const { isServicesConnected, isInvoicesConnected } = useCustomerRealtime({
@@ -31,34 +31,6 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     tenantId: profile?.tenant_id || undefined,
     enabled: !!user,
   });
-
-  useEffect(() => {
-    if (!isLoading && !user) {
-      navigate('/auth/login', { replace: true });
-    }
-  }, [user, isLoading, navigate]);
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <section 
-        dir={isRTL ? 'rtl' : 'ltr'}
-        className="rtl-root min-h-screen flex items-center justify-center bg-background"
-      >
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
-            {isRTL ? "جاري التحميل..." : "Loading..."}
-          </p>
-        </div>
-      </section>
-    );
-  }
-
-  // Not authenticated
-  if (!user) {
-    return null;
-  }
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -123,5 +95,14 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
         </SidebarInset>
       </section>
     </SidebarProvider>
+  );
+}
+
+// Wrap with CustomerGuard for auth protection
+export function CustomerLayout({ children }: CustomerLayoutProps) {
+  return (
+    <CustomerGuard>
+      <CustomerLayoutContent>{children}</CustomerLayoutContent>
+    </CustomerGuard>
   );
 }
