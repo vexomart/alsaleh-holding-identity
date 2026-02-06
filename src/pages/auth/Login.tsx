@@ -1,4 +1,9 @@
-import { useState, useEffect } from 'react';
+/**
+ * Login Page - Premium Authentication Experience
+ * Uses import * as React pattern for hook stability
+ */
+
+import * as React from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft, Globe, Shield, Smartphone, MessageSquare, CheckCircle2 } from 'lucide-react';
@@ -16,13 +21,21 @@ import { useSmsOtp } from '@/hooks/useSmsOtp';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+// Validation Schemas
 const loginSchema = z.object({
-  email: z.string().email('البريد الإلكتروني غير صالح'),
-  password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
+  email: z.string()
+    .trim()
+    .min(1, 'البريد الإلكتروني مطلوب')
+    .email('البريد الإلكتروني غير صالح')
+    .max(255, 'البريد الإلكتروني طويل جداً'),
+  password: z.string()
+    .min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل')
+    .max(100, 'كلمة المرور طويلة جداً'),
 });
 
 const phoneSchema = z.object({
   phone: z.string()
+    .trim()
     .regex(/^(05|5|9665|\+9665)[0-9]{8}$/, 'رقم الجوال غير صالح')
     .transform((val) => {
       if (val.startsWith('+966')) return '0' + val.slice(4);
@@ -32,35 +45,42 @@ const phoneSchema = z.object({
     }),
 });
 
-const Login = () => {
+function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const { language, setLanguage, t, isRTL } = useLanguage();
   const { sendOtp, verifyOtp, isLoading: isSmsLoading, clearError } = useSmsOtp();
   
   // Auth method tabs
-  const [authMethod, setAuthMethod] = useState<'phone' | 'email'>('phone');
+  const [authMethod, setAuthMethod] = React.useState<'phone' | 'email'>('phone');
   
   // Phone login states
-  const [phone, setPhone] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [phoneStep, setPhoneStep] = useState<'phone' | 'otp'>('phone');
-  const [countdown, setCountdown] = useState(0);
+  const [phone, setPhone] = React.useState('');
+  const [otpCode, setOtpCode] = React.useState('');
+  const [phoneStep, setPhoneStep] = React.useState<'phone' | 'otp'>('phone');
+  const [countdown, setCountdown] = React.useState(0);
   
   // Email login states
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [rememberMe, setRememberMe] = React.useState(false);
   
   // Nafath states
-  const [nafathLoading, setNafathLoading] = useState(false);
-  const [nafathProcessing, setNafathProcessing] = useState(false);
+  const [nafathLoading, setNafathLoading] = React.useState(false);
+  const [nafathProcessing, setNafathProcessing] = React.useState(false);
+
+  // Redirect if already logged in
+  React.useEffect(() => {
+    if (user) {
+      navigate('/app');
+    }
+  }, [user, navigate]);
 
   // Countdown timer for OTP resend
-  useEffect(() => {
+  React.useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
@@ -68,7 +88,7 @@ const Login = () => {
   }, [countdown]);
 
   // Handle Nafath callback
-  useEffect(() => {
+  React.useEffect(() => {
     const provider = searchParams.get('provider');
     if (provider === 'nafath') {
       handleNafathCallback();
@@ -175,21 +195,18 @@ const Login = () => {
       // If we have an action_link (magic link), use it to authenticate
       if (response.action_link) {
         try {
-          // Extract the token hash from the action link
           const url = new URL(response.action_link);
           const tokenHash = url.searchParams.get('token');
           const type = url.searchParams.get('type') || 'magiclink';
           
           if (tokenHash) {
-            // Verify the OTP token to get session
             const { data, error } = await supabase.auth.verifyOtp({
               token_hash: tokenHash,
-              type: type as any,
+              type: type as 'magiclink',
             });
             
             if (error) {
               console.error('Error verifying magic link:', error);
-              // Fallback: try direct session refresh
               await supabase.auth.refreshSession();
             }
             
@@ -204,7 +221,6 @@ const Login = () => {
         }
       }
       
-      // Fallback: refresh session and navigate
       await supabase.auth.refreshSession();
       toast.success('تم تسجيل الدخول بنجاح');
       navigate('/app');
@@ -258,6 +274,13 @@ const Login = () => {
     }
   };
 
+  // Format countdown timer
+  const formatCountdown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   // Show processing screen while handling Nafath callback
   if (nafathProcessing) {
     return (
@@ -265,22 +288,16 @@ const Login = () => {
         className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
         dir="rtl"
       >
-        <Card className="border-white/10 bg-white/5 backdrop-blur-2xl shadow-2xl w-full max-w-md">
+        <Card className="border-border/20 bg-card/5 backdrop-blur-2xl shadow-2xl w-full max-w-md">
           <CardContent className="py-12 text-center">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto text-emerald-400 mb-4" />
-            <p className="text-lg font-medium text-white">جارِ التحقق عبر نفاذ...</p>
-            <p className="text-slate-400 text-sm mt-2">يرجى الانتظار</p>
+            <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
+            <p className="text-lg font-medium text-foreground">جارِ التحقق عبر نفاذ...</p>
+            <p className="text-muted-foreground text-sm mt-2">يرجى الانتظار</p>
           </CardContent>
         </Card>
       </div>
     );
   }
-
-  const formatCountdown = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   return (
     <div 
@@ -291,7 +308,7 @@ const Login = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
       
       {/* Animated Orbs */}
-      <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 end-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       
       {/* Grid Pattern */}
@@ -302,7 +319,7 @@ const Login = () => {
         variant="ghost"
         size="sm"
         onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-        className="absolute top-4 end-4 text-slate-400 hover:text-white hover:bg-white/10"
+        className="absolute top-4 end-4 text-muted-foreground hover:text-foreground hover:bg-foreground/10"
       >
         <Globe className="w-4 h-4 me-2" />
         {language === 'ar' ? 'English' : 'عربي'}
@@ -322,40 +339,40 @@ const Login = () => {
           transition={{ delay: 0.2 }}
         >
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/30">
-              <span className="text-3xl font-black text-white tracking-tight">ASH</span>
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-2xl shadow-primary/30">
+              <span className="text-3xl font-black text-primary-foreground tracking-tight">ASH</span>
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-wide">ASH HOLDING</h1>
-            <p className="text-slate-400 text-sm mt-1">منصة إدارة الأعمال</p>
+            <h1 className="text-2xl font-bold text-foreground tracking-wide">ASH HOLDING</h1>
+            <p className="text-muted-foreground text-sm mt-1">منصة إدارة الأعمال</p>
           </div>
         </motion.div>
 
         {/* Main Card */}
-        <Card className="border-white/10 bg-white/5 backdrop-blur-2xl shadow-2xl">
+        <Card className="border-border/20 bg-card/5 backdrop-blur-2xl shadow-2xl">
           <CardHeader className="text-center pb-2">
-            <CardTitle className="text-xl font-bold text-white">
+            <CardTitle className="text-xl font-bold text-foreground">
               {isRTL ? 'تسجيل الدخول' : 'Sign In'}
             </CardTitle>
-            <CardDescription className="text-slate-400">
+            <CardDescription className="text-muted-foreground">
               {isRTL ? 'اختر طريقة الدخول المفضلة' : 'Choose your preferred login method'}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             <Tabs value={authMethod} onValueChange={(v) => setAuthMethod(v as 'phone' | 'email')} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 mb-6">
+              <TabsList className="grid w-full grid-cols-2 bg-foreground/5 border border-border/20 mb-6">
                 <TabsTrigger 
                   value="phone" 
-                  className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white text-slate-400"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
                 >
                   <Smartphone className="w-4 h-4 me-2" />
                   {isRTL ? 'رقم الجوال' : 'Phone'}
                 </TabsTrigger>
                 <TabsTrigger 
                   value="email"
-                  className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white text-slate-400"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
                 >
                   <Mail className="w-4 h-4 me-2" />
                   {isRTL ? 'البريد' : 'Email'}
@@ -375,32 +392,34 @@ const Login = () => {
                       className="space-y-4"
                     >
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-sm font-medium text-slate-300">
+                        <Label htmlFor="phone" className="text-sm font-medium text-muted-foreground">
                           {isRTL ? 'رقم الجوال' : 'Phone Number'}
                         </Label>
                         <div className="relative">
-                          <Smartphone className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                          <Smartphone className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input
                             id="phone"
                             type="tel"
                             placeholder="05XXXXXXXX"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="ps-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-emerald-500/20"
+                            onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ''))}
+                            className="ps-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
                             dir="ltr"
                             required
                             disabled={isSmsLoading}
+                            maxLength={14}
+                            autoComplete="tel"
                           />
                         </div>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                           {isRTL ? 'سيتم إرسال رمز التحقق إلى هذا الرقم' : 'A verification code will be sent to this number'}
                         </p>
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
-                        disabled={isSmsLoading}
+                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                        disabled={isSmsLoading || !phone}
                       >
                         {isSmsLoading ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
@@ -425,20 +444,20 @@ const Login = () => {
                       <button
                         type="button"
                         onClick={() => { setPhoneStep('phone'); setOtpCode(''); }}
-                        className="flex items-center text-sm text-slate-400 hover:text-white transition-colors"
+                        className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         <ArrowLeft className="w-4 h-4 ms-1 rotate-180" />
                         {isRTL ? 'تغيير الرقم' : 'Change number'}
                       </button>
 
                       <div className="text-center space-y-2">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-emerald-500/10 flex items-center justify-center">
-                          <MessageSquare className="w-8 h-8 text-emerald-400" />
+                        <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+                          <MessageSquare className="w-8 h-8 text-primary" />
                         </div>
-                        <p className="text-white font-medium">
+                        <p className="text-foreground font-medium">
                           {isRTL ? 'أدخل رمز التحقق' : 'Enter verification code'}
                         </p>
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-muted-foreground">
                           {isRTL ? `تم إرسال الرمز إلى ${phone}` : `Code sent to ${phone}`}
                         </p>
                       </div>
@@ -455,7 +474,7 @@ const Login = () => {
                               <InputOTPSlot 
                                 key={index} 
                                 index={index}
-                                className="w-12 h-14 text-xl bg-white/5 border-white/20 text-white rounded-lg"
+                                className="w-12 h-14 text-xl bg-foreground/5 border-border/30 text-foreground rounded-lg"
                               />
                             ))}
                           </InputOTPGroup>
@@ -465,7 +484,7 @@ const Login = () => {
                       {/* Countdown & Resend */}
                       <div className="text-center">
                         {countdown > 0 ? (
-                          <p className="text-sm text-slate-400">
+                          <p className="text-sm text-muted-foreground">
                             {isRTL ? `إعادة الإرسال بعد ${formatCountdown(countdown)}` : `Resend in ${formatCountdown(countdown)}`}
                           </p>
                         ) : (
@@ -473,7 +492,7 @@ const Login = () => {
                             type="button"
                             onClick={handleResendOtp}
                             disabled={isSmsLoading}
-                            className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors"
+                            className="text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
                           >
                             {isRTL ? 'إعادة إرسال الرمز' : 'Resend code'}
                           </button>
@@ -482,7 +501,7 @@ const Login = () => {
 
                       <Button
                         type="submit"
-                        className="w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
+                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
                         disabled={isSmsLoading || otpCode.length !== 6}
                       >
                         {isSmsLoading ? (
@@ -508,44 +527,49 @@ const Login = () => {
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-slate-300">
+                    <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">
                       {t('auth.email')}
                     </Label>
                     <div className="relative">
-                      <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                      <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
                         placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="ps-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-emerald-500/20"
+                        onChange={(e) => setEmail(e.target.value.trim())}
+                        className="ps-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
                         required
                         disabled={isLoading}
+                        maxLength={255}
+                        autoComplete="email"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium text-slate-300">
+                    <Label htmlFor="password" className="text-sm font-medium text-muted-foreground">
                       {t('auth.password')}
                     </Label>
                     <div className="relative">
-                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         id="password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder={isRTL ? 'أدخل كلمة المرور' : 'Enter your password'}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="ps-10 pe-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-emerald-500 focus:ring-emerald-500/20"
+                        className="ps-10 pe-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
                         required
                         disabled={isLoading}
+                        maxLength={100}
+                        autoComplete="current-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                        className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        tabIndex={-1}
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -558,15 +582,15 @@ const Login = () => {
                         id="remember"
                         checked={rememberMe}
                         onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                        className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                        className="border-border/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                       />
-                      <Label htmlFor="remember" className="text-sm text-slate-400 cursor-pointer">
+                      <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
                         {t('auth.remember_me')}
                       </Label>
                     </div>
                     <Link
                       to="/auth/forgot-password"
-                      className="text-sm text-emerald-400 hover:text-emerald-300"
+                      className="text-sm text-primary hover:text-primary/80"
                     >
                       {t('auth.forgot_password')}
                     </Link>
@@ -574,8 +598,8 @@ const Login = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white font-medium"
-                    disabled={isLoading}
+                    className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
+                    disabled={isLoading || !email || !password}
                   >
                     {isLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -593,10 +617,10 @@ const Login = () => {
             {/* Divider */}
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-white/10" />
+                <span className="w-full border-t border-border/20" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-transparent px-2 text-slate-500">
+                <span className="bg-transparent px-2 text-muted-foreground">
                   {isRTL ? 'أو' : 'or'}
                 </span>
               </div>
@@ -606,7 +630,7 @@ const Login = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full h-11 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
+              className="w-full h-11 bg-foreground/5 border-border/20 text-foreground hover:bg-foreground/10 hover:border-border/30"
               onClick={handleNafathLogin}
               disabled={nafathLoading || isLoading}
             >
@@ -614,7 +638,7 @@ const Login = () => {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <Shield className="w-5 h-5 text-emerald-400" />
+                  <Shield className="w-5 h-5 text-primary" />
                   <span className="ms-2">{isRTL ? 'الدخول عبر نفاذ' : 'Sign in with Nafath'}</span>
                 </>
               )}
@@ -622,9 +646,9 @@ const Login = () => {
 
             {/* Create Account Link */}
             <div className="text-center mt-6">
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-muted-foreground">
                 {isRTL ? 'ليس لديك حساب؟' : "Don't have an account?"}{' '}
-                <Link to="/auth/signup" className="text-emerald-400 hover:text-emerald-300 font-medium">
+                <Link to="/auth/signup" className="text-primary hover:text-primary/80 font-medium">
                   {isRTL ? 'أنشئ حساباً' : 'Sign up'}
                 </Link>
               </p>
@@ -639,10 +663,10 @@ const Login = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <p className="text-sm text-slate-500">ASH HOLDING</p>
+          <p className="text-sm text-muted-foreground/60">ASH HOLDING</p>
           <Link 
             to="/" 
-            className="text-sm text-slate-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1"
+            className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
           >
             <ArrowLeft className="w-3 h-3 rotate-180" />
             {isRTL ? 'العودة للموقع' : 'Back to Website'}
@@ -651,6 +675,6 @@ const Login = () => {
       </motion.div>
     </div>
   );
-};
+}
 
 export default Login;
