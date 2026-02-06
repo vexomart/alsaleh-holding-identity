@@ -1,12 +1,12 @@
 /**
  * Login Page - Premium Authentication Experience
- * Uses import * as React pattern for hook stability
+ * Modern Design with Enhanced Animations
  */
 
 import * as React from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft, Globe, Shield, Smartphone, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft, Globe, Shield, Smartphone, MessageSquare, CheckCircle2, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,6 +44,35 @@ const phoneSchema = z.object({
       return val;
     }),
 });
+
+// Floating particles component
+function FloatingParticles() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-primary/30"
+          initial={{
+            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+          }}
+          animate={{
+            y: [null, Math.random() * -200 - 100],
+            opacity: [0.2, 0.8, 0],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 10,
+            repeat: Infinity,
+            repeatType: 'loop',
+            ease: 'linear',
+            delay: Math.random() * 5,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 function Login() {
   const navigate = useNavigate();
@@ -192,7 +221,6 @@ function Login() {
     const response = await verifyOtp(phone, otpCode, 'login');
 
     if (response.success) {
-      // If we have an action_link (magic link), use it to authenticate
       if (response.action_link) {
         try {
           const url = new URL(response.action_link);
@@ -285,394 +313,487 @@ function Login() {
   if (nafathProcessing) {
     return (
       <div 
-        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
+        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a1628] via-[#0d1f3c] to-[#0a1628] p-4"
         dir="rtl"
       >
-        <Card className="border-border/20 bg-card/5 backdrop-blur-2xl shadow-2xl w-full max-w-md">
-          <CardContent className="py-12 text-center">
-            <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
-            <p className="text-lg font-medium text-foreground">جارِ التحقق عبر نفاذ...</p>
-            <p className="text-muted-foreground text-sm mt-2">يرجى الانتظار</p>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-6"
+        >
+          <div className="relative">
+            <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <Loader2 className="w-12 h-12 animate-spin text-primary" />
+            </div>
+            <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+          </div>
+          <div>
+            <p className="text-xl font-bold text-white">جارِ التحقق عبر نفاذ...</p>
+            <p className="text-white/60 mt-2">يرجى الانتظار</p>
+          </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center relative overflow-hidden p-4"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+      {/* Enhanced Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0d1f3c] to-[#0a1628]" />
       
-      {/* Animated Orbs */}
-      <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 end-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      {/* Animated Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}
+        />
+      </div>
+
+      {/* Floating Particles */}
+      <FloatingParticles />
       
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      {/* Animated Gradient Orbs */}
+      <motion.div 
+        className="absolute top-1/4 start-1/4 w-[500px] h-[500px] rounded-full opacity-30"
+        style={{
+          background: 'radial-gradient(circle, hsl(var(--primary) / 0.4) 0%, transparent 70%)',
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.3, 0.2],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+      <motion.div 
+        className="absolute bottom-1/4 end-1/4 w-[400px] h-[400px] rounded-full opacity-20"
+        style={{
+          background: 'radial-gradient(circle, hsl(var(--accent) / 0.4) 0%, transparent 70%)',
+        }}
+        animate={{
+          scale: [1.2, 1, 1.2],
+          opacity: [0.15, 0.25, 0.15],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 2,
+        }}
+      />
       
       {/* Language Toggle */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-        className="absolute top-4 end-4 text-muted-foreground hover:text-foreground hover:bg-foreground/10"
-      >
-        <Globe className="w-4 h-4 me-2" />
-        {language === 'ar' ? 'English' : 'عربي'}
-      </Button>
-
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10 space-y-6"
+        transition={{ delay: 0.5 }}
+        className="absolute top-6 start-6"
       >
-        {/* Logo & Branding */}
-        <motion.div 
-          className="text-center space-y-3"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+          className="text-white/70 hover:text-white hover:bg-white/10 backdrop-blur-sm border border-white/10"
         >
-          <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-2xl shadow-primary/30">
-              <span className="text-3xl font-black text-primary-foreground tracking-tight">ASH</span>
+          <Globe className="w-4 h-4 me-2" />
+          {language === 'ar' ? 'English' : 'عربي'}
+        </Button>
+      </motion.div>
+
+      <div className="w-full max-w-md relative z-10 px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="space-y-8"
+        >
+          {/* Logo & Branding */}
+          <motion.div 
+            className="text-center space-y-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="flex justify-center">
+              <motion.div 
+                className="relative"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary/80 flex items-center justify-center shadow-2xl relative overflow-hidden">
+                  {/* Inner glow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20" />
+                  <span className="text-4xl font-black text-white tracking-tight relative z-10">ASH</span>
+                </div>
+                {/* Outer glow ring */}
+                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary/50 to-accent/50 blur-lg opacity-50 -z-10" />
+              </motion.div>
             </div>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground tracking-wide">ASH HOLDING</h1>
-            <p className="text-muted-foreground text-sm mt-1">منصة إدارة الأعمال</p>
-          </div>
-        </motion.div>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold text-white tracking-wide">
+                ASH HOLDING
+              </h1>
+              <p className="text-white/60 text-base">منصة إدارة الأعمال</p>
+            </div>
+          </motion.div>
 
-        {/* Main Card */}
-        <Card className="border-border/20 bg-card/5 backdrop-blur-2xl shadow-2xl">
-          <CardHeader className="text-center pb-2">
-            <CardTitle className="text-xl font-bold text-foreground">
-              {isRTL ? 'تسجيل الدخول' : 'Sign In'}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">
-              {isRTL ? 'اختر طريقة الدخول المفضلة' : 'Choose your preferred login method'}
-            </CardDescription>
-          </CardHeader>
+          {/* Main Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <Card className="border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-2xl overflow-hidden relative">
+              {/* Card inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none" />
+              
+              <CardHeader className="text-center pb-4 pt-8 relative">
+                <CardTitle className="text-2xl font-bold text-white">
+                  {isRTL ? 'تسجيل الدخول' : 'Sign In'}
+                </CardTitle>
+                <CardDescription className="text-white/60 text-base mt-2">
+                  {isRTL ? 'اختر طريقة الدخول المفضلة' : 'Choose your preferred login method'}
+                </CardDescription>
+              </CardHeader>
 
-          <CardContent>
-            <Tabs value={authMethod} onValueChange={(v) => setAuthMethod(v as 'phone' | 'email')} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-foreground/5 border border-border/20 mb-6">
-                <TabsTrigger 
-                  value="phone" 
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
-                >
-                  <Smartphone className="w-4 h-4 me-2" />
-                  {isRTL ? 'رقم الجوال' : 'Phone'}
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="email"
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-muted-foreground"
-                >
-                  <Mail className="w-4 h-4 me-2" />
-                  {isRTL ? 'البريد' : 'Email'}
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Phone Login */}
-              <TabsContent value="phone" className="mt-0">
-                <AnimatePresence mode="wait">
-                  {phoneStep === 'phone' ? (
-                    <motion.form
-                      key="phone-form"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      onSubmit={handleSendOtp}
-                      className="space-y-4"
+              <CardContent className="relative pb-8">
+                <Tabs value={authMethod} onValueChange={(v) => setAuthMethod(v as 'phone' | 'email')} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 mb-8 p-1 rounded-xl">
+                    <TabsTrigger 
+                      value="phone" 
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white text-white/60 rounded-lg transition-all duration-300 py-3 text-base font-medium"
                     >
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-sm font-medium text-muted-foreground">
-                          {isRTL ? 'رقم الجوال' : 'Phone Number'}
-                        </Label>
-                        <div className="relative">
-                          <Smartphone className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            id="phone"
-                            type="tel"
-                            placeholder="05XXXXXXXX"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ''))}
-                            className="ps-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
-                            dir="ltr"
-                            required
-                            disabled={isSmsLoading}
-                            maxLength={14}
-                            autoComplete="tel"
-                          />
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {isRTL ? 'سيتم إرسال رمز التحقق إلى هذا الرقم' : 'A verification code will be sent to this number'}
-                        </p>
-                      </div>
-
-                      <Button
-                        type="submit"
-                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                        disabled={isSmsLoading || !phone}
-                      >
-                        {isSmsLoading ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <>
-                            <MessageSquare className="w-4 h-4 me-2" />
-                            {isRTL ? 'إرسال رمز التحقق' : 'Send Verification Code'}
-                          </>
-                        )}
-                      </Button>
-                    </motion.form>
-                  ) : (
-                    <motion.form
-                      key="otp-form"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      onSubmit={handleVerifyOtp}
-                      className="space-y-6"
+                      <Smartphone className="w-5 h-5 me-2" />
+                      {isRTL ? 'رقم الجوال' : 'Phone'}
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="email"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-white text-white/60 rounded-lg transition-all duration-300 py-3 text-base font-medium"
                     >
-                      {/* Back button */}
-                      <button
-                        type="button"
-                        onClick={() => { setPhoneStep('phone'); setOtpCode(''); }}
-                        className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        <ArrowLeft className="w-4 h-4 ms-1 rotate-180" />
-                        {isRTL ? 'تغيير الرقم' : 'Change number'}
-                      </button>
+                      <Mail className="w-5 h-5 me-2" />
+                      {isRTL ? 'البريد' : 'Email'}
+                    </TabsTrigger>
+                  </TabsList>
 
-                      <div className="text-center space-y-2">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
-                          <MessageSquare className="w-8 h-8 text-primary" />
-                        </div>
-                        <p className="text-foreground font-medium">
-                          {isRTL ? 'أدخل رمز التحقق' : 'Enter verification code'}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {isRTL ? `تم إرسال الرمز إلى ${phone}` : `Code sent to ${phone}`}
-                        </p>
-                      </div>
-
-                      {/* OTP Input */}
-                      <div className="flex justify-center" dir="ltr">
-                        <InputOTP
-                          maxLength={6}
-                          value={otpCode}
-                          onChange={setOtpCode}
+                  {/* Phone Login */}
+                  <TabsContent value="phone" className="mt-0">
+                    <AnimatePresence mode="wait">
+                      {phoneStep === 'phone' ? (
+                        <motion.form
+                          key="phone-form"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 20 }}
+                          onSubmit={handleSendOtp}
+                          className="space-y-6"
                         >
-                          <InputOTPGroup className="gap-2">
-                            {[0, 1, 2, 3, 4, 5].map((index) => (
-                              <InputOTPSlot 
-                                key={index} 
-                                index={index}
-                                className="w-12 h-14 text-xl bg-foreground/5 border-border/30 text-foreground rounded-lg"
+                          <div className="space-y-3">
+                            <Label htmlFor="phone" className="text-base font-medium text-white/80">
+                              {isRTL ? 'رقم الجوال' : 'Phone Number'}
+                            </Label>
+                            <div className="relative group">
+                              <Smartphone className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" />
+                              <Input
+                                id="phone"
+                                type="tel"
+                                placeholder="+966XXXXXXXXX"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value.replace(/[^0-9+]/g, ''))}
+                                className="ps-12 h-14 bg-white/5 border-white/10 text-white text-lg placeholder:text-white/30 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
+                                dir="ltr"
+                                required
+                                disabled={isSmsLoading}
+                                maxLength={14}
+                                autoComplete="tel"
                               />
-                            ))}
-                          </InputOTPGroup>
-                        </InputOTP>
-                      </div>
+                            </div>
+                            <p className="text-sm text-white/50 flex items-center gap-2">
+                              <MessageSquare className="w-4 h-4" />
+                              {isRTL ? 'سيتم إرسال رمز التحقق إلى هذا الرقم' : 'A verification code will be sent'}
+                            </p>
+                          </div>
 
-                      {/* Countdown & Resend */}
-                      <div className="text-center">
-                        {countdown > 0 ? (
-                          <p className="text-sm text-muted-foreground">
-                            {isRTL ? `إعادة الإرسال بعد ${formatCountdown(countdown)}` : `Resend in ${formatCountdown(countdown)}`}
-                          </p>
-                        ) : (
+                          <Button
+                            type="submit"
+                            className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold text-lg rounded-xl shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
+                            disabled={isSmsLoading || !phone}
+                          >
+                            {isSmsLoading ? (
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                            ) : (
+                              <>
+                                <MessageSquare className="w-5 h-5 me-2" />
+                                {isRTL ? 'إرسال رمز التحقق' : 'Send Verification Code'}
+                              </>
+                            )}
+                          </Button>
+                        </motion.form>
+                      ) : (
+                        <motion.form
+                          key="otp-form"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          onSubmit={handleVerifyOtp}
+                          className="space-y-6"
+                        >
+                          {/* Back button */}
                           <button
                             type="button"
-                            onClick={handleResendOtp}
-                            disabled={isSmsLoading}
-                            className="text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
+                            onClick={() => { setPhoneStep('phone'); setOtpCode(''); }}
+                            className="flex items-center text-sm text-white/60 hover:text-white transition-colors"
                           >
-                            {isRTL ? 'إعادة إرسال الرمز' : 'Resend code'}
+                            <ArrowLeft className="w-4 h-4 ms-1 rotate-180" />
+                            {isRTL ? 'تغيير الرقم' : 'Change number'}
                           </button>
-                        )}
+
+                          <div className="text-center space-y-4">
+                            <motion.div 
+                              className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center relative"
+                              animate={{ scale: [1, 1.05, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            >
+                              <MessageSquare className="w-10 h-10 text-primary" />
+                              <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping" />
+                            </motion.div>
+                            <div>
+                              <p className="text-xl font-semibold text-white">
+                                {isRTL ? 'أدخل رمز التحقق' : 'Enter verification code'}
+                              </p>
+                              <p className="text-white/50 mt-1" dir="ltr">
+                                {phone}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* OTP Input */}
+                          <div className="flex justify-center py-4" dir="ltr">
+                            <InputOTP
+                              maxLength={6}
+                              value={otpCode}
+                              onChange={setOtpCode}
+                            >
+                              <InputOTPGroup className="gap-3">
+                                {[0, 1, 2, 3, 4, 5].map((index) => (
+                                  <InputOTPSlot 
+                                    key={index} 
+                                    index={index}
+                                    className="w-14 h-16 text-2xl bg-white/5 border-white/20 text-white rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
+                                  />
+                                ))}
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </div>
+
+                          {/* Countdown & Resend */}
+                          <div className="text-center">
+                            {countdown > 0 ? (
+                              <p className="text-white/50">
+                                {isRTL ? `إعادة الإرسال بعد` : `Resend in`}{' '}
+                                <span className="text-primary font-mono font-bold">{formatCountdown(countdown)}</span>
+                              </p>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={handleResendOtp}
+                                disabled={isSmsLoading}
+                                className="text-primary hover:text-primary/80 font-medium transition-colors disabled:opacity-50"
+                              >
+                                {isRTL ? 'إعادة إرسال الرمز' : 'Resend code'}
+                              </button>
+                            )}
+                          </div>
+
+                          <Button
+                            type="submit"
+                            className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold text-lg rounded-xl shadow-lg shadow-primary/25 transition-all duration-300"
+                            disabled={isSmsLoading || otpCode.length !== 6}
+                          >
+                            {isSmsLoading ? (
+                              <Loader2 className="w-6 h-6 animate-spin" />
+                            ) : (
+                              <>
+                                <CheckCircle2 className="w-5 h-5 me-2" />
+                                {isRTL ? 'تأكيد الدخول' : 'Confirm Login'}
+                              </>
+                            )}
+                          </Button>
+                        </motion.form>
+                      )}
+                    </AnimatePresence>
+                  </TabsContent>
+
+                  {/* Email Login */}
+                  <TabsContent value="email" className="mt-0">
+                    <motion.form
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      onSubmit={handleEmailLogin}
+                      className="space-y-6"
+                    >
+                      <div className="space-y-3">
+                        <Label htmlFor="email" className="text-base font-medium text-white/80">
+                          {t('auth.email')}
+                        </Label>
+                        <div className="relative group">
+                          <Mail className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" />
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value.trim())}
+                            className="ps-12 h-14 bg-white/5 border-white/10 text-white text-lg placeholder:text-white/30 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
+                            required
+                            disabled={isLoading}
+                            maxLength={255}
+                            autoComplete="email"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="password" className="text-base font-medium text-white/80">
+                          {t('auth.password')}
+                        </Label>
+                        <div className="relative group">
+                          <Lock className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" />
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder={isRTL ? 'أدخل كلمة المرور' : 'Enter your password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="ps-12 pe-12 h-14 bg-white/5 border-white/10 text-white text-lg placeholder:text-white/30 focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl transition-all"
+                            required
+                            disabled={isLoading}
+                            maxLength={100}
+                            autoComplete="current-password"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute end-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                            tabIndex={-1}
+                          >
+                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id="remember"
+                            checked={rememberMe}
+                            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                            className="border-white/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5"
+                          />
+                          <Label htmlFor="remember" className="text-white/60 cursor-pointer">
+                            {t('auth.remember_me')}
+                          </Label>
+                        </div>
+                        <Link
+                          to="/auth/forgot-password"
+                          className="text-primary hover:text-primary/80 font-medium transition-colors"
+                        >
+                          {t('auth.forgot_password')}
+                        </Link>
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                        disabled={isSmsLoading || otpCode.length !== 6}
+                        className="w-full h-14 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold text-lg rounded-xl shadow-lg shadow-primary/25 transition-all duration-300"
+                        disabled={isLoading || !email || !password}
                       >
-                        {isSmsLoading ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                        {isLoading ? (
+                          <Loader2 className="w-6 h-6 animate-spin" />
                         ) : (
                           <>
-                            <CheckCircle2 className="w-4 h-4 me-2" />
-                            {isRTL ? 'تأكيد الدخول' : 'Confirm Login'}
+                            {t('auth.login')}
+                            <ArrowLeft className="w-5 h-5 ms-2 rotate-180" />
                           </>
                         )}
                       </Button>
                     </motion.form>
-                  )}
-                </AnimatePresence>
-              </TabsContent>
+                  </TabsContent>
+                </Tabs>
 
-              {/* Email Login */}
-              <TabsContent value="email" className="mt-0">
-                <motion.form
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onSubmit={handleEmailLogin}
-                  className="space-y-4"
+                {/* Divider */}
+                <div className="relative my-8">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-white/10" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-transparent px-4 text-white/40 text-sm">
+                      {isRTL ? 'أو' : 'or'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Nafath Login */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-14 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20 rounded-xl transition-all duration-300 text-base font-medium"
+                  onClick={handleNafathLogin}
+                  disabled={nafathLoading || isLoading}
                 >
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">
-                      {t('auth.email')}
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value.trim())}
-                        className="ps-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
-                        required
-                        disabled={isLoading}
-                        maxLength={255}
-                        autoComplete="email"
-                      />
-                    </div>
-                  </div>
+                  {nafathLoading ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <>
+                      <Shield className="w-6 h-6 text-green-400" />
+                      <span className="ms-3">{isRTL ? 'الدخول عبر نفاذ' : 'Sign in with Nafath'}</span>
+                    </>
+                  )}
+                </Button>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium text-muted-foreground">
-                      {t('auth.password')}
-                    </Label>
-                    <div className="relative">
-                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder={isRTL ? 'أدخل كلمة المرور' : 'Enter your password'}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="ps-10 pe-10 bg-foreground/5 border-border/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20"
-                        required
-                        disabled={isLoading}
-                        maxLength={100}
-                        autoComplete="current-password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="remember"
-                        checked={rememberMe}
-                        onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                        className="border-border/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                      />
-                      <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
-                        {t('auth.remember_me')}
-                      </Label>
-                    </div>
-                    <Link
-                      to="/auth/forgot-password"
-                      className="text-sm text-primary hover:text-primary/80"
-                    >
-                      {t('auth.forgot_password')}
+                {/* Create Account Link */}
+                <div className="text-center mt-8">
+                  <p className="text-white/50">
+                    {isRTL ? 'ليس لديك حساب؟' : "Don't have an account?"}{' '}
+                    <Link to="/auth/signup" className="text-primary hover:text-primary/80 font-semibold transition-colors">
+                      {isRTL ? 'أنشئ حساباً' : 'Sign up'}
                     </Link>
-                  </div>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-                  <Button
-                    type="submit"
-                    className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
-                    disabled={isLoading || !email || !password}
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <>
-                        {t('auth.login')}
-                        <ArrowLeft className="w-4 h-4 ms-2 rotate-180" />
-                      </>
-                    )}
-                  </Button>
-                </motion.form>
-              </TabsContent>
-            </Tabs>
-
-            {/* Divider */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border/20" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-transparent px-2 text-muted-foreground">
-                  {isRTL ? 'أو' : 'or'}
-                </span>
-              </div>
-            </div>
-
-            {/* Nafath Login */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full h-11 bg-foreground/5 border-border/20 text-foreground hover:bg-foreground/10 hover:border-border/30"
-              onClick={handleNafathLogin}
-              disabled={nafathLoading || isLoading}
-            >
-              {nafathLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <Shield className="w-5 h-5 text-primary" />
-                  <span className="ms-2">{isRTL ? 'الدخول عبر نفاذ' : 'Sign in with Nafath'}</span>
-                </>
-              )}
-            </Button>
-
-            {/* Create Account Link */}
-            <div className="text-center mt-6">
-              <p className="text-sm text-muted-foreground">
-                {isRTL ? 'ليس لديك حساب؟' : "Don't have an account?"}{' '}
-                <Link to="/auth/signup" className="text-primary hover:text-primary/80 font-medium">
-                  {isRTL ? 'أنشئ حساباً' : 'Sign up'}
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Footer */}
-        <motion.div 
-          className="text-center space-y-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <p className="text-sm text-muted-foreground/60">ASH HOLDING</p>
-          <Link 
-            to="/" 
-            className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+          {/* Footer */}
+          <motion.div 
+            className="text-center space-y-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
           >
-            <ArrowLeft className="w-3 h-3 rotate-180" />
-            {isRTL ? 'العودة للموقع' : 'Back to Website'}
-          </Link>
+            <p className="text-white/30 text-sm flex items-center justify-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              ASH HOLDING
+              <Sparkles className="w-4 h-4" />
+            </p>
+            <Link 
+              to="/" 
+              className="text-white/50 hover:text-primary transition-colors inline-flex items-center gap-2 text-sm"
+            >
+              <ArrowLeft className="w-4 h-4 rotate-180" />
+              {isRTL ? 'العودة للموقع' : 'Back to Website'}
+            </Link>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 }
