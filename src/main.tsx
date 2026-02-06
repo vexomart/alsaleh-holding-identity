@@ -44,8 +44,8 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Cache version - v66 forces complete rebuild
-const CACHE_VERSION = 'v66';
+// Cache version - v67 forces complete rebuild
+const CACHE_VERSION = 'v67';
 const CACHE_KEY = `app_cache_${CACHE_VERSION}`;
 
 // Force cache bust and reload on version change

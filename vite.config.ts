@@ -38,18 +38,20 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Force all React imports to single instance
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
-    // Dedupe to ensure single React instance
     dedupe: [
       "react", 
       "react-dom", 
       "react/jsx-runtime",
       "react/jsx-dev-runtime",
       "@tanstack/react-query",
+      "framer-motion",
     ],
   },
   optimizeDeps: {
-    // Force deps optimization on every server start
     force: true,
     esbuildOptions: {
       define: {
@@ -60,6 +62,7 @@ export default defineConfig(({ mode }) => ({
       "react",
       "react-dom",
       "react/jsx-runtime",
+      "react/jsx-dev-runtime",
       "@tanstack/react-query",
       "framer-motion",
       "react-router-dom",
@@ -72,9 +75,14 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-query': ['@tanstack/react-query'],
+        manualChunks: (id) => {
+          // Force all react-related code into single chunk
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor';
+          }
+          if (id.includes('@tanstack/react-query')) {
+            return 'query-vendor';
+          }
         },
       },
     },
