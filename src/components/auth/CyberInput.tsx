@@ -62,10 +62,10 @@ export function CyberInput({
                 ? "border-cyan-500/60 bg-slate-900/80" 
                 : "border-white/10 hover:border-cyan-500/30 hover:bg-slate-900/70"
         )}>
-          {/* Icon Container */}
+          {/* Icon Container - Right side (start in RTL) */}
           <motion.div 
             className={cn(
-              "absolute end-3 sm:end-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl",
+              "absolute start-3 sm:start-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl",
               "flex items-center justify-center transition-all duration-200",
               error 
                 ? "bg-red-500/15 text-red-400"
@@ -92,7 +92,7 @@ export function CyberInput({
           <motion.label
             htmlFor={inputId}
             className={cn(
-              "absolute start-4 sm:start-5 pointer-events-none font-medium transition-colors duration-200",
+              "absolute start-14 sm:start-16 pointer-events-none font-medium transition-colors duration-200",
               isFloating
                 ? "text-[10px] sm:text-xs text-cyan-400/70"
                 : "text-xs sm:text-sm text-white/40"
@@ -115,7 +115,7 @@ export function CyberInput({
             className={cn(
               "absolute inset-0 w-full h-full bg-transparent",
               "text-white text-sm sm:text-base font-medium",
-              "ps-4 sm:ps-5 pe-14 sm:pe-16 pt-5 sm:pt-6 pb-2",
+              "ps-14 sm:ps-16 pe-4 sm:pe-5 pt-5 sm:pt-6 pb-2",
               "placeholder:text-transparent focus:placeholder:text-white/20",
               "outline-none border-none",
               "caret-cyan-400",
@@ -127,7 +127,7 @@ export function CyberInput({
           />
           
           {/* Status Indicator */}
-          <div className="absolute end-14 sm:end-16 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+          <div className="absolute end-3 sm:end-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {success && !error && (
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
