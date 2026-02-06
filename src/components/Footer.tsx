@@ -102,13 +102,13 @@ const Footer = () => {
     { name: "الحلول التقنية", href: "/tech-ecosystem", icon: Zap },
     { name: "تطوير البرمجيات", href: "/technical-services", icon: Code },
     { name: "الذكاء الاصطناعي", href: "/ai-solutions", icon: Zap },
-    { name: "التحول الرقمي", href: "/digital-transformation", icon: Globe }
+    { name: "التحول الرقمي", href: "/business-services/transformation", icon: Globe }
   ];
 
   const legalLinks = [
-    { name: "سياسة الخصوصية", href: "/privacy-policy" },
+    { name: "سياسة الخصوصية", href: "/privacy" },
     { name: "الشروط والأحكام", href: "/terms" },
-    { name: "سياسة الاسترداد", href: "/refund-policy" }
+    { name: "سياسة ملفات تعريف الارتباط", href: "/cookie-policy" }
   ];
 
   return (

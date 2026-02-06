@@ -30,18 +30,18 @@ export const headerConfig: HeaderConfig = {
     { name: 'خدمات مخصصة أخرى', href: '/services-catalog', icon: Wrench, description: 'حلول مخصصة' },
   ],
   products: [
-    { name: 'أنظمة SaaS', href: '/saas-products', icon: Cloud, description: 'منصات سحابية' },
+    { name: 'الحلول السحابية', href: '/cloud-solutions', icon: Cloud, description: 'منصات سحابية' },
     { name: 'تطبيقات ويب', href: '/ready-projects', icon: Monitor, description: 'تطبيقات متقدمة' },
     { name: 'تطبيقات جوال', href: '/mobile-apps', icon: Smartphone, description: 'iOS & Android' },
     { name: 'منصات إدارية', href: '/software-products', icon: Layout, description: 'أنظمة إدارة' },
-    { name: 'منتجات مستقبلية', href: '/future-products', icon: Lightbulb, description: 'قيد التطوير' },
+    { name: 'المشاريع التقنية', href: '/tech-projects', icon: Lightbulb, description: 'مشاريع متكاملة' },
   ],
   others: [
-    { name: 'المدونة', href: '/blog', icon: BookOpen },
+    { name: 'الأخبار والتحديثات', href: '/news', icon: Newspaper },
     { name: 'الأسئلة الشائعة', href: '/faq', icon: HelpCircle },
     { name: 'الشركاء', href: '/partnerships', icon: Users },
     { name: 'الوظائف', href: '/careers', icon: Briefcase },
-    { name: 'الأخبار', href: '/news', icon: Newspaper },
+    { name: 'دليل المستخدم', href: '/user-guide', icon: BookOpen },
   ],
 };
 
