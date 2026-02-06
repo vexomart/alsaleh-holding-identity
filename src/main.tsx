@@ -1,4 +1,5 @@
-import { createRoot } from 'react-dom/client';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
@@ -43,22 +44,54 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Force cache bust on version change - v64 for React singleton fix
-const CACHE_KEY = 'app_cache_v65';
-if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
-  // Clear old session keys
-  Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
-  Object.keys(localStorage).filter(k => k.startsWith('app_cache_')).forEach(k => localStorage.removeItem(k));
-  sessionStorage.setItem(CACHE_KEY, '1');
-  // Clear all caches including Vite deps
-  if ('caches' in window) {
-    caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+// Cache version - v66 forces complete rebuild
+const CACHE_VERSION = 'v66';
+const CACHE_KEY = `app_cache_${CACHE_VERSION}`;
+
+// Force cache bust and reload on version change
+if (typeof window !== 'undefined' && typeof sessionStorage !== 'undefined') {
+  const hasCurrentCache = sessionStorage.getItem(CACHE_KEY);
+  
+  if (!hasCurrentCache) {
+    // Clear ALL old cache keys from sessionStorage
+    const sessionKeys = Object.keys(sessionStorage);
+    sessionKeys.forEach(key => {
+      if (key.startsWith('app_cache_')) {
+        sessionStorage.removeItem(key);
+      }
+    });
+    
+    // Clear from localStorage too
+    const localKeys = Object.keys(localStorage);
+    localKeys.forEach(key => {
+      if (key.startsWith('app_cache_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    // Set new cache key
+    sessionStorage.setItem(CACHE_KEY, Date.now().toString());
+    
+    // Clear browser caches (including Vite deps cache)
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => caches.delete(name));
+      });
+    }
+    
+    // Force a hard reload to clear all module caches
+    console.log(`[Cache] Version ${CACHE_VERSION} - forcing reload`);
+    window.location.reload();
   }
-  // Force reload on first visit with new version
-  window.location.reload();
 }
 
-const root = document.getElementById("root");
-if (root) {
-  createRoot(root).render(<App />);
+// Mount React app
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
