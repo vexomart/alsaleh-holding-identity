@@ -184,6 +184,7 @@ const IntegratedServicesPage = lazy(() => import("./pages/IntegratedServicesPage
 
 // NEW DASHBOARDS - Clean Architecture
 const AuthLogin = lazy(() => import("./pages/auth/Login"));
+const AuthRegister = lazy(() => import("./pages/auth/Register"));
 const AuthForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const AuthResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -290,8 +291,9 @@ const App = () => {
                       {/* Public Website */}
                       <Route path="/" element={<Index />} />
                       
-                      {/* Auth Routes - CLEAN */}
+{/* Auth Routes - CLEAN */}
                       <Route path="/auth/login" element={<Suspense fallback={<PageLoader />}><AuthLogin /></Suspense>} />
+                      <Route path="/auth/register" element={<Suspense fallback={<PageLoader />}><AuthRegister /></Suspense>} />
                       <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
                       <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
                       

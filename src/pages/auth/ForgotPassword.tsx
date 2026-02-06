@@ -1,166 +1,189 @@
-import { useState } from 'react';
+/**
+ * Forgot Password Page - Enterprise Design
+ * Password Recovery Flow
+ */
+import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Mail, ArrowLeft, Loader2, CheckCircle, Globe } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, ArrowRight, CheckCircle2, KeyRound } from 'lucide-react';
+import { 
+  AuthBackground, AuthLogo, AuthCard, AuthInput, 
+  AuthButton, FeatureBadges 
+} from '@/components/auth';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 const emailSchema = z.object({
-  email: z.string().email('البريد الإلكتروني غير صالح'),
+  email: z.string()
+    .trim()
+    .min(1, 'البريد الإلكتروني مطلوب')
+    .email('صيغة البريد الإلكتروني غير صحيحة')
+    .max(255),
 });
 
-const ForgotPassword = () => {
+function ForgotPassword() {
   const { resetPassword } = useAuth();
-  const { language, setLanguage, t, isRTL } = useLanguage();
   
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [email, setEmail] = React.useState('');
+  const [emailError, setEmailError] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setEmailError('');
     
     const result = emailSchema.safeParse({ email });
     if (!result.success) {
-      toast.error(result.error.errors[0].message);
+      setEmailError(result.error.errors[0].message);
       return;
     }
 
     setIsLoading(true);
     try {
-      const { error } = await resetPassword(email);
+      const { error } = await resetPassword(email.trim());
       
       if (error) {
-        toast.error(isRTL ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred');
+        toast.error('حدث خطأ، يرجى المحاولة مرة أخرى');
         return;
       }
 
       setIsSuccess(true);
-      toast.success(isRTL ? 'تم إرسال رابط الإعادة' : 'Reset link sent');
+      toast.success('تم إرسال رابط استعادة كلمة المرور');
     } catch (error) {
-      toast.error(isRTL ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred');
+      toast.error('حدث خطأ، يرجى المحاولة مرة أخرى');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDIwMjAiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 py-8" dir="rtl">
+      <AuthBackground />
       
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-        className="absolute top-4 end-4 text-white/70 hover:text-white"
-      >
-        <Globe className="w-4 h-4 me-2" />
-        {language === 'ar' ? 'English' : 'عربي'}
-      </Button>
+      <div className="w-full max-w-md relative z-10 space-y-6">
+        {/* Header */}
+        <motion.div 
+          className="text-center space-y-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <AuthLogo size="sm" />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">استعادة كلمة المرور</h1>
+            <p className="text-white/50 mt-1 text-sm">سنرسل لك رابط لإعادة تعيين كلمة المرور</p>
+          </motion.div>
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10"
-      >
-        <Card className="border-border/50 bg-card/95 backdrop-blur-xl shadow-2xl">
-          <CardHeader className="text-center space-y-4">
-            <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-primary-foreground">ASH</span>
-              </div>
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-bold">
-                {t('auth.reset_password')}
-              </CardTitle>
-              <CardDescription className="mt-2">
-                {isRTL 
-                  ? 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين' 
-                  : 'Enter your email and we\'ll send you a reset link'}
-              </CardDescription>
-            </div>
-          </CardHeader>
+        <FeatureBadges variant="login" />
 
-          <CardContent>
+        <AuthCard>
+          <AnimatePresence mode="wait">
             {isSuccess ? (
               <motion.div
+                key="success"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-6"
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="text-center py-6 space-y-6"
               >
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  {isRTL ? 'تم إرسال الرابط!' : 'Link Sent!'}
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  {isRTL 
-                    ? `تم إرسال رابط إعادة التعيين إلى ${email}` 
-                    : `Reset link sent to ${email}`}
-                </p>
+                <motion.div 
+                  className="w-20 h-20 mx-auto rounded-full bg-green-500/15 flex items-center justify-center border border-green-500/30"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', delay: 0.1 }}
+                >
+                  <CheckCircle2 className="w-10 h-10 text-green-400" />
+                </motion.div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-white">تم الإرسال بنجاح!</h3>
+                  <p className="text-white/50 text-sm">
+                    تم إرسال رابط استعادة كلمة المرور إلى
+                  </p>
+                  <p className="text-primary font-mono text-sm" dir="ltr">{email}</p>
+                  <p className="text-white/40 text-xs mt-4">
+                    يرجى التحقق من بريدك الإلكتروني واتباع التعليمات
+                  </p>
+                </div>
+                
                 <Link to="/auth/login">
-                  <Button variant="outline" className="w-full">
-                    <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
-                    {t('auth.back_to_login')}
-                  </Button>
+                  <AuthButton variant="outline" icon={<ArrowRight className="w-4 h-4" />}>
+                    العودة لتسجيل الدخول
+                  </AuthButton>
                 </Link>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
-                    {t('auth.email')}
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder={isRTL ? 'أدخل بريدك الإلكتروني' : 'Enter your email'}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="ps-10"
-                      required
-                      disabled={isLoading}
-                    />
-                  </div>
+              <motion.form
+                key="form"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                {/* Icon */}
+                <div className="flex justify-center">
+                  <motion.div 
+                    className="w-16 h-16 rounded-2xl bg-primary/15 flex items-center justify-center border border-primary/20"
+                    animate={{ scale: [1, 1.03, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <KeyRound className="w-7 h-7 text-primary" />
+                  </motion.div>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-11 text-base font-medium"
+                <div className="text-center mb-2">
+                  <h2 className="text-xl font-bold text-white">نسيت كلمة المرور؟</h2>
+                  <p className="text-white/45 text-sm mt-1">أدخل بريدك الإلكتروني لاستعادتها</p>
+                </div>
+
+                <AuthInput
+                  label="البريد الإلكتروني"
+                  icon={<Mail className="w-4 h-4" />}
+                  type="email"
+                  placeholder="example@domain.com"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setEmailError(''); }}
+                  error={emailError}
+                  hint="سنرسل رابط استعادة كلمة المرور إلى هذا البريد"
+                  dir="ltr"
+                  maxLength={255}
+                  autoComplete="email"
                   disabled={isLoading}
+                />
+
+                <AuthButton
+                  type="submit"
+                  isLoading={isLoading}
+                  disabled={!email || isLoading}
+                  icon={<Mail className="w-4 h-4" />}
                 >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    t('auth.send_reset_link')
-                  )}
-                </Button>
+                  إرسال رابط الاستعادة
+                </AuthButton>
 
                 <Link to="/auth/login" className="block">
-                  <Button variant="ghost" className="w-full" type="button">
-                    <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
-                    {t('auth.back_to_login')}
-                  </Button>
+                  <AuthButton variant="outline" icon={<ArrowRight className="w-4 h-4" />}>
+                    العودة لتسجيل الدخول
+                  </AuthButton>
                 </Link>
-              </form>
+              </motion.form>
             )}
-          </CardContent>
-        </Card>
-      </motion.div>
+          </AnimatePresence>
+        </AuthCard>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center text-white/25 text-xs"
+        >
+          © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
+        </motion.p>
+      </div>
     </div>
   );
-};
+}
 
 export default ForgotPassword;
