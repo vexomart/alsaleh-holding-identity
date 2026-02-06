@@ -7,13 +7,6 @@ import { componentTagger } from "lovable-tagger";
 const brotliShimPath = path.resolve(__dirname, "./src/shims/brotli.ts");
 const brotliDecompressShimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
 
-// React paths for singleton enforcement - use absolute resolved paths
-const reactPath = path.resolve(__dirname, "node_modules/react");
-const reactDomPath = path.resolve(__dirname, "node_modules/react-dom");
-const reactJsxRuntime = path.resolve(__dirname, "node_modules/react/jsx-runtime");
-const reactJsxDevRuntime = path.resolve(__dirname, "node_modules/react/jsx-dev-runtime");
-const reactDomClient = path.resolve(__dirname, "node_modules/react-dom/client");
-
 // Plugin to handle brotli imports
 function brotliPlugin(): Plugin {
   return {
@@ -45,64 +38,18 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force single React instance with absolute paths
-      "react": reactPath,
-      "react-dom": reactDomPath,
-      "react/jsx-runtime": reactJsxRuntime,
-      "react/jsx-dev-runtime": reactJsxDevRuntime,
-      "react-dom/client": reactDomClient,
     },
-    // Dedupe ALL packages that depend on React
+    // Dedupe to ensure single React instance
     dedupe: [
       "react", 
       "react-dom", 
       "react/jsx-runtime",
       "react/jsx-dev-runtime",
-      "react-dom/client",
       "@tanstack/react-query",
-      "framer-motion",
-      "react-router-dom",
-      "react-helmet-async",
-      "sonner",
-      "input-otp",
-      "cmdk",
-      "vaul",
-      "@capacitor/core",
-      "@supabase/supabase-js",
-      "react-hook-form",
-      "@hookform/resolvers",
-      "zod",
-      // All Radix UI packages
-      "@radix-ui/react-tooltip",
-      "@radix-ui/react-primitive",
-      "@radix-ui/react-context",
-      "@radix-ui/react-use-callback-ref",
-      "@radix-ui/react-use-controllable-state",
-      "@radix-ui/react-dismissable-layer",
-      "@radix-ui/react-portal",
-      "@radix-ui/react-presence",
-      "@radix-ui/react-slot",
-      "@radix-ui/react-compose-refs",
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-popover",
-      "@radix-ui/react-select",
-      "@radix-ui/react-accordion",
-      "@radix-ui/react-dropdown-menu",
-      "@radix-ui/react-checkbox",
-      "@radix-ui/react-label",
-      "@radix-ui/react-switch",
-      "@radix-ui/react-tabs",
-      "@radix-ui/react-avatar",
-      "@radix-ui/react-scroll-area",
-      "@radix-ui/react-separator",
-      "@radix-ui/react-progress",
-      "@radix-ui/react-radio-group",
-      "@radix-ui/react-alert-dialog",
-      "@radix-ui/react-collapsible",
     ],
   },
   optimizeDeps: {
-    // Force rebuild deps on every startup to prevent React duplication
+    // Force deps optimization on every server start
     force: true,
     esbuildOptions: {
       define: {
@@ -113,24 +60,9 @@ export default defineConfig(({ mode }) => ({
       "react",
       "react-dom",
       "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "react-dom/client",
       "@tanstack/react-query",
       "framer-motion",
       "react-router-dom",
-      "react-helmet-async",
-      "sonner",
-      "input-otp",
-      "@supabase/supabase-js",
-      "@radix-ui/react-tooltip",
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-popover",
-      "@radix-ui/react-select",
-      "@radix-ui/react-slot",
-      "@radix-ui/react-primitive",
-      "@radix-ui/react-tabs",
-      "@radix-ui/react-checkbox",
-      "@radix-ui/react-label",
     ],
     exclude: ["brotli"],
   },
@@ -140,9 +72,9 @@ export default defineConfig(({ mode }) => ({
     },
     rollupOptions: {
       output: {
-        // Ensure React is in its own chunk that's shared
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-query': ['@tanstack/react-query'],
         },
       },
     },

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { HelmetProvider } from "react-helmet-async";
@@ -7,8 +7,6 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-const lazy = React.lazy;
-const Suspense = React.Suspense;
 import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
@@ -213,7 +211,7 @@ const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
   const { isRTL, language } = useLanguage();
   
   // Sync document direction when language changes
-  React.useEffect(() => {
+  useEffect(() => {
     const dir = isRTL ? 'rtl' : 'ltr';
     
     // Apply to html
