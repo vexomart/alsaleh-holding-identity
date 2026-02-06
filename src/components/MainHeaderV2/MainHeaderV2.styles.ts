@@ -43,11 +43,10 @@ export const navStyles = {
   dropdownTriggerActive: 'text-primary',
 };
 
-// Dropdown Panel Styles - HIGH CONTRAST
+// Dropdown Panel Styles - HIGH CONTRAST (Portal-based)
 export const dropdownStyles = {
-  // Panel with solid background
+  // Panel styles (position handled dynamically via Portal)
   panel: `
-    absolute top-full end-0 mt-4 w-[540px]
     bg-slate-800 rounded-2xl border border-slate-600
     shadow-2xl shadow-black/50 overflow-hidden
   `,
