@@ -15,7 +15,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider, useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
-import Index from "./pages/Index";
+// Lazy load ALL pages including Index for optimal performance
+const Index = lazy(() => import("./pages/OptimizedIndex"));
 
 // Lazy load pages for better performance
 const OurWorks = lazy(() => import("./pages/OurWorks"));
@@ -190,12 +191,34 @@ const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const CustomerDashboard = lazy(() => import("./pages/app/Dashboard"));
 const CustomerOrderDetails = lazy(() => import("./pages/app/OrderDetails"));
 
-// Loading component
+// Enhanced Loading component - minimal for fast First Paint
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="text-center">
-      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-muted-foreground text-lg">جارٍ التحميل...</p>
+    <div className="flex flex-col items-center gap-4">
+      {/* Minimal spinner - fastest to render */}
+      <div className="w-10 h-10 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
+      {/* Loading bar */}
+      <div className="w-32 h-1 bg-muted rounded-full overflow-hidden">
+        <div className="h-full bg-gradient-to-l from-primary to-accent animate-loading-bar" />
+      </div>
+    </div>
+  </div>
+);
+
+// Dashboard skeleton loader
+const DashboardLoader = () => (
+  <div className="min-h-screen bg-background p-4 lg:p-8">
+    <div className="animate-pulse space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-10 w-48 bg-muted rounded" />
+        <div className="h-10 w-10 bg-muted rounded-full" />
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-24 bg-muted rounded-xl" />
+        ))}
+      </div>
+      <div className="h-64 bg-muted rounded-xl" />
     </div>
   </div>
 );
@@ -287,8 +310,8 @@ const App = () => {
                       <Sonner />
                     
                     <Routes>
-                      {/* Public Website */}
-                      <Route path="/" element={<Index />} />
+                      {/* Public Website - Lazy loaded with optimized skeleton */}
+                      <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
 {/* Auth Routes - CLEAN */}
                       <Route path="/auth/login" element={<Suspense fallback={<PageLoader />}><AuthLogin /></Suspense>} />

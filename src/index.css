@@ -1526,3 +1526,75 @@ html[lang="ar"] .invoice-container {
   font-weight: 600;
   line-height: 1.4;
 }
+
+/* ===========================================
+   PERFORMANCE ANIMATIONS - Loading States
+   =========================================== */
+
+/* Loading bar animation */
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+    margin-inline-start: 0;
+  }
+  50% {
+    width: 70%;
+    margin-inline-start: 0;
+  }
+  100% {
+    width: 100%;
+    margin-inline-start: 0;
+  }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
+}
+
+/* Shimmer effect for skeletons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-loading-bar,
+  .animate-shimmer,
+  .animate-spin,
+  .animate-pulse,
+  .animate-bounce {
+    animation: none !important;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Performance optimizations for animations */
+.performance-optimized {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Defer animations class - applied until page is ready */
+.defer-animations * {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+.defer-animations.ready * {
+  animation-play-state: running !important;
+  transition: all 0.3s ease !important;
+}
