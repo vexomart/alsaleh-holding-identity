@@ -65,7 +65,7 @@ export function CyberInput({
           {/* Icon Container - Right side (start in RTL) */}
           <motion.div 
             className={cn(
-              "absolute start-3 sm:start-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-lg",
+              "absolute start-3 sm:start-4 top-[52%] -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-lg",
               "flex items-center justify-center transition-all duration-200",
               error 
                 ? "bg-red-500/15 text-red-400"
