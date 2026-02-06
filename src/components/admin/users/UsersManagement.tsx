@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -442,37 +442,34 @@ export function UsersManagement() {
                 </p>
               </motion.div>
             ) : (
-              <motion.div 
-                layout
+              <div 
                 className={cn(
                   "grid gap-4",
                   viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
                 )}
               >
-                <AnimatePresence mode="popLayout">
-                  {filteredUsers.map((user) => (
-                    <UserCard
-                      key={user.id}
-                      user={user}
-                      language={language}
-                      isSelected={selectedUsers.has(user.id)}
-                      onSelect={(selected) => handleSelectUser(user.id, selected)}
-                      onView={() => {
-                        setSelectedUser(user);
-                        setIsViewDialogOpen(true);
-                      }}
-                      onEdit={() => openEditDialog(user)}
-                      onChangeRole={() => openRoleDialog(user)}
-                      onToggleStatus={() => handleToggleStatus(user)}
-                      onDelete={() => {
-                        setSelectedUser(user);
-                        setIsDeleteDialogOpen(true);
-                      }}
-                      formatRelativeTime={formatRelativeTime}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
+                {filteredUsers.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    language={language}
+                    isSelected={selectedUsers.has(user.id)}
+                    onSelect={(selected) => handleSelectUser(user.id, selected)}
+                    onView={() => {
+                      setSelectedUser(user);
+                      setIsViewDialogOpen(true);
+                    }}
+                    onEdit={() => openEditDialog(user)}
+                    onChangeRole={() => openRoleDialog(user)}
+                    onToggleStatus={() => handleToggleStatus(user)}
+                    onDelete={() => {
+                      setSelectedUser(user);
+                      setIsDeleteDialogOpen(true);
+                    }}
+                    formatRelativeTime={formatRelativeTime}
+                  />
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>
