@@ -315,20 +315,19 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden" dir="rtl">
+    <div className="min-h-screen relative overflow-hidden" dir="rtl">
       <CyberBackground />
       
-      {/* Split Layout */}
-      <div className="flex flex-col lg:flex-row w-full relative z-10">
-        
-        {/* Hero Section - Desktop only */}
-        <div className="hidden lg:flex lg:w-1/2 xl:w-[55%]">
+      {/* Split Layout - RTL: Hero on Right, Form on Left */}
+      <div className="relative z-10 min-h-screen flex">
+        {/* Hero Section - Desktop only (appears on right in RTL) */}
+        <div className="hidden lg:flex lg:w-1/2 xl:w-[55%] items-center justify-center">
           <CyberHeroSection variant="login" />
         </div>
         
-        {/* Form Section */}
-        <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
-          <div className="w-full max-w-[420px] space-y-5 sm:space-y-6">
+        {/* Form Section (appears on left in RTL) */}
+        <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+          <div className="w-full max-w-md space-y-6">
             
             {/* Mobile Header */}
             <motion.div 
