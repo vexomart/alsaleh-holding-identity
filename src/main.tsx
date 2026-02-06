@@ -43,8 +43,8 @@ const initializeDirection = () => {
 // Initialize direction immediately
 initializeDirection();
 
-// Force cache bust on version change - v52 for React hooks fix
-const CACHE_KEY = 'app_cache_v56';
+// Force cache bust on version change - v57 for ReCaptchaProvider fix
+const CACHE_KEY = 'app_cache_v57';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));
