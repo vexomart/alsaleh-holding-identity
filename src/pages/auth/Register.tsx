@@ -1,6 +1,6 @@
 /**
- * Enterprise Registration Page - World-Class Premium Design
- * Step-by-Step Flow with Split Layout
+ * Cyber Security Registration Page - Enterprise Grade
+ * Complete redesign with cyber security theme
  */
 import * as React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,15 +8,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Mail, Lock, Eye, EyeOff, Phone, 
   ArrowLeft, ArrowRight, CheckCircle2, AlertCircle,
-  KeyRound, RefreshCw, Smartphone, ShieldCheck
+  KeyRound, RefreshCw, Smartphone, ShieldCheck, Shield
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Progress } from '@/components/ui/progress';
-import { 
-  AuthBackground, AuthLogo, AuthCard, AuthInput, 
-  AuthButton, FeatureBadges, AuthHeroSection 
-} from '@/components/auth';
+import { CyberBackground } from '@/components/auth/CyberBackground';
+import { CyberAuthCard } from '@/components/auth/CyberAuthCard';
+import { CyberInput } from '@/components/auth/CyberInput';
+import { CyberButton } from '@/components/auth/CyberButton';
+import { CyberLogo } from '@/components/auth/CyberLogo';
+import { CyberHeroSection } from '@/components/auth/CyberHeroSection';
 import { useAuth } from '@/hooks/useAuth';
 import { useSmsOtp } from '@/hooks/useSmsOtp';
 import { toast } from 'sonner';
@@ -60,37 +62,52 @@ const step2Schema = z.object({
   path: ['confirmPassword'],
 });
 
-// Step Progress Component - Mobile Optimized
-function StepProgress({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+// Cyber Step Progress Component
+function CyberStepProgress({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
   const progress = (currentStep / totalSteps) * 100;
   
   return (
-    <div className="space-y-3 sm:space-y-4">
-      <div className="flex justify-between items-center px-1 sm:px-2">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center px-2">
         {Array.from({ length: totalSteps }).map((_, i) => (
           <div key={i} className="flex items-center">
             <motion.div
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all duration-300 ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-xs sm:text-sm font-bold transition-all duration-300 ${
                 i < currentStep 
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white' 
+                  ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30' 
                   : i === currentStep 
-                    ? 'bg-blue-500/20 text-blue-400 border-2 border-blue-500' 
-                    : 'bg-white/[0.04] text-white/30 border border-white/10'
+                    ? 'bg-cyan-500/20 text-cyan-400 border-2 border-cyan-500' 
+                    : 'bg-slate-900/60 text-white/30 border border-white/10'
               }`}
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
             >
-              {i < currentStep ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : i + 1}
+              {i < currentStep ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
             </motion.div>
             {i < totalSteps - 1 && (
               <div 
-                className={`h-[2px] mx-2 sm:mx-3 w-8 sm:w-12 md:w-16 ${i < currentStep ? 'bg-blue-500' : 'bg-white/10'}`}
+                className={`h-[2px] mx-2 sm:mx-3 w-10 sm:w-14 transition-colors duration-300 ${
+                  i < currentStep ? 'bg-cyan-500' : 'bg-white/10'
+                }`}
               />
             )}
           </div>
         ))}
       </div>
-      <Progress value={progress} className="h-1 sm:h-1.5 bg-white/[0.04]" />
+      <div className="relative h-1.5 rounded-full bg-slate-900/60 overflow-hidden">
+        <motion.div
+          className="absolute inset-y-0 start-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        />
+        <motion.div
+          className="absolute inset-y-0 start-0 bg-gradient-to-r from-cyan-400/50 to-blue-500/50 rounded-full blur-sm"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        />
+      </div>
     </div>
   );
 }
@@ -105,6 +122,7 @@ function PasswordStrength({ password }: { password: string }) {
   
   const strength = checks.filter(c => c.valid).length;
   const strengthColors = ['bg-red-500', 'bg-amber-500', 'bg-emerald-500'];
+  const strengthGlows = ['shadow-red-500/30', 'shadow-amber-500/30', 'shadow-emerald-500/30'];
   
   if (!password) return null;
   
@@ -115,25 +133,33 @@ function PasswordStrength({ password }: { password: string }) {
       exit={{ opacity: 0, height: 0 }}
       className="space-y-3 pt-1"
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1.5">
         {[0, 1, 2].map(i => (
-          <div 
+          <motion.div 
             key={i} 
-            className={`h-1.5 flex-1 rounded-full transition-colors ${
-              i < strength ? strengthColors[strength - 1] : 'bg-white/10'
-            }`} 
+            className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+              i < strength ? `${strengthColors[strength - 1]} shadow-lg ${strengthGlows[strength - 1]}` : 'bg-slate-800'
+            }`}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: i * 0.1 }}
           />
         ))}
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         {checks.map((check, i) => (
-          <span 
+          <motion.span 
             key={i} 
-            className={`text-xs flex items-center gap-1.5 ${check.valid ? 'text-emerald-400' : 'text-white/30'}`}
+            className={`text-xs flex items-center gap-1.5 transition-colors duration-200 ${
+              check.valid ? 'text-emerald-400' : 'text-white/30'
+            }`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
           >
-            <CheckCircle2 className={`w-3.5 h-3.5 ${check.valid ? 'text-emerald-400' : 'text-white/20'}`} />
+            <CheckCircle2 className={`w-3.5 h-3.5 transition-colors ${check.valid ? 'text-emerald-400' : 'text-white/20'}`} />
             {check.label}
-          </span>
+          </motion.span>
         ))}
       </div>
     </motion.div>
@@ -368,57 +394,68 @@ function Register() {
 
   // Step titles
   const stepTitles = [
-    { title: 'البيانات الأساسية', subtitle: 'أدخل اسمك ورقم جوالك' },
-    { title: 'بيانات الحساب', subtitle: 'أنشئ بريدك وكلمة المرور' },
-    { title: 'تأكيد الحساب', subtitle: 'أدخل رمز التحقق المرسل' },
+    { title: 'البيانات الأساسية', subtitle: 'أدخل اسمك ورقم جوالك', icon: User },
+    { title: 'بيانات الحساب', subtitle: 'أنشئ بريدك وكلمة المرور', icon: Lock },
+    { title: 'تأكيد الحساب', subtitle: 'أدخل رمز التحقق المرسل', icon: ShieldCheck },
   ];
+
+  const CurrentIcon = stepTitles[currentStep].icon;
 
   return (
     <div className="min-h-screen flex relative overflow-hidden" dir="rtl">
-      <AuthBackground />
+      <CyberBackground />
       
-      {/* Split Layout Container */}
+      {/* Split Layout */}
       <div className="flex flex-col lg:flex-row w-full relative z-10">
         
-        {/* Hero Section - Hidden on mobile */}
+        {/* Hero Section - Desktop only */}
         <div className="hidden lg:flex lg:w-1/2 xl:w-[55%]">
-          <AuthHeroSection variant="register" />
+          <CyberHeroSection variant="register" />
         </div>
         
-        {/* Form Section - Mobile optimized */}
+        {/* Form Section */}
         <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
-          <div className="w-full max-w-[400px] sm:max-w-md space-y-4 sm:space-y-6">
+          <div className="w-full max-w-[420px] space-y-5 sm:space-y-6">
             
-            {/* Mobile Header - Compact */}
+            {/* Mobile Header */}
             <motion.div 
-              className="text-center lg:hidden space-y-2 sm:space-y-3"
+              className="lg:hidden space-y-4"
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <AuthLogo size="sm" />
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-                <h1 className="text-lg sm:text-xl font-bold text-white">
+              <div className="flex justify-center">
+                <CyberLogo size="sm" showText={false} />
+              </div>
+              <div className="text-center">
+                <h1 className="text-xl sm:text-2xl font-bold text-white">
                   إنشاء حساب جديد
                 </h1>
-                <p className="text-white/50 mt-0.5 text-xs sm:text-sm">انضم إلى منصة ASH Holding</p>
-              </motion.div>
+                <p className="text-white/50 mt-1 text-xs sm:text-sm flex items-center justify-center gap-2">
+                  <Shield className="w-3.5 h-3.5 text-cyan-400" />
+                  انضم إلى منظومتنا الآمنة
+                </p>
+              </div>
             </motion.div>
 
-            {/* Feature Badges - Mobile only - Hidden on very small screens */}
-            <div className="lg:hidden hidden sm:block">
-              <FeatureBadges variant="register" />
-            </div>
-
-            <AuthCard>
+            <CyberAuthCard>
               {/* Progress */}
-              <div className="mb-5 sm:mb-6">
-                <StepProgress currentStep={currentStep} totalSteps={totalSteps} />
+              <div className="mb-6">
+                <CyberStepProgress currentStep={currentStep} totalSteps={totalSteps} />
               </div>
 
-              {/* Step Title - Compact */}
-              <div className="text-center mb-5 sm:mb-6">
-                <motion.h2 
+              {/* Step Header */}
+              <div className="text-center mb-6">
+                <motion.div
                   key={currentStep}
+                  className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-600/10 flex items-center justify-center border border-cyan-500/30"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CurrentIcon className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+                <motion.h2 
+                  key={`title-${currentStep}`}
                   className="text-lg sm:text-xl font-bold text-white"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -445,7 +482,7 @@ function Register() {
                     exit={{ opacity: 0, x: 15 }}
                     className="space-y-4"
                   >
-                    <AuthInput
+                    <CyberInput
                       label="الاسم الكامل"
                       icon={<User className="w-5 h-5" />}
                       type="text"
@@ -458,7 +495,7 @@ function Register() {
                       disabled={isLoading}
                     />
 
-                    <AuthInput
+                    <CyberInput
                       label="رقم الجوال"
                       icon={<Smartphone className="w-5 h-5" />}
                       type="tel"
@@ -481,17 +518,19 @@ function Register() {
                       <motion.div
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
                       >
-                        <div className="flex items-start gap-2.5 sm:gap-3">
-                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-1.5 sm:space-y-2">
-                            <p className="text-xs sm:text-sm text-amber-200 font-medium">هذا الرقم مسجّل مسبقاً</p>
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-2">
+                            <p className="text-sm text-amber-200 font-medium">
+                              هذا الرقم مسجّل مسبقاً
+                            </p>
                             <Link 
                               to="/auth/login"
-                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                             >
-                              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <ArrowLeft className="w-4 h-4" />
                               تسجيل الدخول بدلاً من ذلك
                             </Link>
                           </div>
@@ -499,14 +538,14 @@ function Register() {
                       </motion.div>
                     )}
 
-                    <AuthButton
+                    <CyberButton
                       onClick={handleStep1}
                       isLoading={isLoading}
                       disabled={!name || !phone || isLoading}
                       icon={<ArrowLeft className="w-4 h-4" />}
                     >
-                      التالي
-                    </AuthButton>
+                      متابعة
+                    </CyberButton>
                   </motion.div>
                 )}
 
@@ -523,35 +562,31 @@ function Register() {
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
+                      className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 transition-colors text-sm group"
                     >
-                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
-                      الخطوة السابقة
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      رجوع
                     </button>
 
-                    <AuthInput
+                    <CyberInput
                       label="البريد الإلكتروني"
                       icon={<Mail className="w-5 h-5" />}
                       type="email"
                       placeholder="example@email.com"
                       value={email}
-                      onChange={(e) => { 
-                        setEmail(e.target.value); 
-                        setEmailError(''); 
-                        setDuplicateError(null);
-                      }}
+                      onChange={(e) => { setEmail(e.target.value); setEmailError(''); setDuplicateError(null); }}
                       error={emailError}
                       dir="ltr"
                       autoComplete="email"
                       disabled={isLoading}
                     />
 
-                    <div className="space-y-1.5 sm:space-y-2">
-                      <AuthInput
+                    <div className="space-y-2">
+                      <CyberInput
                         label="كلمة المرور"
                         icon={<Lock className="w-5 h-5" />}
                         type={showPassword ? 'text' : 'password'}
-                        placeholder="••••••••"
+                        placeholder="أنشئ كلمة مرور قوية"
                         value={password}
                         onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }}
                         error={passwordError}
@@ -562,20 +597,20 @@ function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                            className="p-2 text-white/40 hover:text-cyan-400 transition-colors rounded-lg hover:bg-cyan-500/10"
                           >
-                            {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
                         }
                       />
                       <PasswordStrength password={password} />
                     </div>
 
-                    <AuthInput
+                    <CyberInput
                       label="تأكيد كلمة المرور"
-                      icon={<ShieldCheck className="w-5 h-5" />}
+                      icon={<Lock className="w-5 h-5" />}
                       type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
+                      placeholder="أعد إدخال كلمة المرور"
                       value={confirmPassword}
                       onChange={(e) => { setConfirmPassword(e.target.value); setConfirmPasswordError(''); }}
                       error={confirmPasswordError}
@@ -587,9 +622,9 @@ function Register() {
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                          className="p-2 text-white/40 hover:text-cyan-400 transition-colors rounded-lg hover:bg-cyan-500/10"
                         >
-                          {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
                       }
                     />
@@ -599,17 +634,19 @@ function Register() {
                       <motion.div
                         initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
                       >
-                        <div className="flex items-start gap-2.5 sm:gap-3">
-                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-1.5 sm:space-y-2">
-                            <p className="text-xs sm:text-sm text-amber-200 font-medium">هذا البريد مسجّل مسبقاً</p>
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-2">
+                            <p className="text-sm text-amber-200 font-medium">
+                              هذا البريد مسجّل مسبقاً
+                            </p>
                             <Link 
                               to="/auth/login"
-                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                             >
-                              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <ArrowLeft className="w-4 h-4" />
                               تسجيل الدخول بدلاً من ذلك
                             </Link>
                           </div>
@@ -617,14 +654,14 @@ function Register() {
                       </motion.div>
                     )}
 
-                    <AuthButton
+                    <CyberButton
                       onClick={handleStep2}
                       isLoading={isLoading || isSmsLoading}
                       disabled={!email || !password || !confirmPassword || isLoading || isSmsLoading}
                       icon={<ArrowLeft className="w-4 h-4" />}
                     >
                       إرسال رمز التحقق
-                    </AuthButton>
+                    </CyberButton>
                   </motion.div>
                 )}
 
@@ -635,47 +672,42 @@ function Register() {
                     initial={{ opacity: 0, x: 15 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -15 }}
-                    className="space-y-4 sm:space-y-5"
+                    className="space-y-5"
                   >
                     {/* Back button */}
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
+                      className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 transition-colors text-sm group"
                     >
-                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
-                      الخطوة السابقة
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      رجوع
                     </button>
 
-                    {/* OTP Header - Compact on mobile */}
-                    <div className="text-center space-y-2 sm:space-y-3 py-1 sm:py-2">
-                      <motion.div 
-                        className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
-                        animate={{ scale: [1, 1.03, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-                      </motion.div>
-                      <div>
-                        <h3 className="text-base sm:text-lg font-bold text-white">تم إرسال رمز التحقق</h3>
-                        <p className="text-white/40 text-xs sm:text-sm mt-1 font-mono" dir="ltr">{phone}</p>
-                      </div>
+                    {/* OTP Info */}
+                    <div className="text-center space-y-2">
+                      <p className="text-white/60 text-sm">
+                        تم إرسال رمز التحقق إلى
+                      </p>
+                      <p className="text-cyan-400 font-mono font-bold text-lg" dir="ltr">
+                        {phone}
+                      </p>
                     </div>
 
-                    {/* OTP Input - Responsive */}
-                    <div className="flex justify-center py-2 sm:py-3" dir="ltr">
+                    {/* OTP Input */}
+                    <div className="flex justify-center py-3" dir="ltr">
                       <InputOTP
                         maxLength={6}
                         value={otpCode}
                         onChange={setOtpCode}
                       >
-                        <InputOTPGroup className="gap-1.5 sm:gap-2.5">
+                        <InputOTPGroup className="gap-2">
                           {[0, 1, 2, 3, 4, 5].map((index) => (
                             <InputOTPSlot 
                               key={index}
                               index={index} 
-                              className="w-9 h-11 sm:w-11 sm:h-13 rounded-lg sm:rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-base sm:text-lg font-bold
-                                focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:bg-white/[0.06]
+                              className="w-10 h-12 sm:w-11 sm:h-13 rounded-xl bg-slate-900/60 border-cyan-500/30 text-white text-lg font-bold
+                                focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:bg-slate-900/80
                                 transition-all duration-200"
                             />
                           ))}
@@ -686,9 +718,9 @@ function Register() {
                     {/* Countdown */}
                     <div className="text-center">
                       {countdown > 0 ? (
-                        <p className="text-xs sm:text-sm text-white/40">
+                        <p className="text-sm text-white/40">
                           إعادة الإرسال بعد{' '}
-                          <span className="text-blue-400 font-mono font-bold">
+                          <span className="text-cyan-400 font-mono font-bold">
                             {formatCountdown(countdown)}
                           </span>
                         </p>
@@ -697,15 +729,15 @@ function Register() {
                           type="button"
                           onClick={handleResendOtp}
                           disabled={isSmsLoading}
-                          className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
+                          className="text-sm text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
                         >
-                          <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <RefreshCw className="w-4 h-4" />
                           إعادة إرسال الرمز
                         </button>
                       )}
                     </div>
 
-                    <AuthButton
+                    <CyberButton
                       onClick={handleStep3}
                       isLoading={isLoading}
                       disabled={otpCode.length !== 6 || isLoading}
@@ -713,24 +745,24 @@ function Register() {
                       icon={<CheckCircle2 className="w-4 h-4" />}
                     >
                       إنشاء الحساب
-                    </AuthButton>
+                    </CyberButton>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Login Link */}
-              <div className="text-center mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/[0.08]">
-                <p className="text-white/45 text-xs sm:text-sm">
+              <div className="mt-6 pt-6 border-t border-cyan-500/10 text-center">
+                <p className="text-white/45 text-sm">
                   لديك حساب بالفعل؟{' '}
                   <Link 
                     to="/auth/login"
-                    className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                    className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                   >
                     تسجيل الدخول
                   </Link>
                 </p>
               </div>
-            </AuthCard>
+            </CyberAuthCard>
 
             {/* Footer */}
             <motion.p 
@@ -739,7 +771,7 @@ function Register() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
+              © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة • محمي بتقنية التشفير المتقدمة
             </motion.p>
           </div>
         </div>

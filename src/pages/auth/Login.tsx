@@ -1,6 +1,6 @@
 /**
- * Enterprise Login Page - World-Class Premium Design
- * Split Layout with Hero Section and Premium Form
+ * Cyber Security Login Page - Enterprise Grade
+ * Complete redesign with cyber security theme
  */
 import * as React from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
@@ -8,17 +8,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Mail, Lock, Eye, EyeOff, Smartphone, KeyRound, 
   Phone, Send, RefreshCw, CheckCircle2, ArrowRight,
-  UserPlus, AlertCircle, ChevronLeft, ArrowLeft
+  UserPlus, AlertCircle, ChevronLeft, ArrowLeft, Shield
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { 
-  AuthBackground, AuthLogo, AuthCard, AuthInput, 
-  AuthButton, FeatureBadges, AuthHeroSection 
-} from '@/components/auth';
+import { CyberBackground } from '@/components/auth/CyberBackground';
+import { CyberAuthCard } from '@/components/auth/CyberAuthCard';
+import { CyberInput } from '@/components/auth/CyberInput';
+import { CyberButton } from '@/components/auth/CyberButton';
+import { CyberLogo } from '@/components/auth/CyberLogo';
+import { CyberHeroSection } from '@/components/auth/CyberHeroSection';
 import { useAuth } from '@/hooks/useAuth';
 import { useSmsOtp } from '@/hooks/useSmsOtp';
 import { toast } from 'sonner';
@@ -51,15 +53,15 @@ const phoneSchema = z.object({
     .refine((val) => /^05[0-9]{8}$/.test(val), 'رقم الجوال يجب أن يبدأ بـ 05'),
 });
 
-// Step indicator component
-function StepIndicator({ step, total }: { step: number; total: number }) {
+// Cyber Step Indicator
+function CyberStepIndicator({ step, total }: { step: number; total: number }) {
   return (
-    <div className="flex items-center justify-center gap-2 mb-6">
+    <div className="flex items-center justify-center gap-2 mb-5">
       {Array.from({ length: total }).map((_, i) => (
         <motion.div
           key={i}
-          className={`h-1.5 rounded-full transition-all duration-300 ${
-            i < step ? 'bg-blue-500 w-8' : i === step ? 'bg-blue-400/60 w-5' : 'bg-white/10 w-3'
+          className={`h-1 rounded-full transition-all duration-300 ${
+            i < step ? 'bg-cyan-500 w-8' : i === step ? 'bg-cyan-400/60 w-5' : 'bg-white/10 w-3'
           }`}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -281,55 +283,57 @@ function Login() {
 
   return (
     <div className="min-h-screen flex relative overflow-hidden" dir="rtl">
-      <AuthBackground />
+      <CyberBackground />
       
-      {/* Split Layout Container */}
+      {/* Split Layout */}
       <div className="flex flex-col lg:flex-row w-full relative z-10">
         
-        {/* Hero Section - Hidden on mobile, shown on lg+ */}
+        {/* Hero Section - Desktop only */}
         <div className="hidden lg:flex lg:w-1/2 xl:w-[55%]">
-          <AuthHeroSection variant="login" />
+          <CyberHeroSection variant="login" />
         </div>
         
-        {/* Form Section - Mobile optimized */}
+        {/* Form Section */}
         <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
-          <div className="w-full max-w-[400px] sm:max-w-md space-y-4 sm:space-y-6">
+          <div className="w-full max-w-[420px] space-y-5 sm:space-y-6">
             
-            {/* Mobile Header - Compact */}
+            {/* Mobile Header */}
             <motion.div 
-              className="text-center lg:hidden space-y-2 sm:space-y-3"
+              className="lg:hidden space-y-4"
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
             >
-              <AuthLogo size="sm" />
-              
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.15 }}
-              >
-                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  ASH <span className="text-blue-400">HOLDING</span>
+              <div className="flex justify-center">
+                <CyberLogo size="sm" showText={false} />
+              </div>
+              <div className="text-center">
+                <h1 className="text-xl sm:text-2xl font-bold text-white">
+                  تسجيل الدخول الآمن
                 </h1>
-                <p className="text-white/50 mt-0.5 text-xs sm:text-sm">منصة إدارة الأعمال المتكاملة</p>
-              </motion.div>
+                <p className="text-white/50 mt-1 text-xs sm:text-sm flex items-center justify-center gap-2">
+                  <Shield className="w-3.5 h-3.5 text-cyan-400" />
+                  بوابة محمية بتشفير 256-bit
+                </p>
+              </div>
             </motion.div>
 
-            {/* Feature Badges - Mobile only - Hidden on very small screens */}
-            <div className="lg:hidden hidden sm:block">
-              <FeatureBadges variant="login" />
-            </div>
-
             {/* Main Card */}
-            <AuthCard>
-              {/* Card Header - Compact on mobile */}
-              <div className="text-center mb-5 sm:mb-6">
+            <CyberAuthCard>
+              {/* Card Header */}
+              <div className="text-center mb-6">
+                <motion.div
+                  className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/10 flex items-center justify-center border border-cyan-500/30"
+                  animate={{ 
+                    boxShadow: ['0 0 20px hsla(190, 100%, 50%, 0.2)', '0 0 30px hsla(190, 100%, 50%, 0.4)', '0 0 20px hsla(190, 100%, 50%, 0.2)'],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Lock className="w-6 h-6 text-cyan-400" />
+                </motion.div>
                 <motion.h2 
                   className="text-xl sm:text-2xl font-bold text-white"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
                 >
                   تسجيل الدخول
                 </motion.h2>
@@ -337,13 +341,13 @@ function Login() {
                   className="text-white/45 text-xs sm:text-sm mt-1.5"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
+                  transition={{ delay: 0.1 }}
                 >
                   أدخل بياناتك للوصول إلى حسابك
                 </motion.p>
               </div>
 
-              {/* Auth Method Tabs - Responsive */}
+              {/* Auth Method Tabs */}
               <Tabs 
                 value={authMethod} 
                 onValueChange={(v) => {
@@ -355,19 +359,19 @@ function Login() {
                 }} 
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-2 bg-white/[0.05] border border-white/[0.1] p-1 sm:p-1.5 rounded-lg sm:rounded-xl mb-5 sm:mb-6 h-11 sm:h-12">
+                <TabsList className="grid w-full grid-cols-2 bg-slate-900/60 border border-cyan-500/20 p-1.5 rounded-xl mb-6 h-12">
                   <TabsTrigger 
                     value="phone" 
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md text-white/50 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 h-9 sm:h-10"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-cyan-500/20 text-white/50 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200"
                   >
-                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-1.5 sm:me-2" />
+                    <Phone className="w-4 h-4 me-2" />
                     رقم الجوال
                   </TabsTrigger>
                   <TabsTrigger 
                     value="email"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md text-white/50 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 h-9 sm:h-10"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-cyan-500/20 text-white/50 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200"
                   >
-                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-1.5 sm:me-2" />
+                    <Mail className="w-4 h-4 me-2" />
                     البريد الإلكتروني
                   </TabsTrigger>
                 </TabsList>
@@ -385,7 +389,7 @@ function Login() {
                         onSubmit={handleSendOtp}
                         className="space-y-4"
                       >
-                        <AuthInput
+                        <CyberInput
                           label="رقم الجوال"
                           icon={<Smartphone className="w-5 h-5" />}
                           type="tel"
@@ -405,22 +409,19 @@ function Login() {
                           <motion.div
                             initial={{ opacity: 0, y: -8, height: 0 }}
                             animate={{ opacity: 1, y: 0, height: 'auto' }}
-                            className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
+                            className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
                           >
-                            <div className="flex items-start gap-2.5 sm:gap-3">
-                              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                              <div className="space-y-1.5 sm:space-y-2">
-                                <p className="text-xs sm:text-sm text-amber-200 font-medium">
+                            <div className="flex items-start gap-3">
+                              <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                              <div className="space-y-2">
+                                <p className="text-sm text-amber-200 font-medium">
                                   لا يوجد حساب مرتبط بهذا الرقم
-                                </p>
-                                <p className="text-[11px] sm:text-xs text-white/50">
-                                  يمكنك إنشاء حساب جديد للبدء في استخدام المنصة
                                 </p>
                                 <Link 
                                   to="/auth/register"
-                                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                                  className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                                 >
-                                  <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                  <UserPlus className="w-4 h-4" />
                                   إنشاء حساب جديد
                                 </Link>
                               </div>
@@ -428,14 +429,14 @@ function Login() {
                           </motion.div>
                         )}
 
-                        <AuthButton
+                        <CyberButton
                           type="submit"
                           isLoading={isSmsLoading}
                           disabled={!phone || isSmsLoading}
                           icon={<Send className="w-4 h-4" />}
                         >
                           إرسال رمز التحقق
-                        </AuthButton>
+                        </CyberButton>
                       </motion.form>
                     ) : (
                       <motion.form
@@ -445,49 +446,51 @@ function Login() {
                         exit={{ opacity: 0, x: -15 }}
                         transition={{ duration: 0.2 }}
                         onSubmit={handleVerifyOtp}
-                        className="space-y-4 sm:space-y-5"
+                        className="space-y-5"
                       >
-                        <StepIndicator step={1} total={2} />
+                        <CyberStepIndicator step={1} total={2} />
                         
                         {/* Back button */}
                         <button
                           type="button"
                           onClick={handleBackToPhone}
-                          className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
+                          className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 transition-colors text-sm group"
                         >
-                          <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-x-0.5 transition-transform" />
+                          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
                           تغيير الرقم
                         </button>
 
-                        {/* OTP Header - Compact on mobile */}
-                        <div className="text-center space-y-2 sm:space-y-3 py-1 sm:py-2">
+                        {/* OTP Header */}
+                        <div className="text-center space-y-3">
                           <motion.div 
-                            className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
-                            animate={{ scale: [1, 1.03, 1] }}
+                            className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-600/10 flex items-center justify-center border border-cyan-500/30"
+                            animate={{ 
+                              boxShadow: ['0 0 15px hsla(190, 100%, 50%, 0.2)', '0 0 25px hsla(190, 100%, 50%, 0.3)', '0 0 15px hsla(190, 100%, 50%, 0.2)'],
+                            }}
                             transition={{ duration: 2, repeat: Infinity }}
                           >
-                            <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+                            <KeyRound className="w-6 h-6 text-cyan-400" />
                           </motion.div>
                           <div>
-                            <h3 className="text-base sm:text-lg font-bold text-white">أدخل رمز التحقق</h3>
-                            <p className="text-white/40 text-xs sm:text-sm mt-1 font-mono" dir="ltr">{phone}</p>
+                            <h3 className="text-lg font-bold text-white">أدخل رمز التحقق</h3>
+                            <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
                           </div>
                         </div>
 
-                        {/* OTP Input - Responsive */}
-                        <div className="flex justify-center py-2 sm:py-3" dir="ltr">
+                        {/* OTP Input */}
+                        <div className="flex justify-center py-3" dir="ltr">
                           <InputOTP
                             maxLength={6}
                             value={otpCode}
                             onChange={setOtpCode}
                           >
-                            <InputOTPGroup className="gap-1.5 sm:gap-2.5">
+                            <InputOTPGroup className="gap-2">
                               {[0, 1, 2, 3, 4, 5].map((index) => (
                                 <InputOTPSlot 
                                   key={index}
                                   index={index} 
-                                  className="w-9 h-11 sm:w-11 sm:h-13 rounded-lg sm:rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-base sm:text-lg font-bold
-                                    focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:bg-white/[0.06]
+                                  className="w-10 h-12 sm:w-11 sm:h-13 rounded-xl bg-slate-900/60 border-cyan-500/30 text-white text-lg font-bold
+                                    focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:bg-slate-900/80
                                     transition-all duration-200"
                                 />
                               ))}
@@ -498,9 +501,9 @@ function Login() {
                         {/* Countdown */}
                         <div className="text-center">
                           {countdown > 0 ? (
-                            <p className="text-xs sm:text-sm text-white/40">
+                            <p className="text-sm text-white/40">
                               إعادة الإرسال بعد{' '}
-                              <span className="text-blue-400 font-mono font-bold">
+                              <span className="text-cyan-400 font-mono font-bold">
                                 {formatCountdown(countdown)}
                               </span>
                             </p>
@@ -509,15 +512,15 @@ function Login() {
                               type="button"
                               onClick={handleResendOtp}
                               disabled={isSmsLoading}
-                              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
+                              className="text-sm text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
                             >
-                              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <RefreshCw className="w-4 h-4" />
                               إعادة إرسال الرمز
                             </button>
                           )}
                         </div>
 
-                        <AuthButton
+                        <CyberButton
                           type="submit"
                           isLoading={isSmsLoading}
                           disabled={otpCode.length !== 6 || isSmsLoading}
@@ -525,7 +528,7 @@ function Login() {
                           icon={<CheckCircle2 className="w-4 h-4" />}
                         >
                           تأكيد الدخول
-                        </AuthButton>
+                        </CyberButton>
                       </motion.form>
                     )}
                   </AnimatePresence>
@@ -540,7 +543,7 @@ function Login() {
                     onSubmit={handleEmailLogin}
                     className="space-y-4"
                   >
-                    <AuthInput
+                    <CyberInput
                       label="البريد الإلكتروني"
                       icon={<Mail className="w-5 h-5" />}
                       type="email"
@@ -553,7 +556,7 @@ function Login() {
                       disabled={isLoading}
                     />
 
-                    <AuthInput
+                    <CyberInput
                       label="كلمة المرور"
                       icon={<Lock className="w-5 h-5" />}
                       type={showPassword ? 'text' : 'password'}
@@ -568,29 +571,29 @@ function Login() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                          className="p-2 text-white/40 hover:text-cyan-400 transition-colors rounded-lg hover:bg-cyan-500/10"
                         >
-                          {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
                       }
                     />
 
-                    {/* Remember me & Forgot password - Responsive */}
+                    {/* Remember me & Forgot password */}
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 sm:gap-2">
+                      <div className="flex items-center gap-2">
                         <Checkbox 
                           id="remember" 
                           checked={rememberMe}
                           onCheckedChange={(checked) => setRememberMe(checked === true)}
-                          className="border-white/20 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 w-4 h-4"
+                          className="border-cyan-500/30 data-[state=checked]:bg-cyan-600 data-[state=checked]:border-cyan-600"
                         />
-                        <Label htmlFor="remember" className="text-xs sm:text-sm text-white/50 cursor-pointer">
+                        <Label htmlFor="remember" className="text-sm text-white/50 cursor-pointer">
                           تذكرني
                         </Label>
                       </div>
                       <Link 
                         to="/auth/forgot-password"
-                        className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                        className="text-sm text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
                       >
                         نسيت كلمة المرور؟
                       </Link>
@@ -601,19 +604,19 @@ function Login() {
                       <motion.div
                         initial={{ opacity: 0, y: -8, height: 0 }}
                         animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
                       >
-                        <div className="flex items-start gap-2.5 sm:gap-3">
-                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-1.5 sm:space-y-2">
-                            <p className="text-xs sm:text-sm text-amber-200 font-medium">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-2">
+                            <p className="text-sm text-amber-200 font-medium">
                               لا يوجد حساب مرتبط بهذا البريد
                             </p>
                             <Link 
                               to="/auth/register"
-                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                             >
-                              <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <UserPlus className="w-4 h-4" />
                               إنشاء حساب جديد
                             </Link>
                           </div>
@@ -621,41 +624,41 @@ function Login() {
                       </motion.div>
                     )}
 
-                    <AuthButton
+                    <CyberButton
                       type="submit"
                       isLoading={isLoading}
                       disabled={!email || !password || isLoading}
                       icon={<ArrowLeft className="w-4 h-4" />}
                     >
                       تسجيل الدخول
-                    </AuthButton>
+                    </CyberButton>
                   </motion.form>
                 </TabsContent>
               </Tabs>
 
-              {/* Divider - Compact */}
-              <div className="relative my-5 sm:my-6">
+              {/* Divider */}
+              <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/[0.08]" />
+                  <div className="w-full border-t border-cyan-500/10" />
                 </div>
-                <div className="relative flex justify-center text-[11px] sm:text-xs">
-                  <span className="bg-slate-900/80 px-3 sm:px-4 text-white/30">أو</span>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-slate-950/80 px-4 text-white/30">أو</span>
                 </div>
               </div>
 
               {/* Register Link */}
               <div className="text-center">
-                <p className="text-white/45 text-xs sm:text-sm">
+                <p className="text-white/45 text-sm">
                   ليس لديك حساب؟{' '}
                   <Link 
                     to="/auth/register"
-                    className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                    className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
                   >
                     إنشاء حساب جديد
                   </Link>
                 </p>
               </div>
-            </AuthCard>
+            </CyberAuthCard>
 
             {/* Footer */}
             <motion.p 
@@ -664,7 +667,7 @@ function Login() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
+              © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة • محمي بتقنية التشفير المتقدمة
             </motion.p>
           </div>
         </div>
