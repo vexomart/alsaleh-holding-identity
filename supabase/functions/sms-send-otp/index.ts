@@ -167,21 +167,31 @@
           `0${formattedPhone.slice(3)}`,     // 0555812567
           `+${formattedPhone}`,              // +966555812567
           formattedPhone.slice(3),           // 555812567
+          `+966${formattedPhone.slice(3)}`,  // +966555812567 (with plus)
         ];
         
-        let userExists = false;
-        for (const phoneFormat of phoneFormats) {
-          const { data: profile } = await supabase
+        console.log("Checking for existing user with formats:", phoneFormats);
+        
+        // Use OR query for all formats at once (more efficient)
+        const { data: profileByPhone } = await supabase
+          .from("profiles")
+          .select("id")
+          .or(phoneFormats.map(f => `phone.eq.${f}`).join(','))
+          .limit(1)
+          .maybeSingle();
+        
+        let userExists = !!profileByPhone;
+        
+        // If not found, try LIKE search
+        if (!userExists) {
+          const { data: profileByLike } = await supabase
             .from("profiles")
             .select("id")
-            .eq("phone", phoneFormat)
+            .or(`phone.like.%${formattedPhone.slice(-9)}%,phone.like.%${formattedPhone.slice(3)}%`)
+            .limit(1)
             .maybeSingle();
           
-          if (profile) {
-            userExists = true;
-            console.log("Found user with phone format:", phoneFormat);
-            break;
-          }
+          userExists = !!profileByLike;
         }
         
         if (!userExists) {
@@ -201,6 +211,8 @@
             );
           }
         }
+        
+        console.log("User exists:", userExists);
       }
 
       // Rate limiting: Check recent OTP requests
