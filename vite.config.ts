@@ -7,9 +7,12 @@ import { componentTagger } from "lovable-tagger";
 const brotliShimPath = path.resolve(__dirname, "./src/shims/brotli.ts");
 const brotliDecompressShimPath = path.resolve(__dirname, "./src/shims/brotli-decompress.ts");
 
-// React paths for singleton enforcement
+// React paths for singleton enforcement - use absolute resolved paths
 const reactPath = path.resolve(__dirname, "node_modules/react");
 const reactDomPath = path.resolve(__dirname, "node_modules/react-dom");
+const reactJsxRuntime = path.resolve(__dirname, "node_modules/react/jsx-runtime");
+const reactJsxDevRuntime = path.resolve(__dirname, "node_modules/react/jsx-dev-runtime");
+const reactDomClient = path.resolve(__dirname, "node_modules/react-dom/client");
 
 // Plugin to handle brotli imports
 function brotliPlugin(): Plugin {
@@ -42,13 +45,14 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force single React instance - absolute paths
+      // Force single React instance with absolute paths
       "react": reactPath,
       "react-dom": reactDomPath,
-      "react/jsx-runtime": path.resolve(reactPath, "jsx-runtime"),
-      "react/jsx-dev-runtime": path.resolve(reactPath, "jsx-dev-runtime"),
-      "react-dom/client": path.resolve(reactDomPath, "client"),
+      "react/jsx-runtime": reactJsxRuntime,
+      "react/jsx-dev-runtime": reactJsxDevRuntime,
+      "react-dom/client": reactDomClient,
     },
+    // Dedupe ALL packages that depend on React
     dedupe: [
       "react", 
       "react-dom", 
@@ -64,6 +68,10 @@ export default defineConfig(({ mode }) => ({
       "cmdk",
       "vaul",
       "@capacitor/core",
+      "@supabase/supabase-js",
+      "react-hook-form",
+      "@hookform/resolvers",
+      "zod",
       // All Radix UI packages
       "@radix-ui/react-tooltip",
       "@radix-ui/react-primitive",
@@ -94,7 +102,8 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   optimizeDeps: {
-    force: true, // Always force rebuild to prevent React duplication
+    // Force rebuild deps on every startup to prevent React duplication
+    force: true,
     esbuildOptions: {
       define: {
         global: 'globalThis',
@@ -110,18 +119,32 @@ export default defineConfig(({ mode }) => ({
       "framer-motion",
       "react-router-dom",
       "react-helmet-async",
+      "sonner",
+      "input-otp",
+      "@supabase/supabase-js",
       "@radix-ui/react-tooltip",
       "@radix-ui/react-dialog",
       "@radix-ui/react-popover",
       "@radix-ui/react-select",
       "@radix-ui/react-slot",
       "@radix-ui/react-primitive",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-label",
     ],
     exclude: ["brotli"],
   },
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        // Ensure React is in its own chunk that's shared
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+        },
+      },
     },
   },
 }));
