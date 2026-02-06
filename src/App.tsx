@@ -1,5 +1,4 @@
-import * as React from 'react';
-const { lazy, Suspense, useEffect } = React;
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { HelmetProvider } from "react-helmet-async";
