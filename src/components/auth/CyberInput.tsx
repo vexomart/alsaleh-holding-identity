@@ -85,7 +85,7 @@ export function CyberInput({
           <motion.label
             htmlFor={inputId}
             className={cn(
-              "absolute start-14 sm:start-16 pointer-events-none font-medium transition-colors duration-200",
+              "absolute start-[52px] sm:start-[60px] pointer-events-none font-medium transition-colors duration-200",
               isFloating
                 ? "text-[10px] sm:text-xs text-cyan-400/70"
                 : "text-xs sm:text-sm text-white/40"
@@ -108,7 +108,7 @@ export function CyberInput({
             className={cn(
               "absolute inset-0 w-full h-full bg-transparent",
               "text-white text-sm sm:text-base font-medium",
-              "ps-14 sm:ps-16 pe-4 sm:pe-5 pt-5 sm:pt-6 pb-2",
+              "ps-[52px] sm:ps-[60px] pe-4 sm:pe-5 pt-5 sm:pt-6 pb-2",
               "placeholder:text-transparent focus:placeholder:text-white/20",
               "outline-none border-none",
               "caret-cyan-400",
