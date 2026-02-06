@@ -60,17 +60,17 @@ const step2Schema = z.object({
   path: ['confirmPassword'],
 });
 
-// Step Progress Component
+// Step Progress Component - Mobile Optimized
 function StepProgress({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
   const progress = (currentStep / totalSteps) * 100;
   
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center px-2">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="flex justify-between items-center px-1 sm:px-2">
         {Array.from({ length: totalSteps }).map((_, i) => (
           <div key={i} className="flex items-center">
             <motion.div
-              className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all duration-300 ${
                 i < currentStep 
                   ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white' 
                   : i === currentStep 
@@ -80,17 +80,17 @@ function StepProgress({ currentStep, totalSteps }: { currentStep: number; totalS
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
             >
-              {i < currentStep ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
+              {i < currentStep ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> : i + 1}
             </motion.div>
             {i < totalSteps - 1 && (
               <div 
-                className={`h-[2px] mx-3 w-12 sm:w-16 ${i < currentStep ? 'bg-blue-500' : 'bg-white/10'}`}
+                className={`h-[2px] mx-2 sm:mx-3 w-8 sm:w-12 md:w-16 ${i < currentStep ? 'bg-blue-500' : 'bg-white/10'}`}
               />
             )}
           </div>
         ))}
       </div>
-      <Progress value={progress} className="h-1.5 bg-white/[0.04]" />
+      <Progress value={progress} className="h-1 sm:h-1.5 bg-white/[0.04]" />
     </div>
   );
 }
@@ -385,48 +385,48 @@ function Register() {
           <AuthHeroSection variant="register" />
         </div>
         
-        {/* Form Section */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
-          <div className="w-full max-w-md space-y-6">
+        {/* Form Section - Mobile optimized */}
+        <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
+          <div className="w-full max-w-[400px] sm:max-w-md space-y-4 sm:space-y-6">
             
-            {/* Mobile Header */}
+            {/* Mobile Header - Compact */}
             <motion.div 
-              className="text-center lg:hidden space-y-4"
-              initial={{ opacity: 0, y: -20 }}
+              className="text-center lg:hidden space-y-2 sm:space-y-3"
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
             >
               <AuthLogo size="sm" />
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-                <h1 className="text-2xl sm:text-3xl font-bold text-white">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+                <h1 className="text-lg sm:text-xl font-bold text-white">
                   إنشاء حساب جديد
                 </h1>
-                <p className="text-white/50 mt-1 text-sm">انضم إلى منصة ASH Holding</p>
+                <p className="text-white/50 mt-0.5 text-xs sm:text-sm">انضم إلى منصة ASH Holding</p>
               </motion.div>
             </motion.div>
 
-            {/* Feature Badges - Mobile only */}
-            <div className="lg:hidden">
+            {/* Feature Badges - Mobile only - Hidden on very small screens */}
+            <div className="lg:hidden hidden sm:block">
               <FeatureBadges variant="register" />
             </div>
 
             <AuthCard>
               {/* Progress */}
-              <div className="mb-8">
+              <div className="mb-5 sm:mb-6">
                 <StepProgress currentStep={currentStep} totalSteps={totalSteps} />
               </div>
 
-              {/* Step Title */}
-              <div className="text-center mb-8">
+              {/* Step Title - Compact */}
+              <div className="text-center mb-5 sm:mb-6">
                 <motion.h2 
                   key={currentStep}
-                  className="text-xl sm:text-2xl font-bold text-white"
-                  initial={{ opacity: 0, y: 10 }}
+                  className="text-lg sm:text-xl font-bold text-white"
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                 >
                   {stepTitles[currentStep].title}
                 </motion.h2>
                 <motion.p 
-                  className="text-white/45 text-sm mt-2"
+                  className="text-white/45 text-xs sm:text-sm mt-1.5"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.1 }}
@@ -440,10 +440,10 @@ function Register() {
                 {currentStep === 0 && (
                   <motion.div
                     key="step1"
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -15 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    className="space-y-5"
+                    exit={{ opacity: 0, x: 15 }}
+                    className="space-y-4"
                   >
                     <AuthInput
                       label="الاسم الكامل"
@@ -479,19 +479,19 @@ function Register() {
                     {/* Duplicate phone warning */}
                     {duplicateError === 'phone' && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
                       >
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-2">
-                            <p className="text-sm text-amber-200 font-medium">هذا الرقم مسجّل مسبقاً</p>
+                        <div className="flex items-start gap-2.5 sm:gap-3">
+                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-1.5 sm:space-y-2">
+                            <p className="text-xs sm:text-sm text-amber-200 font-medium">هذا الرقم مسجّل مسبقاً</p>
                             <Link 
                               to="/auth/login"
-                              className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                             >
-                              <ArrowLeft className="w-4 h-4" />
+                              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                               تسجيل الدخول بدلاً من ذلك
                             </Link>
                           </div>
@@ -514,18 +514,18 @@ function Register() {
                 {currentStep === 1 && (
                   <motion.div
                     key="step2"
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 15 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-5"
+                    exit={{ opacity: 0, x: -15 }}
+                    className="space-y-4"
                   >
                     {/* Back button */}
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm group"
+                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
                     >
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
                       الخطوة السابقة
                     </button>
 
@@ -546,7 +546,7 @@ function Register() {
                       disabled={isLoading}
                     />
 
-                    <div className="space-y-2">
+                    <div className="space-y-1.5 sm:space-y-2">
                       <AuthInput
                         label="كلمة المرور"
                         icon={<Lock className="w-5 h-5" />}
@@ -562,9 +562,9 @@ function Register() {
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                            className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
                           >
-                            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                            {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                           </button>
                         }
                       />
@@ -587,9 +587,9 @@ function Register() {
                         <button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          className="p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                          className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
                         >
-                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                         </button>
                       }
                     />
@@ -597,19 +597,19 @@ function Register() {
                     {/* Duplicate email warning */}
                     {duplicateError === 'email' && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
+                        initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
                       >
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-2">
-                            <p className="text-sm text-amber-200 font-medium">هذا البريد مسجّل مسبقاً</p>
+                        <div className="flex items-start gap-2.5 sm:gap-3">
+                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-1.5 sm:space-y-2">
+                            <p className="text-xs sm:text-sm text-amber-200 font-medium">هذا البريد مسجّل مسبقاً</p>
                             <Link 
                               to="/auth/login"
-                              className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                             >
-                              <ArrowLeft className="w-4 h-4" />
+                              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                               تسجيل الدخول بدلاً من ذلك
                             </Link>
                           </div>
@@ -632,49 +632,49 @@ function Register() {
                 {currentStep === 2 && (
                   <motion.div
                     key="step3"
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 15 }}
                     animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    exit={{ opacity: 0, x: -15 }}
+                    className="space-y-4 sm:space-y-5"
                   >
                     {/* Back button */}
                     <button
                       type="button"
                       onClick={handleBack}
-                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm group"
+                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
                     >
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-0.5 transition-transform" />
                       الخطوة السابقة
                     </button>
 
-                    {/* OTP Header */}
-                    <div className="text-center space-y-3 py-2">
+                    {/* OTP Header - Compact on mobile */}
+                    <div className="text-center space-y-2 sm:space-y-3 py-1 sm:py-2">
                       <motion.div 
-                        className="w-18 h-18 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
+                        className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
                         animate={{ scale: [1, 1.03, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        <KeyRound className="w-8 h-8 text-blue-400" />
+                        <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                       </motion.div>
                       <div>
-                        <h3 className="text-lg font-bold text-white">تم إرسال رمز التحقق</h3>
-                        <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
+                        <h3 className="text-base sm:text-lg font-bold text-white">تم إرسال رمز التحقق</h3>
+                        <p className="text-white/40 text-xs sm:text-sm mt-1 font-mono" dir="ltr">{phone}</p>
                       </div>
                     </div>
 
-                    {/* OTP Input */}
-                    <div className="flex justify-center py-3" dir="ltr">
+                    {/* OTP Input - Responsive */}
+                    <div className="flex justify-center py-2 sm:py-3" dir="ltr">
                       <InputOTP
                         maxLength={6}
                         value={otpCode}
                         onChange={setOtpCode}
                       >
-                        <InputOTPGroup className="gap-2 sm:gap-3">
+                        <InputOTPGroup className="gap-1.5 sm:gap-2.5">
                           {[0, 1, 2, 3, 4, 5].map((index) => (
                             <InputOTPSlot 
                               key={index}
                               index={index} 
-                              className="w-11 h-13 sm:w-12 sm:h-14 rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-lg font-bold
+                              className="w-9 h-11 sm:w-11 sm:h-13 rounded-lg sm:rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-base sm:text-lg font-bold
                                 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:bg-white/[0.06]
                                 transition-all duration-200"
                             />
@@ -686,7 +686,7 @@ function Register() {
                     {/* Countdown */}
                     <div className="text-center">
                       {countdown > 0 ? (
-                        <p className="text-sm text-white/40">
+                        <p className="text-xs sm:text-sm text-white/40">
                           إعادة الإرسال بعد{' '}
                           <span className="text-blue-400 font-mono font-bold">
                             {formatCountdown(countdown)}
@@ -697,9 +697,9 @@ function Register() {
                           type="button"
                           onClick={handleResendOtp}
                           disabled={isSmsLoading}
-                          className="text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
+                          className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
                         >
-                          <RefreshCw className="w-4 h-4" />
+                          <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           إعادة إرسال الرمز
                         </button>
                       )}
@@ -719,8 +719,8 @@ function Register() {
               </AnimatePresence>
 
               {/* Login Link */}
-              <div className="text-center mt-8 pt-6 border-t border-white/[0.08]">
-                <p className="text-white/45 text-sm">
+              <div className="text-center mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-white/[0.08]">
+                <p className="text-white/45 text-xs sm:text-sm">
                   لديك حساب بالفعل؟{' '}
                   <Link 
                     to="/auth/login"
@@ -734,10 +734,10 @@ function Register() {
 
             {/* Footer */}
             <motion.p 
-              className="text-center text-xs text-white/25"
+              className="text-center text-[10px] sm:text-xs text-white/25 pb-4 sm:pb-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4 }}
             >
               © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
             </motion.p>

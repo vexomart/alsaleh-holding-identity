@@ -291,50 +291,50 @@ function Login() {
           <AuthHeroSection variant="login" />
         </div>
         
-        {/* Form Section */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
-          <div className="w-full max-w-md space-y-6">
+        {/* Form Section - Mobile optimized */}
+        <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
+          <div className="w-full max-w-[400px] sm:max-w-md space-y-4 sm:space-y-6">
             
-            {/* Mobile Header */}
+            {/* Mobile Header - Compact */}
             <motion.div 
-              className="text-center lg:hidden space-y-4"
-              initial={{ opacity: 0, y: -20 }}
+              className="text-center lg:hidden space-y-2 sm:space-y-3"
+              initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
             >
-              <AuthLogo size="md" />
+              <AuthLogo size="sm" />
               
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.15 }}
               >
-                <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                   ASH <span className="text-blue-400">HOLDING</span>
                 </h1>
-                <p className="text-white/50 mt-1 text-sm">منصة إدارة الأعمال المتكاملة</p>
+                <p className="text-white/50 mt-0.5 text-xs sm:text-sm">منصة إدارة الأعمال المتكاملة</p>
               </motion.div>
             </motion.div>
 
-            {/* Feature Badges - Mobile only */}
-            <div className="lg:hidden">
+            {/* Feature Badges - Mobile only - Hidden on very small screens */}
+            <div className="lg:hidden hidden sm:block">
               <FeatureBadges variant="login" />
             </div>
 
             {/* Main Card */}
             <AuthCard>
-              {/* Card Header */}
-              <div className="text-center mb-8">
+              {/* Card Header - Compact on mobile */}
+              <div className="text-center mb-5 sm:mb-6">
                 <motion.h2 
-                  className="text-2xl sm:text-3xl font-bold text-white"
-                  initial={{ opacity: 0, y: 10 }}
+                  className="text-xl sm:text-2xl font-bold text-white"
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
                   تسجيل الدخول
                 </motion.h2>
                 <motion.p 
-                  className="text-white/45 text-sm mt-2"
+                  className="text-white/45 text-xs sm:text-sm mt-1.5"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
@@ -343,7 +343,7 @@ function Login() {
                 </motion.p>
               </div>
 
-              {/* Auth Method Tabs */}
+              {/* Auth Method Tabs - Responsive */}
               <Tabs 
                 value={authMethod} 
                 onValueChange={(v) => {
@@ -355,19 +355,19 @@ function Login() {
                 }} 
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-2 bg-white/[0.04] border border-white/[0.08] p-1.5 rounded-xl mb-8 h-14">
+                <TabsList className="grid w-full grid-cols-2 bg-white/[0.05] border border-white/[0.1] p-1 sm:p-1.5 rounded-lg sm:rounded-xl mb-5 sm:mb-6 h-11 sm:h-12">
                   <TabsTrigger 
                     value="phone" 
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/50 rounded-lg font-semibold transition-all duration-200 h-11"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md text-white/50 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 h-9 sm:h-10"
                   >
-                    <Phone className="w-4 h-4 me-2" />
+                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-1.5 sm:me-2" />
                     رقم الجوال
                   </TabsTrigger>
                   <TabsTrigger 
                     value="email"
-                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/50 rounded-lg font-semibold transition-all duration-200 h-11"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md text-white/50 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 h-9 sm:h-10"
                   >
-                    <Mail className="w-4 h-4 me-2" />
+                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-1.5 sm:me-2" />
                     البريد الإلكتروني
                   </TabsTrigger>
                 </TabsList>
@@ -378,12 +378,12 @@ function Login() {
                     {phoneStep === 'phone' ? (
                       <motion.form
                         key="phone-form"
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -15 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, x: 15 }}
+                        transition={{ duration: 0.2 }}
                         onSubmit={handleSendOtp}
-                        className="space-y-5"
+                        className="space-y-4"
                       >
                         <AuthInput
                           label="رقم الجوال"
@@ -403,24 +403,24 @@ function Login() {
                         {/* User not found message */}
                         {userNotFound && (
                           <motion.div
-                            initial={{ opacity: 0, y: -10, height: 0 }}
+                            initial={{ opacity: 0, y: -8, height: 0 }}
                             animate={{ opacity: 1, y: 0, height: 'auto' }}
-                            className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
+                            className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
                           >
-                            <div className="flex items-start gap-3">
-                              <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                              <div className="space-y-2">
-                                <p className="text-sm text-amber-200 font-medium">
+                            <div className="flex items-start gap-2.5 sm:gap-3">
+                              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                              <div className="space-y-1.5 sm:space-y-2">
+                                <p className="text-xs sm:text-sm text-amber-200 font-medium">
                                   لا يوجد حساب مرتبط بهذا الرقم
                                 </p>
-                                <p className="text-xs text-white/50">
+                                <p className="text-[11px] sm:text-xs text-white/50">
                                   يمكنك إنشاء حساب جديد للبدء في استخدام المنصة
                                 </p>
                                 <Link 
                                   to="/auth/register"
-                                  className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                                 >
-                                  <UserPlus className="w-4 h-4" />
+                                  <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                   إنشاء حساب جديد
                                 </Link>
                               </div>
@@ -440,12 +440,12 @@ function Login() {
                     ) : (
                       <motion.form
                         key="otp-form"
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 15 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, x: -15 }}
+                        transition={{ duration: 0.2 }}
                         onSubmit={handleVerifyOtp}
-                        className="space-y-6"
+                        className="space-y-4 sm:space-y-5"
                       >
                         <StepIndicator step={1} total={2} />
                         
@@ -453,40 +453,40 @@ function Login() {
                         <button
                           type="button"
                           onClick={handleBackToPhone}
-                          className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm group"
+                          className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-xs sm:text-sm group"
                         >
-                          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                          <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-x-0.5 transition-transform" />
                           تغيير الرقم
                         </button>
 
-                        {/* OTP Header */}
-                        <div className="text-center space-y-3 py-2">
+                        {/* OTP Header - Compact on mobile */}
+                        <div className="text-center space-y-2 sm:space-y-3 py-1 sm:py-2">
                           <motion.div 
-                            className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
+                            className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
                             animate={{ scale: [1, 1.03, 1] }}
                             transition={{ duration: 2, repeat: Infinity }}
                           >
-                            <KeyRound className="w-7 h-7 text-blue-400" />
+                            <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
                           </motion.div>
                           <div>
-                            <h3 className="text-lg font-bold text-white">أدخل رمز التحقق</h3>
-                            <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
+                            <h3 className="text-base sm:text-lg font-bold text-white">أدخل رمز التحقق</h3>
+                            <p className="text-white/40 text-xs sm:text-sm mt-1 font-mono" dir="ltr">{phone}</p>
                           </div>
                         </div>
 
-                        {/* OTP Input */}
-                        <div className="flex justify-center py-3" dir="ltr">
+                        {/* OTP Input - Responsive */}
+                        <div className="flex justify-center py-2 sm:py-3" dir="ltr">
                           <InputOTP
                             maxLength={6}
                             value={otpCode}
                             onChange={setOtpCode}
                           >
-                            <InputOTPGroup className="gap-2 sm:gap-3">
+                            <InputOTPGroup className="gap-1.5 sm:gap-2.5">
                               {[0, 1, 2, 3, 4, 5].map((index) => (
                                 <InputOTPSlot 
                                   key={index}
                                   index={index} 
-                                  className="w-11 h-13 sm:w-12 sm:h-14 rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-lg font-bold
+                                  className="w-9 h-11 sm:w-11 sm:h-13 rounded-lg sm:rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-base sm:text-lg font-bold
                                     focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:bg-white/[0.06]
                                     transition-all duration-200"
                                 />
@@ -498,7 +498,7 @@ function Login() {
                         {/* Countdown */}
                         <div className="text-center">
                           {countdown > 0 ? (
-                            <p className="text-sm text-white/40">
+                            <p className="text-xs sm:text-sm text-white/40">
                               إعادة الإرسال بعد{' '}
                               <span className="text-blue-400 font-mono font-bold">
                                 {formatCountdown(countdown)}
@@ -509,9 +509,9 @@ function Login() {
                               type="button"
                               onClick={handleResendOtp}
                               disabled={isSmsLoading}
-                              className="text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
+                              className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
                             >
-                              <RefreshCw className="w-4 h-4" />
+                              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                               إعادة إرسال الرمز
                             </button>
                           )}
@@ -534,11 +534,11 @@ function Login() {
                 {/* Email Login */}
                 <TabsContent value="email" className="mt-0 focus-visible:outline-none">
                   <motion.form
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                     onSubmit={handleEmailLogin}
-                    className="space-y-5"
+                    className="space-y-4"
                   >
                     <AuthInput
                       label="البريد الإلكتروني"
@@ -568,29 +568,29 @@ function Login() {
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                          className="p-1.5 sm:p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
                         >
-                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                         </button>
                       }
                     />
 
-                    {/* Remember me & Forgot password */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                    {/* Remember me & Forgot password - Responsive */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2">
                         <Checkbox 
                           id="remember" 
                           checked={rememberMe}
                           onCheckedChange={(checked) => setRememberMe(checked === true)}
-                          className="border-white/20 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          className="border-white/20 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 w-4 h-4"
                         />
-                        <Label htmlFor="remember" className="text-sm text-white/50 cursor-pointer">
+                        <Label htmlFor="remember" className="text-xs sm:text-sm text-white/50 cursor-pointer">
                           تذكرني
                         </Label>
                       </div>
                       <Link 
                         to="/auth/forgot-password"
-                        className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                        className="text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
                       >
                         نسيت كلمة المرور؟
                       </Link>
@@ -599,21 +599,21 @@ function Login() {
                     {/* User not found message */}
                     {userNotFound && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10, height: 0 }}
+                        initial={{ opacity: 0, y: -8, height: 0 }}
                         animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
+                        className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/20"
                       >
-                        <div className="flex items-start gap-3">
-                          <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <div className="space-y-2">
-                            <p className="text-sm text-amber-200 font-medium">
+                        <div className="flex items-start gap-2.5 sm:gap-3">
+                          <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <div className="space-y-1.5 sm:space-y-2">
+                            <p className="text-xs sm:text-sm text-amber-200 font-medium">
                               لا يوجد حساب مرتبط بهذا البريد
                             </p>
                             <Link 
                               to="/auth/register"
-                              className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                             >
-                              <UserPlus className="w-4 h-4" />
+                              <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                               إنشاء حساب جديد
                             </Link>
                           </div>
@@ -633,19 +633,19 @@ function Login() {
                 </TabsContent>
               </Tabs>
 
-              {/* Divider */}
-              <div className="relative my-8">
+              {/* Divider - Compact */}
+              <div className="relative my-5 sm:my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/[0.08]" />
                 </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="bg-slate-900/80 px-4 text-white/30">أو</span>
+                <div className="relative flex justify-center text-[11px] sm:text-xs">
+                  <span className="bg-slate-900/80 px-3 sm:px-4 text-white/30">أو</span>
                 </div>
               </div>
 
               {/* Register Link */}
               <div className="text-center">
-                <p className="text-white/45 text-sm">
+                <p className="text-white/45 text-xs sm:text-sm">
                   ليس لديك حساب؟{' '}
                   <Link 
                     to="/auth/register"
@@ -659,10 +659,10 @@ function Login() {
 
             {/* Footer */}
             <motion.p 
-              className="text-center text-xs text-white/25"
+              className="text-center text-[10px] sm:text-xs text-white/25 pb-4 sm:pb-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4 }}
             >
               © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
             </motion.p>

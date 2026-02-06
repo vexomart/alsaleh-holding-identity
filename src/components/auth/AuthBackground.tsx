@@ -112,27 +112,27 @@ export function AuthBackground() {
         id="success-orb"
       />
       
-      {/* Floating Particles - Electric Blue */}
-      {[...Array(30)].map((_, i) => (
+      {/* Floating Particles - Reduced for mobile */}
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute rounded-full"
+          className="absolute rounded-full hidden sm:block"
           style={{
-            width: `${2 + Math.random() * 4}px`,
-            height: `${2 + Math.random() * 4}px`,
-            background: `hsla(${210 + Math.random() * 50}, 100%, 70%, ${0.2 + Math.random() * 0.3})`,
-            left: `${5 + Math.random() * 90}%`,
-            top: `${5 + Math.random() * 90}%`,
+            width: `${2 + Math.random() * 3}px`,
+            height: `${2 + Math.random() * 3}px`,
+            background: `hsla(${210 + Math.random() * 50}, 100%, 70%, ${0.15 + Math.random() * 0.25})`,
+            left: `${10 + Math.random() * 80}%`,
+            top: `${10 + Math.random() * 80}%`,
           }}
           animate={{
-            opacity: [0, 0.8, 0],
+            opacity: [0, 0.6, 0],
             scale: [0, 1, 0],
-            y: [0, -40 - Math.random() * 30, 0],
+            y: [0, -30 - Math.random() * 20, 0],
           }}
           transition={{
-            duration: 5 + Math.random() * 4,
+            duration: 6 + Math.random() * 4,
             repeat: Infinity,
-            delay: Math.random() * 6,
+            delay: Math.random() * 5,
             ease: 'easeInOut',
           }}
         />
