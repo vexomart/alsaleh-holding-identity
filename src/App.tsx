@@ -103,6 +103,7 @@ const FinancialPlanning = lazy(() => import("./pages/business-services/Financial
 const DepartmentDetails = lazy(() => import("./pages/DepartmentDetails"));
 const UserGuide = lazy(() => import("./pages/UserGuide"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Sitemap = lazy(() => import("./pages/Sitemap"));
 const StartWithUs = lazy(() => import("./pages/StartWithUs"));
 const BookConsultation = lazy(() => import("./pages/BookConsultation"));
 const Consultation = lazy(() => import("./pages/Consultation"));
@@ -440,6 +441,7 @@ const App = () => {
                       {/* Help */}
                       <Route path="/faq" element={<Suspense fallback={<PageLoader />}><FAQ /></Suspense>} />
                       <Route path="/user-guide" element={<Suspense fallback={<PageLoader />}><UserGuide /></Suspense>} />
+                      <Route path="/sitemap" element={<Suspense fallback={<PageLoader />}><Sitemap /></Suspense>} />
                       <Route path="/department/:id" element={<Suspense fallback={<PageLoader />}><DepartmentDetails /></Suspense>} />
                       
                       {/* Enterprise */}
