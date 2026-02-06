@@ -65,7 +65,7 @@ export function CyberInput({
           {/* Icon Container - Right side (start in RTL) */}
           <motion.div 
             className={cn(
-              "absolute start-3 sm:start-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl",
+              "absolute start-3 sm:start-4 top-[45%] -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-lg",
               "flex items-center justify-center transition-all duration-200",
               error 
                 ? "bg-red-500/15 text-red-400"
@@ -83,7 +83,7 @@ export function CyberInput({
             }}
             transition={{ duration: 0.2 }}
           >
-            <span className="[&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-5 sm:[&>svg]:h-5">
+            <span className="[&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]">
               {icon}
             </span>
           </motion.div>
