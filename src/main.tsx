@@ -44,7 +44,7 @@ const initializeDirection = () => {
 initializeDirection();
 
 // Force cache bust on version change - v64 for React singleton fix
-const CACHE_KEY = 'app_cache_v64';
+const CACHE_KEY = 'app_cache_v65';
 if (typeof sessionStorage !== 'undefined' && !sessionStorage.getItem(CACHE_KEY)) {
   // Clear old session keys
   Object.keys(sessionStorage).filter(k => k.startsWith('app_cache_')).forEach(k => sessionStorage.removeItem(k));

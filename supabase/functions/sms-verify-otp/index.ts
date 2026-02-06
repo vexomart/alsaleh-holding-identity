@@ -182,34 +182,75 @@ serve(async (req) => {
     // Now create or get user and generate session
     const syntheticEmail = generateSyntheticEmail(formattedPhone);
     
-    // Check if user exists by phone in profiles
-    const { data: existingProfile } = await supabase
-      .from("profiles")
-      .select("id, email, full_name")
-      .eq("phone", formattedPhone)
-      .maybeSingle();
+    // Try multiple phone formats to find existing profile
+    const phoneFormats = [
+      formattedPhone,                    // 966555812567
+      `0${formattedPhone.slice(3)}`,     // 0555812567
+      `+${formattedPhone}`,              // +966555812567
+      formattedPhone.slice(3),           // 555812567
+    ];
+    
+    // Check if user exists by phone in profiles (try multiple formats)
+    let existingProfile = null;
+    for (const phoneFormat of phoneFormats) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id, email, full_name, phone")
+        .eq("phone", phoneFormat)
+        .maybeSingle();
+      
+      if (profile) {
+        existingProfile = profile;
+        console.log("Found existing profile with phone format:", phoneFormat);
+        break;
+      }
+    }
 
     let userId: string;
     let userEmail: string;
+    let userName: string | null = null;
     let isNewUser = false;
 
     if (existingProfile) {
-      // User exists - use their ID
+      // User exists - use their ID and name
       userId = existingProfile.id;
       userEmail = existingProfile.email || syntheticEmail;
-      console.log("Found existing user by phone:", userId);
+      userName = existingProfile.full_name;
+      console.log("Found existing user by phone:", userId, "Name:", userName);
     } else {
-      // Check if user exists by synthetic email
+      // Check if user exists by synthetic email in auth.users
       const { data: existingUser } = await supabase.auth.admin.listUsers();
       const userByEmail = existingUser?.users?.find(u => u.email === syntheticEmail);
       
       if (userByEmail) {
         userId = userByEmail.id;
         userEmail = syntheticEmail;
+        userName = userByEmail.user_metadata?.full_name || null;
         console.log("Found existing user by email:", userId);
+        
+        // Update profile with phone if it doesn't have one
+        await supabase.from("profiles").upsert({
+          id: userId,
+          phone: formattedPhone,
+        }, { onConflict: 'id' });
       } else {
-        // Create new user
+        // This is a new user logging in with phone - they should register first
+        // For login purpose, we need existing user
+        if (purpose === "login") {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: "لا يوجد حساب مرتبط بهذا الرقم. يرجى إنشاء حساب جديد أولاً.",
+              error_en: "No account found with this phone. Please register first.",
+            }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        
+        // For registration purpose, create new user
         const tempPassword = crypto.randomUUID();
+        const defaultName = `مستخدم ${formattedPhone.slice(-4)}`;
+        
         const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
           email: syntheticEmail,
           password: tempPassword,
@@ -218,7 +259,7 @@ serve(async (req) => {
           phone_confirm: true,
           user_metadata: {
             phone: formattedPhone,
-            full_name: `مستخدم ${formattedPhone.slice(-4)}`,
+            full_name: defaultName,
             created_via: 'sms_otp',
           },
         });
@@ -237,6 +278,7 @@ serve(async (req) => {
 
         userId = newUser.user.id;
         userEmail = syntheticEmail;
+        userName = defaultName;
         isNewUser = true;
         console.log("Created new user:", userId);
 
@@ -245,7 +287,7 @@ serve(async (req) => {
           id: userId,
           email: syntheticEmail,
           phone: formattedPhone,
-          full_name: `مستخدم ${formattedPhone.slice(-4)}`,
+          full_name: defaultName,
           preferred_language: 'ar',
           is_active: true,
         });
