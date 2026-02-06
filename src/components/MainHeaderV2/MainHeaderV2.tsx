@@ -1,6 +1,7 @@
 /**
  * MainHeaderV2 - Main Header Component
  * Premium enterprise header with dark theme
+ * Uses DropdownProvider for centralized dropdown state
  */
 
 import * as React from 'react';
@@ -11,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { HeaderLogo } from './HeaderLogo';
 import { HeaderDesktopNav } from './HeaderDesktopNav';
 import { HeaderMobileNav } from './HeaderMobileNav';
+import { DropdownProvider } from './DropdownContext';
 import { headerStyles as h, buttonStyles as btn } from './MainHeaderV2.styles';
 
 export function MainHeaderV2() {
@@ -31,7 +33,7 @@ export function MainHeaderV2() {
   }, [location.pathname]);
 
   return (
-    <>
+    <DropdownProvider>
       <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -81,6 +83,6 @@ export function MainHeaderV2() {
         isOpen={isMobileOpen} 
         onClose={() => setIsMobileOpen(false)} 
       />
-    </>
+    </DropdownProvider>
   );
 }

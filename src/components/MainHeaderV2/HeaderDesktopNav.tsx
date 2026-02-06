@@ -1,6 +1,6 @@
 /**
  * MainHeaderV2 - Desktop Navigation
- * RTL-native navigation with dropdowns
+ * RTL-native navigation with click-only dropdowns
  */
 
 import * as React from 'react';
@@ -12,19 +12,11 @@ import { navStyles as s } from './MainHeaderV2.styles';
 
 export function HeaderDesktopNav() {
   const location = useLocation();
-  const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
 
   // Check active route
   const isActive = (href: string) => {
     if (href === '/') return location.pathname === '/';
     return location.pathname.startsWith(href);
-  };
-
-  // Dropdown handlers
-  const openDropdown = (name: string) => setActiveDropdown(name);
-  const closeDropdown = () => setActiveDropdown(null);
-  const toggleDropdown = (name: string) => {
-    setActiveDropdown(prev => prev === name ? null : name);
   };
 
   return (
@@ -42,32 +34,26 @@ export function HeaderDesktopNav() {
 
       {/* Services Dropdown */}
       <HeaderDropdown
+        id="services"
         label="خدماتنا"
         items={servicesMenu}
         variant="grid"
-        isOpen={activeDropdown === 'services'}
-        onToggle={() => toggleDropdown('services')}
-        onClose={closeDropdown}
       />
 
       {/* Products Dropdown */}
       <HeaderDropdown
+        id="products"
         label="منتجاتنا"
         items={productsMenu}
         variant="grid"
-        isOpen={activeDropdown === 'products'}
-        onToggle={() => toggleDropdown('products')}
-        onClose={closeDropdown}
       />
 
       {/* Others Dropdown */}
       <HeaderDropdown
+        id="others"
         label="أخرى"
         items={othersMenu}
         variant="list"
-        isOpen={activeDropdown === 'others'}
-        onToggle={() => toggleDropdown('others')}
-        onClose={closeDropdown}
       />
 
       {/* End Links */}
