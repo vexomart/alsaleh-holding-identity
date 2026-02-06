@@ -1,9 +1,10 @@
 /**
  * useRBAC Hook - Phase 0.5
  * Role-Based Access Control hook for permission checks
+ * Fixed race condition: waits for auth session before fetching roles
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { AppRole } from '@/types/auth';
 import type { PermissionKey } from '@/constants/permissions';
@@ -17,11 +18,6 @@ import {
   isSuperAdmin,
   isAdmin,
 } from '@/lib/permissions';
-
-interface UserPermissions {
-  roles: AppRole[];
-  permissions: string[];
-}
 
 interface UseRBACReturn {
   // State
@@ -51,32 +47,34 @@ export const useRBAC = (): UseRBACReturn => {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [permissions, setPermissions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isMountedRef = useRef(true);
+  const initializedRef = useRef(false);
 
-  const fetchUserPermissions = useCallback(async () => {
+  const fetchUserPermissions = useCallback(async (userId: string) => {
+    if (!isMountedRef.current) return;
+    
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        setRoles([]);
-        setPermissions([]);
-        setIsLoading(false);
-        return;
-      }
-
       // Fetch user roles
       const { data: userRoles, error: rolesError } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', user.id);
+        .eq('user_id', userId);
 
       if (rolesError) {
         console.error('Error fetching roles:', rolesError);
-        setIsLoading(false);
+        if (isMountedRef.current) {
+          setRoles([]);
+          setPermissions([]);
+          setIsLoading(false);
+        }
         return;
       }
 
       const fetchedRoles = (userRoles || []).map(r => r.role as AppRole);
-      setRoles(fetchedRoles);
+      
+      if (isMountedRef.current) {
+        setRoles(fetchedRoles);
+      }
 
       // Fetch permissions based on roles
       if (fetchedRoles.length > 0) {
@@ -90,7 +88,10 @@ export const useRBAC = (): UseRBACReturn => {
 
         if (permsError) {
           console.error('Error fetching permissions:', permsError);
-          setIsLoading(false);
+          if (isMountedRef.current) {
+            setPermissions([]);
+            setIsLoading(false);
+          }
           return;
         }
 
@@ -99,38 +100,90 @@ export const useRBAC = (): UseRBACReturn => {
           .filter((name): name is string => !!name);
 
         // Remove duplicates
-        setPermissions([...new Set(fetchedPermissions)]);
+        if (isMountedRef.current) {
+          setPermissions([...new Set(fetchedPermissions)]);
+        }
       } else {
-        setPermissions([]);
+        if (isMountedRef.current) {
+          setPermissions([]);
+        }
       }
 
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error('Error in fetchUserPermissions:', error);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
+
+  const clearPermissions = useCallback(() => {
+    if (isMountedRef.current) {
+      setRoles([]);
+      setPermissions([]);
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchUserPermissions();
+    isMountedRef.current = true;
 
-    // Listen for auth changes
+    // Set up auth state listener FIRST (before getSession)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event) => {
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
-          fetchUserPermissions();
-        } else if (event === 'SIGNED_OUT') {
-          setRoles([]);
-          setPermissions([]);
-          setIsLoading(false);
+      async (event, session) => {
+        if (!isMountedRef.current) return;
+
+        if (event === 'SIGNED_OUT') {
+          clearPermissions();
+          return;
         }
+
+        // Handle session events
+        if (session?.user) {
+          await fetchUserPermissions(session.user.id);
+        } else if (event === 'INITIAL_SESSION' && !session) {
+          // No session on initial load - user is not logged in
+          clearPermissions();
+        }
+        
+        initializedRef.current = true;
       }
     );
 
+    // Then check for existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!isMountedRef.current) return;
+      
+      // Only process if we haven't been initialized by onAuthStateChange yet
+      if (!initializedRef.current) {
+        if (session?.user) {
+          await fetchUserPermissions(session.user.id);
+        } else {
+          clearPermissions();
+        }
+        initializedRef.current = true;
+      }
+    });
+
     return () => {
+      isMountedRef.current = false;
       subscription.unsubscribe();
     };
-  }, [fetchUserPermissions]);
+  }, [fetchUserPermissions, clearPermissions]);
+
+  // Refresh function for manual re-fetch
+  const refresh = useCallback(async () => {
+    setIsLoading(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await fetchUserPermissions(session.user.id);
+    } else {
+      clearPermissions();
+    }
+  }, [fetchUserPermissions, clearPermissions]);
 
   // Memoized permission check functions
   const can = useCallback(
@@ -175,6 +228,6 @@ export const useRBAC = (): UseRBACReturn => {
     canAccessAdmin: accessAdmin,
     isSuperAdmin: superAdmin,
     isAdmin: admin,
-    refresh: fetchUserPermissions,
+    refresh,
   };
 };

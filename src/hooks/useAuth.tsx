@@ -97,48 +97,49 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     let isMounted = true;
+    let initialized = false;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        if (!isMounted) return;
-
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-
-        if (currentSession?.user) {
-          // Wait for user data to load before setting isLoading to false
-          await loadUserData(currentSession.user.id);
-        } else {
-          setProfile(null);
-          setRoles([]);
-        }
-
-        if (event === 'SIGNED_OUT') {
-          setProfile(null);
-          setRoles([]);
-        }
-
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    );
-
-    // Initial session check
-    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
+    const handleSession = async (currentSession: Session | null, isSignOut = false) => {
       if (!isMounted) return;
 
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      
+
       if (currentSession?.user) {
         // Wait for user data to load before setting isLoading to false
         await loadUserData(currentSession.user.id);
+      } else {
+        setProfile(null);
+        setRoles([]);
       }
-      
+
+      if (isSignOut) {
+        setProfile(null);
+        setRoles([]);
+      }
+
       if (isMounted) {
         setIsLoading(false);
       }
+    };
+
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (!isMounted) return;
+        
+        // Mark as initialized to prevent getSession from running again
+        initialized = true;
+        
+        await handleSession(currentSession, event === 'SIGNED_OUT');
+      }
+    );
+
+    // Then check for existing session (only if not already initialized by listener)
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
+      if (!isMounted || initialized) return;
+      
+      await handleSession(currentSession);
     });
 
     return () => {
