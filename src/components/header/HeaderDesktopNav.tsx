@@ -1,49 +1,63 @@
 /**
- * HeaderDesktopNav - Premium Desktop Navigation
- * Enterprise navigation with animated dropdowns
+ * HeaderDesktopNav - Premium Enterprise Desktop Navigation
+ * RTL-native with dropdowns and proper accessibility
  */
 
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { HeaderDropdown } from './HeaderDropdown';
-import { headerConfig } from './config';
+import { headerConfig, mainNavItems } from './config';
 
 export function HeaderDesktopNav() {
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
 
-  const isActiveRoute = (href: string) => {
+  // Check if route is active
+  const isActiveRoute = React.useCallback((href: string) => {
     if (href === '/') return location.pathname === '/';
     return location.pathname.startsWith(href);
-  };
+  }, [location.pathname]);
 
-  const navItems = [
-    { href: '/', label: 'الرئيسية' },
-    { href: '/about', label: 'من نحن' },
-  ];
+  // Close dropdown handler
+  const handleCloseDropdown = React.useCallback(() => {
+    setOpenDropdown(null);
+  }, []);
 
-  const endNavItems = [
-    { href: '/subsidiaries', label: 'شركاتنا' },
-    { href: '/contact', label: 'تواصل معنا' },
-  ];
+  // Open specific dropdown handler
+  const handleOpenDropdown = React.useCallback((name: string) => {
+    setOpenDropdown(name);
+  }, []);
 
   return (
-    <nav className="hidden lg:flex items-center gap-1" role="navigation" aria-label="القائمة الرئيسية">
-      {/* Start Items */}
-      {navItems.map((item) => (
-        <NavLink key={item.href} href={item.href} isActive={isActiveRoute(item.href)}>
-          {item.label}
-        </NavLink>
-      ))}
+    <nav 
+      className="hidden lg:flex items-center gap-1" 
+      role="navigation" 
+      aria-label="القائمة الرئيسية"
+    >
+      {/* Home Link */}
+      <NavLink 
+        href="/" 
+        isActive={isActiveRoute('/')}
+      >
+        الرئيسية
+      </NavLink>
+
+      {/* About Link */}
+      <NavLink 
+        href="/about" 
+        isActive={isActiveRoute('/about')}
+      >
+        من نحن
+      </NavLink>
 
       {/* Services Dropdown */}
       <HeaderDropdown
         label="خدماتنا"
         items={headerConfig.services}
         isOpen={openDropdown === 'services'}
-        onOpen={() => setOpenDropdown('services')}
-        onClose={() => setOpenDropdown(null)}
+        onOpen={() => handleOpenDropdown('services')}
+        onClose={handleCloseDropdown}
         variant="mega"
       />
 
@@ -52,8 +66,8 @@ export function HeaderDesktopNav() {
         label="منتجاتنا"
         items={headerConfig.products}
         isOpen={openDropdown === 'products'}
-        onOpen={() => setOpenDropdown('products')}
-        onClose={() => setOpenDropdown(null)}
+        onOpen={() => handleOpenDropdown('products')}
+        onClose={handleCloseDropdown}
         variant="mega"
       />
 
@@ -62,21 +76,31 @@ export function HeaderDesktopNav() {
         label="أخرى"
         items={headerConfig.others}
         isOpen={openDropdown === 'others'}
-        onOpen={() => setOpenDropdown('others')}
-        onClose={() => setOpenDropdown(null)}
+        onOpen={() => handleOpenDropdown('others')}
+        onClose={handleCloseDropdown}
+        variant="default"
       />
 
-      {/* End Items */}
-      {endNavItems.map((item) => (
-        <NavLink key={item.href} href={item.href} isActive={isActiveRoute(item.href)}>
-          {item.label}
-        </NavLink>
-      ))}
+      {/* Subsidiaries Link */}
+      <NavLink 
+        href="/subsidiaries" 
+        isActive={isActiveRoute('/subsidiaries')}
+      >
+        شركاتنا
+      </NavLink>
+
+      {/* Contact Link */}
+      <NavLink 
+        href="/contact" 
+        isActive={isActiveRoute('/contact')}
+      >
+        تواصل معنا
+      </NavLink>
     </nav>
   );
 }
 
-// Premium NavLink Component
+// NavLink Component
 function NavLink({ 
   href, 
   isActive, 
@@ -90,7 +114,8 @@ function NavLink({
     <Link
       to={href}
       className={cn(
-        'relative px-4 py-2.5 text-sm font-bold rounded-xl transition-all duration-200',
+        'relative px-4 py-2.5 text-sm font-bold rounded-xl',
+        'transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         isActive 
           ? 'text-primary bg-primary/10' 
           : 'text-gray-700 hover:text-primary hover:bg-gray-100'
@@ -98,9 +123,12 @@ function NavLink({
     >
       {children}
       
-      {/* Active Indicator */}
+      {/* Active Indicator Dot */}
       {isActive && (
-        <span className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full" />
+        <span 
+          className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full"
+          aria-hidden="true"
+        />
       )}
     </Link>
   );
