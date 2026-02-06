@@ -38,53 +38,16 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Force all React imports to single instance
-      "react": path.resolve(__dirname, "node_modules/react"),
-      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
-    dedupe: [
-      "react", 
-      "react-dom", 
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "@tanstack/react-query",
-      "framer-motion",
-    ],
+    dedupe: ["react", "react-dom"],
   },
   optimizeDeps: {
-    force: true,
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-    },
-    include: [
-      "react",
-      "react-dom",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "@tanstack/react-query",
-      "framer-motion",
-      "react-router-dom",
-    ],
+    include: ["react", "react-dom"],
     exclude: ["brotli"],
   },
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
-    },
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          // Force all react-related code into single chunk
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'react-vendor';
-          }
-          if (id.includes('@tanstack/react-query')) {
-            return 'query-vendor';
-          }
-        },
-      },
     },
   },
 }));
