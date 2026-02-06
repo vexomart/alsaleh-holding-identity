@@ -1,4 +1,4 @@
- import * as React from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode, type FC } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
@@ -39,14 +39,14 @@ interface AuthContextType {
   hasRole: (role: AppRole) => boolean;
 }
 
- const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
- export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-   const [user, setUser] = React.useState<User | null>(null);
-   const [session, setSession] = React.useState<Session | null>(null);
-   const [profile, setProfile] = React.useState<UserProfile | null>(null);
-   const [roles, setRoles] = React.useState<UserRole[]>([]);
-   const [isLoading, setIsLoading] = React.useState(true);
+export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [roles, setRoles] = useState<UserRole[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -81,7 +81,7 @@ interface AuthContextType {
     }
   };
 
-   React.useEffect(() => {
+  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         setSession(currentSession);
@@ -202,7 +202,7 @@ interface AuthContextType {
 };
 
 export const useAuth = (): AuthContextType => {
-   const context = React.useContext(AuthContext);
+  const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within AuthProvider');
   }
