@@ -391,7 +391,7 @@ function Login() {
                       >
                         <CyberInput
                           label="رقم الجوال"
-                          icon={<Smartphone className="w-5 h-5" />}
+                          icon={<Phone className="w-5 h-5" />}
                           type="tel"
                           placeholder="05XXXXXXXX"
                           value={phone}
