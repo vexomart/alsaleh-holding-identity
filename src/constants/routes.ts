@@ -8,7 +8,9 @@ export const ROUTES = {
   
   // Auth
   AUTH: {
+    ENTRY: '/entry',
     LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
@@ -65,6 +67,7 @@ export const ROUTE_GUARDS = {
   // Guest only routes - redirect to dashboard if logged in
   GUEST_ONLY: [
     ROUTES.AUTH.LOGIN,
+    ROUTES.AUTH.REGISTER,
     ROUTES.AUTH.FORGOT_PASSWORD,
   ],
   
