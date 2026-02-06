@@ -1,14 +1,14 @@
 /**
  * HeaderDesktopNav - Premium Desktop Navigation
- * Professional navigation with dropdowns
+ * Enterprise navigation with animated dropdowns
  */
 
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { HeaderDropdown } from './HeaderDropdown';
 import { headerConfig } from './config';
-import { LogIn, Headphones } from 'lucide-react';
 
 export function HeaderDesktopNav() {
   const location = useLocation();
@@ -19,17 +19,24 @@ export function HeaderDesktopNav() {
     return location.pathname.startsWith(href);
   };
 
+  const navItems = [
+    { href: '/', label: 'الرئيسية' },
+    { href: '/about', label: 'من نحن' },
+  ];
+
+  const endNavItems = [
+    { href: '/subsidiaries', label: 'شركاتنا' },
+    { href: '/contact', label: 'تواصل معنا' },
+  ];
+
   return (
     <nav className="hidden lg:flex items-center gap-1" role="navigation" aria-label="القائمة الرئيسية">
-      {/* Home */}
-      <NavLink href="/" isActive={isActiveRoute('/')}>
-        الرئيسية
-      </NavLink>
-
-      {/* About */}
-      <NavLink href="/about" isActive={isActiveRoute('/about')}>
-        من نحن
-      </NavLink>
+      {/* Start Items */}
+      {navItems.map((item) => (
+        <NavLink key={item.href} href={item.href} isActive={isActiveRoute(item.href)}>
+          {item.label}
+        </NavLink>
+      ))}
 
       {/* Services Dropdown */}
       <HeaderDropdown
@@ -60,20 +67,17 @@ export function HeaderDesktopNav() {
         onClose={() => setOpenDropdown(null)}
       />
 
-      {/* Subsidiaries */}
-      <NavLink href="/subsidiaries" isActive={isActiveRoute('/subsidiaries')}>
-        شركاتنا
-      </NavLink>
-
-      {/* Contact */}
-      <NavLink href="/contact" isActive={isActiveRoute('/contact')}>
-        تواصل معنا
-      </NavLink>
+      {/* End Items */}
+      {endNavItems.map((item) => (
+        <NavLink key={item.href} href={item.href} isActive={isActiveRoute(item.href)}>
+          {item.label}
+        </NavLink>
+      ))}
     </nav>
   );
 }
 
-// NavLink Component
+// Premium NavLink Component
 function NavLink({ 
   href, 
   isActive, 
@@ -87,15 +91,27 @@ function NavLink({
     <Link
       to={href}
       className={cn(
-        'relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+        'relative px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-300',
         isActive 
-          ? 'text-primary bg-primary/5' 
-          : 'text-foreground hover:text-primary hover:bg-muted'
+          ? 'text-primary bg-primary/10 shadow-sm' 
+          : 'text-foreground hover:text-primary hover:bg-muted/80'
       )}
     >
-      {children}
+      <motion.span
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="relative z-10"
+      >
+        {children}
+      </motion.span>
+      
+      {/* Active Indicator */}
       {isActive && (
-        <span className="absolute bottom-0 start-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
+        <motion.div
+          layoutId="activeNavIndicator"
+          className="absolute bottom-0 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full shadow-lg shadow-primary/30"
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
       )}
     </Link>
   );
