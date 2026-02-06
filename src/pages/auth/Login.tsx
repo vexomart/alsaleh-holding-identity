@@ -75,7 +75,7 @@ function CyberStepIndicator({ step, total }: { step: number; total: number }) {
 function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signIn, user } = useAuth();
+  const { signIn, user, isAdmin } = useAuth();
   const { sendOtp, verifyOtp, isLoading: isSmsLoading, clearError } = useSmsOtp();
   
   // Auth method
@@ -99,13 +99,36 @@ function Login() {
   
   // User status states
   const [userNotFound, setUserNotFound] = React.useState(false);
+
+  // Helper: Check user roles and navigate accordingly
+  const navigateBasedOnRole = React.useCallback(async (userId: string) => {
+    try {
+      const { data: userRoles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+      
+      const hasAdminRole = userRoles?.some(r => 
+        ['super_admin', 'admin', 'manager', 'support', 'finance', 'content_editor', 'staff'].includes(r.role)
+      );
+      
+      navigate(hasAdminRole ? '/admin' : '/app');
+    } catch {
+      navigate('/app');
+    }
+  }, [navigate]);
   
   // Redirect if already logged in
   React.useEffect(() => {
     if (user) {
-      navigate('/app');
+      // Check role and redirect accordingly
+      if (isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/app');
+      }
     }
-  }, [user, navigate]);
+  }, [user, isAdmin, navigate]);
 
   // Countdown timer
   React.useEffect(() => {
@@ -191,7 +214,7 @@ function Login() {
             
             if (data?.session) {
               toast.success('تم تسجيل الدخول بنجاح! مرحباً بك');
-              navigate('/app');
+              await navigateBasedOnRole(data.session.user.id);
               return;
             }
           }
@@ -200,9 +223,13 @@ function Login() {
         }
       }
       
-      await supabase.auth.refreshSession();
+      const { data: refreshData } = await supabase.auth.refreshSession();
       toast.success('تم تسجيل الدخول بنجاح! مرحباً بك');
-      navigate('/app');
+      if (refreshData?.session?.user) {
+        await navigateBasedOnRole(refreshData.session.user.id);
+      } else {
+        navigate('/app');
+      }
     } else {
       toast.error(response.error || 'رمز التحقق غير صحيح');
       if (response.remaining_attempts !== undefined && response.remaining_attempts > 0) {
@@ -265,8 +292,14 @@ function Login() {
         return;
       }
 
+      // Get user session and navigate based on role
+      const { data: sessionData } = await supabase.auth.getSession();
       toast.success('تم تسجيل الدخول بنجاح! مرحباً بك');
-      navigate('/app');
+      if (sessionData?.session?.user) {
+        await navigateBasedOnRole(sessionData.session.user.id);
+      } else {
+        navigate('/app');
+      }
     } catch (error) {
       toast.error('حدث خطأ، يرجى المحاولة مرة أخرى');
     } finally {
