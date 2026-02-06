@@ -1,4 +1,4 @@
-import { memo, forwardRef } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { 
   MoreVertical, 
@@ -73,7 +73,7 @@ const roleConfig: Record<string, { labelAr: string; labelEn: string; color: stri
   customer: { labelAr: "عميل", labelEn: "Customer", color: "bg-gray-500/20 text-gray-700 border-gray-500/30", icon: Shield },
 };
 
-export const UserCard = memo(forwardRef<HTMLDivElement, UserCardProps>(function UserCard({
+export const UserCard = memo(function UserCard({
   user,
   language,
   isSelected,
@@ -84,7 +84,7 @@ export const UserCard = memo(forwardRef<HTMLDivElement, UserCardProps>(function 
   onToggleStatus,
   onDelete,
   formatRelativeTime,
-}, ref) {
+}: UserCardProps) {
   const primaryRole = user.roles[0] || "customer";
   const roleInfo = roleConfig[primaryRole] || roleConfig.customer;
   const displayName = language === "ar" && user.full_name_ar 
@@ -95,11 +95,9 @@ export const UserCard = memo(forwardRef<HTMLDivElement, UserCardProps>(function 
 
   return (
     <motion.div
-      ref={ref}
-      layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
       whileHover={{ y: -2 }}
       className={cn(
         "group relative p-4 rounded-2xl border transition-all duration-200",
@@ -262,4 +260,4 @@ export const UserCard = memo(forwardRef<HTMLDivElement, UserCardProps>(function 
       </div>
     </motion.div>
   );
-}));
+});
