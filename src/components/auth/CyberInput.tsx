@@ -62,31 +62,24 @@ export function CyberInput({
                 ? "border-cyan-500/60 bg-slate-900/80" 
                 : "border-white/10 hover:border-cyan-500/30 hover:bg-slate-900/70"
         )}>
-          {/* Icon Container - Right side (start in RTL) */}
-          <motion.div 
+          {/* Icon Container - Right side (start in RTL) - Perfectly centered */}
+          <div 
             className={cn(
-              "absolute start-3 sm:start-4 top-[52%] -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 rounded-lg",
+              "absolute start-4 sm:start-5 top-1/2 -translate-y-1/2",
               "flex items-center justify-center transition-all duration-200",
               error 
-                ? "bg-red-500/15 text-red-400"
+                ? "text-red-400"
                 : success 
-                  ? "bg-emerald-500/15 text-emerald-400"
+                  ? "text-emerald-400"
                   : isFocused 
-                    ? "bg-cyan-500/15 text-cyan-400" 
-                    : "bg-white/[0.05] text-white/40 group-hover:text-cyan-400/60"
+                    ? "text-cyan-400" 
+                    : "text-white/40 group-hover:text-cyan-400/60"
             )}
-            animate={{ 
-              scale: isFocused ? 1.05 : 1,
-              boxShadow: isFocused && !error && !success 
-                ? '0 0 15px hsla(190, 100%, 50%, 0.3)' 
-                : '0 0 0 transparent',
-            }}
-            transition={{ duration: 0.2 }}
           >
-            <span className="[&>svg]:w-4 [&>svg]:h-4 sm:[&>svg]:w-[18px] sm:[&>svg]:h-[18px]">
+            <span className="[&>svg]:w-5 [&>svg]:h-5">
               {icon}
             </span>
-          </motion.div>
+          </div>
           
           {/* Floating Label */}
           <motion.label
