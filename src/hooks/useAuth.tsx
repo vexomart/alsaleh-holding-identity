@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode, type FC } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode, type FC } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 
@@ -47,6 +47,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [roles, setRoles] = useState<UserRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  const isMountedRef = useRef(true);
+  const initialLoadCompleteRef = useRef(false);
+  const currentUserIdRef = useRef<string | null>(null);
 
   const fetchProfile = async (userId: string): Promise<UserProfile | null> => {
     try {
@@ -57,7 +61,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         .maybeSingle();
 
       if (error) throw error;
-      if (data) {
+      if (data && isMountedRef.current) {
         setProfile(data as UserProfile);
         return data as UserProfile;
       }
@@ -76,7 +80,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         .eq('user_id', userId);
 
       if (error) throw error;
-      if (data) {
+      if (data && isMountedRef.current) {
         setRoles(data as UserRole[]);
         return data as UserRole[];
       }
@@ -95,55 +99,99 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ]);
   };
 
+  const clearUserData = () => {
+    if (isMountedRef.current) {
+      setProfile(null);
+      setRoles([]);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    let initialized = false;
+    isMountedRef.current = true;
 
-    const handleSession = async (currentSession: Session | null, isSignOut = false) => {
-      if (!isMounted) return;
+    // INITIAL LOAD - Controls isLoading state
+    const initializeAuth = async () => {
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        
+        if (!isMountedRef.current) return;
 
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
 
-      if (currentSession?.user) {
-        // Wait for user data to load before setting isLoading to false
-        await loadUserData(currentSession.user.id);
-      } else {
-        setProfile(null);
-        setRoles([]);
-      }
-
-      if (isSignOut) {
-        setProfile(null);
-        setRoles([]);
-      }
-
-      if (isMounted) {
-        setIsLoading(false);
+        if (currentSession?.user) {
+          currentUserIdRef.current = currentSession.user.id;
+          await loadUserData(currentSession.user.id);
+        } else {
+          currentUserIdRef.current = null;
+          clearUserData();
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        clearUserData();
+      } finally {
+        if (isMountedRef.current) {
+          initialLoadCompleteRef.current = true;
+          setIsLoading(false);
+        }
       }
     };
 
-    // Set up auth state listener FIRST
+    // ONGOING AUTH CHANGES - Does NOT control isLoading after initial load
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
-        if (!isMounted) return;
-        
-        // Mark as initialized to prevent getSession from running again
-        initialized = true;
-        
-        await handleSession(currentSession, event === 'SIGNED_OUT');
+        if (!isMountedRef.current) return;
+
+        // Handle sign out immediately
+        if (event === 'SIGNED_OUT') {
+          currentUserIdRef.current = null;
+          setSession(null);
+          setUser(null);
+          clearUserData();
+          if (initialLoadCompleteRef.current) {
+            setIsLoading(false);
+          }
+          return;
+        }
+
+        // Update session and user
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+
+        // Skip if same user (avoid re-fetching on token refresh)
+        if (currentSession?.user && currentUserIdRef.current === currentSession.user.id && initialLoadCompleteRef.current) {
+          return;
+        }
+
+        // New user signed in or initial sign in
+        if (currentSession?.user) {
+          currentUserIdRef.current = currentSession.user.id;
+          
+          // Only show loading if this is a new sign in after initial load
+          if (initialLoadCompleteRef.current) {
+            setIsLoading(true);
+          }
+          
+          await loadUserData(currentSession.user.id);
+          
+          if (isMountedRef.current) {
+            setIsLoading(false);
+          }
+        } else {
+          currentUserIdRef.current = null;
+          clearUserData();
+          if (initialLoadCompleteRef.current) {
+            setIsLoading(false);
+          }
+        }
       }
     );
 
-    // Then check for existing session (only if not already initialized by listener)
-    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
-      if (!isMounted || initialized) return;
-      
-      await handleSession(currentSession);
-    });
+    // Start initial load
+    initializeAuth();
 
     return () => {
-      isMounted = false;
+      isMountedRef.current = false;
       subscription.unsubscribe();
     };
   }, []);
