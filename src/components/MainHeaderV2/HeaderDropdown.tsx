@@ -139,11 +139,11 @@ export function HeaderDropdown({
                       </div>
                     )}
                     <div className={s.itemText}>
-                      <span className={s.itemLabel}>{item.label}</span>
-                      {item.desc && <span className={s.itemDesc}>{item.desc}</span>}
+                      <span className="block text-sm font-semibold">{item.label}</span>
+                      {item.desc && <span className="block text-xs text-slate-400 mt-0.5">{item.desc}</span>}
                     </div>
                     <ArrowLeft 
-                      className="w-4 h-4 opacity-0 translate-x-1 group-hover:opacity-50 group-hover:translate-x-0 transition-all duration-200" 
+                      className="w-4 h-4 opacity-0 translate-x-1 group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-200 text-primary" 
                     />
                   </button>
                 );
