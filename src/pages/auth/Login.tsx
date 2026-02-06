@@ -1,14 +1,14 @@
 /**
- * Enterprise Login Page - Global Software Company Standard
- * Premium Authentication Experience with Full Client Status Logic
+ * Enterprise Login Page - World-Class Premium Design
+ * Split Layout with Hero Section and Premium Form
  */
 import * as React from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Mail, Lock, Eye, EyeOff, ArrowLeft, Globe, Smartphone, 
-  KeyRound, Phone, Send, RefreshCw, CheckCircle2, ArrowRight,
-  UserPlus, AlertCircle, ChevronLeft
+  Mail, Lock, Eye, EyeOff, Smartphone, KeyRound, 
+  Phone, Send, RefreshCw, CheckCircle2, ArrowRight,
+  UserPlus, AlertCircle, ChevronLeft, ArrowLeft
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
@@ -17,7 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { 
   AuthBackground, AuthLogo, AuthCard, AuthInput, 
-  AuthButton, AuthDivider, FeatureBadges 
+  AuthButton, FeatureBadges, AuthHeroSection 
 } from '@/components/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useSmsOtp } from '@/hooks/useSmsOtp';
@@ -42,7 +42,6 @@ const phoneSchema = z.object({
     .min(9, 'رقم الجوال غير مكتمل')
     .max(14)
     .transform((val) => {
-      // Normalize Saudi phone numbers
       let normalized = val.replace(/\s|-/g, '');
       if (normalized.startsWith('+966')) normalized = '0' + normalized.slice(4);
       else if (normalized.startsWith('966')) normalized = '0' + normalized.slice(3);
@@ -55,12 +54,12 @@ const phoneSchema = z.object({
 // Step indicator component
 function StepIndicator({ step, total }: { step: number; total: number }) {
   return (
-    <div className="flex items-center justify-center gap-1.5 mb-6">
+    <div className="flex items-center justify-center gap-2 mb-6">
       {Array.from({ length: total }).map((_, i) => (
         <motion.div
           key={i}
           className={`h-1.5 rounded-full transition-all duration-300 ${
-            i < step ? 'bg-primary w-6' : i === step ? 'bg-primary/60 w-4' : 'bg-white/10 w-2'
+            i < step ? 'bg-blue-500 w-8' : i === step ? 'bg-blue-400/60 w-5' : 'bg-white/10 w-3'
           }`}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -114,7 +113,6 @@ function Login() {
     }
   }, [countdown]);
 
-  // Format countdown
   const formatCountdown = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -150,8 +148,7 @@ function Login() {
       setCountdown(response.expires_in || 180);
       toast.success('تم إرسال رمز التحقق بنجاح');
     } else {
-      // Check if user doesn't exist
-      if (response.error?.includes('غير مسجل') || response.error?.includes('not found')) {
+      if (response.error?.includes('غير مسجل') || response.error?.includes('not found') || response.error?.includes('لا يوجد')) {
         setUserNotFound(true);
         setPhoneError('لا يوجد حساب مرتبط بهذا الرقم');
       } else {
@@ -173,7 +170,6 @@ function Login() {
     const response = await verifyOtp(phone, otpCode, 'login');
 
     if (response.success) {
-      // Handle magic link if provided
       if (response.action_link) {
         try {
           const url = new URL(response.action_link);
@@ -249,7 +245,6 @@ function Login() {
       
       if (error) {
         if (error.message.includes('Invalid login') || error.message.includes('credentials')) {
-          // Check if email exists
           const { data: existingUser } = await supabase
             .from('profiles')
             .select('id')
@@ -285,121 +280,338 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 py-8" dir="rtl">
+    <div className="min-h-screen flex relative overflow-hidden" dir="rtl">
       <AuthBackground />
       
-      {/* Main Container */}
-      <div className="w-full max-w-md relative z-10 space-y-6">
-        {/* Header */}
-        <motion.div 
-          className="text-center space-y-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <AuthLogo size="md" />
-          
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              ASH HOLDING
-            </h1>
-            <p className="text-white/50 mt-1 text-sm sm:text-base">
-              منصة إدارة الأعمال المتكاملة
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Feature Badges */}
-        <FeatureBadges variant="login" />
-
-        {/* Main Card */}
-        <AuthCard>
-          {/* Card Header */}
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-white">تسجيل الدخول</h2>
-            <p className="text-white/45 text-sm mt-1">أدخل بياناتك للوصول إلى حسابك</p>
-          </div>
-
-          {/* Auth Method Tabs */}
-          <Tabs 
-            value={authMethod} 
-            onValueChange={(v) => {
-              setAuthMethod(v as 'phone' | 'email');
-              setUserNotFound(false);
-              setPhoneError('');
-              setEmailError('');
-              setPasswordError('');
-            }} 
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 bg-white/[0.04] border border-white/[0.06] p-1 rounded-xl mb-6 h-12">
-              <TabsTrigger 
-                value="phone" 
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md text-white/50 rounded-lg font-semibold transition-all duration-200 h-10"
+      {/* Split Layout Container */}
+      <div className="flex flex-col lg:flex-row w-full relative z-10">
+        
+        {/* Hero Section - Hidden on mobile, shown on lg+ */}
+        <div className="hidden lg:flex lg:w-1/2 xl:w-[55%]">
+          <AuthHeroSection variant="login" />
+        </div>
+        
+        {/* Form Section */}
+        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen lg:min-h-0">
+          <div className="w-full max-w-md space-y-6">
+            
+            {/* Mobile Header */}
+            <motion.div 
+              className="text-center lg:hidden space-y-4"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AuthLogo size="md" />
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
               >
-                <Phone className="w-4 h-4 me-2" />
-                رقم الجوال
-              </TabsTrigger>
-              <TabsTrigger 
-                value="email"
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md text-white/50 rounded-lg font-semibold transition-all duration-200 h-10"
-              >
-                <Mail className="w-4 h-4 me-2" />
-                البريد الإلكتروني
-              </TabsTrigger>
-            </TabsList>
+                <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                  ASH <span className="text-blue-400">HOLDING</span>
+                </h1>
+                <p className="text-white/50 mt-1 text-sm">منصة إدارة الأعمال المتكاملة</p>
+              </motion.div>
+            </motion.div>
 
-            {/* Phone Login */}
-            <TabsContent value="phone" className="mt-0 focus-visible:outline-none">
-              <AnimatePresence mode="wait">
-                {phoneStep === 'phone' ? (
+            {/* Feature Badges - Mobile only */}
+            <div className="lg:hidden">
+              <FeatureBadges variant="login" />
+            </div>
+
+            {/* Main Card */}
+            <AuthCard>
+              {/* Card Header */}
+              <div className="text-center mb-8">
+                <motion.h2 
+                  className="text-2xl sm:text-3xl font-bold text-white"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  تسجيل الدخول
+                </motion.h2>
+                <motion.p 
+                  className="text-white/45 text-sm mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  أدخل بياناتك للوصول إلى حسابك
+                </motion.p>
+              </div>
+
+              {/* Auth Method Tabs */}
+              <Tabs 
+                value={authMethod} 
+                onValueChange={(v) => {
+                  setAuthMethod(v as 'phone' | 'email');
+                  setUserNotFound(false);
+                  setPhoneError('');
+                  setEmailError('');
+                  setPasswordError('');
+                }} 
+                className="w-full"
+              >
+                <TabsList className="grid w-full grid-cols-2 bg-white/[0.04] border border-white/[0.08] p-1.5 rounded-xl mb-8 h-14">
+                  <TabsTrigger 
+                    value="phone" 
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/50 rounded-lg font-semibold transition-all duration-200 h-11"
+                  >
+                    <Phone className="w-4 h-4 me-2" />
+                    رقم الجوال
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="email"
+                    className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-white/50 rounded-lg font-semibold transition-all duration-200 h-11"
+                  >
+                    <Mail className="w-4 h-4 me-2" />
+                    البريد الإلكتروني
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Phone Login */}
+                <TabsContent value="phone" className="mt-0 focus-visible:outline-none">
+                  <AnimatePresence mode="wait">
+                    {phoneStep === 'phone' ? (
+                      <motion.form
+                        key="phone-form"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.25 }}
+                        onSubmit={handleSendOtp}
+                        className="space-y-5"
+                      >
+                        <AuthInput
+                          label="رقم الجوال"
+                          icon={<Smartphone className="w-5 h-5" />}
+                          type="tel"
+                          placeholder="05XXXXXXXX"
+                          value={phone}
+                          onChange={(e) => handlePhoneChange(e.target.value)}
+                          error={phoneError}
+                          hint="سيتم إرسال رمز التحقق إلى هذا الرقم"
+                          dir="ltr"
+                          maxLength={14}
+                          autoComplete="tel"
+                          disabled={isSmsLoading}
+                        />
+
+                        {/* User not found message */}
+                        {userNotFound && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10, height: 0 }}
+                            animate={{ opacity: 1, y: 0, height: 'auto' }}
+                            className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
+                          >
+                            <div className="flex items-start gap-3">
+                              <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                              <div className="space-y-2">
+                                <p className="text-sm text-amber-200 font-medium">
+                                  لا يوجد حساب مرتبط بهذا الرقم
+                                </p>
+                                <p className="text-xs text-white/50">
+                                  يمكنك إنشاء حساب جديد للبدء في استخدام المنصة
+                                </p>
+                                <Link 
+                                  to="/auth/register"
+                                  className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                                >
+                                  <UserPlus className="w-4 h-4" />
+                                  إنشاء حساب جديد
+                                </Link>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        <AuthButton
+                          type="submit"
+                          isLoading={isSmsLoading}
+                          disabled={!phone || isSmsLoading}
+                          icon={<Send className="w-4 h-4" />}
+                        >
+                          إرسال رمز التحقق
+                        </AuthButton>
+                      </motion.form>
+                    ) : (
+                      <motion.form
+                        key="otp-form"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.25 }}
+                        onSubmit={handleVerifyOtp}
+                        className="space-y-6"
+                      >
+                        <StepIndicator step={1} total={2} />
+                        
+                        {/* Back button */}
+                        <button
+                          type="button"
+                          onClick={handleBackToPhone}
+                          className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm group"
+                        >
+                          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                          تغيير الرقم
+                        </button>
+
+                        {/* OTP Header */}
+                        <div className="text-center space-y-3 py-2">
+                          <motion.div 
+                            className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 flex items-center justify-center border border-white/[0.1]"
+                            animate={{ scale: [1, 1.03, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <KeyRound className="w-7 h-7 text-blue-400" />
+                          </motion.div>
+                          <div>
+                            <h3 className="text-lg font-bold text-white">أدخل رمز التحقق</h3>
+                            <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
+                          </div>
+                        </div>
+
+                        {/* OTP Input */}
+                        <div className="flex justify-center py-3" dir="ltr">
+                          <InputOTP
+                            maxLength={6}
+                            value={otpCode}
+                            onChange={setOtpCode}
+                          >
+                            <InputOTPGroup className="gap-2 sm:gap-3">
+                              {[0, 1, 2, 3, 4, 5].map((index) => (
+                                <InputOTPSlot 
+                                  key={index}
+                                  index={index} 
+                                  className="w-11 h-13 sm:w-12 sm:h-14 rounded-xl bg-white/[0.04] border-white/[0.1] text-white text-lg font-bold
+                                    focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 focus:bg-white/[0.06]
+                                    transition-all duration-200"
+                                />
+                              ))}
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </div>
+
+                        {/* Countdown */}
+                        <div className="text-center">
+                          {countdown > 0 ? (
+                            <p className="text-sm text-white/40">
+                              إعادة الإرسال بعد{' '}
+                              <span className="text-blue-400 font-mono font-bold">
+                                {formatCountdown(countdown)}
+                              </span>
+                            </p>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={handleResendOtp}
+                              disabled={isSmsLoading}
+                              className="text-sm text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1.5 mx-auto transition-colors"
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                              إعادة إرسال الرمز
+                            </button>
+                          )}
+                        </div>
+
+                        <AuthButton
+                          type="submit"
+                          isLoading={isSmsLoading}
+                          disabled={otpCode.length !== 6 || isSmsLoading}
+                          variant={otpCode.length === 6 ? 'success' : 'primary'}
+                          icon={<CheckCircle2 className="w-4 h-4" />}
+                        >
+                          تأكيد الدخول
+                        </AuthButton>
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
+                </TabsContent>
+
+                {/* Email Login */}
+                <TabsContent value="email" className="mt-0 focus-visible:outline-none">
                   <motion.form
-                    key="phone-form"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
-                    onSubmit={handleSendOtp}
+                    onSubmit={handleEmailLogin}
                     className="space-y-5"
                   >
                     <AuthInput
-                      label="رقم الجوال"
-                      icon={<Smartphone className="w-4 h-4" />}
-                      type="tel"
-                      placeholder="05XXXXXXXX"
-                      value={phone}
-                      onChange={(e) => handlePhoneChange(e.target.value)}
-                      error={phoneError}
-                      hint="سيتم إرسال رمز التحقق إلى هذا الرقم"
+                      label="البريد الإلكتروني"
+                      icon={<Mail className="w-5 h-5" />}
+                      type="email"
+                      placeholder="example@email.com"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setEmailError(''); setUserNotFound(false); }}
+                      error={emailError}
                       dir="ltr"
-                      maxLength={14}
-                      autoComplete="tel"
-                      disabled={isSmsLoading}
+                      autoComplete="email"
+                      disabled={isLoading}
                     />
+
+                    <AuthInput
+                      label="كلمة المرور"
+                      icon={<Lock className="w-5 h-5" />}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => { setPassword(e.target.value); setPasswordError(''); }}
+                      error={passwordError}
+                      dir="ltr"
+                      autoComplete="current-password"
+                      disabled={isLoading}
+                      endAdornment={
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="p-2 text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/[0.05]"
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      }
+                    />
+
+                    {/* Remember me & Forgot password */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Checkbox 
+                          id="remember" 
+                          checked={rememberMe}
+                          onCheckedChange={(checked) => setRememberMe(checked === true)}
+                          className="border-white/20 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                        />
+                        <Label htmlFor="remember" className="text-sm text-white/50 cursor-pointer">
+                          تذكرني
+                        </Label>
+                      </div>
+                      <Link 
+                        to="/auth/forgot-password"
+                        className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                      >
+                        نسيت كلمة المرور؟
+                      </Link>
+                    </div>
 
                     {/* User not found message */}
                     {userNotFound && (
                       <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, y: -10, height: 0 }}
+                        animate={{ opacity: 1, y: 0, height: 'auto' }}
                         className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
                       >
                         <div className="flex items-start gap-3">
                           <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
                           <div className="space-y-2">
                             <p className="text-sm text-amber-200 font-medium">
-                              لا يوجد حساب مرتبط بهذا الرقم
-                            </p>
-                            <p className="text-xs text-white/50">
-                              يمكنك إنشاء حساب جديد للبدء في استخدام المنصة
+                              لا يوجد حساب مرتبط بهذا البريد
                             </p>
                             <Link 
                               to="/auth/register"
-                              className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 font-semibold transition-colors"
                             >
                               <UserPlus className="w-4 h-4" />
                               إنشاء حساب جديد
@@ -411,236 +623,51 @@ function Login() {
 
                     <AuthButton
                       type="submit"
-                      isLoading={isSmsLoading}
-                      disabled={!phone || isSmsLoading}
-                      icon={<Send className="w-4 h-4" />}
+                      isLoading={isLoading}
+                      disabled={!email || !password || isLoading}
+                      icon={<ArrowLeft className="w-4 h-4" />}
                     >
-                      إرسال رمز التحقق
+                      تسجيل الدخول
                     </AuthButton>
                   </motion.form>
-                ) : (
-                  <motion.form
-                    key="otp-form"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.25 }}
-                    onSubmit={handleVerifyOtp}
-                    className="space-y-5"
-                  >
-                    <StepIndicator step={1} total={2} />
-                    
-                    {/* Back button */}
-                    <button
-                      type="button"
-                      onClick={handleBackToPhone}
-                      className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm group mb-2"
-                    >
-                      <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-                      تغيير الرقم
-                    </button>
+                </TabsContent>
+              </Tabs>
 
-                    {/* OTP Header */}
-                    <div className="text-center space-y-3 py-2">
-                      <motion.div 
-                        className="w-16 h-16 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center border border-primary/20"
-                        animate={{ scale: [1, 1.03, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        <KeyRound className="w-7 h-7 text-primary" />
-                      </motion.div>
-                      <div>
-                        <h3 className="text-lg font-bold text-white">أدخل رمز التحقق</h3>
-                        <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
-                      </div>
-                    </div>
-
-                    {/* OTP Input */}
-                    <div className="flex justify-center py-3" dir="ltr">
-                      <InputOTP
-                        maxLength={6}
-                        value={otpCode}
-                        onChange={setOtpCode}
-                      >
-                        <InputOTPGroup className="gap-2 sm:gap-3">
-                          {[0, 1, 2, 3, 4, 5].map((index) => (
-                            <InputOTPSlot 
-                              key={index} 
-                              index={index}
-                              className="w-10 h-12 sm:w-12 sm:h-14 text-xl sm:text-2xl bg-white/[0.04] border-white/10 text-white rounded-xl focus:border-primary focus:ring-1 focus:ring-primary/30 font-bold"
-                            />
-                          ))}
-                        </InputOTPGroup>
-                      </InputOTP>
-                    </div>
-
-                    {/* Countdown & Resend */}
-                    <div className="text-center py-2">
-                      {countdown > 0 ? (
-                        <div className="flex items-center justify-center gap-2 text-white/40 text-sm">
-                          <RefreshCw className="w-3.5 h-3.5" />
-                          <span>إعادة الإرسال بعد</span>
-                          <span className="text-primary font-mono font-bold">{formatCountdown(countdown)}</span>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={handleResendOtp}
-                          disabled={isSmsLoading}
-                          className="text-primary hover:text-primary/80 font-semibold text-sm transition-colors flex items-center gap-1.5 mx-auto"
-                        >
-                          <RefreshCw className="w-3.5 h-3.5" />
-                          إعادة إرسال الرمز
-                        </button>
-                      )}
-                    </div>
-
-                    <AuthButton
-                      type="submit"
-                      isLoading={isSmsLoading}
-                      disabled={otpCode.length !== 6 || isSmsLoading}
-                      icon={<CheckCircle2 className="w-4 h-4" />}
-                    >
-                      تأكيد وتسجيل الدخول
-                    </AuthButton>
-                  </motion.form>
-                )}
-              </AnimatePresence>
-            </TabsContent>
-
-            {/* Email Login */}
-            <TabsContent value="email" className="mt-0 focus-visible:outline-none">
-              <motion.form
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onSubmit={handleEmailLogin}
-                className="space-y-5"
-              >
-                <AuthInput
-                  label="البريد الإلكتروني"
-                  icon={<Mail className="w-4 h-4" />}
-                  type="email"
-                  placeholder="example@domain.com"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setEmailError('');
-                    setUserNotFound(false);
-                  }}
-                  error={emailError}
-                  dir="ltr"
-                  maxLength={255}
-                  autoComplete="email"
-                  disabled={isLoading}
-                />
-
-                <AuthInput
-                  label="كلمة المرور"
-                  icon={<Lock className="w-4 h-4" />}
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setPasswordError('');
-                  }}
-                  error={passwordError}
-                  maxLength={100}
-                  autoComplete="current-password"
-                  disabled={isLoading}
-                  endAdornment={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-white/30 hover:text-white/60 transition-colors p-1"
-                      tabIndex={-1}
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  }
-                />
-
-                {/* User not found message */}
-                {userNotFound && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20"
-                  >
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                      <div className="space-y-2">
-                        <p className="text-sm text-amber-200 font-medium">
-                          لا يوجد حساب مرتبط بهذا البريد
-                        </p>
-                        <Link 
-                          to="/auth/register"
-                          className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 font-semibold transition-colors"
-                        >
-                          <UserPlus className="w-4 h-4" />
-                          إنشاء حساب جديد
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Remember & Forgot */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <Checkbox
-                      id="remember"
-                      checked={rememberMe}
-                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                      className="border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary w-4 h-4 rounded"
-                    />
-                    <Label htmlFor="remember" className="text-white/50 cursor-pointer text-sm">
-                      تذكرني
-                    </Label>
-                  </div>
-                  <Link
-                    to="/auth/forgot-password"
-                    className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
-                  >
-                    نسيت كلمة المرور؟
-                  </Link>
+              {/* Divider */}
+              <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/[0.08]" />
                 </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-slate-900/80 px-4 text-white/30">أو</span>
+                </div>
+              </div>
 
-                <AuthButton
-                  type="submit"
-                  isLoading={isLoading}
-                  disabled={!email || !password || isLoading}
-                  icon={<ArrowLeft className="w-4 h-4" />}
-                >
-                  تسجيل الدخول
-                </AuthButton>
-              </motion.form>
-            </TabsContent>
-          </Tabs>
+              {/* Register Link */}
+              <div className="text-center">
+                <p className="text-white/45 text-sm">
+                  ليس لديك حساب؟{' '}
+                  <Link 
+                    to="/auth/register"
+                    className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+                  >
+                    إنشاء حساب جديد
+                  </Link>
+                </p>
+              </div>
+            </AuthCard>
 
-          {/* Divider */}
-          <AuthDivider />
-
-          {/* Register Link */}
-          <div className="text-center space-y-3">
-            <p className="text-white/40 text-sm">ليس لديك حساب؟</p>
-            <Link to="/auth/register">
-              <AuthButton variant="secondary" icon={<UserPlus className="w-4 h-4" />}>
-                إنشاء حساب جديد
-              </AuthButton>
-            </Link>
+            {/* Footer */}
+            <motion.p 
+              className="text-center text-xs text-white/25"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
+            </motion.p>
           </div>
-        </AuthCard>
-
-        {/* Footer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-center text-white/25 text-xs"
-        >
-          © {new Date().getFullYear()} ASH Holding. جميع الحقوق محفوظة
-        </motion.p>
+        </div>
       </div>
     </div>
   );
