@@ -1,42 +1,59 @@
 /**
- * Feature Badges - Trust Indicators
+ * Feature Badges - Premium Trust Indicators
+ * World-Class SaaS Design
  */
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Zap, Lock } from 'lucide-react';
+import { Shield, Zap, Lock, CheckCircle2, Globe, Fingerprint } from 'lucide-react';
 
 interface FeatureBadgesProps {
   variant?: 'login' | 'register';
+  layout?: 'horizontal' | 'vertical';
 }
 
-export function FeatureBadges({ variant = 'login' }: FeatureBadgesProps) {
+export function FeatureBadges({ variant = 'login', layout = 'horizontal' }: FeatureBadgesProps) {
   const features = variant === 'login' ? [
-    { icon: Shield, text: 'تسجيل آمن ومشفر' },
-    { icon: Zap, text: 'دخول فوري' },
-    { icon: Lock, text: 'حماية متقدمة' },
+    { icon: Shield, text: 'تشفير متقدم', color: 'from-blue-500/20 to-blue-600/10' },
+    { icon: Zap, text: 'دخول فوري', color: 'from-cyan-500/20 to-cyan-600/10' },
+    { icon: Lock, text: 'حماية 24/7', color: 'from-indigo-500/20 to-indigo-600/10' },
   ] : [
-    { icon: Shield, text: 'بياناتك محمية' },
-    { icon: Zap, text: 'تفعيل سريع' },
-    { icon: Lock, text: 'خصوصية تامة' },
+    { icon: CheckCircle2, text: 'تسجيل سريع', color: 'from-emerald-500/20 to-emerald-600/10' },
+    { icon: Fingerprint, text: 'تحقق آمن', color: 'from-blue-500/20 to-blue-600/10' },
+    { icon: Globe, text: 'وصول عالمي', color: 'from-purple-500/20 to-purple-600/10' },
   ];
+
+  const containerClass = layout === 'horizontal' 
+    ? "flex flex-wrap justify-center gap-2 sm:gap-3"
+    : "flex flex-col gap-2";
 
   return (
     <motion.div 
-      className="flex flex-wrap justify-center gap-2 sm:gap-3"
+      className={containerClass}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
     >
       {features.map((feature, index) => (
         <motion.div
           key={index}
-          className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-white/[0.04] border border-white/[0.06] backdrop-blur-sm"
+          className={`
+            flex items-center gap-2 px-4 py-2.5 rounded-xl
+            bg-gradient-to-r ${feature.color}
+            border border-white/[0.06] backdrop-blur-sm
+            ${layout === 'horizontal' ? '' : 'w-full'}
+          `}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 + index * 0.08 }}
+          transition={{ delay: 0.4 + index * 0.1 }}
+          whileHover={{ 
+            scale: 1.02,
+            borderColor: 'rgba(255,255,255,0.12)',
+          }}
         >
-          <feature.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
-          <span className="text-[10px] sm:text-xs text-white/60 font-medium">{feature.text}</span>
+          <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center">
+            <feature.icon className="w-4 h-4 text-white/70" />
+          </div>
+          <span className="text-xs sm:text-sm text-white/60 font-medium">{feature.text}</span>
         </motion.div>
       ))}
     </motion.div>

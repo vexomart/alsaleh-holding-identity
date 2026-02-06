@@ -8,3 +8,4 @@ export { AuthInput } from './AuthInput';
 export { AuthButton } from './AuthButton';
 export { AuthDivider } from './AuthDivider';
 export { FeatureBadges } from './FeatureBadges';
+export { AuthHeroSection } from './AuthHeroSection';

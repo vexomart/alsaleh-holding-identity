@@ -1,46 +1,74 @@
 /**
- * Auth Logo Component - Enterprise Branding
+ * Auth Logo Component - Premium Brand Display
+ * World-Class SaaS Design
  */
 import * as React from 'react';
 import { motion } from 'framer-motion';
+import { Building2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AuthLogoProps {
   size?: 'sm' | 'md' | 'lg';
+  showText?: boolean;
+  className?: string;
 }
 
-export function AuthLogo({ size = 'md' }: AuthLogoProps) {
+export function AuthLogo({ size = 'md', showText = false, className }: AuthLogoProps) {
   const sizes = {
-    sm: { container: 'w-16 h-16', text: 'text-2xl', glow: '-inset-1' },
-    md: { container: 'w-24 h-24', text: 'text-4xl', glow: '-inset-2' },
-    lg: { container: 'w-32 h-32', text: 'text-5xl', glow: '-inset-3' },
+    sm: { container: 'w-14 h-14', icon: 'w-7 h-7', text: 'text-xl' },
+    md: { container: 'w-18 h-18', icon: 'w-9 h-9', text: 'text-2xl' },
+    lg: { container: 'w-24 h-24', icon: 'w-12 h-12', text: 'text-3xl' },
   };
-  
-  const s = sizes[size];
 
   return (
     <motion.div 
-      className="relative inline-block"
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: 'spring', stiffness: 400 }}
+      className={cn("flex flex-col items-center gap-3", className)}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      <motion.div 
-        className={`${s.container} rounded-2xl bg-gradient-to-br from-primary via-primary/95 to-primary-glow flex items-center justify-center shadow-2xl relative overflow-hidden`}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+      {/* Logo Container */}
+      <motion.div
+        className={cn(
+          "relative rounded-2xl",
+          "bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600",
+          "flex items-center justify-center",
+          "shadow-2xl shadow-blue-500/30",
+          sizes[size].container
+        )}
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.2 }}
       >
-        {/* Shine overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/20" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_50%)]" />
+        {/* Glow effect */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 via-transparent to-transparent" />
         
-        {/* Logo text */}
-        <span className={`${s.text} font-black text-white tracking-tight relative z-10 select-none`}>
+        {/* Logo Text */}
+        <span className={cn(sizes[size].text, "font-black text-white tracking-tight relative z-10 select-none")}>
           ASH
         </span>
+        
+        {/* Shine effect */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent opacity-0"
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
       </motion.div>
       
-      {/* Glow effect */}
-      <div className={`absolute ${s.glow} rounded-2xl bg-gradient-to-br from-primary/50 to-primary-glow/30 blur-xl opacity-50 -z-10`} />
+      {/* Brand Text */}
+      {showText && (
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-center"
+        >
+          <h1 className={cn(sizes[size].text, "font-bold text-white tracking-tight")}>
+            <span className="bg-gradient-to-r from-white via-white to-white/80 bg-clip-text">ASH</span>
+            <span className="text-blue-400 ms-1">HOLDING</span>
+          </h1>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
