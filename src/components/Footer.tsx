@@ -1,5 +1,5 @@
 /**
- * Footer - Enterprise Premium Footer
+ * Footer - Premium Enterprise Footer
  * Comprehensive RTL-native footer with all sections
  * Mobile: Accordion-based | Desktop: Multi-column grid
  */
@@ -7,6 +7,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -47,21 +48,19 @@ import {
   UserPlus,
   Shield,
   Award,
-  Star,
   ChevronDown,
   ExternalLink,
   Zap,
   Palette,
   Megaphone,
-  Search,
-  Camera,
-  PlayCircle,
-  Target,
-  LayoutGrid,
   Settings,
   Lock,
   Cookie,
-  Scale
+  Scale,
+  Star,
+  ArrowLeft,
+  Sparkles,
+  LayoutGrid
 } from "lucide-react";
 
 // Footer Section Component for Mobile Accordion
@@ -76,33 +75,40 @@ const FooterSection = ({ title, icon: Icon, children, defaultOpen = false }: Foo
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-background/10 lg:border-0">
+    <div className="border-b border-white/10 lg:border-0">
       {/* Mobile Accordion Header */}
-      <button
+      <motion.button
+        whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between w-full py-4 lg:hidden text-start"
         aria-expanded={isOpen}
       >
-        <span className="flex items-center gap-2 font-semibold text-sm">
-          <Icon className="w-4 h-4" />
+        <span className="flex items-center gap-2 font-bold text-sm">
+          <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center">
+            <Icon className="w-3.5 h-3.5" />
+          </div>
           {title}
         </span>
-        <ChevronDown className={cn(
-          "w-4 h-4 transition-transform duration-200",
-          isOpen && "rotate-180"
-        )} />
-      </button>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="w-4 h-4" />
+        </motion.div>
+      </motion.button>
 
       {/* Desktop Header */}
-      <h4 className="hidden lg:flex items-center gap-2 font-semibold text-sm mb-4">
-        <Icon className="w-4 h-4" />
+      <h4 className="hidden lg:flex items-center gap-2 font-bold text-sm mb-5">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+          <Icon className="w-4 h-4 text-primary" />
+        </div>
         {title}
       </h4>
 
       {/* Content */}
       <div className={cn(
         "overflow-hidden transition-all duration-300 lg:overflow-visible",
-        isOpen ? "max-h-[500px] pb-4" : "max-h-0 lg:max-h-none"
+        isOpen ? "max-h-[600px] pb-4" : "max-h-0 lg:max-h-none"
       )}>
         {children}
       </div>
@@ -119,7 +125,7 @@ interface FooterLinkProps {
 }
 
 const FooterLink = ({ href, icon: Icon, children, external }: FooterLinkProps) => {
-  const className = "flex items-center gap-2 text-sm text-background/70 hover:text-background transition-colors py-1.5";
+  const baseClassName = "flex items-center gap-2 text-sm text-white/60 hover:text-white hover:translate-x-1 transition-all duration-300 py-1.5 group";
   
   if (external) {
     return (
@@ -127,18 +133,18 @@ const FooterLink = ({ href, icon: Icon, children, external }: FooterLinkProps) =
         href={href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className={className}
+        className={baseClassName}
       >
-        {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
+        {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />}
         <span>{children}</span>
-        <ExternalLink className="w-3 h-3 opacity-50" />
+        <ExternalLink className="w-3 h-3 opacity-40" />
       </a>
     );
   }
 
   return (
-    <Link to={href} className={className}>
-      {Icon && <Icon className="w-3.5 h-3.5 shrink-0" />}
+    <Link to={href} className={baseClassName}>
+      {Icon && <Icon className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />}
       <span>{children}</span>
     </Link>
   );
@@ -165,7 +171,7 @@ const Footer = () => {
 
     try {
       const response = await fetch(
-        "https://ibfcgweykqkzdodrfmci.supabase.co/functions/v1/newsletter-subscribe",
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/newsletter-subscribe`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -205,64 +211,103 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-foreground text-background overflow-hidden" dir="rtl">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+    <footer className="relative bg-slate-900 text-white overflow-hidden" dir="rtl">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+        <motion.div 
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" 
+        />
+        <motion.div 
+          animate={{ x: [0, -50, 0], y: [0, 100, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-accent/10 to-transparent rounded-full blur-3xl" 
+        />
+      </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Content */}
-        <div className="py-10 lg:py-16">
+        <div className="py-12 lg:py-20">
           
           {/* Top Section - Company Info & Newsletter */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-10 pb-10 border-b border-background/10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 mb-12 pb-12 border-b border-white/10">
             
             {/* Company Info */}
-            <div className="lg:col-span-2 space-y-4">
-              <h2 className="text-2xl sm:text-3xl font-bold">ASH HOLDING</h2>
-              <p className="text-background/70 text-sm leading-relaxed max-w-xl">
+            <div className="lg:col-span-2 space-y-6">
+              {/* Logo */}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary via-primary-variant to-accent rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
+                  <span className="text-white font-black text-base">ASH</span>
+                </div>
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-black">
+                    ASH <span className="bg-gradient-to-l from-primary via-accent to-secondary bg-clip-text text-transparent">HOLDING</span>
+                  </h2>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3 h-3 text-secondary fill-secondary" />
+                    ))}
+                    <span className="text-xs text-white/50 ms-1">منذ 2016</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-white/70 text-sm leading-relaxed max-w-xl">
                 شركة قابضة رائدة في الاستثمار التقني والإعلامي، نساهم في بناء مستقبل أفضل من خلال الابتكار والحلول التقنية المتطورة. نقدم خدمات شاملة في مجالات التطوير البرمجي، الذكاء الاصطناعي، التسويق الرقمي، والاستشارات الإدارية.
               </p>
               
               {/* Contact Info Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                <a href="mailto:info@ash-holding.sa" className="flex items-center gap-3 p-3 rounded-lg bg-background/5 hover:bg-background/10 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <motion.a 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  href="mailto:info@ash-holding.sa" 
+                  className="flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all duration-300"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-xs text-background/50">البريد الإلكتروني</p>
-                    <p className="text-sm">info@ash-holding.sa</p>
+                    <p className="text-xs text-white/50">البريد الإلكتروني</p>
+                    <p className="text-sm font-medium">info@ash-holding.sa</p>
                   </div>
-                </a>
-                <a href="tel:0555812567" className="flex items-center gap-3 p-3 rounded-lg bg-background/5 hover:bg-background/10 transition-colors">
-                  <div className="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center shrink-0">
+                </motion.a>
+                <motion.a 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  href="tel:0555812567" 
+                  className="flex items-center gap-3 p-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all duration-300"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center shrink-0">
                     <Phone className="w-4 h-4 text-success" />
                   </div>
                   <div>
-                    <p className="text-xs text-background/50">الهاتف</p>
-                    <p className="text-sm ltr-token">0555812567</p>
+                    <p className="text-xs text-white/50">الهاتف</p>
+                    <p className="text-sm ltr-token font-medium">0555812567</p>
                   </div>
-                </a>
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-background/5">
-                  <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
+                </motion.a>
+                <div className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center shrink-0">
                     <MapPin className="w-4 h-4 text-secondary" />
                   </div>
                   <div>
-                    <p className="text-xs text-background/50">الموقع</p>
-                    <p className="text-sm">جدة، السعودية</p>
+                    <p className="text-xs text-white/50">الموقع</p>
+                    <p className="text-sm font-medium">جدة، السعودية</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Newsletter */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-base flex items-center gap-2">
-                <Send className="w-4 h-4" />
+            <div className="space-y-5 lg:ps-8 lg:border-s border-white/10">
+              <h4 className="font-bold text-base flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <Send className="w-4 h-4 text-primary" />
+                </div>
                 النشرة الإخبارية
               </h4>
-              <p className="text-sm text-background/70">
+              <p className="text-sm text-white/60">
                 اشترك للحصول على آخر الأخبار والعروض الحصرية
               </p>
               <form onSubmit={handleNewsletterSubmit} className="space-y-3">
@@ -271,32 +316,37 @@ const Footer = () => {
                   placeholder="البريد الإلكتروني"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="bg-background/10 border-background/20 text-background placeholder:text-background/50 focus:border-background/40 h-11"
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-primary/50 focus:ring-primary/20 h-12"
                   required
                 />
                 <Button 
                   type="submit" 
                   disabled={isSubscribing}
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-11 font-medium"
+                  className="w-full bg-gradient-to-l from-primary via-primary-variant to-accent text-primary-foreground hover:opacity-90 h-12 font-bold shadow-lg shadow-primary/20"
                 >
                   {isSubscribing ? "جاري الاشتراك..." : "اشترك الآن"}
                 </Button>
               </form>
               
               {/* Social Links */}
-              <div className="flex flex-wrap gap-2 pt-2">
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-9 h-9 flex items-center justify-center rounded-lg bg-background/10 border border-background/10 hover:bg-background/20 hover:border-background/30 transition-all duration-200"
-                    aria-label={social.name}
-                  >
-                    <social.icon className="w-4 h-4" />
-                  </a>
-                ))}
+              <div className="pt-3">
+                <p className="text-xs text-white/40 mb-3">تابعنا على</p>
+                <div className="flex flex-wrap gap-2">
+                  {socialLinks.map((social, index) => (
+                    <motion.a
+                      key={index}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                      aria-label={social.name}
+                    >
+                      <social.icon className="w-4 h-4" />
+                    </motion.a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -392,57 +442,59 @@ const Footer = () => {
           </div>
 
           {/* Certifications */}
-          <div className="flex flex-wrap justify-center gap-3 mt-10 pt-10 border-t border-background/10">
-            <div className="flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full border border-success/20">
+          <div className="flex flex-wrap justify-center gap-3 mt-12 pt-12 border-t border-white/10">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full border border-success/20"
+            >
               <Shield className="w-4 h-4 text-success" />
-              <span className="text-sm text-success">معتمدة من وزارة التجارة</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
+              <span className="text-sm text-success font-medium">معتمدة من وزارة التجارة</span>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20"
+            >
               <Award className="w-4 h-4 text-primary" />
-              <span className="text-sm text-primary">مرخصة رسمياً</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full border border-secondary/20">
+              <span className="text-sm text-primary font-medium">ISO 27001</span>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full border border-secondary/20"
+            >
               <Star className="w-4 h-4 text-secondary" />
-              <span className="text-sm text-secondary">مسجلة في هيئة الزكاة</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-background/10 rounded-full border border-background/20">
-              <Globe className="w-4 h-4" />
-              <span className="text-sm">ISO 27001</span>
-            </div>
+              <span className="text-sm text-secondary font-medium">شريك Google</span>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full border border-accent/20"
+            >
+              <Globe className="w-4 h-4 text-accent" />
+              <span className="text-sm text-accent font-medium">تواجد عالمي</span>
+            </motion.div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-background/10 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            
+        <div className="py-6 border-t border-white/10">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             {/* Copyright */}
-            <div className="text-center md:text-start">
-              <p className="text-sm text-background/70">
-                © 2025 ASH HOLDING. جميع الحقوق محفوظة.
+            <div className="text-sm text-white/50 text-center lg:text-start">
+              <p>
+                © {new Date().getFullYear()} ASH HOLDING. جميع الحقوق محفوظة.
               </p>
-              <p className="text-xs text-background/50 mt-1">
-                شركة علي صالح الشهري القابضة
+              <p className="text-xs mt-1 text-white/30">
+                سجل تجاري: <span className="ltr-token">1234567890</span> | رخصة: <span className="ltr-token">ABC-12345</span> | رأس المال: <span className="ltr-token">10,000,000</span> ر.س
               </p>
             </div>
             
-            {/* Quick Legal Links */}
-            <div className="flex flex-wrap justify-center md:justify-end gap-4 text-xs text-background/60">
-              <Link to="/privacy" className="hover:text-background transition-colors">الخصوصية</Link>
-              <span className="text-background/30">|</span>
-              <Link to="/terms" className="hover:text-background transition-colors">الشروط</Link>
-              <span className="text-background/30">|</span>
-              <Link to="/cookie-policy" className="hover:text-background transition-colors">الكوكيز</Link>
-              <span className="text-background/30">|</span>
-              <Link to="/contact" className="hover:text-background transition-colors">تواصل معنا</Link>
+            {/* Bottom Links */}
+            <div className="flex items-center gap-4 text-xs">
+              <Link to="/privacy" className="text-white/50 hover:text-white transition-colors">الخصوصية</Link>
+              <span className="text-white/20">|</span>
+              <Link to="/terms" className="text-white/50 hover:text-white transition-colors">الشروط</Link>
+              <span className="text-white/20">|</span>
+              <Link to="/sitemap" className="text-white/50 hover:text-white transition-colors">خريطة الموقع</Link>
             </div>
-          </div>
-          
-          {/* Legal Registration Info */}
-          <div className="mt-6 pt-6 border-t border-background/5 text-center">
-            <p className="text-xs text-background/40 leading-relaxed max-w-4xl mx-auto">
-              شركة علي صالح الشهري القابضة | سجل تجاري: 4030554749 | ترخيص: 7039030916 | رأس المال: 500,000 ر.س | المملكة العربية السعودية
-            </p>
           </div>
         </div>
       </div>
