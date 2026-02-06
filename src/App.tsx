@@ -399,6 +399,7 @@ const App = () => {
                       <Route path="/business-services" element={<Suspense fallback={<PageLoader />}><BusinessServices /></Suspense>} />
                       <Route path="/business-services/consulting" element={<Suspense fallback={<PageLoader />}><BusinessConsulting /></Suspense>} />
                       <Route path="/business-services/transformation" element={<Suspense fallback={<PageLoader />}><DigitalTransformation /></Suspense>} />
+                      <Route path="/digital-transformation" element={<Suspense fallback={<PageLoader />}><DigitalTransformation /></Suspense>} />
                       <Route path="/business-services/financial" element={<Suspense fallback={<PageLoader />}><FinancialPlanning /></Suspense>} />
                       <Route path="/technical-services" element={<Suspense fallback={<PageLoader />}><TechnicalServices /></Suspense>} />
                       <Route path="/professional-services" element={<Suspense fallback={<PageLoader />}><ProfessionalServices /></Suspense>} />
