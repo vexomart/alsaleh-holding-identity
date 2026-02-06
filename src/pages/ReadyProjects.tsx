@@ -8,7 +8,6 @@ import {
   FileText, 
   Building2, 
   GraduationCap,
-  ArrowLeft,
   ExternalLink,
   Star,
   CheckCircle,

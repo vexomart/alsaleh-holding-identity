@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { 
   Eye,
-  ArrowLeft,
+  ArrowRight,
   CheckCircle,
   Star,
   Users,
@@ -273,7 +273,7 @@ const ComputerVision = () => {
                 asChild
               >
                 <Link to="/ai-solutions">
-                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  <ArrowRight className="w-5 h-5 mr-2" />
                   عودة لحلول الذكاء الاصطناعي
                 </Link>
               </Button>
@@ -285,7 +285,7 @@ const ComputerVision = () => {
       {/* Back Navigation */}
       <div className="container mx-auto px-6 py-8">
         <Link to="/ai-solutions" className="inline-flex items-center gap-2 text-slate-600 hover:text-emerald-600 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" />
           العودة إلى حلول الذكاء الاصطناعي
         </Link>
       </div>

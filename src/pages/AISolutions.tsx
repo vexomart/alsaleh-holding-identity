@@ -10,7 +10,7 @@ import {
   Eye,
   MessageSquare,
   TrendingUp,
-  ArrowLeft,
+  ArrowRight,
   CheckCircle,
   Star,
   Users,
@@ -413,7 +413,7 @@ const AISolutions = () => {
       {/* Back to Home */}
       <div className="container mx-auto px-6 py-8">
         <Link to="/" className="inline-flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" />
           العودة إلى الصفحة الرئيسية
         </Link>
       </div>
