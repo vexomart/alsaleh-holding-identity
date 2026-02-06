@@ -315,20 +315,21 @@ export function OrdersManagement() {
         title: isRTL ? 'تم تحديث حالة الطلب' : 'Order status updated' 
       });
       
-      // Send email notification to customer
+      // Send email + SMS notification to customer
       if (order?.customer?.email && order.customer_id) {
         sendOrderStatusEmail({
           orderId: orderId,
           orderNumber: order.order_number,
           customerEmail: order.customer.email,
           customerName: order.customer.full_name || '',
+          customerPhone: order.customer.phone || undefined,
           serviceName: order.title,
           serviceNameAr: order.title_ar || undefined,
           totalAmount: order.total_amount || 0,
           currency: order.currency || 'SAR',
           status: newStatus,
           previousStatus: previousStatus || undefined,
-        }).catch(err => console.error('Email notification failed:', err));
+        }).catch(err => console.error('Notification failed:', err));
       }
     } catch (err) {
       console.error('Error updating order:', err);

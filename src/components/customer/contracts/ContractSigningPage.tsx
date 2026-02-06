@@ -135,19 +135,20 @@ export function ContractSigningPage() {
       setSignedAt(now);
       toast.success(isRTL ? 'تم توقيع العقد بنجاح!' : 'Contract signed successfully!');
       
-      // Send contract signed email notification
+      // Send contract signed email + SMS notification
       if (signerData.email || profile?.email) {
         sendContractEmail({
           contractId: contract.id,
           contractNumber: contract.contract_number,
           customerEmail: signerData.email || profile?.email || '',
           customerName: signerData.name,
+          customerPhone: signerData.phone || profile?.phone || undefined,
           serviceName: contract.service?.name || '',
           serviceNameAr: contract.service?.name_ar || undefined,
           totalAmount: contract.pricing_json?.total || 0,
           currency: contract.pricing_json?.currency || 'SAR',
           eventType: 'signed',
-        }).catch(err => console.error('Email notification failed:', err));
+        }).catch(err => console.error('Notification failed:', err));
       }
       
       // Move to success step

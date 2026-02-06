@@ -147,7 +147,7 @@ export function ApplicationsTab() {
           if (entityData?.owner_user_id) {
             const { data: profileData } = await supabase
               .from("profiles")
-              .select("email, full_name")
+              .select("email, full_name, phone")
               .eq("id", entityData.owner_user_id)
               .single();
             
@@ -157,11 +157,12 @@ export function ApplicationsTab() {
                 applicationNumber: selectedApp.application_number,
                 customerEmail: profileData.email,
                 customerName: profileData.full_name || '',
+                customerPhone: profileData.phone || undefined,
                 entityName: selectedApp.entity?.legal_name_ar || '',
                 amountSar: selectedApp.amount_sar,
                 tenorMonths: selectedApp.tenor_months,
                 eventType: 'under_review',
-              }).catch(err => console.error('Email notification failed:', err));
+              }).catch(err => console.error('Notification failed:', err));
             }
           }
         } catch (err) {
@@ -207,7 +208,7 @@ export function ApplicationsTab() {
           if (entityOwner) {
             const { data: profileData } = await supabase
               .from("profiles")
-              .select("email, full_name")
+              .select("email, full_name, phone")
               .eq("id", entityOwner)
               .single();
             
@@ -217,12 +218,13 @@ export function ApplicationsTab() {
                 applicationNumber: selectedApp.application_number,
                 customerEmail: profileData.email,
                 customerName: profileData.full_name || '',
+                customerPhone: profileData.phone || undefined,
                 entityName: selectedApp.entity?.legal_name_ar || '',
                 amountSar: selectedApp.amount_sar,
                 tenorMonths: selectedApp.tenor_months,
                 eventType: 'rejected',
                 rejectionReason: reason,
-              }).catch(err => console.error('Email notification failed:', err));
+              }).catch(err => console.error('Notification failed:', err));
             }
           }
         } catch (err) {
