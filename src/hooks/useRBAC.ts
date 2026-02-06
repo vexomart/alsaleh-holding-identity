@@ -3,7 +3,8 @@
  * Role-Based Access Control hook for permission checks
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import * as React from 'react';
+const { useState, useEffect, useCallback, useMemo } = React;
 import { supabase } from '@/integrations/supabase/client';
 import type { AppRole } from '@/types/auth';
 import type { PermissionKey } from '@/constants/permissions';

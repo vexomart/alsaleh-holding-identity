@@ -4,7 +4,9 @@
  * Uses CSS Grid for proper sidebar placement
  */
 
-import { ReactNode, useEffect } from "react";
+import * as React from "react";
+const { useEffect } = React;
+type ReactNode = React.ReactNode;
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useRBAC } from "@/hooks/useRBAC";
