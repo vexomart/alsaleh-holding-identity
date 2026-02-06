@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 const lazy = React.lazy;
 const Suspense = React.Suspense;
-import { MobileOptimizer } from "@/components/MobileOptimizer";
 import { SecurityHeaders } from "@/components/SecurityHeaders";
 import { ReCaptchaProvider } from "@/components/ReCaptchaProvider";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
@@ -274,13 +273,12 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <MobileOptimizer>
-          <BrowserRouter>
-            <AuthProvider>
-              <LanguageProvider>
-                <TooltipProvider>
-                  <ReCaptchaProvider>
-                    <RTLAppShell>
+        <BrowserRouter>
+          <AuthProvider>
+            <LanguageProvider>
+              <TooltipProvider>
+                <ReCaptchaProvider>
+                  <RTLAppShell>
                       <SecurityHeaders />
                       <TemplateVariableBlocker />
                       <AnalyticsProvider />
@@ -508,14 +506,13 @@ const App = () => {
                       
                       {/* 404 */}
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
-                    </Routes>
-                    </RTLAppShell>
-                  </ReCaptchaProvider>
-                </TooltipProvider>
-              </LanguageProvider>
-            </AuthProvider>
-          </BrowserRouter>
-        </MobileOptimizer>
+                  </Routes>
+                  </RTLAppShell>
+                </ReCaptchaProvider>
+              </TooltipProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </HelmetProvider>
     </QueryClientProvider>
   );
