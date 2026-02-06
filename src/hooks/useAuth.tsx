@@ -48,7 +48,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [roles, setRoles] = useState<UserRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string): Promise<UserProfile | null> => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -59,13 +59,16 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       if (error) throw error;
       if (data) {
         setProfile(data as UserProfile);
+        return data as UserProfile;
       }
+      return null;
     } catch (error) {
       console.error('Error fetching profile:', error);
+      return null;
     }
   };
 
-  const fetchRoles = async (userId: string) => {
+  const fetchRoles = async (userId: string): Promise<UserRole[]> => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
@@ -75,23 +78,36 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       if (error) throw error;
       if (data) {
         setRoles(data as UserRole[]);
+        return data as UserRole[];
       }
+      return [];
     } catch (error) {
       console.error('Error fetching roles:', error);
+      return [];
     }
   };
 
+  const loadUserData = async (userId: string) => {
+    // Fetch profile and roles in parallel, wait for both to complete
+    await Promise.all([
+      fetchProfile(userId),
+      fetchRoles(userId)
+    ]);
+  };
+
   useEffect(() => {
+    let isMounted = true;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
+        if (!isMounted) return;
+
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
 
         if (currentSession?.user) {
-          setTimeout(() => {
-            fetchProfile(currentSession.user.id);
-            fetchRoles(currentSession.user.id);
-          }, 0);
+          // Wait for user data to load before setting isLoading to false
+          await loadUserData(currentSession.user.id);
         } else {
           setProfile(null);
           setRoles([]);
@@ -102,23 +118,31 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
           setRoles([]);
         }
 
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+    // Initial session check
+    supabase.auth.getSession().then(async ({ data: { session: currentSession } }) => {
+      if (!isMounted) return;
+
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       
       if (currentSession?.user) {
-        fetchProfile(currentSession.user.id);
-        fetchRoles(currentSession.user.id);
+        // Wait for user data to load before setting isLoading to false
+        await loadUserData(currentSession.user.id);
       }
       
-      setIsLoading(false);
+      if (isMounted) {
+        setIsLoading(false);
+      }
     });
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
