@@ -6,7 +6,7 @@
 
 // Header Container Styles
 export const headerStyles = {
-  wrapper: 'fixed inset-x-0 top-0 z-50',
+  wrapper: 'fixed inset-x-0 top-0 z-[100]',
   container: 'mx-auto max-w-7xl px-4 sm:px-6 lg:px-8',
   inner: 'flex h-20 items-center justify-between gap-8',
   
