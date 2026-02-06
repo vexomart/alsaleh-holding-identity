@@ -131,33 +131,31 @@ export const useRBAC = (): UseRBACReturn => {
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Set up auth state listener FIRST (before getSession)
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!isMountedRef.current) return;
 
-        if (event === 'SIGNED_OUT') {
+        if (event === 'SIGNED_OUT' || !session?.user) {
           clearPermissions();
+          initializedRef.current = true;
           return;
         }
 
-        // Handle session events
+        // Handle session with user
         if (session?.user) {
           await fetchUserPermissions(session.user.id);
-        } else if (event === 'INITIAL_SESSION' && !session) {
-          // No session on initial load - user is not logged in
-          clearPermissions();
         }
         
         initializedRef.current = true;
       }
     );
 
-    // Then check for existing session
+    // Check for existing session immediately
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!isMountedRef.current) return;
       
-      // Only process if we haven't been initialized by onAuthStateChange yet
+      // Only process if not already initialized
       if (!initializedRef.current) {
         if (session?.user) {
           await fetchUserPermissions(session.user.id);
