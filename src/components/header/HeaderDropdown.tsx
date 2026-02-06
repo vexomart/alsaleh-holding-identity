@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronLeft, ArrowLeft, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -63,54 +63,56 @@ export function HeaderDropdown({
       onMouseLeave={handleMouseLeave}
     >
       {/* Trigger Button */}
-      <motion.button 
+      <button 
         onClick={handleTriggerClick}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
         className={cn(
-          'flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-300',
+          'flex items-center gap-1.5 px-4 py-2.5 text-sm font-bold rounded-xl transition-all duration-200',
           isActive || isOpen
-            ? 'text-primary bg-primary/10 shadow-sm' 
-            : 'text-foreground hover:text-primary hover:bg-muted/80'
+            ? 'text-primary bg-primary/10' 
+            : 'text-gray-700 hover:text-primary hover:bg-gray-100'
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
         {label}
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <ChevronDown className="w-4 h-4" />
-        </motion.div>
-      </motion.button>
+        <ChevronDown 
+          className={cn(
+            'w-4 h-4 transition-transform duration-200',
+            isOpen && 'rotate-180'
+          )} 
+        />
+      </button>
 
       {/* Dropdown Panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.15 }}
             className={cn(
-              'absolute top-full start-0 mt-3 bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/50 z-50 overflow-hidden',
-              variant === 'mega' ? 'min-w-[480px]' : 'min-w-[300px]'
+              'absolute top-full start-0 mt-2 rounded-2xl shadow-2xl border overflow-hidden z-[100]',
+              variant === 'mega' ? 'min-w-[480px]' : 'min-w-[280px]'
             )}
+            style={{ 
+              backgroundColor: '#ffffff',
+              borderColor: '#e5e7eb'
+            }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
             {/* Top Gradient Border */}
             <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-l from-primary via-accent to-secondary" />
             
-            <div className="p-3">
+            <div className="p-3 pt-4">
               {/* Header */}
-              <div className="flex items-center justify-between mb-3 pb-2 border-b border-border/30">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-bold text-foreground">{label}</span>
+                  <span className="text-sm font-bold text-gray-900">{label}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">{items.length} خيارات</span>
+                <span className="text-xs text-gray-500">{items.length} خيارات</span>
               </div>
 
               {variant === 'mega' ? (
@@ -151,36 +153,32 @@ function DropdownItem({ item, onNavigate, index }: { item: NavItem; onNavigate: 
   };
 
   return (
-    <motion.a
+    <a
       href={item.href}
       onClick={handleClick}
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05 }}
       className={cn(
-        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-300 group cursor-pointer',
+        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 group cursor-pointer',
         isActive 
-          ? 'bg-primary/10 text-primary font-medium shadow-sm' 
-          : 'text-foreground hover:bg-muted hover:text-primary'
+          ? 'bg-primary/10 text-primary font-medium' 
+          : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
       )}
     >
       {Icon && (
         <div className={cn(
-          'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300',
+          'w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors',
           isActive 
-            ? 'bg-primary text-white shadow-lg shadow-primary/30' 
-            : 'bg-muted group-hover:bg-primary/10 group-hover:text-primary'
+            ? 'bg-primary text-white' 
+            : 'bg-gray-100 group-hover:bg-primary/10 group-hover:text-primary'
         )}>
           <Icon className="w-4 h-4" />
         </div>
       )}
       <span className="flex-1 font-medium">{item.name}</span>
       <ArrowLeft className={cn(
-        'w-4 h-4 opacity-0 translate-x-2 transition-all duration-300',
-        'group-hover:opacity-100 group-hover:translate-x-0',
-        isActive && 'text-primary'
+        'w-4 h-4 opacity-0 translate-x-2 transition-all duration-200',
+        'group-hover:opacity-100 group-hover:translate-x-0 text-gray-400'
       )} />
-    </motion.a>
+    </a>
   );
 }
 
@@ -201,51 +199,43 @@ function DropdownMegaItem({ item, onNavigate, index }: { item: NavItem; onNaviga
   };
 
   return (
-    <motion.a
+    <a
       href={item.href}
       onClick={handleClick}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
       className={cn(
-        'flex items-start gap-3 p-3 rounded-xl text-sm transition-all duration-300 group cursor-pointer relative overflow-hidden',
+        'flex items-start gap-3 p-3 rounded-xl text-sm transition-all duration-200 group cursor-pointer',
         isActive 
-          ? 'bg-primary/10 shadow-sm' 
-          : 'hover:bg-muted/80'
+          ? 'bg-primary/10' 
+          : 'hover:bg-gray-50'
       )}
     >
-      {/* Hover Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
       {Icon && (
         <div className={cn(
-          'w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 relative z-10',
+          'w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-colors',
           isActive 
-            ? 'bg-primary text-white shadow-lg shadow-primary/30' 
-            : 'bg-muted group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/20'
+            ? 'bg-primary text-white' 
+            : 'bg-gray-100 group-hover:bg-primary group-hover:text-white'
         )}>
           <Icon className="w-5 h-5" />
         </div>
       )}
-      <div className="flex-1 min-w-0 relative z-10">
+      <div className="flex-1 min-w-0">
         <span className={cn(
-          'block font-bold mb-0.5 transition-colors duration-300',
-          isActive ? 'text-primary' : 'text-foreground group-hover:text-primary'
+          'block font-bold mb-0.5 transition-colors',
+          isActive ? 'text-primary' : 'text-gray-900 group-hover:text-primary'
         )}>
           {item.name}
         </span>
         {item.description && (
-          <span className="block text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+          <span className="block text-xs text-gray-500 line-clamp-2 leading-relaxed">
             {item.description}
           </span>
         )}
       </div>
       <ChevronLeft className={cn(
-        'w-4 h-4 mt-1.5 opacity-0 -translate-x-2 transition-all duration-300 relative z-10',
-        'group-hover:opacity-100 group-hover:translate-x-0',
-        isActive ? 'text-primary' : 'text-muted-foreground'
+        'w-4 h-4 mt-1.5 opacity-0 -translate-x-2 transition-all duration-200',
+        'group-hover:opacity-100 group-hover:translate-x-0 text-gray-400'
       )} />
-    </motion.a>
+    </a>
   );
 }

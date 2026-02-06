@@ -6,7 +6,7 @@
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Headphones, User } from 'lucide-react';
+import { Headphones, User, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { HeaderLogo } from './header/HeaderLogo';
 import { HeaderTopBar } from './header/HeaderTopBar';
@@ -44,22 +44,26 @@ function Navigation() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={cn(
-          'fixed inset-x-0 z-40 transition-all duration-500 ease-out',
+          'fixed inset-x-0 z-40 transition-all duration-300',
           isScrolled 
-            ? 'top-0 shadow-xl' 
+            ? 'top-0' 
             : 'top-0 lg:top-10'
         )}
         role="banner"
       >
-        <div className={cn(
-          'bg-card/95 backdrop-blur-xl border-b transition-all duration-500',
-          isScrolled 
-            ? 'border-border/80 shadow-lg' 
-            : 'border-border/30'
-        )}>
+        {/* Header Background - Solid and Visible */}
+        <div 
+          className={cn(
+            'transition-all duration-300',
+            isScrolled 
+              ? 'bg-white shadow-xl border-b border-gray-200' 
+              : 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100'
+          )}
+          style={{ backgroundColor: isScrolled ? '#ffffff' : 'rgba(255, 255, 255, 0.98)' }}
+        >
           <div className="container mx-auto px-4 lg:px-6">
             {/* Main Nav Container - RTL Native Flow */}
-            <div className="flex items-center justify-between h-14 lg:h-16" dir="rtl">
+            <div className="flex items-center justify-between h-16 lg:h-18" dir="rtl">
               
               {/* ===== LOGO (Right Side in RTL) ===== */}
               <HeaderLogo />
@@ -71,80 +75,51 @@ function Navigation() {
               <div className="flex items-center gap-2 lg:gap-3 shrink-0">
                 
                 {/* Mobile Menu Toggle */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className={cn(
-                    'lg:hidden flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300',
-                    'hover:bg-muted active:bg-primary/10',
-                    isMobileMenuOpen && 'bg-primary/10'
+                    'lg:hidden flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-200',
+                    'bg-gray-100 hover:bg-gray-200 active:bg-primary/10',
+                    isMobileMenuOpen && 'bg-primary/10 text-primary'
                   )}
                   aria-label={isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
                   aria-expanded={isMobileMenuOpen}
                   aria-controls="mobile-menu"
                 >
-                  <div className="w-5 h-4 flex flex-col justify-center items-center gap-1">
-                    <motion.span 
-                      animate={{ 
-                        rotate: isMobileMenuOpen ? 45 : 0,
-                        y: isMobileMenuOpen ? 6 : 0
-                      }}
-                      className="block w-5 h-0.5 bg-foreground rounded-full" 
-                    />
-                    <motion.span 
-                      animate={{ 
-                        opacity: isMobileMenuOpen ? 0 : 1,
-                        scale: isMobileMenuOpen ? 0 : 1
-                      }}
-                      className="block w-5 h-0.5 bg-foreground rounded-full" 
-                    />
-                    <motion.span 
-                      animate={{ 
-                        rotate: isMobileMenuOpen ? -45 : 0,
-                        y: isMobileMenuOpen ? -6 : 0
-                      }}
-                      className="block w-5 h-0.5 bg-foreground rounded-full" 
-                    />
-                  </div>
-                </motion.button>
+                  {isMobileMenuOpen ? (
+                    <X className="w-5 h-5 text-gray-700" />
+                  ) : (
+                    <Menu className="w-5 h-5 text-gray-700" />
+                  )}
+                </button>
 
                 {/* Customer Portal Button - Desktop */}
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link 
-                    to="/app"
-                    className={cn(
-                      'hidden lg:inline-flex items-center gap-2 px-4 py-2.5',
-                      'bg-muted border border-border text-foreground text-sm font-semibold rounded-xl',
-                      'hover:bg-primary/10 hover:border-primary/30 hover:text-primary',
-                      'transition-all duration-300'
-                    )}
-                  >
-                    <User className="w-4 h-4" />
-                    <span>بوابة العملاء</span>
-                  </Link>
-                </motion.div>
+                <Link 
+                  to="/app"
+                  className={cn(
+                    'hidden lg:inline-flex items-center gap-2 px-5 py-2.5',
+                    'bg-gray-100 text-gray-700 text-sm font-bold rounded-xl',
+                    'hover:bg-primary/10 hover:text-primary border border-gray-200',
+                    'transition-all duration-200'
+                  )}
+                >
+                  <User className="w-4 h-4" />
+                  <span>بوابة العملاء</span>
+                </Link>
 
                 {/* CTA Button - Desktop */}
-                <motion.div 
-                  whileHover={{ scale: 1.02 }} 
-                  whileTap={{ scale: 0.98 }}
+                <Link 
+                  to="/book-consultation"
+                  className={cn(
+                    'hidden lg:inline-flex items-center gap-2 px-6 py-2.5',
+                    'bg-gradient-to-l from-primary via-primary to-accent text-white text-sm font-bold rounded-xl',
+                    'hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02]',
+                    'transition-all duration-200 relative overflow-hidden'
+                  )}
                 >
-                  <Link 
-                    to="/book-consultation"
-                    className={cn(
-                      'hidden lg:inline-flex items-center gap-2 px-5 py-2.5',
-                      'bg-gradient-to-l from-primary via-primary-variant to-accent text-primary-foreground text-sm font-bold rounded-xl',
-                      'hover:shadow-lg hover:shadow-primary/30',
-                      'transition-all duration-300 relative overflow-hidden group'
-                    )}
-                  >
-                    <Headphones className="w-4 h-4" />
-                    <span>احجز استشارة</span>
-                    {/* Shine Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-l from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                  </Link>
-                </motion.div>
+                  <Headphones className="w-4 h-4" />
+                  <span>احجز استشارة</span>
+                </Link>
               </div>
             </div>
           </div>

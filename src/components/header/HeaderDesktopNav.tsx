@@ -5,7 +5,6 @@
 
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { HeaderDropdown } from './HeaderDropdown';
 import { headerConfig } from './config';
@@ -91,27 +90,17 @@ function NavLink({
     <Link
       to={href}
       className={cn(
-        'relative px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-300',
+        'relative px-4 py-2.5 text-sm font-bold rounded-xl transition-all duration-200',
         isActive 
-          ? 'text-primary bg-primary/10 shadow-sm' 
-          : 'text-foreground hover:text-primary hover:bg-muted/80'
+          ? 'text-primary bg-primary/10' 
+          : 'text-gray-700 hover:text-primary hover:bg-gray-100'
       )}
     >
-      <motion.span
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="relative z-10"
-      >
-        {children}
-      </motion.span>
+      {children}
       
       {/* Active Indicator */}
       {isActive && (
-        <motion.div
-          layoutId="activeNavIndicator"
-          className="absolute bottom-0 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full shadow-lg shadow-primary/30"
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
+        <span className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full" />
       )}
     </Link>
   );
