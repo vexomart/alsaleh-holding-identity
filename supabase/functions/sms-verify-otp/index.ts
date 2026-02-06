@@ -188,21 +188,40 @@ serve(async (req) => {
       `0${formattedPhone.slice(3)}`,     // 0555812567
       `+${formattedPhone}`,              // +966555812567
       formattedPhone.slice(3),           // 555812567
+      `+966${formattedPhone.slice(3)}`,  // +966555812567 (with plus)
     ];
+    
+    console.log("Searching for profile with phone formats:", phoneFormats);
     
     // Check if user exists by phone in profiles (try multiple formats)
     let existingProfile = null;
-    for (const phoneFormat of phoneFormats) {
-      const { data: profile } = await supabase
+    
+    // First, try using OR query for all formats at once (more efficient)
+    const { data: profileByPhone } = await supabase
+      .from("profiles")
+      .select("id, email, full_name, phone")
+      .or(phoneFormats.map(f => `phone.eq.${f}`).join(','))
+      .limit(1)
+      .maybeSingle();
+    
+    if (profileByPhone) {
+      existingProfile = profileByPhone;
+      console.log("Found existing profile:", profileByPhone.id, "phone:", profileByPhone.phone);
+    }
+    
+    // If not found by phone, also search by normalized phone in case of data inconsistency
+    if (!existingProfile) {
+      // Try LIKE search for partial match
+      const { data: profileByLike } = await supabase
         .from("profiles")
         .select("id, email, full_name, phone")
-        .eq("phone", phoneFormat)
+        .or(`phone.like.%${formattedPhone.slice(-9)}%,phone.like.%${formattedPhone.slice(3)}%`)
+        .limit(1)
         .maybeSingle();
       
-      if (profile) {
-        existingProfile = profile;
-        console.log("Found existing profile with phone format:", phoneFormat);
-        break;
+      if (profileByLike) {
+        existingProfile = profileByLike;
+        console.log("Found profile by LIKE search:", profileByLike.id);
       }
     }
 
