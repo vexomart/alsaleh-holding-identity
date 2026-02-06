@@ -328,20 +328,21 @@ export function ContractsManagement() {
 
       toast.success(isRTL ? 'تمت الموافقة على العقد بنجاح' : 'Contract approved successfully');
       
-      // Send email notification to customer
+      // Send email + SMS notification to customer
       if (selectedContract.customer?.email) {
         sendContractEmail({
           contractId: selectedContract.id,
           contractNumber: selectedContract.contract_number,
           customerEmail: selectedContract.customer.email,
           customerName: selectedContract.customer.full_name || selectedContract.customer.full_name_ar || '',
+          customerPhone: selectedContract.customer.phone || undefined,
           serviceName: selectedContract.service?.name || '',
           serviceNameAr: selectedContract.service?.name_ar || undefined,
           totalAmount: selectedContract.pricing_json?.total || 0,
           currency: selectedContract.pricing_json?.currency || 'SAR',
           eventType: 'admin_approved',
           signingUrl: `/app/contracts/${selectedContract.id}/sign`,
-        }).catch(err => console.error('Email notification failed:', err));
+        }).catch(err => console.error('Notification failed:', err));
       }
       
       setIsApproveOpen(false);
@@ -377,20 +378,21 @@ export function ContractsManagement() {
 
       toast.success(isRTL ? 'تم رفض العقد' : 'Contract rejected');
       
-      // Send rejection email notification to customer
+      // Send rejection email + SMS notification to customer
       if (selectedContract.customer?.email) {
         sendContractEmail({
           contractId: selectedContract.id,
           contractNumber: selectedContract.contract_number,
           customerEmail: selectedContract.customer.email,
           customerName: selectedContract.customer.full_name || selectedContract.customer.full_name_ar || '',
+          customerPhone: selectedContract.customer.phone || undefined,
           serviceName: selectedContract.service?.name || '',
           serviceNameAr: selectedContract.service?.name_ar || undefined,
           totalAmount: selectedContract.pricing_json?.total || 0,
           currency: selectedContract.pricing_json?.currency || 'SAR',
           eventType: 'rejected',
           rejectionReason: rejectionReason,
-        }).catch(err => console.error('Email notification failed:', err));
+        }).catch(err => console.error('Notification failed:', err));
       }
       
       setIsRejectOpen(false);

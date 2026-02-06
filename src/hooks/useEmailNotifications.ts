@@ -1,6 +1,6 @@
 /**
- * Email Notifications Hook
- * Provides easy access to email notification functions with loading states
+ * Email + SMS Notifications Hook
+ * Provides easy access to notification functions with loading states
  */
 
 import { useState, useCallback } from 'react';
@@ -24,10 +24,10 @@ export function useEmailNotifications() {
   const [isSending, setIsSending] = useState(false);
 
   /**
-   * Send order status notification
+   * Send order status notification (email + SMS)
    */
   const notifyOrderStatus = useCallback(async (
-    data: Omit<OrderEmailData, 'customerEmail' | 'customerName'> & { customerId: string }
+    data: Omit<OrderEmailData, 'customerEmail' | 'customerName' | 'customerPhone'> & { customerId: string }
   ) => {
     setIsSending(true);
     try {
@@ -41,10 +41,11 @@ export function useEmailNotifications() {
         ...data,
         customerEmail: profile.email,
         customerName: profile.name,
+        customerPhone: profile.phone || undefined,
       });
 
       if (result.success) {
-        console.log('Order notification sent successfully');
+        console.log('Order notification sent successfully (email + SMS)');
       }
       return result;
     } catch (err) {
@@ -56,10 +57,10 @@ export function useEmailNotifications() {
   }, []);
 
   /**
-   * Send contract notification
+   * Send contract notification (email + SMS)
    */
   const notifyContract = useCallback(async (
-    data: Omit<ContractEmailData, 'customerEmail' | 'customerName'> & { customerId: string }
+    data: Omit<ContractEmailData, 'customerEmail' | 'customerName' | 'customerPhone'> & { customerId: string }
   ) => {
     setIsSending(true);
     try {
@@ -73,10 +74,11 @@ export function useEmailNotifications() {
         ...data,
         customerEmail: profile.email,
         customerName: profile.name,
+        customerPhone: profile.phone || undefined,
       });
 
       if (result.success) {
-        console.log('Contract notification sent successfully');
+        console.log('Contract notification sent successfully (email + SMS)');
       }
       return result;
     } catch (err) {
@@ -88,10 +90,10 @@ export function useEmailNotifications() {
   }, []);
 
   /**
-   * Send invoice notification
+   * Send invoice notification (email + SMS)
    */
   const notifyInvoice = useCallback(async (
-    data: Omit<InvoiceEmailData, 'customerEmail' | 'customerName'> & { customerId: string }
+    data: Omit<InvoiceEmailData, 'customerEmail' | 'customerName' | 'customerPhone'> & { customerId: string }
   ) => {
     setIsSending(true);
     try {
@@ -105,10 +107,11 @@ export function useEmailNotifications() {
         ...data,
         customerEmail: profile.email,
         customerName: profile.name,
+        customerPhone: profile.phone || undefined,
       });
 
       if (result.success) {
-        console.log('Invoice notification sent successfully');
+        console.log('Invoice notification sent successfully (email + SMS)');
       }
       return result;
     } catch (err) {
@@ -120,10 +123,10 @@ export function useEmailNotifications() {
   }, []);
 
   /**
-   * Send finance notification
+   * Send finance notification (email + SMS)
    */
   const notifyFinance = useCallback(async (
-    data: Omit<FinanceEmailData, 'customerEmail' | 'customerName'> & { customerId: string }
+    data: Omit<FinanceEmailData, 'customerEmail' | 'customerName' | 'customerPhone'> & { customerId: string }
   ) => {
     setIsSending(true);
     try {
@@ -137,10 +140,11 @@ export function useEmailNotifications() {
         ...data,
         customerEmail: profile.email,
         customerName: profile.name,
+        customerPhone: profile.phone || undefined,
       });
 
       if (result.success) {
-        console.log('Finance notification sent successfully');
+        console.log('Finance notification sent successfully (email + SMS)');
       }
       return result;
     } catch (err) {
