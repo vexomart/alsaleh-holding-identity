@@ -157,26 +157,70 @@
        );
      }
  
-     const formattedPhone = phoneValidation.formatted;
- 
-     // Rate limiting: Check recent OTP requests
-     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-     const { count: recentCount } = await supabase
-       .from("sms_otp_codes")
-       .select("*", { count: "exact", head: true })
-       .eq("phone", formattedPhone)
-       .gte("created_at", fiveMinutesAgo);
- 
-     if (recentCount && recentCount >= 3) {
-       return new Response(
-         JSON.stringify({
-           success: false,
-           error: "تم تجاوز الحد الأقصى للطلبات. يرجى الانتظار 5 دقائق.",
-           error_en: "Rate limit exceeded. Please wait 5 minutes.",
-         }),
-         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-       );
-     }
+      const formattedPhone = phoneValidation.formatted;
+
+      // For login purpose, check if user exists first
+      if (purpose === "login") {
+        // Try multiple phone formats to find existing profile
+        const phoneFormats = [
+          formattedPhone,                    // 966555812567
+          `0${formattedPhone.slice(3)}`,     // 0555812567
+          `+${formattedPhone}`,              // +966555812567
+          formattedPhone.slice(3),           // 555812567
+        ];
+        
+        let userExists = false;
+        for (const phoneFormat of phoneFormats) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("phone", phoneFormat)
+            .maybeSingle();
+          
+          if (profile) {
+            userExists = true;
+            console.log("Found user with phone format:", phoneFormat);
+            break;
+          }
+        }
+        
+        if (!userExists) {
+          // Also check synthetic email
+          const syntheticEmail = `phone_${formattedPhone}@ash.local`;
+          const { data: existingUser } = await supabase.auth.admin.listUsers();
+          const userByEmail = existingUser?.users?.find(u => u.email === syntheticEmail);
+          
+          if (!userByEmail) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: "لا يوجد حساب مرتبط بهذا الرقم. يرجى إنشاء حساب جديد.",
+                error_en: "No account found with this phone. Please register first.",
+              }),
+              { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
+        }
+      }
+
+      // Rate limiting: Check recent OTP requests
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const { count: recentCount } = await supabase
+        .from("sms_otp_codes")
+        .select("*", { count: "exact", head: true })
+        .eq("phone", formattedPhone)
+        .gte("created_at", fiveMinutesAgo);
+
+      if (recentCount && recentCount >= 3) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "تم تجاوز الحد الأقصى للطلبات. يرجى الانتظار 5 دقائق.",
+            error_en: "Rate limit exceeded. Please wait 5 minutes.",
+          }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
  
      // Generate OTP
      const otp = generateOTP();
