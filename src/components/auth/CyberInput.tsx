@@ -52,31 +52,32 @@ export function CyberInput({
         
         {/* Input Container */}
         <div className={cn(
-          "relative h-14 sm:h-[60px] rounded-xl sm:rounded-2xl transition-all duration-300",
-          "bg-slate-900/60 border",
+          "relative h-14 sm:h-16 rounded-xl sm:rounded-2xl transition-all duration-300",
+          "bg-slate-900/70 border-2",
           error 
-            ? "border-red-500/50" 
+            ? "border-red-500/60" 
             : success 
-              ? "border-emerald-500/50"
+              ? "border-emerald-500/60"
               : isFocused 
-                ? "border-cyan-500/60 bg-slate-900/80" 
-                : "border-white/10 hover:border-cyan-500/30 hover:bg-slate-900/70"
+                ? "border-cyan-500/70 bg-slate-900/90 shadow-lg shadow-cyan-500/10" 
+                : "border-white/15 hover:border-cyan-500/40 hover:bg-slate-900/80"
         )}>
-          {/* Icon Container - Right side (start in RTL) - Perfectly centered */}
+          {/* Icon Container - Right side (start in RTL) */}
           <div 
             className={cn(
-              "absolute start-4 sm:start-5 top-1/2 -translate-y-1/2",
-              "flex items-center justify-center transition-all duration-200",
+              "absolute start-3 sm:start-4 top-1/2 -translate-y-1/2",
+              "w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl",
+              "flex items-center justify-center transition-all duration-300",
               error 
-                ? "text-red-400"
+                ? "bg-red-500/15 text-red-400"
                 : success 
-                  ? "text-emerald-400"
+                  ? "bg-emerald-500/15 text-emerald-400"
                   : isFocused 
-                    ? "text-cyan-400" 
-                    : "text-white/40 group-hover:text-cyan-400/60"
+                    ? "bg-cyan-500/20 text-cyan-400" 
+                    : "bg-white/5 text-white/50 group-hover:bg-cyan-500/10 group-hover:text-cyan-400/70"
             )}
           >
-            <span className="[&>svg]:w-5 [&>svg]:h-5">
+            <span className="[&>svg]:w-5 [&>svg]:h-5 sm:[&>svg]:w-[22px] sm:[&>svg]:h-[22px]">
               {icon}
             </span>
           </div>
@@ -85,14 +86,14 @@ export function CyberInput({
           <motion.label
             htmlFor={inputId}
             className={cn(
-              "absolute start-[52px] sm:start-[60px] pointer-events-none font-medium transition-colors duration-200",
+              "absolute start-[54px] sm:start-[62px] pointer-events-none font-medium transition-colors duration-200",
               isFloating
-                ? "text-[10px] sm:text-xs text-cyan-400/70"
-                : "text-xs sm:text-sm text-white/40"
+                ? "text-[10px] sm:text-xs text-cyan-400/80"
+                : "text-sm sm:text-base text-white/50"
             )}
             animate={{
-              y: isFloating ? -8 : 0,
-              top: isFloating ? '28%' : '50%',
+              y: isFloating ? -10 : 0,
+              top: isFloating ? '24%' : '50%',
             }}
             initial={false}
             transition={{ duration: 0.2, ease: 'easeOut' }}
@@ -107,9 +108,9 @@ export function CyberInput({
             value={value}
             className={cn(
               "absolute inset-0 w-full h-full bg-transparent",
-              "text-white text-sm sm:text-base font-medium",
-              "ps-[52px] sm:ps-[60px] pe-4 sm:pe-5 pt-5 sm:pt-6 pb-2",
-              "placeholder:text-transparent focus:placeholder:text-white/20",
+              "text-white text-base sm:text-lg font-medium tracking-wide",
+              "ps-[54px] sm:ps-[62px] pe-12 sm:pe-14 pt-5 sm:pt-6 pb-2",
+              "placeholder:text-transparent focus:placeholder:text-white/30",
               "outline-none border-none",
               "caret-cyan-400",
               className
@@ -120,12 +121,12 @@ export function CyberInput({
           />
           
           {/* Status Indicator */}
-          <div className="absolute end-3 sm:end-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+          <div className="absolute end-3 sm:end-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
             {success && !error && (
               <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-emerald-400"
+                className="text-emerald-400 bg-emerald-500/10 p-1.5 rounded-lg"
               >
                 <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.div>
@@ -137,14 +138,16 @@ export function CyberInput({
           {isFocused && (
             <>
               <motion.div 
-                className="absolute top-0 start-0 w-4 h-4 border-t border-s border-cyan-500/50"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                className="absolute top-0 start-0 w-5 h-5 border-t-2 border-s-2 border-cyan-500/60 rounded-tl-xl"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
               />
               <motion.div 
-                className="absolute bottom-0 end-0 w-4 h-4 border-b border-e border-cyan-500/50"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                className="absolute bottom-0 end-0 w-5 h-5 border-b-2 border-e-2 border-cyan-500/60 rounded-br-xl"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
               />
             </>
           )}
