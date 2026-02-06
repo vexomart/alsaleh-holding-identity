@@ -172,6 +172,40 @@ const Login = () => {
     const response = await verifyOtp(phone, otpCode, 'login');
 
     if (response.success) {
+      // If we have an action_link (magic link), use it to authenticate
+      if (response.action_link) {
+        try {
+          // Extract the token hash from the action link
+          const url = new URL(response.action_link);
+          const tokenHash = url.searchParams.get('token');
+          const type = url.searchParams.get('type') || 'magiclink';
+          
+          if (tokenHash) {
+            // Verify the OTP token to get session
+            const { data, error } = await supabase.auth.verifyOtp({
+              token_hash: tokenHash,
+              type: type as any,
+            });
+            
+            if (error) {
+              console.error('Error verifying magic link:', error);
+              // Fallback: try direct session refresh
+              await supabase.auth.refreshSession();
+            }
+            
+            if (data?.session) {
+              toast.success('تم تسجيل الدخول بنجاح');
+              navigate('/app');
+              return;
+            }
+          }
+        } catch (err) {
+          console.error('Error processing magic link:', err);
+        }
+      }
+      
+      // Fallback: refresh session and navigate
+      await supabase.auth.refreshSession();
       toast.success('تم تسجيل الدخول بنجاح');
       navigate('/app');
     } else {

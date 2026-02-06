@@ -8,13 +8,18 @@
    expires_in?: number;
  }
  
- interface VerifyOtpResult {
-   success: boolean;
-   message?: string;
-   error?: string;
-   session_token?: string;
-   remaining_attempts?: number;
- }
+interface VerifyOtpResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+  session_token?: string;
+  remaining_attempts?: number;
+  user_id?: string;
+  email?: string;
+  is_new_user?: boolean;
+  magic_link_token?: string;
+  action_link?: string;
+}
  
  interface SendNotificationResult {
    success: boolean;
