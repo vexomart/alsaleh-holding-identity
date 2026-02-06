@@ -59,6 +59,11 @@ export default defineConfig(({ mode }) => ({
       "framer-motion",
       "react-router-dom",
       "react-helmet-async",
+      "sonner",
+      "input-otp",
+      "cmdk",
+      "vaul",
+      "@capacitor/core",
       // All Radix UI packages
       "@radix-ui/react-tooltip",
       "@radix-ui/react-primitive",
@@ -89,7 +94,7 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   optimizeDeps: {
-    force: mode === 'development',
+    force: true, // Always force rebuild to prevent React duplication
     esbuildOptions: {
       define: {
         global: 'globalThis',
