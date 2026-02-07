@@ -248,7 +248,7 @@ export function RoleDetailSheet({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent 
         side={isRTL ? "left" : "right"} 
-        className="w-full sm:max-w-lg p-0 flex flex-col"
+        className="w-full sm:max-w-lg p-0 flex flex-col bg-[#0a0e1a] border-slate-800"
       >
         {/* Header */}
         {config && (
@@ -307,7 +307,7 @@ export function RoleDetailSheet({
         )}
 
         {/* Permissions List */}
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1 p-4 bg-[#0f1629]">
           <div className="space-y-3">
             {Object.entries(permissionsByModule).map(([module, modulePerms]) => {
               const ModuleIcon = moduleIcons[module] || Settings;
@@ -321,33 +321,39 @@ export function RoleDetailSheet({
                   key={module}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-border overflow-hidden"
+                  className="rounded-xl border border-slate-700 overflow-hidden bg-slate-800/30"
                 >
                   {/* Module Header */}
                   <button
                     onClick={() => toggleModule(module)}
-                    className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors"
+                    className="w-full flex items-center justify-between p-4 hover:bg-slate-700/50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <ModuleIcon className="h-4 w-4 text-primary" />
+                      <div className="p-2 rounded-lg bg-blue-500/20">
+                        <ModuleIcon className="h-4 w-4 text-blue-400" />
                       </div>
                       <div className="text-start">
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white">
                           {moduleNames[module]?.[isRTL ? "ar" : "en"] || module}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-slate-400">
                           {moduleAssigned}/{modulePerms.length} {isRTL ? "مفعّل" : "enabled"}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant={allEnabled ? "default" : noneEnabled ? "outline" : "secondary"}>
-                        {percentage}%
+                      <Badge 
+                        variant="outline"
+                        className={cn(
+                          "border-slate-600 text-slate-300",
+                          allEnabled && "bg-emerald-500/20 border-emerald-500/50 text-emerald-400"
+                        )}
+                      >
+                        {Math.round((moduleAssigned / modulePerms.length) * 100)}%
                       </Badge>
                       <motion.div
                         animate={{ rotate: isExpanded ? 180 : 0 }}
-                        className="text-muted-foreground"
+                        className="text-slate-400"
                       >
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -368,13 +374,13 @@ export function RoleDetailSheet({
                       >
                         <div className="p-4 pt-0 space-y-2">
                           {/* Quick Actions */}
-                          <div className="flex items-center gap-2 pb-2 border-b border-border">
+                          <div className="flex items-center gap-2 pb-2 border-b border-slate-700">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => toggleAllInModule(module, true)}
                               disabled={allEnabled}
-                              className="text-xs"
+                              className="text-xs text-slate-300 hover:text-white hover:bg-slate-700"
                             >
                               <CheckCircle2 className="h-3 w-3 me-1" />
                               {isRTL ? "تفعيل الكل" : "Enable All"}
@@ -384,7 +390,7 @@ export function RoleDetailSheet({
                               size="sm"
                               onClick={() => toggleAllInModule(module, false)}
                               disabled={noneEnabled}
-                              className="text-xs"
+                              className="text-xs text-slate-300 hover:text-white hover:bg-slate-700"
                             >
                               <XCircle className="h-3 w-3 me-1" />
                               {isRTL ? "تعطيل الكل" : "Disable All"}
@@ -402,21 +408,21 @@ export function RoleDetailSheet({
                                 layout
                                 className={cn(
                                   "flex items-center justify-between p-3 rounded-lg transition-colors",
-                                  hasPerm ? "bg-primary/5" : "bg-muted/30"
+                                  hasPerm ? "bg-blue-500/10" : "bg-slate-800/50"
                                 )}
                               >
                                 <div className="flex items-center gap-3 min-w-0">
                                   {hasPerm ? (
-                                    <Unlock className="h-4 w-4 text-primary flex-shrink-0" />
+                                    <Unlock className="h-4 w-4 text-blue-400 flex-shrink-0" />
                                   ) : (
-                                    <Lock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                                    <Lock className="h-4 w-4 text-slate-500 flex-shrink-0" />
                                   )}
                                   <div className="min-w-0">
-                                    <p className="font-medium text-sm truncate">
+                                    <p className="font-medium text-sm truncate text-slate-200">
                                       {getPermissionLabel(perm)}
                                     </p>
                                     {perm.description && (
-                                      <p className="text-xs text-muted-foreground truncate">
+                                      <p className="text-xs text-slate-500 truncate">
                                         {perm.description}
                                       </p>
                                     )}
@@ -424,11 +430,12 @@ export function RoleDetailSheet({
                                 </div>
                                 
                                 {isLoading ? (
-                                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                  <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
                                 ) : (
                                   <Switch
                                     checked={hasPerm}
                                     onCheckedChange={() => handleToggle(perm.id, hasPerm)}
+                                    className="data-[state=checked]:bg-blue-600"
                                   />
                                 )}
                               </motion.div>
@@ -445,8 +452,12 @@ export function RoleDetailSheet({
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-4 border-t border-border">
-          <Button onClick={onClose} variant="outline" className="w-full">
+        <div className="p-4 border-t border-slate-700 bg-[#0a0e1a]">
+          <Button 
+            onClick={onClose} 
+            variant="outline" 
+            className="w-full bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white"
+          >
             {isRTL ? "إغلاق" : "Close"}
           </Button>
         </div>

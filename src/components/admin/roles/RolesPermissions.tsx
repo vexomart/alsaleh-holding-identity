@@ -1,13 +1,12 @@
 /**
- * RolesPermissions Page - Redesigned Enterprise UI
+ * RolesPermissions Page - Dark Theme Enterprise UI
  * Modern roles and permissions management interface
  */
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -16,13 +15,10 @@ import {
   Shield, 
   Users,
   Key,
-  Settings,
   RefreshCw,
   CheckCircle2,
   Grid3X3,
-  LayoutGrid,
-  Zap,
-  Activity
+  LayoutGrid
 } from "lucide-react";
 
 import { RoleCard, roleConfigs } from "./RoleCard";
@@ -176,34 +172,34 @@ export function RolesPermissions() {
       label: isRTL ? "الأدوار" : "Roles",
       value: roles.length,
       icon: Shield,
-      color: "from-blue-500 to-indigo-500",
-      bgColor: "bg-blue-500/10"
+      gradient: "from-blue-500 to-indigo-500",
+      iconColor: "text-blue-400"
     },
     {
       label: isRTL ? "الصلاحيات" : "Permissions",
       value: permissions.length,
       icon: Key,
-      color: "from-emerald-500 to-teal-500",
-      bgColor: "bg-emerald-500/10"
+      gradient: "from-emerald-500 to-teal-500",
+      iconColor: "text-emerald-400"
     },
     {
       label: isRTL ? "صلاحيات مُعينة" : "Assigned",
       value: rolePermissions.length,
       icon: CheckCircle2,
-      color: "from-amber-500 to-orange-500",
-      bgColor: "bg-amber-500/10"
+      gradient: "from-amber-500 to-orange-500",
+      iconColor: "text-amber-400"
     },
     {
       label: isRTL ? "المستخدمين" : "Users",
       value: Object.values(userCounts).reduce((a, b) => a + b, 0),
       icon: Users,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-500/10"
+      gradient: "from-purple-500 to-pink-500",
+      iconColor: "text-purple-400"
     }
   ], [isRTL, roles.length, permissions.length, rolePermissions.length, userCounts]);
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-[#0a0e1a] p-4 lg:p-6 space-y-6">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -212,14 +208,14 @@ export function RolesPermissions() {
       >
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary to-primary/80">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
               <Shield className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+              <h1 className="text-2xl lg:text-3xl font-bold text-white">
                 {isRTL ? "الأدوار والصلاحيات" : "Roles & Permissions"}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-slate-400">
                 {isRTL 
                   ? "إدارة أدوار المستخدمين وصلاحياتهم في النظام"
                   : "Manage user roles and their permissions in the system"}
@@ -231,10 +227,10 @@ export function RolesPermissions() {
         <div className="flex items-center gap-3">
           {/* Live Status */}
           <div className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium",
+            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border",
             isConnected 
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
-              : "bg-red-500/10 text-red-600 dark:text-red-400"
+              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" 
+              : "bg-red-500/10 text-red-400 border-red-500/30"
           )}>
             <span className={cn(
               "w-2 h-2 rounded-full",
@@ -248,7 +244,7 @@ export function RolesPermissions() {
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="gap-2"
+            className="gap-2 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white"
           >
             <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
             <span className="hidden sm:inline">{isRTL ? "تحديث" : "Refresh"}</span>
@@ -265,17 +261,17 @@ export function RolesPermissions() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
           >
-            <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow group">
+            <Card className="relative overflow-hidden bg-[#0f1629] border-slate-800 hover:border-slate-700 transition-all group">
               <div className={cn(
                 "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
-                stat.color
+                stat.gradient
               )} />
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    <p className="text-xs text-slate-400">{stat.label}</p>
                     <motion.p 
-                      className="text-2xl lg:text-3xl font-bold mt-1"
+                      className="text-2xl lg:text-3xl font-bold mt-1 text-white"
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.1 + 0.2 }}
@@ -283,11 +279,8 @@ export function RolesPermissions() {
                       {stat.value}
                     </motion.p>
                   </div>
-                  <div className={cn(
-                    "p-3 rounded-xl transition-transform group-hover:scale-110",
-                    stat.bgColor
-                  )}>
-                    <stat.icon className={cn("h-5 w-5 bg-gradient-to-br bg-clip-text", stat.color)} style={{ color: 'currentColor' }} />
+                  <div className="p-3 rounded-xl bg-slate-800/50 transition-transform group-hover:scale-110">
+                    <stat.icon className={cn("h-5 w-5", stat.iconColor)} />
                   </div>
                 </div>
               </CardContent>
@@ -303,12 +296,18 @@ export function RolesPermissions() {
         transition={{ delay: 0.4 }}
       >
         <Tabs defaultValue="roles" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md bg-muted/50 p-1 rounded-xl">
-            <TabsTrigger value="roles" className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm">
+          <TabsList className="grid w-full grid-cols-2 max-w-md bg-slate-800/50 p-1 rounded-xl border border-slate-700">
+            <TabsTrigger 
+              value="roles" 
+              className="gap-2 rounded-lg text-slate-400 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
               <LayoutGrid className="h-4 w-4" />
               {isRTL ? "الأدوار" : "Roles"}
             </TabsTrigger>
-            <TabsTrigger value="matrix" className="gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm">
+            <TabsTrigger 
+              value="matrix" 
+              className="gap-2 rounded-lg text-slate-400 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
               <Grid3X3 className="h-4 w-4" />
               {isRTL ? "مصفوفة الصلاحيات" : "Permission Matrix"}
             </TabsTrigger>
@@ -319,7 +318,7 @@ export function RolesPermissions() {
             {isLoading ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-48 rounded-2xl bg-muted animate-pulse" />
+                  <div key={i} className="h-48 rounded-2xl bg-slate-800 animate-pulse" />
                 ))}
               </div>
             ) : (
@@ -345,7 +344,7 @@ export function RolesPermissions() {
 
           {/* Permission Matrix */}
           <TabsContent value="matrix" className="mt-6">
-            <Card className="border-0 shadow-lg">
+            <Card className="bg-[#0f1629] border-slate-800">
               <CardContent className="p-4 lg:p-6">
                 <PermissionMatrix
                   permissions={permissions}

@@ -1,11 +1,10 @@
 /**
- * PermissionMatrix Component - Visual Permission Grid
+ * PermissionMatrix Component - Visual Permission Grid (Dark Theme)
  * Shows all permissions vs roles in a matrix view
  */
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -21,8 +20,6 @@ import { cn } from "@/lib/utils";
 import { 
   Search, 
   Filter,
-  CheckCircle2,
-  XCircle,
   Shield,
   Key,
   Users,
@@ -41,7 +38,6 @@ import {
   PenTool,
   Loader2
 } from "lucide-react";
-import { toast } from "sonner";
 
 interface Permission {
   id: string;
@@ -205,8 +201,8 @@ export function PermissionMatrix({
     return (
       <div className="flex items-center justify-center h-96">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+          <p className="text-sm text-slate-400">
             {isRTL ? "جاري تحميل البيانات..." : "Loading data..."}
           </p>
         </div>
@@ -220,12 +216,12 @@ export function PermissionMatrix({
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             placeholder={isRTL ? "بحث في الصلاحيات..." : "Search permissions..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="ps-10"
+            className="ps-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-blue-500"
           />
         </div>
 
@@ -236,7 +232,12 @@ export function PermissionMatrix({
               variant={selectedModule === null ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedModule(null)}
-              className="whitespace-nowrap"
+              className={cn(
+                "whitespace-nowrap",
+                selectedModule === null 
+                  ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                  : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+              )}
             >
               <Filter className="h-4 w-4 me-1" />
               {isRTL ? "الكل" : "All"}
@@ -247,12 +248,14 @@ export function PermissionMatrix({
               return (
                 <Button
                   key={module}
-                  variant={isSelected ? "default" : "outline"}
+                  variant="outline"
                   size="sm"
                   onClick={() => setSelectedModule(isSelected ? null : module)}
                   className={cn(
                     "whitespace-nowrap",
-                    !isSelected && moduleColors[module]
+                    isSelected 
+                      ? "bg-blue-600 hover:bg-blue-700 text-white border-blue-600" 
+                      : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                   )}
                 >
                   <Icon className="h-4 w-4 me-1" />
@@ -266,15 +269,15 @@ export function PermissionMatrix({
       </div>
 
       {/* Matrix Table */}
-      <div className="relative rounded-xl border border-border overflow-hidden bg-card">
+      <div className="relative rounded-xl border border-slate-700 overflow-hidden bg-slate-900/50">
         <ScrollArea className="w-full">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50 hover:bg-muted/50">
-                <TableHead className="sticky start-0 z-20 bg-muted/50 min-w-[200px] border-e">
+              <TableRow className="bg-slate-800/80 hover:bg-slate-800/80 border-slate-700">
+                <TableHead className="sticky start-0 z-20 bg-slate-800/80 min-w-[200px] border-e border-slate-700">
                   <div className="flex items-center gap-2">
-                    <Key className="h-4 w-4 text-primary" />
-                    <span className="font-semibold">
+                    <Key className="h-4 w-4 text-blue-400" />
+                    <span className="font-semibold text-slate-200">
                       {isRTL ? "الصلاحية" : "Permission"}
                     </span>
                   </div>
@@ -290,7 +293,7 @@ export function PermissionMatrix({
                         )}>
                           <Icon className="h-4 w-4 text-white" />
                         </div>
-                        <span className="text-xs font-medium">
+                        <span className="text-xs font-medium text-slate-300">
                           {roleNames[role]?.[isRTL ? "ar" : "en"] || role}
                         </span>
                       </div>
@@ -304,7 +307,7 @@ export function PermissionMatrix({
                 {filteredPermissions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={roleOrder.length + 1} className="h-32 text-center">
-                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <div className="flex flex-col items-center gap-2 text-slate-400">
                         <Search className="h-8 w-8 opacity-50" />
                         <p>{isRTL ? "لا توجد صلاحيات مطابقة" : "No matching permissions"}</p>
                       </div>
@@ -320,9 +323,9 @@ export function PermissionMatrix({
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: isRTL ? -20 : 20 }}
                         transition={{ duration: 0.2, delay: index * 0.02 }}
-                        className="group hover:bg-muted/30 transition-colors"
+                        className="group hover:bg-slate-800/50 transition-colors border-slate-700/50"
                       >
-                        <TableCell className="sticky start-0 z-10 bg-card group-hover:bg-muted/30 border-e transition-colors">
+                        <TableCell className="sticky start-0 z-10 bg-slate-900/80 group-hover:bg-slate-800/80 border-e border-slate-700/50 transition-colors">
                           <div className="flex items-center gap-3">
                             <div className={cn(
                               "p-1.5 rounded-lg border",
@@ -331,10 +334,10 @@ export function PermissionMatrix({
                               <ModuleIcon className="h-3.5 w-3.5" />
                             </div>
                             <div>
-                              <p className="font-medium text-sm">
+                              <p className="font-medium text-sm text-slate-200">
                                 {getPermissionLabel(permission)}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-slate-500">
                                 {permission.name}
                               </p>
                             </div>
@@ -349,7 +352,7 @@ export function PermissionMatrix({
                             <TableCell key={role} className="text-center">
                               <div className="flex items-center justify-center">
                                 {isUpdating ? (
-                                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                  <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
                                 ) : (
                                   <motion.div
                                     whileTap={{ scale: 0.9 }}
@@ -358,7 +361,7 @@ export function PermissionMatrix({
                                     <Switch
                                       checked={hasPerm}
                                       onCheckedChange={() => handleToggle(role, permission.id, hasPerm)}
-                                      className="data-[state=checked]:bg-primary"
+                                      className="data-[state=checked]:bg-blue-600"
                                     />
                                   </motion.div>
                                 )}
@@ -378,7 +381,7 @@ export function PermissionMatrix({
       </div>
 
       {/* Summary */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground px-1">
+      <div className="flex items-center justify-between text-sm text-slate-400 px-1">
         <span>
           {isRTL 
             ? `عرض ${filteredPermissions.length} من ${permissions.length} صلاحية`
