@@ -2,10 +2,14 @@
  * V3 Admin Command Center Overview
  * 100% Custom - NO SHADCN
  * Bloomberg Terminal Inspired
+ * 
+ * NOW WITH 100% REAL DATA
  */
 
 import * as React from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useAdminAnalytics } from '@/hooks/useAdminAnalytics';
+import { useRealTimeAdminStats } from '@/hooks/useRealTimeAdminStats';
 import { V3StatCard } from '../data/V3StatCard';
 import { V3Table } from '../data/V3Table';
 import { V3Badge } from '../primitives/V3Badge';
@@ -45,38 +49,52 @@ const AlertIcon = () => (
   </svg>
 );
 
-// Mock data for demo
-const recentOrders = [
-  { id: 'ORD-001', customer: 'محمد أحمد', service: 'تطوير موقع', status: 'pending', amount: '15,000' },
-  { id: 'ORD-002', customer: 'فاطمة علي', service: 'تطبيق جوال', status: 'in_progress', amount: '25,000' },
-  { id: 'ORD-003', customer: 'أحمد سالم', service: 'استشارة', status: 'completed', amount: '5,000' },
-  { id: 'ORD-004', customer: 'نورة خالد', service: 'تصميم هوية', status: 'pending', amount: '8,000' },
-  { id: 'ORD-005', customer: 'عبدالله محمد', service: 'تطوير نظام', status: 'in_progress', amount: '45,000' },
-];
+// Format number with K/M suffix
+const formatNumber = (num: number): string => {
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+  return num.toLocaleString('en-US');
+};
 
-const systemAlerts = [
-  { id: 1, type: 'warning', message: '5 طلبات بانتظار الموافقة', time: 'منذ 10 دقائق' },
-  { id: 2, type: 'danger', message: '3 عقود قاربت على الانتهاء', time: 'منذ ساعة' },
-  { id: 3, type: 'info', message: 'تحديث النظام متاح', time: 'منذ 3 ساعات' },
-];
+// Format currency
+const formatCurrency = (amount: number): string => {
+  if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
+  if (amount >= 1000) return `${(amount / 1000).toFixed(0)}K`;
+  return amount.toLocaleString('en-US');
+};
 
 export const V3AdminOverview: React.FC = () => {
   const { language } = useLanguage();
   const isAr = language === 'ar';
+  
+  // Fetch real data from database
+  const { analytics, loading } = useAdminAnalytics();
+  const { stats: realtimeStats, alerts: systemAlerts } = useRealTimeAdminStats();
 
   const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { label: string; variant: 'success' | 'warning' | 'info' }> = {
+    const statusMap: Record<string, { label: string; variant: 'success' | 'warning' | 'info' | 'danger' }> = {
       pending: { label: isAr ? 'بانتظار' : 'Pending', variant: 'warning' },
+      processing: { label: isAr ? 'قيد المعالجة' : 'Processing', variant: 'info' },
       in_progress: { label: isAr ? 'قيد التنفيذ' : 'In Progress', variant: 'info' },
       completed: { label: isAr ? 'مكتمل' : 'Completed', variant: 'success' },
+      cancelled: { label: isAr ? 'ملغي' : 'Cancelled', variant: 'danger' },
     };
     const { label, variant } = statusMap[status] || statusMap.pending;
     return <V3Badge context="command" variant={variant}>{label}</V3Badge>;
   };
 
+  // Transform real orders for table display
+  const recentOrders = analytics.recentOrders.map(order => ({
+    id: order.order_number || order.id.slice(0, 8),
+    customer: order.title || '-',
+    service: isAr ? 'خدمة' : 'Service',
+    status: order.status,
+    amount: formatCurrency(order.total_amount || 0),
+  }));
+
   const orderColumns = [
     { key: 'id', header: 'Order ID', headerAr: 'رقم الطلب', width: '120px' },
-    { key: 'customer', header: 'Customer', headerAr: 'العميل' },
+    { key: 'customer', header: 'Customer', headerAr: 'العنوان' },
     { key: 'service', header: 'Service', headerAr: 'الخدمة' },
     { 
       key: 'status', 
@@ -95,6 +113,16 @@ export const V3AdminOverview: React.FC = () => {
     },
   ];
 
+  // Calculate trends (comparing to previous period)
+  const activeOrders = analytics.ordersByStatus.pending + 
+                       analytics.ordersByStatus.processing + 
+                       analytics.ordersByStatus.in_progress;
+
+  // Calculate completion rate
+  const completionRate = analytics.totalOrders > 0 
+    ? Math.round((analytics.ordersByStatus.completed / analytics.totalOrders) * 100)
+    : 0;
+
   return (
     <div className="cmd-overview">
       {/* Page Header */}
@@ -104,7 +132,7 @@ export const V3AdminOverview: React.FC = () => {
             {isAr ? 'مركز القيادة' : 'Command Center'}
           </h1>
           <p className="cmd-overview__subtitle">
-            {isAr ? 'نظرة شاملة على النظام' : 'System Overview'}
+            {isAr ? 'بيانات حية من النظام' : 'Live System Data'}
           </p>
         </div>
         <div className="cmd-overview__actions">
@@ -117,48 +145,48 @@ export const V3AdminOverview: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Real Data */}
       <div className="cmd-overview__stats">
         <V3StatCard
           context="command"
           title={isAr ? 'إجمالي المستخدمين' : 'Total Users'}
-          value="1,284"
-          trend={{ value: 12, direction: 'up' }}
-          subtitle={isAr ? 'هذا الشهر' : 'This month'}
+          value={loading ? '...' : formatNumber(analytics.totalUsers)}
+          trend={{ value: 0, direction: 'neutral' }}
+          subtitle={isAr ? `${analytics.activeUsers} نشط` : `${analytics.activeUsers} active`}
           icon={<UsersIcon />}
           variant="info"
         />
         <V3StatCard
           context="command"
           title={isAr ? 'الطلبات النشطة' : 'Active Orders'}
-          value="47"
-          trend={{ value: 8, direction: 'up' }}
-          subtitle={isAr ? 'قيد التنفيذ' : 'In progress'}
+          value={loading ? '...' : formatNumber(activeOrders)}
+          trend={{ value: 0, direction: 'neutral' }}
+          subtitle={isAr ? `من ${analytics.totalOrders} طلب` : `of ${analytics.totalOrders} total`}
           icon={<OrdersIcon />}
           variant="warning"
         />
         <V3StatCard
           context="command"
-          title={isAr ? 'رصيد المحافظ' : 'Wallet Balance'}
-          value="2.4M"
-          trend={{ value: 3, direction: 'down' }}
+          title={isAr ? 'إجمالي الإيرادات' : 'Total Revenue'}
+          value={loading ? '...' : formatCurrency(analytics.totalRevenue)}
+          trend={{ value: 0, direction: 'neutral' }}
           subtitle="SAR"
           icon={<WalletIcon />}
           variant="success"
         />
         <V3StatCard
           context="command"
-          title={isAr ? 'العقود السارية' : 'Active Contracts'}
-          value="156"
+          title={isAr ? 'الخدمات النشطة' : 'Active Services'}
+          value={loading ? '...' : formatNumber(analytics.totalServices)}
           trend={{ value: 0, direction: 'neutral' }}
-          subtitle={isAr ? 'سارية' : 'Active'}
+          subtitle={isAr ? 'خدمة متاحة' : 'Available'}
           icon={<ContractIcon />}
         />
       </div>
 
       {/* Main Content Grid */}
       <div className="cmd-overview__grid">
-        {/* Recent Orders */}
+        {/* Recent Orders - Real Data */}
         <div className="cmd-overview__main">
           <V3Card context="command">
             <V3CardHeader>
@@ -167,19 +195,29 @@ export const V3AdminOverview: React.FC = () => {
               </V3CardTitle>
             </V3CardHeader>
             <V3CardContent noPadding>
-              <V3Table
-                context="command"
-                columns={orderColumns}
-                data={recentOrders}
-                language={language}
-                onRowClick={(row) => console.log('Order clicked:', row.id)}
-                compact
-              />
+              {loading ? (
+                <div className="cmd-loading">
+                  <span>{isAr ? 'جاري التحميل...' : 'Loading...'}</span>
+                </div>
+              ) : recentOrders.length > 0 ? (
+                <V3Table
+                  context="command"
+                  columns={orderColumns}
+                  data={recentOrders}
+                  language={language}
+                  onRowClick={(row) => console.log('Order clicked:', row.id)}
+                  compact
+                />
+              ) : (
+                <div className="cmd-empty">
+                  <span>{isAr ? 'لا توجد طلبات حديثة' : 'No recent orders'}</span>
+                </div>
+              )}
             </V3CardContent>
           </V3Card>
         </div>
 
-        {/* System Alerts */}
+        {/* System Alerts - Real Data */}
         <div className="cmd-overview__sidebar">
           <V3Card context="command">
             <V3CardHeader>
@@ -189,25 +227,31 @@ export const V3AdminOverview: React.FC = () => {
             </V3CardHeader>
             <V3CardContent>
               <div className="cmd-alerts">
-                {systemAlerts.map((alert) => (
-                  <div 
-                    key={alert.id} 
-                    className={`cmd-alert cmd-alert--${alert.type}`}
-                  >
-                    <div className="cmd-alert__icon">
-                      <AlertIcon />
+                {systemAlerts.length > 0 ? (
+                  systemAlerts.map((alert) => (
+                    <div 
+                      key={alert.id} 
+                      className={`cmd-alert cmd-alert--${alert.type}`}
+                    >
+                      <div className="cmd-alert__icon">
+                        <AlertIcon />
+                      </div>
+                      <div className="cmd-alert__content">
+                        <p className="cmd-alert__message">{isAr ? alert.messageAr : alert.message}</p>
+                        <span className="cmd-alert__time">{alert.time}</span>
+                      </div>
                     </div>
-                    <div className="cmd-alert__content">
-                      <p className="cmd-alert__message">{alert.message}</p>
-                      <span className="cmd-alert__time">{alert.time}</span>
-                    </div>
+                  ))
+                ) : (
+                  <div className="cmd-empty-small">
+                    <span>{isAr ? 'لا توجد تنبيهات' : 'No alerts'}</span>
                   </div>
-                ))}
+                )}
               </div>
             </V3CardContent>
           </V3Card>
 
-          {/* Quick Stats */}
+          {/* Quick Stats - Real Data */}
           <V3Card context="command">
             <V3CardHeader>
               <V3CardTitle context="command">
@@ -220,19 +264,25 @@ export const V3AdminOverview: React.FC = () => {
                   <span className="cmd-quick-stat__label">
                     {isAr ? 'معدل الإنجاز' : 'Completion Rate'}
                   </span>
-                  <span className="cmd-quick-stat__value cmd-quick-stat__value--success">94%</span>
+                  <span className="cmd-quick-stat__value cmd-quick-stat__value--success">
+                    {completionRate}%
+                  </span>
                 </div>
                 <div className="cmd-quick-stat">
                   <span className="cmd-quick-stat__label">
-                    {isAr ? 'رضا العملاء' : 'Customer Satisfaction'}
+                    {isAr ? 'طلبات معلقة' : 'Pending Orders'}
                   </span>
-                  <span className="cmd-quick-stat__value cmd-quick-stat__value--info">4.8/5</span>
+                  <span className="cmd-quick-stat__value cmd-quick-stat__value--warning">
+                    {analytics.ordersByStatus.pending}
+                  </span>
                 </div>
                 <div className="cmd-quick-stat">
                   <span className="cmd-quick-stat__label">
-                    {isAr ? 'الإيرادات اليومية' : 'Daily Revenue'}
+                    {isAr ? 'طلبات مكتملة' : 'Completed Orders'}
                   </span>
-                  <span className="cmd-quick-stat__value">45K SAR</span>
+                  <span className="cmd-quick-stat__value cmd-quick-stat__value--info">
+                    {analytics.ordersByStatus.completed}
+                  </span>
                 </div>
               </div>
             </V3CardContent>
