@@ -100,7 +100,7 @@ export function HeroSectionDark() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-center mb-6"
         >
-          <h1 dir="ltr" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
+          <h1 dir="ltr" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-center">
             <span className="text-[hsl(var(--hp-text))]">ASH </span>
             <span className="hp-gradient-text">HOLDING</span>
           </h1>
