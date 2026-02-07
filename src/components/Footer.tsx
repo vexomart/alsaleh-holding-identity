@@ -211,7 +211,14 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-slate-900 text-white overflow-hidden" dir="rtl">
+    <footer 
+      className="relative bg-slate-900 text-white overflow-hidden w-full flex-shrink-0" 
+      dir="rtl"
+      style={{
+        width: '100%',
+        maxWidth: '100%',
+      }}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />

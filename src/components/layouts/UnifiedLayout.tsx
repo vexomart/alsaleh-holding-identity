@@ -1,7 +1,8 @@
 /**
  * UnifiedLayout - Single Layout for Entire Application
- * Header (sticky) + Main Content + Footer
+ * Header (sticky) + Main Content + Footer (sticky bottom)
  * iOS-like smooth behavior with no horizontal overflow
+ * Footer always at bottom even with short content
  */
 
 import { ReactNode } from "react";
@@ -25,13 +26,12 @@ export function UnifiedLayout({
   return (
     <div 
       dir="rtl"
-      className="min-h-screen flex flex-col bg-background"
+      className="min-h-screen min-h-dvh flex flex-col bg-background"
       style={{ 
         direction: 'rtl',
         width: '100%',
         maxWidth: '100%',
         overflowX: 'hidden',
-        position: 'relative',
       }}
     >
       {/* Sticky Header - Always visible */}
@@ -40,20 +40,25 @@ export function UnifiedLayout({
       {/* Main Content Area - Grows to fill available space */}
       <main 
         className={cn(
-          "flex-1 w-full",
+          "flex-1 flex-grow w-full",
           contentClassName
         )}
         style={{
           width: '100%',
           maxWidth: '100%',
           overflowX: 'hidden',
+          flex: '1 0 auto',
         }}
       >
         {children}
       </main>
       
-      {/* Footer - Always at bottom */}
-      {!hideFooter && <Footer />}
+      {/* Footer - Always at bottom, never floats */}
+      {!hideFooter && (
+        <div className="flex-shrink-0 mt-auto w-full">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }
