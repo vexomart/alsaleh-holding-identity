@@ -200,8 +200,8 @@ const systemNavItems: NavItem[] = [
 
 export function AdminSidebar() {
   const { language, isRTL } = useLanguage();
-  const { profile, signOut } = useAuth();
-  const { can, isSuperAdmin } = useRBAC();
+  const { profile, signOut, isAdmin: authIsAdmin } = useAuth();
+  const { can, isSuperAdmin, isLoading: rbacLoading } = useRBAC();
   const { state, toggleSidebar, setOpenMobile, openMobile } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
@@ -212,7 +212,11 @@ export function AdminSidebar() {
 
   const getTitle = (item: NavItem) => language === "ar" ? item.titleAr : item.titleEn;
 
+  // While RBAC is loading, show all items if user is admin (from useAuth)
+  // This prevents items from being hidden during initial load
   const hasAccess = (item: NavItem): boolean => {
+    // If RBAC is still loading and user is admin, show all items
+    if (rbacLoading && authIsAdmin) return true;
     if (isSuperAdmin) return true;
     if (!item.permission) return true;
     return can(item.permission as any);
