@@ -1,0 +1,202 @@
+/**
+ * Homepage Dark Theme - MaxioCore Inspired
+ * Clean, professional, and stable
+ */
+
+/* Dark Homepage Root */
+.homepage-dark {
+  --hp-bg: 222 50% 5%;
+  --hp-bg-secondary: 222 45% 8%;
+  --hp-bg-card: 222 40% 10%;
+  --hp-bg-card-hover: 222 38% 12%;
+  
+  --hp-text: 0 0% 98%;
+  --hp-text-muted: 220 15% 65%;
+  --hp-text-subtle: 220 15% 45%;
+  
+  --hp-border: 222 30% 18%;
+  --hp-border-light: 222 25% 22%;
+  
+  /* Accent Colors - Vibrant on Dark */
+  --hp-primary: 200 85% 55%;
+  --hp-primary-glow: 200 90% 65%;
+  --hp-secondary: 173 70% 45%;
+  --hp-accent: 25 85% 58%;
+  
+  /* Gradient Text */
+  --hp-gradient-text: linear-gradient(135deg, hsl(200 85% 55%), hsl(173 70% 50%));
+  
+  background-color: hsl(var(--hp-bg));
+  color: hsl(var(--hp-text));
+  min-height: 100vh;
+}
+
+/* Homepage Hero */
+.homepage-dark .hero-section {
+  background: linear-gradient(
+    180deg,
+    hsl(222 50% 5%) 0%,
+    hsl(222 45% 7%) 50%,
+    hsl(222 40% 9%) 100%
+  );
+}
+
+/* Subtle Grid Pattern */
+.homepage-dark .grid-pattern {
+  background-image: 
+    linear-gradient(to right, hsl(var(--hp-border) / 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--hp-border) / 0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Gradient Text */
+.hp-gradient-text {
+  background: var(--hp-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Service Cards */
+.homepage-dark .service-card {
+  background: hsl(var(--hp-bg-card));
+  border: 1px solid hsl(var(--hp-border));
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.homepage-dark .service-card:hover {
+  background: hsl(var(--hp-bg-card-hover));
+  border-color: hsl(var(--hp-border-light));
+  transform: translateY(-4px);
+}
+
+/* Icon Boxes */
+.hp-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hp-icon-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+.hp-icon-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+.hp-icon-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.hp-icon-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.hp-icon-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.hp-icon-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+
+/* Feature Pills */
+.hp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: hsl(var(--hp-bg-card));
+  border: 1px solid hsl(var(--hp-border));
+  border-radius: 9999px;
+  font-size: 14px;
+  color: hsl(var(--hp-text-muted));
+  transition: all 0.2s ease;
+}
+
+.hp-pill:hover {
+  border-color: hsl(var(--hp-primary) / 0.5);
+  color: hsl(var(--hp-text));
+}
+
+.hp-pill.active {
+  background: hsl(var(--hp-primary) / 0.15);
+  border-color: hsl(var(--hp-primary) / 0.5);
+  color: hsl(var(--hp-primary));
+}
+
+/* CTA Buttons */
+.hp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, hsl(var(--hp-primary)), hsl(var(--hp-secondary)));
+  color: hsl(222 50% 5%);
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px hsl(var(--hp-primary) / 0.3);
+}
+
+.hp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: transparent;
+  color: hsl(var(--hp-text));
+  font-weight: 500;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--hp-border-light));
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hp-btn-secondary:hover {
+  background: hsl(var(--hp-bg-card));
+  border-color: hsl(var(--hp-primary) / 0.5);
+}
+
+/* Stats Card */
+.hp-stat-card {
+  background: hsl(var(--hp-bg-card) / 0.6);
+  border: 1px solid hsl(var(--hp-border) / 0.5);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+/* Section Dividers */
+.hp-section {
+  padding: 80px 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .hp-section {
+    padding: 48px 0;
+  }
+}
+
+/* Animations - Subtle and Stable */
+@keyframes hp-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes hp-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.hp-animate-float {
+  animation: hp-float 6s ease-in-out infinite;
+}
+
+.hp-animate-pulse {
+  animation: hp-pulse 3s ease-in-out infinite;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .hp-animate-float,
+  .hp-animate-pulse {
+    animation: none;
+  }
+}
