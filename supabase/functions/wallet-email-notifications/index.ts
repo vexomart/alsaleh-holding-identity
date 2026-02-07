@@ -148,19 +148,19 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case 'welcome':
-        emailSubject = `🎉 مرحباً بك في محفظتك الرقمية - شركة الصالح القابضة`;
+        emailSubject = `🎉 مرحباً بك في ASH HOLDING - حسابك جاهز!`;
         emailHtml = await renderAsync(
           React.createElement(WelcomeEmailTemplate, {
             customerName: finalCustomerName,
             data: data || {
               user_id: 'new-user',
-              welcome_message: 'مرحباً بك في منصتنا! تم إنشاء محفظتك الرقمية بنجاح.',
+              welcome_message: 'مرحباً بك في ASH HOLDING! تم إنشاء حسابك بنجاح.',
               initial_balance: 0,
               wallet_features: [
-                'إيداع وسحب الأموال بسهولة',
-                'تتبع جميع المعاملات المالية',
-                'إشعارات فورية عند كل معاملة',
-                'أمان عالي لحماية أموالك'
+                'طلب الخدمات المتنوعة',
+                'متابعة حالة الطلبات',
+                'إدارة العقود والفواتير',
+                'محفظة رقمية آمنة'
               ]
             }
           })
@@ -211,14 +211,14 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Determine sender name based on email type
     const senderName = type === 'balance_alert' 
-      ? "تنبيهات المحفظة - علي الشهري القابضة" 
+      ? "تنبيهات المحفظة - ASH HOLDING" 
       : type === 'transaction_summary'
-      ? "التقارير المالية - علي الشهري القابضة"
-      : "المحفظة الرقمية - علي الشهري القابضة";
+      ? "التقارير المالية - ASH HOLDING"
+      : "ASH HOLDING";
 
     // Send email using Resend
     const emailResponse = await resend.emails.send({
-      from: "المحفظة الرقمية - ASH HOLDING <info@ash-holding.sa>",
+      from: "ASH HOLDING <info@ash-holding.sa>",
       to: [finalCustomerEmail],
       subject: emailSubject,
       html: emailHtml,

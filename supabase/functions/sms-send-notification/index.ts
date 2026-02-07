@@ -10,6 +10,8 @@ const MSEGAT_API_URL = "https://www.msegat.com/gw/sendsms.php";
 
 // Message Types
 type MessageType = 
+  // Welcome & Registration
+  | "welcome" | "registration_complete" | "otp_sent"
   // Orders
   | "order_created" | "order_confirmed" | "order_processing" | "order_completed" | "order_cancelled"
   // Contracts
@@ -33,128 +35,145 @@ interface NotificationRequest {
 
 // Comprehensive Arabic SMS Templates
 const TEMPLATES: Record<string, string> = {
+  // ===== Welcome & Registration =====
+  welcome: `🎉 أهلاً بك {{name}} في ASH HOLDING!
+تم إنشاء حسابك بنجاح.
+استمتع بخدماتنا المميزة.
+للدعم: info@ash-holding.sa
+ASH HOLDING`,
+
+  registration_complete: `✅ مبروك {{name}}!
+اكتمل تسجيلك في ASH HOLDING.
+يمكنك الآن تصفح خدماتنا وطلبها.
+ASH HOLDING`,
+
+  otp_sent: `🔐 رمز التحقق الخاص بك: {{otp}}
+صالح لمدة 5 دقائق.
+لا تشاركه مع أحد.
+ASH HOLDING`,
+
   // ===== Orders =====
   order_created: `✨ عميلنا العزيز،
 تم استلام طلبكم رقم {{order_number}} بنجاح.
 سيتم مراجعته قريباً.
-ASH Holding`,
+ASH HOLDING`,
 
   order_confirmed: `✅ تم تأكيد طلبكم رقم {{order_number}}.
 قيمة الطلب: {{amount}} ريال
 سيتم التواصل معكم قريباً.
-ASH Holding`,
+ASH HOLDING`,
 
   order_processing: `⚙️ طلبكم رقم {{order_number}} قيد التنفيذ الآن.
 تابعوا حالة الطلب عبر حسابكم.
-ASH Holding`,
+ASH HOLDING`,
 
   order_completed: `🎉 تم إنجاز طلبكم رقم {{order_number}} بنجاح!
 شكراً لثقتكم بنا.
-ASH Holding`,
+ASH HOLDING`,
 
   order_cancelled: `❌ تم إلغاء طلبكم رقم {{order_number}}.
 للاستفسار: info@ash-holding.sa
-ASH Holding`,
+ASH HOLDING`,
 
   order_status: `عميلنا العزيز،
 تم تحديث حالة طلبك رقم {{order_number}} إلى: {{status}}
 شكراً لثقتكم
-ASH Holding`,
+ASH HOLDING`,
 
   // ===== Contracts =====
   contract_created: `📄 تم إنشاء عقد جديد رقم {{contract_number}}.
 يرجى مراجعته في حسابكم.
-ASH Holding`,
+ASH HOLDING`,
 
   contract_approved: `✅ تمت الموافقة على عقدكم رقم {{contract_number}}.
 يمكنكم الآن التوقيع عليه.
-ASH Holding`,
+ASH HOLDING`,
 
   contract_rejected: `❌ تم رفض العقد رقم {{contract_number}}.
 السبب: {{reason}}
 للتواصل: info@ash-holding.sa
-ASH Holding`,
+ASH HOLDING`,
 
   contract_pending_signature: `✍️ عقدكم رقم {{contract_number}} جاهز للتوقيع.
 يرجى تسجيل الدخول لإتمام التوقيع.
-ASH Holding`,
+ASH HOLDING`,
 
   contract_signed: `🖊️ تم توقيع العقد رقم {{contract_number}} بنجاح!
 سيتم تفعيله قريباً.
-ASH Holding`,
+ASH HOLDING`,
 
   contract_active: `🟢 عقدكم رقم {{contract_number}} أصبح نشطاً الآن!
-ASH Holding`,
+ASH HOLDING`,
 
   contract_expired: `⚠️ انتهت صلاحية عقدكم رقم {{contract_number}}.
 للتجديد تواصلوا معنا.
-ASH Holding`,
+ASH HOLDING`,
 
   // ===== Finance =====
   finance_submitted: `📝 تم استلام طلب التمويل رقم {{application_number}}.
 سيتم مراجعته خلال 48 ساعة.
-ASH Holding`,
+ASH HOLDING`,
 
   finance_approved: `🎉 مبروك! تمت الموافقة على طلب التمويل {{application_number}}.
 المبلغ: {{amount}} ريال
 القسط الشهري: {{monthly}} ريال
-ASH Holding`,
+ASH HOLDING`,
 
   finance_rejected: `❌ لم تتم الموافقة على طلب التمويل {{application_number}}.
 للمزيد: info@ash-holding.sa
-ASH Holding`,
+ASH HOLDING`,
 
   finance_offer_ready: `💰 عروض التمويل جاهزة لطلبكم {{application_number}}.
 سجّل دخولك الآن لاختيار العرض المناسب.
-ASH Holding`,
+ASH HOLDING`,
 
   finance_contract_ready: `📄 عقد التمويل {{contract_number}} جاهز للتوقيع.
 سجّل دخولك لإتمام العملية.
-ASH Holding`,
+ASH HOLDING`,
 
   finance_disbursed: `💸 تم صرف مبلغ التمويل {{amount}} ريال في محفظتكم!
-ASH Holding`,
+ASH HOLDING`,
 
   finance_payment_due: `📅 تذكير: قسط التمويل رقم {{installment}} مستحق في {{due_date}}.
 المبلغ: {{amount}} ريال
-ASH Holding`,
+ASH HOLDING`,
 
   finance_payment_reminder: `⏰ يحين موعد سداد قسط التمويل غداً.
 القسط رقم {{installment}}: {{amount}} ريال
-ASH Holding`,
+ASH HOLDING`,
 
   finance_payment_received: `✅ تم استلام سداد القسط رقم {{installment}} بنجاح.
 المتبقي: {{remaining}} قسط
-ASH Holding`,
+ASH HOLDING`,
 
   finance_payment_overdue: `🚨 تنبيه: قسط التمويل رقم {{installment}} متأخر!
 المبلغ المستحق: {{amount}} ريال
 يرجى السداد فوراً.
-ASH Holding`,
+ASH HOLDING`,
 
   // ===== Payments =====
   payment_success: `✅ تم استلام دفعتكم بنجاح!
 المبلغ: {{amount}} ريال
 رقم العملية: {{transaction_id}}
-ASH Holding`,
+ASH HOLDING`,
 
   payment_failed: `❌ لم تتم عملية الدفع.
 يرجى المحاولة مرة أخرى.
-ASH Holding`,
+ASH HOLDING`,
 
   wallet_topup: `💳 تم شحن محفظتكم بنجاح!
 المبلغ: {{amount}} ريال
 الرصيد الجديد: {{balance}} ريال
-ASH Holding`,
+ASH HOLDING`,
 
   wallet_withdrawal: `💸 تم تحويل {{amount}} ريال من محفظتكم.
 الرصيد المتبقي: {{balance}} ريال
-ASH Holding`,
+ASH HOLDING`,
 
   // ===== General =====
   account_update: `🔐 تم تحديث معلومات حسابك.
 إذا لم تقم بهذا التغيير، تواصل معنا فوراً.
-ASH Holding`,
+ASH HOLDING`,
 };
 
 // Format phone number

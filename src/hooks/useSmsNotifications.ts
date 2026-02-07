@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 // Message types matching the edge function
 type SmsMessageType =
+  // Welcome & Registration
+  | "welcome" | "registration_complete" | "otp_sent"
   // Orders
   | "order_created" | "order_confirmed" | "order_processing" | "order_completed" | "order_cancelled"
   // Contracts
@@ -65,6 +67,14 @@ export function useSmsNotifications() {
   };
 
   // ===== Order Notifications =====
+
+  const notifyWelcome = async (phone: string, name: string) => {
+    return sendSms(phone, "welcome", { name });
+  };
+
+  const notifyRegistrationComplete = async (phone: string, name: string) => {
+    return sendSms(phone, "registration_complete", { name });
+  };
 
   const notifyOrderCreated = async (phone: string, orderNumber: string) => {
     return sendSms(phone, "order_created", { order_number: orderNumber });
@@ -256,6 +266,10 @@ export function useSmsNotifications() {
   return {
     // Core function
     sendSms,
+
+    // Welcome & Registration
+    notifyWelcome,
+    notifyRegistrationComplete,
 
     // Orders
     notifyOrderCreated,
