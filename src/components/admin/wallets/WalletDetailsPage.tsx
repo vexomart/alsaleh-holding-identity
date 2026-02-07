@@ -128,7 +128,7 @@ export function WalletDetailsPage() {
     },
   });
 
-  // Handle adjustment
+  // Handle adjustment with real-time notifications
   const handleAdjustmentSubmit = async (amount: number, reason: string) => {
     if (!customerData?.wallet) return;
 
@@ -137,6 +137,7 @@ export function WalletDetailsPage() {
         ? Number(customerData.wallet.balance) + amount
         : Number(customerData.wallet.balance) - amount;
 
+    // Update wallet balance
     const { error: walletError } = await supabase
       .from("customer_wallets")
       .update({ balance: newBalance } as any)
@@ -144,6 +145,7 @@ export function WalletDetailsPage() {
 
     if (walletError) throw walletError;
 
+    // Insert transaction record
     const { error: txError } = await supabase
       .from("financial_transactions")
       .insert({
@@ -161,50 +163,69 @@ export function WalletDetailsPage() {
 
     if (txError) throw txError;
 
-    // Send SMS notification to customer
-    if (customerData.profile?.phone) {
-      try {
-        const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
-        await supabase.functions.invoke("sms-send-notification", {
-          body: {
-            phone: customerData.profile.phone,
-            message_type: messageType,
-            template_data: {
-              amount: amount.toLocaleString("ar-SA"),
-              balance: newBalance.toLocaleString("ar-SA"),
-            },
+    // Send notifications in parallel for speed
+    const customerPhone = customerData.profile?.phone;
+    const customerEmail = customerData.profile?.email;
+    const customerName = customerData.profile?.full_name || "عميلنا الكريم";
+
+    const notificationPromises: Promise<any>[] = [];
+
+    // SMS Notification - ALWAYS send if phone exists
+    if (customerPhone) {
+      const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
+      const smsPromise = supabase.functions.invoke("sms-send-notification", {
+        body: {
+          phone: customerPhone,
+          message_type: messageType,
+          template_data: {
+            amount: amount.toLocaleString("ar-SA"),
+            balance: newBalance.toLocaleString("ar-SA"),
           },
-        });
-        console.log("Wallet adjustment SMS sent");
-      } catch (smsError) {
-        console.error("Failed to send adjustment SMS:", smsError);
-      }
+        },
+      }).then(res => {
+        console.log("✅ SMS notification sent successfully:", res);
+        toast.success(isRTL ? "تم إرسال إشعار SMS للعميل" : "SMS notification sent");
+        return res;
+      }).catch(err => {
+        console.error("❌ SMS notification failed:", err);
+        toast.error(isRTL ? "فشل إرسال SMS" : "SMS failed");
+        return null;
+      });
+      notificationPromises.push(smsPromise);
     }
 
-    // Send email notification
-    const email = customerData.profile?.email;
-    if (email && !email.endsWith("@ash.local")) {
-      try {
-        await supabase.functions.invoke("wallet-email-notifications", {
-          body: {
-            type: adjustmentType === "add" ? "deposit" : "withdrawal",
-            customer_email: email,
-            customer_name: customerData.profile?.full_name || "عميلنا الكريم",
-            amount: amount,
-            newBalance: newBalance,
-            transactionId: `ADJ-${Date.now()}`,
-          },
-        });
-        console.log("Wallet adjustment email sent");
-      } catch (emailError) {
-        console.error("Failed to send adjustment email:", emailError);
-      }
+    // Email Notification - send if real email exists
+    if (customerEmail && !customerEmail.endsWith("@ash.local")) {
+      const emailPromise = supabase.functions.invoke("wallet-email-notifications", {
+        body: {
+          type: adjustmentType === "add" ? "deposit" : "withdrawal",
+          customer_email: customerEmail,
+          customer_name: customerName,
+          amount: amount,
+          newBalance: newBalance,
+          transactionId: `ADJ-${Date.now()}`,
+        },
+      }).then(res => {
+        console.log("✅ Email notification sent successfully:", res);
+        return res;
+      }).catch(err => {
+        console.error("❌ Email notification failed:", err);
+        return null;
+      });
+      notificationPromises.push(emailPromise);
+    }
+
+    // Wait for all notifications (don't block the main flow)
+    if (notificationPromises.length > 0) {
+      Promise.all(notificationPromises).then(results => {
+        console.log("All notifications processed:", results);
+      });
     }
 
     toast.success(
       isRTL
-        ? `تم ${adjustmentType === "add" ? "إضافة" : "خصم"} ${amount} ر.س`
-        : `${adjustmentType === "add" ? "Added" : "Deducted"} ${amount} SAR`
+        ? `تم ${adjustmentType === "add" ? "إضافة" : "خصم"} ${amount} ر.س بنجاح`
+        : `Successfully ${adjustmentType === "add" ? "added" : "deducted"} ${amount} SAR`
     );
 
     queryClient.invalidateQueries({ queryKey: ["admin-wallet-details", id] });
