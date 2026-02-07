@@ -322,12 +322,12 @@ const App = () => {
                       <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
                       <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
                       
-                      {/* Admin Dashboard - /admin/* (Protected by AdminGuard in Layout) */}
-                      <Route path="/admin/*" element={<Suspense fallback={<DashboardLoader />}><AdminDashboard /></Suspense>} />
+                      {/* Admin Dashboard - /adminash/* (Protected by AdminGuard in Layout) */}
+                      <Route path="/adminash/*" element={<Suspense fallback={<DashboardLoader />}><AdminDashboard /></Suspense>} />
                       
-                      {/* Customer Dashboard - /app/* (Protected by CustomerGuard in Layout) */}
-                      <Route path="/app/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
-                      <Route path="/app/*" element={<Suspense fallback={<DashboardLoader />}><CustomerDashboard /></Suspense>} />
+                      {/* Customer Dashboard - /dashboard/* (Protected by CustomerGuard in Layout) */}
+                      <Route path="/dashboard/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
+                      <Route path="/dashboard/*" element={<Suspense fallback={<DashboardLoader />}><CustomerDashboard /></Suspense>} />
                       
                       {/* Company Pages */}
                       <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />

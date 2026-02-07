@@ -74,7 +74,7 @@ export function ContractSigningPage() {
         }
       } else if (contract.status !== 'pending_signature') {
         toast.error(isRTL ? 'العقد غير متاح للتوقيع' : 'Contract not available for signing');
-        navigate('/app/contracts');
+        navigate('/dashboard/contracts');
       }
     }
   }, [isLoading, contract, navigate, isRTL, signature]);
@@ -240,7 +240,7 @@ export function ContractSigningPage() {
                 </p>
                 <p className="text-sm text-muted-foreground">{error}</p>
               </div>
-              <Button variant="outline" onClick={() => navigate('/app/contracts')}>
+              <Button variant="outline" onClick={() => navigate('/dashboard/contracts')}>
                 <ArrowRight className={cn("h-4 w-4", isRTL ? "ml-2" : "mr-2 rotate-180")} />
                 {isRTL ? 'العودة للعقود' : 'Back to Contracts'}
               </Button>
@@ -271,7 +271,7 @@ export function ContractSigningPage() {
               contract={contract}
               customerName={signerData?.name || profile?.full_name || ''}
               onContinue={handleStep1Continue}
-              onCancel={() => navigate('/app/contracts')}
+              onCancel={() => navigate('/dashboard/contracts')}
             />
           )}
 
@@ -306,7 +306,7 @@ export function ContractSigningPage() {
               signerName={signerData.name}
               signedAt={signedAt || contract.signed_at || new Date().toISOString()}
               onDownload={handleDownload}
-              onViewContracts={() => navigate('/app/contracts')}
+              onViewContracts={() => navigate('/dashboard/contracts')}
               isDownloading={isDownloading}
             />
           )}

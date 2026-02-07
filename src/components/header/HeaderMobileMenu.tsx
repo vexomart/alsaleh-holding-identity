@@ -207,8 +207,8 @@ export function HeaderMobileMenu({ isOpen, onClose }: HeaderMobileMenuProps) {
               {/* Customer Portal */}
               <MobileNavItem 
                 icon={User}
-                isActive={isActiveRoute('/app')}
-                onClick={() => handleNavigate('/app')}
+                isActive={isActiveRoute('/dashboard')}
+                onClick={() => handleNavigate('/dashboard')}
                 variant="highlighted"
               >
                 بوابة العملاء

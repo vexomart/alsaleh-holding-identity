@@ -242,7 +242,7 @@ export function ComingSoonInfrastructure() {
         <motion.div variants={itemVariants} className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/app/services")}
+            onClick={() => navigate("/dashboard/services")}
             className="gap-2 hover:bg-emerald-500/10 text-emerald-400"
           >
             <BackIcon className="h-4 w-4" />

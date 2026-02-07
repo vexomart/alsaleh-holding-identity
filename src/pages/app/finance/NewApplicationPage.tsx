@@ -138,7 +138,7 @@ export default function NewFinanceApplicationPage() {
     onSuccess: () => {
       toast.success("تم تقديم طلب التمويل بنجاح");
       queryClient.invalidateQueries({ queryKey: ["my-finance-applications"] });
-      navigate("/app/finance");
+      navigate("/dashboard/finance");
     },
     onError: () => {
       toast.error("حدث خطأ أثناء تقديم الطلب");
@@ -167,7 +167,7 @@ export default function NewFinanceApplicationPage() {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     } else {
-      navigate("/app/finance");
+      navigate("/dashboard/finance");
     }
   };
 
@@ -279,7 +279,7 @@ export default function NewFinanceApplicationPage() {
                     <p className="text-muted-foreground mb-6">
                       يجب تسجيل كيان أولاً للتقديم على التمويل
                     </p>
-                    <Button onClick={() => navigate("/app/finance/entities/new")}>
+                    <Button onClick={() => navigate("/dashboard/finance/entities/new")}>
                       تسجيل كيان جديد
                     </Button>
                   </motion.div>

@@ -268,7 +268,7 @@ export function ServiceJourneyCard({ orders, isLoading, isRTL }: ServiceJourneyC
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate("/app/orders");
+                            navigate("/dashboard/orders");
                           }}
                           className="gap-1.5 h-10 min-h-[44px]"
                         >

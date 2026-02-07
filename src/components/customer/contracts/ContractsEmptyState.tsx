@@ -64,7 +64,7 @@ export function ContractsEmptyState({ hasFilters, onClearFilters }: ContractsEmp
                 : 'Contracts will appear here when you request a service that requires one. You can sign and download PDF after signing.'}
             </p>
           </div>
-          <Button onClick={() => navigate('/app/services')} className="mt-4 gap-2">
+          <Button onClick={() => navigate('/dashboard/services')} className="mt-4 gap-2">
             <ShoppingBag className="h-4 w-4" />
             {isRTL ? 'تصفح الخدمات' : 'Browse Services'}
           </Button>

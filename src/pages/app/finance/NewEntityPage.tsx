@@ -121,7 +121,7 @@ export default function NewEntityPage() {
     onSuccess: () => {
       toast.success("تم تسجيل الكيان بنجاح");
       queryClient.invalidateQueries({ queryKey: ["my-entities"] });
-      navigate("/app/finance");
+      navigate("/dashboard/finance");
     },
     onError: () => {
       toast.error("حدث خطأ أثناء التسجيل");
@@ -153,7 +153,7 @@ export default function NewEntityPage() {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     } else {
-      navigate("/app/finance");
+      navigate("/dashboard/finance");
     }
   };
 

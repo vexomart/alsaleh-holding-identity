@@ -162,7 +162,7 @@ export function FinanceCenter() {
           <h1 className="text-2xl font-bold">مركز التمويل</h1>
           <p className="text-muted-foreground">إدارة طلبات التمويل والأقساط</p>
         </div>
-        <Button onClick={() => navigate("/app/finance/apply")} size="lg" className="gap-2">
+        <Button onClick={() => navigate("/dashboard/finance/apply")} size="lg" className="gap-2">
           <Sparkles className="h-4 w-4" />
           طلب تمويل جديد
           <ArrowLeft className="h-4 w-4" />
@@ -250,7 +250,7 @@ export function FinanceCenter() {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => navigate("/app/finance/entities/new")}
+                onClick={() => navigate("/dashboard/finance/entities/new")}
                 className="gap-1"
               >
                 <Plus className="h-4 w-4" />
@@ -271,7 +271,7 @@ export function FinanceCenter() {
                 <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
                   سجّل كياناً جديداً للبدء في التقديم على خدمات التمويل
                 </p>
-                <Button onClick={() => navigate("/app/finance/entities/new")} size="lg">
+                <Button onClick={() => navigate("/dashboard/finance/entities/new")} size="lg">
                   <Plus className="h-4 w-4 ml-2" />
                   تسجيل كيان جديد
                 </Button>

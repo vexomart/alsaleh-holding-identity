@@ -58,7 +58,7 @@ const kpiConfigs: KPIConfig[] = [
     iconColor: "text-blue-500",
     iconBg: "bg-blue-500/10",
     accentColor: "group-hover:border-blue-500/30",
-    path: "/app/orders",
+    path: "/dashboard/orders",
   },
   {
     key: "activeContracts",
@@ -70,7 +70,7 @@ const kpiConfigs: KPIConfig[] = [
     iconColor: "text-emerald-500",
     iconBg: "bg-emerald-500/10",
     accentColor: "group-hover:border-emerald-500/30",
-    path: "/app/contracts",
+    path: "/dashboard/contracts",
   },
   {
     key: "pendingInvoices",
@@ -82,7 +82,7 @@ const kpiConfigs: KPIConfig[] = [
     iconColor: "text-amber-500",
     iconBg: "bg-amber-500/10",
     accentColor: "group-hover:border-amber-500/30",
-    path: "/app/orders",
+    path: "/dashboard/orders",
     highlightWhen: (v) => v > 0,
   },
   {
@@ -95,7 +95,7 @@ const kpiConfigs: KPIConfig[] = [
     iconColor: "text-violet-500",
     iconBg: "bg-violet-500/10",
     accentColor: "group-hover:border-violet-500/30",
-    path: "/app/wallet",
+    path: "/dashboard/wallet",
     isAmount: true,
   },
 ];
