@@ -65,40 +65,41 @@ interface VerifyOtpResult {
      }
    }, []);
  
-   /**
-    * Verify OTP code
-    */
-   const verifyOtp = useCallback(async (
-     phone: string,
-     otp: string,
-     purpose: string = "login"
-   ): Promise<VerifyOtpResult> => {
-     setIsLoading(true);
-     setError(null);
- 
-     try {
-       const { data, error: fnError } = await supabase.functions.invoke("sms-verify-otp", {
-         body: { phone, otp, purpose },
-       });
- 
-       if (fnError) {
-         throw new Error(fnError.message);
-       }
- 
-       if (!data.success) {
-         setError(data.error);
-         return data;
-       }
- 
-       return data;
-     } catch (err: any) {
-       const errorMsg = err.message || "فشل في التحقق من الرمز";
-       setError(errorMsg);
-       return { success: false, error: errorMsg };
-     } finally {
-       setIsLoading(false);
-     }
-   }, []);
+  /**
+   * Verify OTP code
+   */
+  const verifyOtp = useCallback(async (
+    phone: string,
+    otp: string,
+    purpose: string = "login",
+    name?: string // Added: customer name for registration
+  ): Promise<VerifyOtpResult> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("sms-verify-otp", {
+        body: { phone, otp, purpose, name },
+      });
+
+      if (fnError) {
+        throw new Error(fnError.message);
+      }
+
+      if (!data.success) {
+        setError(data.error);
+        return data;
+      }
+
+      return data;
+    } catch (err: any) {
+      const errorMsg = err.message || "فشل في التحقق من الرمز";
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
  
    /**
     * Send status notification SMS
