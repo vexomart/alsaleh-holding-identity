@@ -78,26 +78,23 @@ export const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({
   const sidebarContent = (
     <>
       {/* Header */}
-      <div className="v3-sidebar-header">
+      <div className="v3-sidebar-header" style={{ flexDirection: 'row-reverse' }}>
+        {isMobile && mobileOpen && (
+          <button
+            className="v3-sidebar-toggle"
+            onClick={onMobileClose}
+          >
+            <X size={20} />
+          </button>
+        )}
         {logo || (
           <button
             className="v3-sidebar-toggle"
             onClick={onToggle}
             title={isExpanded ? 'طي القائمة' : 'توسيع القائمة'}
           >
-            {isRTL ? (
-              isExpanded ? <ChevronRight size={20} /> : <ChevronLeft size={20} />
-            ) : (
-              isExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />
-            )}
-          </button>
-        )}
-        {isMobile && mobileOpen && (
-          <button
-            className="v3-sidebar-toggle ms-auto"
-            onClick={onMobileClose}
-          >
-            <X size={20} />
+            {/* In RTL: ChevronRight collapses (moves right), ChevronLeft expands (moves left) */}
+            {isExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
           </button>
         )}
       </div>
@@ -124,6 +121,7 @@ export const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({
                   onMouseEnter={() => setHoveredItem(item.id)}
                   onMouseLeave={() => setHoveredItem(null)}
                   title={!isExpanded && !isMobile ? getLabel(item) : undefined}
+                  style={{ flexDirection: 'row' }} /* Icon first, then text */
                 >
                   <span className="v3-nav-item-icon">
                     {item.icon}
@@ -141,7 +139,8 @@ export const UnifiedSidebar: React.FC<UnifiedSidebarProps> = ({
                           ? 'hsl(var(--v3-warning))'
                           : item.badgeVariant === 'danger'
                           ? 'hsl(var(--v3-error))'
-                          : 'hsl(var(--v3-brand-primary))'
+                          : 'hsl(var(--v3-brand-primary))',
+                        marginInlineStart: 'auto',
                       }}
                     >
                       {item.badge > 99 ? '99+' : item.badge}
