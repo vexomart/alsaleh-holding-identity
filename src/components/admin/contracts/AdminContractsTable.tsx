@@ -3,6 +3,7 @@
  * جدول عقود احترافي متجاوب بتصميم iOS
  */
 
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ import {
   User,
   Banknote,
   Calendar,
+  ChevronLeft,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 
@@ -165,6 +167,11 @@ export function AdminContractsTable({
   onReject,
   onCopyNumber,
 }: AdminContractsTableProps) {
+  const navigate = useNavigate();
+
+  const handleRowClick = (contract: AdminContract) => {
+    navigate(`/adminash/contracts/${contract.id}`);
+  };
 
   const formatCurrency = (amount: number, currency: string = 'SAR') => {
     return new Intl.NumberFormat('ar-SA', {
@@ -301,7 +308,7 @@ export function AdminContractsTable({
                     'group hover:bg-slate-800/50 cursor-pointer transition-colors duration-150',
                     contract.status === 'pre_approved_by_customer' && 'bg-amber-950/15'
                   )}
-                  onClick={() => onViewDetails(contract)}
+                  onClick={() => handleRowClick(contract)}
                   style={{ direction: 'rtl' }}
                 >
                   <td className="py-3 px-4" style={{ textAlign: 'right' }}>
@@ -373,13 +380,13 @@ export function AdminContractsTable({
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700"
-                              onClick={() => onViewDetails(contract)}
+                              className="h-8 w-8 text-teal-400 hover:text-teal-300 hover:bg-teal-900/40"
+                              onClick={() => handleRowClick(contract)}
                             >
-                              <Eye className="h-4 w-4" />
+                              <ChevronLeft className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent side="top">عرض</TooltipContent>
+                          <TooltipContent side="top">عرض التفاصيل</TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                       
@@ -435,7 +442,7 @@ export function AdminContractsTable({
             initial="hidden"
             animate="visible"
             variants={rowVariants}
-            onClick={() => onViewDetails(contract)}
+            onClick={() => handleRowClick(contract)}
             className={cn(
               "rounded-xl border border-slate-700/60 bg-slate-800/40 p-4 cursor-pointer",
               "active:scale-[0.98] transition-transform duration-150 touch-manipulation",
@@ -479,11 +486,11 @@ export function AdminContractsTable({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 px-3 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg"
-                  onClick={() => onViewDetails(contract)}
+                  className="h-9 px-3 text-teal-400 hover:text-teal-300 hover:bg-teal-900/40 rounded-lg"
+                  onClick={() => handleRowClick(contract)}
                 >
-                  <Eye className="h-4 w-4 me-1.5" />
-                  عرض
+                  <ChevronLeft className="h-4 w-4 me-1.5" />
+                  التفاصيل
                 </Button>
                 
                 {contract.status === 'pre_approved_by_customer' && (
