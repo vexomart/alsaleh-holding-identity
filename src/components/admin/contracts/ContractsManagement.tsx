@@ -66,23 +66,41 @@ export function ContractsManagement() {
   const fetchContracts = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      // First fetch contracts with services
+      const { data: contractsData, error: contractsError } = await supabase
         .from('contracts')
         .select(`
           *,
-          service:services(id, name, name_ar),
-          customer:profiles!contracts_customer_user_id_fkey(id, full_name, full_name_ar, email, phone, customer_uid)
+          service:services(id, name, name_ar)
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (contractsError) throw contractsError;
 
-      const transformedContracts = (data || []).map((item: any) => ({
+      // Fetch customer profiles separately
+      const customerIds = [...new Set((contractsData || []).map((c: any) => c.customer_user_id))];
+      
+      let profilesMap: Record<string, any> = {};
+      if (customerIds.length > 0) {
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, full_name, full_name_ar, email, phone, customer_uid')
+          .in('id', customerIds);
+        
+        if (profilesData) {
+          profilesMap = profilesData.reduce((acc: Record<string, any>, profile: any) => {
+            acc[profile.id] = profile;
+            return acc;
+          }, {});
+        }
+      }
+
+      const transformedContracts = (contractsData || []).map((item: any) => ({
         ...item,
         status: item.status as ContractStatus,
         pricing_json: item.pricing_json as AdminContract['pricing_json'],
         service: item.service as AdminContract['service'],
-        customer: item.customer as AdminContract['customer'],
+        customer: profilesMap[item.customer_user_id] || null,
       }));
 
       setContracts(transformedContracts);

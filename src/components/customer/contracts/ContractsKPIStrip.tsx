@@ -1,6 +1,6 @@
 /**
- * ContractsKPIStrip - Premium glassmorphism KPI cards
- * تصميم زجاجي احترافي
+ * ContractsKPIStrip - Premium Banking Portal KPI cards
+ * تصميم بنكي احترافي للعملاء
  */
 
 import { motion } from 'framer-motion';
@@ -14,6 +14,7 @@ import {
   XCircle,
   Hourglass,
 } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
 export interface ContractsKPIData {
   total: number;
@@ -27,6 +28,7 @@ interface ContractsKPIStripProps {
   data: ContractsKPIData;
   isLoading?: boolean;
   onFilterByStatus?: (status: string) => void;
+  activeFilter?: string;
 }
 
 const cardVariants = {
@@ -57,15 +59,29 @@ function AnimatedNumber({ value }: { value: number }) {
   );
 }
 
+interface KPIConfig {
+  key: string;
+  labelAr: string;
+  labelEn: string;
+  value: number;
+  icon: LucideIcon;
+  gradient: string;
+  iconBg: string;
+  iconColor: string;
+  filter: string;
+  highlight?: boolean;
+}
+
 export function ContractsKPIStrip({ 
   data, 
   isLoading = false,
   onFilterByStatus,
+  activeFilter = 'all',
 }: ContractsKPIStripProps) {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
 
-  const kpis = [
+  const kpis: KPIConfig[] = [
     {
       key: 'total',
       labelAr: 'إجمالي العقود',
@@ -148,8 +164,9 @@ export function ContractsKPIStrip({
               "text-white shadow-lg",
               "transition-all duration-300",
               "hover:shadow-xl",
-              "focus:outline-none focus:ring-2 focus:ring-white/50",
-              "group"
+              "focus:outline-none focus:ring-2 focus:ring-primary/50",
+              "group",
+              activeFilter === kpi.filter && "ring-2 ring-white/50"
             )}
             onClick={() => onFilterByStatus?.(kpi.filter)}
           >
@@ -158,7 +175,7 @@ export function ContractsKPIStrip({
             
             {/* Highlight indicator */}
             {kpi.highlight && (
-              <div className="absolute top-2 right-2">
+              <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2">
                 <span className="flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-400"></span>
@@ -188,7 +205,7 @@ export function ContractsKPIStrip({
             </div>
             
             {/* Decorative circle */}
-            <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full bg-white/5" />
+            <div className="absolute -bottom-4 -right-4 rtl:-right-auto rtl:-left-4 w-16 h-16 rounded-full bg-white/5" />
           </button>
         </motion.div>
       ))}

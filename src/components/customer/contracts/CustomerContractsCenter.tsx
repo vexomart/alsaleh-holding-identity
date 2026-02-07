@@ -180,6 +180,7 @@ export function CustomerContractsCenter() {
           data={kpiStripData}
           isLoading={isLoading && contracts.length === 0}
           onFilterByStatus={handleFilterByStatus}
+          activeFilter={filters.status === 'all' ? 'all' : filters.status}
         />
       </AnimationWrapper>
 
