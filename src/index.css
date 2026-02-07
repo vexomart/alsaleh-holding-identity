@@ -60,6 +60,32 @@ html, body {
 }
 
 /* ===========================================
+   STICKY FOOTER - Always at bottom
+   Works with short and long content
+   =========================================== */
+.sticky-footer-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+.sticky-footer-layout > main {
+  flex: 1 0 auto;
+}
+
+.sticky-footer-layout > footer,
+.sticky-footer-layout > .footer-wrapper {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* Ensure footer doesn't float */
+footer {
+  flex-shrink: 0;
+}
+
+/* ===========================================
    RTL ROOT BOUNDARY - Hard RTL Isolation
    =========================================== */
 .rtl-root {
