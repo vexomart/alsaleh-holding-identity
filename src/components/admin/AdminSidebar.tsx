@@ -252,7 +252,7 @@ export function AdminSidebar() {
           // Responsive padding and height
           isMobile ? "px-4 py-3.5 min-h-[52px]" : "px-3 py-2.5",
           isActive 
-            ? "bg-gradient-to-l from-amber-500/20 to-amber-500/5 text-amber-400 shadow-sm border border-amber-500/30" 
+            ? "bg-gradient-to-l from-[hsl(25_80%_52%/0.15)] to-[hsl(25_80%_52%/0.05)] text-[hsl(25_85%_58%)] shadow-sm border border-[hsl(25_80%_52%/0.3)]" 
             : "hover:bg-white/5 text-slate-400 hover:text-white"
         )}
       >
@@ -260,7 +260,7 @@ export function AdminSidebar() {
         {isActive && (
           <div
             className={cn(
-              "absolute top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-gradient-to-b from-amber-400 to-amber-600",
+              "absolute top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-gradient-to-b from-[hsl(25_85%_58%)] to-[hsl(20_75%_42%)]",
               isRTL ? "-left-1" : "-right-1"
             )}
           />
@@ -271,7 +271,7 @@ export function AdminSidebar() {
           "flex items-center justify-center rounded-xl transition-all duration-200 shrink-0",
           isMobile ? "w-10 h-10" : "w-9 h-9",
           isActive 
-            ? "bg-gradient-to-br from-amber-500 to-amber-600 text-slate-900 shadow-lg shadow-amber-500/40" 
+            ? "bg-gradient-to-br from-[hsl(25_80%_52%)] to-[hsl(20_75%_42%)] text-white shadow-lg shadow-[hsl(25_80%_52%/0.4)]" 
             : "bg-white/5 text-slate-400 group-hover/item:bg-white/10 group-hover/item:text-white"
         )}>
           <Icon className={cn(isMobile ? "h-5 w-5" : "h-[18px] w-[18px]")} />
@@ -350,8 +350,9 @@ export function AdminSidebar() {
       side={isRTL ? "right" : "left"} 
       collapsible="icon"
       className={cn(
-        "border-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950",
-        "shadow-2xl shadow-black/50"
+        "border-0",
+        "bg-[hsl(222_47%_11%)]",
+        "shadow-2xl shadow-black/40"
       )}
     >
       {/* Header */}
@@ -369,12 +370,12 @@ export function AdminSidebar() {
             onClick={() => handleNavClick(ROUTES.ADMIN.OVERVIEW)}
           >
             <div className={cn(
-              "flex items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-500 text-slate-900 shadow-xl shadow-amber-500/40 ring-2 ring-amber-400/30 ring-offset-2 ring-offset-slate-900",
+              "flex items-center justify-center rounded-2xl bg-gradient-to-br from-[hsl(25_80%_52%)] to-[hsl(20_75%_42%)] text-white shadow-xl shadow-[hsl(25_80%_52%/0.4)] ring-2 ring-[hsl(25_80%_52%/0.3)] ring-offset-2 ring-offset-[hsl(222_47%_11%)]",
               isMobile ? "h-14 w-14" : "h-12 w-12"
             )}>
               <Building2 className={cn(isMobile ? "h-7 w-7" : "h-6 w-6")} />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-lg shadow-emerald-500/50" />
+            <div className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-[hsl(152_70%_38%)] border-2 border-[hsl(222_47%_11%)] shadow-lg shadow-[hsl(152_70%_38%/0.5)]" />
           </div>
 
           {/* Brand Text */}
