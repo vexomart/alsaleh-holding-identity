@@ -5,6 +5,9 @@
  * RTL-FIRST ARABIC NATIVE
  */
 
+/* Import animations */
+@import './animations.css';
+
 :root {
   /* =========================================
      MODERN LIGHT PALETTE
