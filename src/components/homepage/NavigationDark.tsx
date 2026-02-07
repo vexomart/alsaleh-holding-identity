@@ -68,9 +68,13 @@ export function NavigationDark() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-18">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <span className="text-xl sm:text-2xl font-black hp-gradient-text">
-                MaxioCore
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-gradient-to-br from-[hsl(var(--hp-primary))] to-[hsl(var(--hp-secondary))] rounded-lg flex items-center justify-center">
+                <span className="text-[hsl(222_50%_5%)] font-black text-xs">ASH</span>
+              </div>
+              <span className="text-xl sm:text-2xl font-black">
+                <span className="text-[hsl(var(--hp-text))]">ASH</span>
+                <span className="hp-gradient-text"> HOLDING</span>
               </span>
             </Link>
 

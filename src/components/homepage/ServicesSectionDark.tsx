@@ -65,9 +65,9 @@ const serviceCategories = [
 ];
 
 const stats = [
-  { value: "13+", label: "طلب منفذ", icon: CheckCircle },
-  { value: "9+", label: "عميل سعيد", icon: Users },
-  { value: "127+", label: "خدمة متاحة", icon: Layers },
+  { value: "14,883", label: "مشروع منجز", icon: CheckCircle },
+  { value: "9,512", label: "عميل راضٍ", icon: Users },
+  { value: "42", label: "دولة حول العالم", icon: Layers },
   { value: "100%", label: "نسبة الرضا", icon: Rocket },
 ];
 
