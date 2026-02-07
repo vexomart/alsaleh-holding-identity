@@ -1,7 +1,7 @@
 /**
  * V3 Admin Layout - Command Center
  * 100% Custom - NO SHADCN
- * RTL-First Arabic Native
+ * RTL-First Arabic Native - STRICT MODE
  */
 
 import * as React from 'react';
@@ -110,7 +110,7 @@ export interface V3AdminLayoutProps {
 }
 
 export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
-  const { language } = useLanguage();
+  const { language, isRTL } = useLanguage();
   const { profile } = useAuth();
   const [isRailExpanded, setIsRailExpanded] = React.useState(false);
 
@@ -161,7 +161,14 @@ export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="cmd-center">
+    <div 
+      className="cmd-center"
+      dir={isRTL ? 'rtl' : 'ltr'}
+      style={{
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: isRTL ? 'right' : 'left'
+      }}
+    >
       <div className={`cmd-grid ${isRailExpanded ? 'rail-expanded' : ''}`}>
         {/* Rail Navigation */}
         <V3RailNav

@@ -35,20 +35,24 @@ function CustomerLayoutContent({ children }: CustomerLayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
       {/* 
-        HARD RTL BOUNDARY
+        HARD RTL BOUNDARY - STRICT MODE
         - dir attribute at root level
         - CSS isolation prevents LTR leakage
         - Grid respects dir for column order
+        - All children inherit RTL direction
       */}
       <section 
         dir={isRTL ? 'rtl' : 'ltr'}
         className={cn(
           "rtl-root min-h-screen w-full bg-background overflow-x-hidden",
-          "grid"
+          "grid",
+          isRTL ? "text-right" : "text-left"
         )}
         style={{
           gridTemplateColumns: "auto 1fr",
-          gridTemplateAreas: '"sidebar content"'
+          gridTemplateAreas: '"sidebar content"',
+          direction: isRTL ? 'rtl' : 'ltr',
+          textAlign: isRTL ? 'right' : 'left'
         }}
       >
         {/* Sidebar - Grid placement respects RTL automatically */}

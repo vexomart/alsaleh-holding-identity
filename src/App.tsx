@@ -232,30 +232,49 @@ const DashboardLoader = () => (
  * Applies direction from language context to the root wrapper
  * OPTIMIZED: useLayoutEffect for instant DOM update, no console logs
  */
+/**
+ * RTL-Aware App Shell - STRICT MODE
+ * Applies direction from language context to the root wrapper
+ * Arabic (RTL) is the DEFAULT language
+ * OPTIMIZED: useLayoutEffect for instant DOM update, no console logs
+ */
 const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
   const { isRTL, language } = useLanguage();
   
   // Use layoutEffect for synchronous DOM update before paint
   React.useLayoutEffect(() => {
     const dir = isRTL ? 'rtl' : 'ltr';
+    const textAlign = isRTL ? 'right' : 'left';
     
-    // Apply to html & body
+    // Apply to html element (document level)
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
-    document.body.dir = dir;
+    document.documentElement.style.direction = dir;
+    document.documentElement.style.textAlign = textAlign;
     
-    // Toggle classes
+    // Apply to body element
+    document.body.dir = dir;
+    document.body.style.direction = dir;
+    document.body.style.textAlign = textAlign;
+    
+    // Toggle classes for CSS targeting
     document.documentElement.classList.toggle('rtl', isRTL);
     document.documentElement.classList.toggle('ltr', !isRTL);
+    document.body.classList.toggle('rtl', isRTL);
+    document.body.classList.toggle('ltr', !isRTL);
   }, [isRTL, language]);
   
   return (
     <div 
       dir={isRTL ? 'rtl' : 'ltr'}
       className={cn(
-        "min-h-screen bg-background",
+        "min-h-screen bg-background overflow-x-hidden",
         isRTL ? "text-right" : "text-left"
       )}
+      style={{
+        direction: isRTL ? 'rtl' : 'ltr',
+        textAlign: isRTL ? 'right' : 'left'
+      }}
     >
       {children}
     </div>
