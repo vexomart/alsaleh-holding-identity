@@ -163,63 +163,11 @@ export function WalletDetailsPage() {
 
     if (txError) throw txError;
 
-    // ⚡⚡⚡ INSTANT SMS - MUST RUN IMMEDIATELY ⚡⚡⚡
-    const customerPhone = customerData.profile?.phone;
+    // 📱 SMS is now handled automatically by database trigger (notify_wallet_transaction)
+    // No need for frontend SMS call - it runs at database level for reliability
+    
     const customerEmail = customerData.profile?.email;
     const customerName = customerData.profile?.full_name || "عميلنا الكريم";
-
-    // Format date and time for banking SMS
-    const now = new Date();
-    const dateStr = now.toLocaleDateString("ar-SA", { 
-      year: "numeric", 
-      month: "2-digit", 
-      day: "2-digit" 
-    });
-    const timeStr = now.toLocaleTimeString("ar-SA", { 
-      hour: "2-digit", 
-      minute: "2-digit",
-      hour12: true 
-    });
-    const operationType = adjustmentType === "add" 
-      ? "إيداع نقدي - تعديل إداري" 
-      : "خصم إداري";
-
-    console.log("🔔 Starting SMS dispatch...", { customerPhone, adjustmentType, amount, newBalance });
-
-    if (customerPhone) {
-      const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
-      
-      console.log("📤 SENDING SMS NOW to:", customerPhone);
-      
-      // Use Supabase SDK - guaranteed to work
-      const { data: smsData, error: smsError } = await supabase.functions.invoke("sms-send-notification", {
-        body: {
-          phone: customerPhone,
-          message_type: messageType,
-          template_data: {
-            amount: amount.toLocaleString("ar-SA"),
-            balance: newBalance.toLocaleString("ar-SA"),
-            date: dateStr,
-            time: timeStr,
-            operation_type: operationType,
-          },
-        },
-      });
-      
-      console.log("📱 SMS Result:", { smsData, smsError });
-      
-      if (smsError) {
-        console.error("❌ SMS Error:", smsError);
-        toast.error(isRTL ? "فشل إرسال SMS" : "SMS failed");
-      } else if (smsData?.success) {
-        console.log("✅ SMS SENT SUCCESSFULLY!");
-        toast.success(isRTL ? "📱 تم إرسال إشعار SMS للعميل" : "📱 SMS sent");
-      } else {
-        console.warn("⚠️ SMS response:", smsData);
-      }
-    } else {
-      console.warn("⚠️ No phone number - SMS skipped");
-    }
 
     // Email Notification - send in background (less critical)
     if (customerEmail && !customerEmail.endsWith("@ash.local")) {
