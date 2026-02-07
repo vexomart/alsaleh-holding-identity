@@ -1,4 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+/**
+ * useAdminAnalytics Hook - Instant Loading with Cache
+ * 
+ * OPTIMIZATION: Uses localStorage cache for instant initial render
+ * - Shows cached data immediately (no loading spinner)
+ * - Fetches fresh data in background
+ * - Updates cache on successful fetch
+ */
+
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface AdminAnalytics {
@@ -43,34 +52,75 @@ export interface AdminAnalytics {
   }>;
 }
 
+const CACHE_KEY = 'admin_analytics_cache';
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 const monthNamesAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+const defaultAnalytics: AdminAnalytics = {
+  totalOrders: 0,
+  totalUsers: 0,
+  totalRevenue: 0,
+  totalServices: 0,
+  activeUsers: 0,
+  ordersByStatus: {
+    pending: 0,
+    processing: 0,
+    in_progress: 0,
+    completed: 0,
+    cancelled: 0,
+    refunded: 0,
+  },
+  monthlyRevenue: [],
+  topServices: [],
+  recentOrders: [],
+};
+
+// Get cached analytics synchronously
+function getCachedAnalytics(): { data: AdminAnalytics; isStale: boolean } {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const isStale = Date.now() - parsed.timestamp > CACHE_TTL;
+      return { data: parsed.data, isStale };
+    }
+  } catch {
+    // Silent fail
+  }
+  return { data: defaultAnalytics, isStale: true };
+}
+
+// Cache analytics
+function cacheAnalytics(data: AdminAnalytics) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      data,
+      timestamp: Date.now()
+    }));
+  } catch {
+    // Silent fail
+  }
+}
+
 export const useAdminAnalytics = () => {
-  const [analytics, setAnalytics] = useState<AdminAnalytics>({
-    totalOrders: 0,
-    totalUsers: 0,
-    totalRevenue: 0,
-    totalServices: 0,
-    activeUsers: 0,
-    ordersByStatus: {
-      pending: 0,
-      processing: 0,
-      in_progress: 0,
-      completed: 0,
-      cancelled: 0,
-      refunded: 0,
-    },
-    monthlyRevenue: [],
-    topServices: [],
-    recentOrders: [],
-  });
-  const [loading, setLoading] = useState(true);
+  // INSTANT: Start with cached data
+  const cached = getCachedAnalytics();
+  const [analytics, setAnalytics] = useState<AdminAnalytics>(cached.data);
+  // Only show loading if we have no cached data
+  const [loading, setLoading] = useState(cached.isStale && cached.data.totalOrders === 0);
   const [error, setError] = useState<Error | null>(null);
+  const isMountedRef = useRef(true);
 
   const fetchAnalytics = useCallback(async () => {
+    if (!isMountedRef.current) return;
+    
     try {
-      setLoading(true);
+      // Only show loading if no cached data
+      if (analytics.totalOrders === 0) {
+        setLoading(true);
+      }
       setError(null);
 
       // Fetch all data in parallel
@@ -92,6 +142,8 @@ export const useAdminAnalytics = () => {
           .order('created_at', { ascending: false })
           .limit(5),
       ]);
+
+      if (!isMountedRef.current) return;
 
       const orders = ordersRes.data || [];
       const users = usersRes.data || [];
@@ -167,7 +219,7 @@ export const useAdminAnalytics = () => {
         .sort((a, b) => b.orders_count - a.orders_count)
         .slice(0, 5);
 
-      setAnalytics({
+      const newAnalytics: AdminAnalytics = {
         totalOrders: orders.length,
         totalUsers: users.length,
         totalRevenue,
@@ -177,19 +229,36 @@ export const useAdminAnalytics = () => {
         monthlyRevenue,
         topServices,
         recentOrders: recentOrdersRes.data || [],
-      });
+      };
+
+      // Update state and cache
+      if (isMountedRef.current) {
+        setAnalytics(newAnalytics);
+        cacheAnalytics(newAnalytics);
+      }
 
     } catch (err) {
       console.error('Error fetching admin analytics:', err);
-      setError(err as Error);
+      if (isMountedRef.current) {
+        setError(err as Error);
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [analytics.totalOrders]);
 
   useEffect(() => {
+    isMountedRef.current = true;
+    
+    // Fetch fresh data immediately
     fetchAnalytics();
-  }, [fetchAnalytics]);
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   return {
     analytics,
