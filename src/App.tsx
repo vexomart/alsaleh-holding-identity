@@ -258,14 +258,17 @@ const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
     document.documentElement.style.width = '100%';
     document.documentElement.style.maxWidth = '100%';
     
-    // Apply to body element
+    // Apply to body element - CRITICAL: prevent shifts
     document.body.dir = dir;
     document.body.style.direction = dir;
     document.body.style.textAlign = textAlign;
     document.body.style.overflowX = 'hidden';
     document.body.style.width = '100%';
     document.body.style.maxWidth = '100%';
+    document.body.style.minWidth = '0';
     document.body.style.position = 'relative';
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
     
     // Toggle classes for CSS targeting
     document.documentElement.classList.toggle('rtl', isRTL);
@@ -278,7 +281,7 @@ const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
     <div 
       dir={isRTL ? 'rtl' : 'ltr'}
       className={cn(
-        "min-h-screen bg-background",
+        "min-h-screen min-h-dvh bg-background",
         isRTL ? "text-right" : "text-left"
       )}
       style={{
@@ -286,8 +289,10 @@ const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
         textAlign: isRTL ? 'right' : 'left',
         width: '100%',
         maxWidth: '100%',
+        minWidth: 0,
         overflowX: 'hidden',
         position: 'relative',
+        boxSizing: 'border-box',
       }}
     >
       {children}

@@ -7,16 +7,28 @@
 @import url('./styles/finance-animations.css');
 
 /* ===========================================
+   GLOBAL BOX-SIZING FIX
+   Prevent width overflow from padding/borders
+   =========================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ===========================================
    RTL BASE - Document Level (STRICT MODE)
    Arabic is the DEFAULT language
    =========================================== */
 html {
   direction: rtl;
   text-align: right;
-  /* Prevent horizontal overflow globally */
-  overflow-x: hidden;
+  /* CRITICAL: Prevent horizontal overflow */
+  overflow-x: hidden !important;
   width: 100%;
   max-width: 100%;
+  /* Prevent layout shift from scrollbar */
+  scrollbar-gutter: stable;
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
 }
 
 html[dir="ltr"] {
@@ -29,10 +41,38 @@ body {
   text-align: inherit;
   /* iOS-like smooth scrolling */
   -webkit-overflow-scrolling: touch;
-  overflow-x: hidden;
+  /* CRITICAL: Prevent horizontal overflow */
+  overflow-x: hidden !important;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   position: relative;
+  /* Prevent body from shifting when modals open */
+  margin: 0;
+  padding: 0;
+}
+
+/* ===========================================
+   PREVENT LAYOUT SHIFT FROM MODALS/DIALOGS
+   Keep body stable when overlays open
+   =========================================== */
+html.overflow-hidden,
+body.overflow-hidden,
+html:has([data-radix-dialog-overlay]),
+body:has([data-radix-dialog-overlay]) {
+  /* Prevent scroll but keep layout stable */
+  overflow-y: scroll !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Modal/Dialog overlay - prevent width issues */
+[data-radix-dialog-overlay],
+[data-radix-alert-dialog-overlay],
+.fixed.inset-0 {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* ===========================================
@@ -42,11 +82,6 @@ body {
 .sticky {
   position: sticky;
   position: -webkit-sticky;
-}
-
-/* Prevent layout shift from scrollbar */
-html, body {
-  scrollbar-gutter: stable;
 }
 
 /* Hardware acceleration for smooth animations */
@@ -209,6 +244,41 @@ footer {
 
 /* Prevent horizontal overflow in RTL */
 .rtl-root {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ===========================================
+   WIDTH OVERFLOW PREVENTION
+   Never use 100vw - always use 100%
+   =========================================== */
+.w-full {
+  width: 100%;
+  max-width: 100%;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+/* Override any 100vw usage */
+.w-screen {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Container safety */
+.container,
+.container-fluid,
+main,
+section,
+article,
+header,
+footer,
+nav,
+aside {
+  max-width: 100%;
   overflow-x: hidden;
 }
 
