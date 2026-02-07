@@ -202,6 +202,13 @@ serve(async (req) => {
           }
         }
 
+        // Get new balance for SMS
+        const { data: updatedWallet } = await supabase
+          .from('customer_wallets')
+          .select('balance')
+          .eq('id', transaction.wallet_id)
+          .single();
+
         // Create journal entry for top-up
         await createTopupJournalEntry(supabase, {
           walletId: transaction.wallet_id,
@@ -211,6 +218,52 @@ serve(async (req) => {
           customerId: transaction.customer_user_id,
           transactionNo,
         });
+
+        // Get customer phone for SMS notification
+        const { data: customerProfile } = await supabase
+          .from('profiles')
+          .select('phone, full_name, email')
+          .eq('id', transaction.customer_user_id)
+          .single();
+
+        // Send SMS notification for wallet topup
+        if (customerProfile?.phone) {
+          try {
+            console.log('Sending wallet topup SMS to:', customerProfile.phone);
+            await supabase.functions.invoke('sms-send-notification', {
+              body: {
+                phone: customerProfile.phone,
+                message_type: 'wallet_topup',
+                template_data: {
+                  amount: Number(transaction.amount).toLocaleString('ar-SA'),
+                  balance: Number(updatedWallet?.balance || 0).toLocaleString('ar-SA'),
+                },
+              },
+            });
+            console.log('Wallet topup SMS sent successfully');
+          } catch (smsError) {
+            console.error('Failed to send wallet topup SMS:', smsError);
+          }
+        }
+
+        // Send email notification for wallet topup
+        if (customerProfile?.email && !customerProfile.email.endsWith('@ash.local')) {
+          try {
+            await supabase.functions.invoke('wallet-email-notifications', {
+              body: {
+                type: 'deposit',
+                customer_email: customerProfile.email,
+                customer_name: customerProfile.full_name || 'عميلنا الكريم',
+                amount: Number(transaction.amount),
+                newBalance: Number(updatedWallet?.balance || 0),
+                transactionId: transactionNo,
+              },
+            });
+            console.log('Wallet topup email sent successfully');
+          } catch (emailError) {
+            console.error('Failed to send wallet topup email:', emailError);
+          }
+        }
 
         // Create notification for customer
         await supabase.from('notifications').insert({
@@ -273,6 +326,33 @@ serve(async (req) => {
             customerId: invoice.customer_id,
             transactionNo,
           });
+
+          // Get customer profile for SMS
+          const { data: customerProfile } = await supabase
+            .from('profiles')
+            .select('phone, full_name, email')
+            .eq('id', invoice.customer_id)
+            .single();
+
+          // Send SMS notification for successful payment
+          if (customerProfile?.phone) {
+            try {
+              console.log('Sending payment success SMS to:', customerProfile.phone);
+              await supabase.functions.invoke('sms-send-notification', {
+                body: {
+                  phone: customerProfile.phone,
+                  message_type: 'payment_success',
+                  template_data: {
+                    amount: Number(invoice.total).toLocaleString('ar-SA'),
+                    transaction_id: invoice.invoice_number,
+                  },
+                },
+              });
+              console.log('Payment success SMS sent');
+            } catch (smsError) {
+              console.error('Failed to send payment SMS:', smsError);
+            }
+          }
 
           // Emit invoice.paid realtime event
           await emitRealtimeEvent(supabase, 'invoice.paid', {
@@ -345,6 +425,28 @@ serve(async (req) => {
 
       // Create notification for failed payment
       if (transaction.customer_user_id) {
+        // Get customer phone for SMS
+        const { data: failedCustomerProfile } = await supabase
+          .from('profiles')
+          .select('phone')
+          .eq('id', transaction.customer_user_id)
+          .single();
+
+        // Send SMS for failed payment
+        if (failedCustomerProfile?.phone) {
+          try {
+            await supabase.functions.invoke('sms-send-notification', {
+              body: {
+                phone: failedCustomerProfile.phone,
+                message_type: 'payment_failed',
+                template_data: {},
+              },
+            });
+          } catch (smsError) {
+            console.error('Failed to send payment failed SMS:', smsError);
+          }
+        }
+
         await supabase.from('notifications').insert({
           user_id: transaction.customer_user_id,
           tenant_id: transaction.tenant_id,

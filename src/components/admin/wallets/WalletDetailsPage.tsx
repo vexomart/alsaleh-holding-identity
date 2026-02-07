@@ -161,6 +161,46 @@ export function WalletDetailsPage() {
 
     if (txError) throw txError;
 
+    // Send SMS notification to customer
+    if (customerData.profile?.phone) {
+      try {
+        const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
+        await supabase.functions.invoke("sms-send-notification", {
+          body: {
+            phone: customerData.profile.phone,
+            message_type: messageType,
+            template_data: {
+              amount: amount.toLocaleString("ar-SA"),
+              balance: newBalance.toLocaleString("ar-SA"),
+            },
+          },
+        });
+        console.log("Wallet adjustment SMS sent");
+      } catch (smsError) {
+        console.error("Failed to send adjustment SMS:", smsError);
+      }
+    }
+
+    // Send email notification
+    const email = customerData.profile?.email;
+    if (email && !email.endsWith("@ash.local")) {
+      try {
+        await supabase.functions.invoke("wallet-email-notifications", {
+          body: {
+            type: adjustmentType === "add" ? "deposit" : "withdrawal",
+            customer_email: email,
+            customer_name: customerData.profile?.full_name || "عميلنا الكريم",
+            amount: amount,
+            newBalance: newBalance,
+            transactionId: `ADJ-${Date.now()}`,
+          },
+        });
+        console.log("Wallet adjustment email sent");
+      } catch (emailError) {
+        console.error("Failed to send adjustment email:", emailError);
+      }
+    }
+
     toast.success(
       isRTL
         ? `تم ${adjustmentType === "add" ? "إضافة" : "خصم"} ${amount} ر.س`
