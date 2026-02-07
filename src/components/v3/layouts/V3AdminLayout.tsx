@@ -10,6 +10,7 @@ import { V3CommandHeader } from '../navigation/V3CommandHeader';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
 import '@/styles/v3/tokens.css';
+import '@/styles/v3/admin-dark-override.css';
 
 // Memoized content wrapper to prevent unnecessary re-renders
 const MemoizedContent = React.memo(({ children }: { children: React.ReactNode }) => (
