@@ -1,6 +1,6 @@
 /**
  * Customer Portal - Dark Theme Styles
- * Matches Admin Command Center aesthetic
+ * Modern Responsive + Mobile-First Design
  * Premium Banking Dark Mode
  */
 
@@ -60,7 +60,7 @@
 /* Force sidebar dark colors */
 [data-sidebar="sidebar"].customer-sidebar,
 .customer-portal [data-sidebar="sidebar"] {
-  background: hsl(222 47% 11%) !important;
+  background: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(222 50% 8%) 100%) !important;
   color: hsl(0 0% 98%) !important;
 }
 
@@ -72,19 +72,52 @@
 }
 
 /* =========================================
-   CARD OVERRIDES FOR DARK MODE
+   RESPONSIVE CARD SYSTEM
    ========================================= */
 
 .customer-portal .card,
 .customer-portal [class*="Card"] {
   background: hsl(220 22% 9%);
-  border-color: hsl(220 18% 18%);
+  border-color: hsl(220 18% 15%);
   color: hsl(0 0% 98%);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+}
+
+.customer-portal .card:hover,
+.customer-portal [class*="Card"]:hover {
+  border-color: hsl(220 18% 22%);
+  box-shadow: 0 8px 32px hsl(220 30% 5% / 0.4);
 }
 
 .customer-portal .card-header,
 .customer-portal [class*="CardHeader"] {
-  border-color: hsl(220 18% 18%);
+  border-color: hsl(220 18% 15%);
+}
+
+/* Mobile-specific card adjustments */
+@media (max-width: 768px) {
+  .customer-portal .card,
+  .customer-portal [class*="Card"] {
+    border-radius: 0.875rem;
+    padding: 1rem;
+  }
+}
+
+/* =========================================
+   MOBILE BOTTOM NAVIGATION
+   ========================================= */
+
+.customer-portal .mobile-bottom-nav {
+  background: linear-gradient(180deg, hsl(222 47% 11% / 0.98) 0%, hsl(222 50% 8% / 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid hsl(220 18% 18%);
+}
+
+/* Safe area padding for notched devices */
+.customer-portal .pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
 /* =========================================
@@ -100,8 +133,22 @@
 }
 
 /* =========================================
-   BUTTON OVERRIDES
+   RESPONSIVE BUTTON SYSTEM
    ========================================= */
+
+.customer-portal .btn,
+.customer-portal button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Minimum touch target size for mobile */
+@media (max-width: 768px) {
+  .customer-portal button:not(.icon-only),
+  .customer-portal [role="button"]:not(.icon-only) {
+    min-height: 44px;
+  }
+}
 
 .customer-portal .btn-outline,
 .customer-portal [class*="outline"] {
@@ -116,7 +163,7 @@
 }
 
 /* =========================================
-   FORM ELEMENTS DARK
+   RESPONSIVE FORM ELEMENTS
    ========================================= */
 
 .customer-portal input,
@@ -125,45 +172,108 @@
   background: hsl(220 20% 10%);
   border-color: hsl(220 18% 20%);
   color: hsl(0 0% 98%);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+/* Prevent zoom on iOS */
+@media (max-width: 768px) {
+  .customer-portal input,
+  .customer-portal textarea,
+  .customer-portal select {
+    font-size: 16px !important;
+  }
 }
 
 .customer-portal input::placeholder,
 .customer-portal textarea::placeholder {
-  color: hsl(220 15% 50%);
+  color: hsl(220 15% 45%);
 }
 
 .customer-portal input:focus,
 .customer-portal textarea:focus,
 .customer-portal select:focus {
   border-color: hsl(173 65% 40%);
-  box-shadow: 0 0 0 2px hsl(173 65% 40% / 0.2);
+  box-shadow: 0 0 0 3px hsl(173 65% 40% / 0.15);
+  outline: none;
 }
 
 /* =========================================
-   TABLE DARK MODE
+   RESPONSIVE TABLE SYSTEM
    ========================================= */
 
 .customer-portal table {
   background: hsl(220 22% 9%);
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
 .customer-portal th {
   background: hsl(220 20% 12%);
-  color: hsl(220 15% 70%);
-  border-color: hsl(220 18% 18%);
+  color: hsl(220 15% 65%);
+  border-color: hsl(220 18% 15%);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .customer-portal td {
-  border-color: hsl(220 18% 15%);
+  border-color: hsl(220 18% 12%);
   color: hsl(0 0% 90%);
 }
 
 .customer-portal tr:hover {
-  background: hsl(220 20% 12%);
+  background: hsl(220 20% 11%);
+}
+
+/* Mobile: Convert tables to cards */
+@media (max-width: 768px) {
+  .customer-portal .responsive-table {
+    display: block;
+  }
+  
+  .customer-portal .responsive-table thead {
+    display: none;
+  }
+  
+  .customer-portal .responsive-table tbody,
+  .customer-portal .responsive-table tr {
+    display: block;
+  }
+  
+  .customer-portal .responsive-table tr {
+    margin-bottom: 1rem;
+    background: hsl(220 22% 9%);
+    border-radius: 0.875rem;
+    padding: 1rem;
+    border: 1px solid hsl(220 18% 15%);
+  }
+  
+  .customer-portal .responsive-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border: none;
+    border-bottom: 1px solid hsl(220 18% 12%);
+  }
+  
+  .customer-portal .responsive-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .customer-portal .responsive-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: hsl(220 15% 55%);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
 }
 
 /* =========================================
-   BADGE OVERRIDES
+   BADGE SYSTEM
    ========================================= */
 
 .customer-portal .badge-outline,
@@ -173,25 +283,37 @@
 }
 
 /* =========================================
-   SCROLLBAR DARK THEME
+   CUSTOM SCROLLBAR - THIN & MODERN
    ========================================= */
 
 .customer-portal ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 .customer-portal ::-webkit-scrollbar-track {
-  background: hsl(220 25% 8%);
+  background: transparent;
 }
 
 .customer-portal ::-webkit-scrollbar-thumb {
-  background: hsl(220 18% 25%);
-  border-radius: 4px;
+  background: hsl(220 18% 20%);
+  border-radius: 999px;
 }
 
 .customer-portal ::-webkit-scrollbar-thumb:hover {
-  background: hsl(220 18% 35%);
+  background: hsl(220 18% 30%);
+}
+
+/* Hide scrollbar on mobile */
+@media (max-width: 768px) {
+  .customer-portal ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .customer-portal {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 }
 
 /* =========================================
@@ -204,66 +326,73 @@
 }
 
 /* =========================================
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE SPACING UTILITIES
    ========================================= */
 
 @media (max-width: 768px) {
-  .customer-portal .mobile-header {
-    background: hsl(220 22% 9%);
-    border-color: hsl(220 18% 18%);
+  .customer-portal .mobile-p-3 {
+    padding: 0.75rem !important;
+  }
+  
+  .customer-portal .mobile-p-4 {
+    padding: 1rem !important;
+  }
+  
+  .customer-portal .mobile-gap-3 {
+    gap: 0.75rem !important;
+  }
+  
+  .customer-portal .mobile-text-sm {
+    font-size: 0.875rem !important;
   }
 }
 
 /* =========================================
-   GRADIENT OVERRIDES FOR DARK
-   ========================================= */
-
-.customer-portal .gradient-hero,
-.customer-portal [class*="gradient"] {
-  --tw-gradient-from: hsl(220 25% 10%);
-  --tw-gradient-to: hsl(220 22% 8%);
-}
-
-/* Premium accent gradients */
-.customer-portal .premium-gradient {
-  background: linear-gradient(135deg, 
-    hsl(220 25% 10%) 0%, 
-    hsl(173 30% 15%) 50%, 
-    hsl(220 25% 10%) 100%
-  );
-}
-
-/* =========================================
-   SKELETON LOADER DARK
+   LOADING SKELETON DARK
    ========================================= */
 
 .customer-portal .skeleton,
 .customer-portal [class*="Skeleton"] {
-  background: hsl(220 20% 15%);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: linear-gradient(90deg, 
+    hsl(220 20% 12%) 0%, 
+    hsl(220 20% 18%) 50%, 
+    hsl(220 20% 12%) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
   }
-  50% {
-    opacity: 0.5;
+  100% {
+    background-position: -200% 0;
   }
 }
 
 /* =========================================
-   DIALOG/MODAL DARK
+   DIALOG/MODAL RESPONSIVE
    ========================================= */
 
 .customer-portal [role="dialog"],
 .customer-portal [data-state="open"][role="dialog"] {
   background: hsl(220 22% 9%);
   border-color: hsl(220 18% 18%);
+  border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+  .customer-portal [role="dialog"] {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    max-width: calc(100vw - 2rem) !important;
+  }
 }
 
 .customer-portal [data-radix-dialog-overlay] {
-  background: hsl(220 30% 5% / 0.8);
+  background: hsl(220 30% 3% / 0.85);
+  backdrop-filter: blur(8px);
 }
 
 /* =========================================
@@ -273,6 +402,8 @@
 .customer-portal [role="menu"] {
   background: hsl(220 22% 10%);
   border-color: hsl(220 18% 18%);
+  border-radius: 0.875rem;
+  box-shadow: 0 16px 48px hsl(220 30% 5% / 0.5);
 }
 
 .customer-portal [role="menuitem"]:hover {
@@ -280,17 +411,33 @@
 }
 
 /* =========================================
-   TABS DARK MODE
+   TABS RESPONSIVE
    ========================================= */
 
 .customer-portal [role="tablist"] {
   background: hsl(220 20% 10%);
   border-color: hsl(220 18% 18%);
+  border-radius: 0.75rem;
+  padding: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .customer-portal [role="tablist"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .customer-portal [role="tablist"]::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .customer-portal [role="tab"][data-state="active"] {
   background: hsl(173 65% 40%);
   color: hsl(0 0% 100%);
+  border-radius: 0.5rem;
 }
 
 .customer-portal [role="tab"]:not([data-state="active"]) {
@@ -300,4 +447,55 @@
 .customer-portal [role="tab"]:not([data-state="active"]):hover {
   color: hsl(0 0% 90%);
   background: hsl(220 20% 15%);
+}
+
+/* =========================================
+   GRADIENT BACKGROUNDS
+   ========================================= */
+
+.customer-portal .gradient-mesh {
+  background: 
+    radial-gradient(ellipse at 20% 0%, hsl(173 65% 40% / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, hsl(220 50% 30% / 0.08) 0%, transparent 50%),
+    hsl(220 25% 6%);
+}
+
+.customer-portal .gradient-card {
+  background: linear-gradient(135deg, 
+    hsl(220 22% 11%) 0%, 
+    hsl(220 22% 9%) 100%
+  );
+}
+
+/* =========================================
+   ANIMATIONS & TRANSITIONS
+   ========================================= */
+
+.customer-portal * {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .customer-portal * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================
+   FOCUS STATES FOR ACCESSIBILITY
+   ========================================= */
+
+.customer-portal :focus-visible {
+  outline: 2px solid hsl(173 65% 50%);
+  outline-offset: 2px;
+}
+
+.customer-portal button:focus-visible,
+.customer-portal a:focus-visible {
+  outline: 2px solid hsl(173 65% 50%);
+  outline-offset: 2px;
 }
