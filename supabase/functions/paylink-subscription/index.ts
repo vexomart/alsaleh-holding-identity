@@ -147,7 +147,7 @@ serve(async (req) => {
     logStep("Subscription created", { subscriptionId: subscription.id });
 
     // Prepare Paylink payment request
-    const baseUrl = req.headers.get("origin") || "https://c76d2028-73e1-45b9-a970-979a33912db9.lovableproject.com";
+    const baseUrl = req.headers.get("origin") || "https://alialshehriholding.com";
     const successUrl = return_url || `${baseUrl}/payment-success?subscription_id=${subscription.id}`;
     const cancelUrl = `${baseUrl}/pricing?cancelled=true`;
 

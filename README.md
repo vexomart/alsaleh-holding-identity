@@ -1,73 +1,62 @@
-# Welcome to your Lovable project
+# شركة علي صالح الشهري القابضة - ASH HOLDING
 
-## Project info
+## معلومات المشروع
 
-**URL**: https://lovable.dev/projects/c76d2028-73e1-45b9-a970-979a33912db9
+**الموقع**: https://alialshehriholding.com
 
-## How can I edit this code?
+## وصف المشروع
 
-There are several ways of editing your application.
+منصة رقمية متكاملة لشركة علي صالح الشهري القابضة - شركة رائدة في مجال الاستثمار التقني والإعلامي في المملكة العربية السعودية.
 
-**Use Lovable**
+## التقنيات المستخدمة
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c76d2028-73e1-45b9-a970-979a33912db9) and start prompting.
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Backend**: Supabase (Database, Auth, Storage, Edge Functions)
+- **Deployment**: Cloud Hosting
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## التشغيل المحلي
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# استنساخ المستودع
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# الانتقال لمجلد المشروع
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# تثبيت المتطلبات
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# تشغيل خادم التطوير
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## البناء للإنتاج
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+# بناء المشروع
+npm run build
 
-**Use GitHub Codespaces**
+# معاينة البناء
+npm run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## الميزات الرئيسية
 
-## What technologies are used for this project?
+- ✅ لوحة تحكم إدارية متكاملة
+- ✅ نظام إدارة العملاء والطلبات
+- ✅ نظام الفواتير والمالية
+- ✅ نظام العقود والتوقيع الإلكتروني
+- ✅ نظام المصادقة والصلاحيات (RBAC)
+- ✅ دعم كامل للغة العربية (RTL)
+- ✅ تصميم متجاوب لجميع الأجهزة
 
-This project is built with:
+## التواصل
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **البريد الإلكتروني**: info@ash-holding.sa
+- **الهاتف**: +966555812567
+- **العنوان**: 5081 شارع الأمير سلطان – حي البساتين، الرياض 11564
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/c76d2028-73e1-45b9-a970-979a33912db9) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+© 2024 شركة علي صالح الشهري القابضة. جميع الحقوق محفوظة.
