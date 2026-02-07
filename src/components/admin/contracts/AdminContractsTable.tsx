@@ -1,23 +1,14 @@
 /**
- * AdminContractsTable - Enterprise Data Table for Admin Contracts
- * Bloomberg-style with advanced features
+ * AdminContractsTable - iOS-Style Enterprise Table
+ * جدول عقود احترافي متجاوب بتصميم iOS
  */
 
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Tooltip,
   TooltipContent,
@@ -36,7 +27,7 @@ import {
   X,
   Copy,
   User,
-  DollarSign,
+  Banknote,
   Calendar,
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
@@ -93,61 +84,53 @@ export interface AdminContract {
   customer?: ContractCustomer | null;
 }
 
-// Status configuration
 const statusConfig: Record<ContractStatus, {
-  labelAr: string;
-  labelEn: string;
+  label: string;
   color: string;
   bgColor: string;
   borderColor: string;
   icon: LucideIcon;
 }> = {
   draft: {
-    labelAr: 'مسودة',
-    labelEn: 'Draft',
+    label: 'مسودة',
     color: 'text-slate-300',
-    bgColor: 'bg-slate-700/50',
+    bgColor: 'bg-slate-700/60',
     borderColor: 'border-slate-600',
     icon: FileText,
   },
   pre_approved_by_customer: {
-    labelAr: 'بانتظار الموافقة',
-    labelEn: 'Pending Approval',
+    label: 'بانتظار الموافقة',
     color: 'text-amber-300',
-    bgColor: 'bg-amber-900/40',
-    borderColor: 'border-amber-700',
+    bgColor: 'bg-amber-900/50',
+    borderColor: 'border-amber-700/60',
     icon: AlertTriangle,
   },
   pending_admin_approval: {
-    labelAr: 'بانتظار الإدارة',
-    labelEn: 'Pending Admin',
+    label: 'بانتظار الإدارة',
     color: 'text-amber-300',
-    bgColor: 'bg-amber-900/40',
-    borderColor: 'border-amber-700',
+    bgColor: 'bg-amber-900/50',
+    borderColor: 'border-amber-700/60',
     icon: AlertTriangle,
   },
   pending_signature: {
-    labelAr: 'بانتظار التوقيع',
-    labelEn: 'Awaiting Signature',
+    label: 'بانتظار التوقيع',
     color: 'text-indigo-300',
-    bgColor: 'bg-indigo-900/40',
-    borderColor: 'border-indigo-700',
+    bgColor: 'bg-indigo-900/50',
+    borderColor: 'border-indigo-700/60',
     icon: FileSignature,
   },
   signed: {
-    labelAr: 'موقّع',
-    labelEn: 'Signed',
+    label: 'موقّع',
     color: 'text-emerald-300',
-    bgColor: 'bg-emerald-900/40',
-    borderColor: 'border-emerald-700',
+    bgColor: 'bg-emerald-900/50',
+    borderColor: 'border-emerald-700/60',
     icon: CheckCircle,
   },
   cancelled: {
-    labelAr: 'ملغي',
-    labelEn: 'Cancelled',
+    label: 'ملغي',
     color: 'text-red-300',
-    bgColor: 'bg-red-900/40',
-    borderColor: 'border-red-700',
+    bgColor: 'bg-red-900/50',
+    borderColor: 'border-red-700/60',
     icon: XCircle,
   },
 };
@@ -162,14 +145,14 @@ interface AdminContractsTableProps {
 }
 
 const rowVariants = {
-  hidden: { opacity: 0, y: 8 },
+  hidden: { opacity: 0, x: 16 },
   visible: (i: number) => ({
     opacity: 1,
-    y: 0,
+    x: 0,
     transition: {
-      delay: i * 0.02,
-      duration: 0.15,
-      ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+      delay: i * 0.03,
+      duration: 0.25,
+      ease: [0.25, 0.1, 0.25, 1] as const,
     },
   }),
 };
@@ -182,10 +165,9 @@ export function AdminContractsTable({
   onReject,
   onCopyNumber,
 }: AdminContractsTableProps) {
-  const { isRTL } = useLanguage();
 
   const formatCurrency = (amount: number, currency: string = 'SAR') => {
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-SA', {
+    return new Intl.NumberFormat('ar-SA', {
       style: 'currency',
       currency,
       minimumFractionDigits: 0,
@@ -195,7 +177,7 @@ export function AdminContractsTable({
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
+    return new Intl.DateTimeFormat('ar-SA', {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
@@ -208,15 +190,13 @@ export function AdminContractsTable({
     const Icon = config.icon;
     return (
       <div className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border flex-row-reverse",
+        "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[11px] font-medium border",
         config.bgColor,
         config.color,
         config.borderColor
       )}>
         <Icon className="h-3 w-3" />
-        <span className="hidden sm:inline">
-          {config.labelAr}
-        </span>
+        <span>{config.label}</span>
       </div>
     );
   };
@@ -227,238 +207,330 @@ export function AdminContractsTable({
 
   if (contracts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl border border-slate-700 bg-slate-800/50">
-        <FileText className="h-16 w-16 text-slate-500 mb-4" />
-        <h3 className="font-semibold text-lg text-white">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-slate-700/60 bg-slate-800/40"
+      >
+        <div className="p-4 rounded-full bg-slate-700/40 mb-4">
+          <FileText className="h-10 w-10 text-slate-500" />
+        </div>
+        <h3 className="font-semibold text-lg text-white mb-1">
           لا توجد عقود
         </h3>
-        <p className="text-slate-400 text-sm">
-          لم يتم العثور على أي عقود مطابقة
+        <p className="text-slate-400 text-sm max-w-xs">
+          لم يتم العثور على أي عقود مطابقة للبحث أو الفلتر المحدد
         </p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-900 overflow-hidden shadow-xl" dir="rtl">
-      <ScrollArea className="h-[600px]">
-        <Table>
-          <TableHeader className="bg-slate-800/80 sticky top-0 z-10">
-            <TableRow className="hover:bg-transparent border-slate-700">
-              <TableHead className="w-[120px] text-right text-slate-300">
-                الحالة
-              </TableHead>
-              <TableHead className="min-w-[160px] text-right text-slate-300">
-                رقم العقد
-              </TableHead>
-              <TableHead className="min-w-[180px] text-right text-slate-300">
-                <div className="flex items-center gap-1.5 flex-row-reverse">
-                  <User className="h-4 w-4 text-slate-400" />
-                  العميل
-                </div>
-              </TableHead>
-              <TableHead className="min-w-[140px] text-right text-slate-300">
-                الخدمة
-              </TableHead>
-              <TableHead className="w-[120px] text-right text-slate-300">
-                <div className="flex items-center gap-1.5 flex-row-reverse">
-                  <DollarSign className="h-4 w-4 text-slate-400" />
-                  القيمة
-                </div>
-              </TableHead>
-              <TableHead className="w-[130px] text-right text-slate-300">
-                <div className="flex items-center gap-1.5 flex-row-reverse">
-                  <Calendar className="h-4 w-4 text-slate-400" />
-                  التاريخ
-                </div>
-              </TableHead>
-              <TableHead className="w-[140px] text-center text-slate-300">
-                الإجراءات
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {contracts.map((contract, index) => (
-              <motion.tr
-                key={contract.id}
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                variants={rowVariants}
-                className={cn(
-                  'group hover:bg-slate-800/50 cursor-pointer transition-colors border-slate-700/50',
-                  contract.status === 'pre_approved_by_customer' && 'bg-amber-950/20'
-                )}
-                onClick={() => onViewDetails(contract)}
-              >
-                {/* Status */}
-                <TableCell className="text-right">
-                  {getStatusBadge(contract.status)}
-                </TableCell>
-
-                {/* Contract Number */}
-                <TableCell className="text-right">
-                  <div className="flex items-center gap-2 flex-row-reverse">
-                    <code className="px-2 py-1 bg-slate-700 rounded text-xs font-mono text-slate-200">
-                      {contract.contract_number}
-                    </code>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white hover:bg-slate-700"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onCopyNumber(contract.contract_number);
-                            }}
-                          >
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          نسخ
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+    <div dir="rtl">
+      {/* Desktop Table */}
+      <div className="hidden lg:block rounded-2xl border border-slate-700/60 bg-slate-900/60 overflow-hidden">
+        <ScrollArea className="h-[600px]">
+          <table className="w-full">
+            <thead className="bg-slate-800/80 sticky top-0 z-10">
+              <tr className="border-b border-slate-700/60">
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[130px]">
+                  الحالة
+                </th>
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[150px]">
+                  رقم العقد
+                </th>
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[180px]">
+                  <div className="flex items-center gap-1.5">
+                    <User className="h-3.5 w-3.5 text-slate-400" />
+                    العميل
                   </div>
-                </TableCell>
-
-                {/* Customer */}
-                <TableCell className="text-right">
-                  <div className="flex flex-col">
-                    <span className="font-medium text-sm text-white">
-                      {contract.customer?.full_name_ar || contract.customer?.full_name || '-'}
-                    </span>
-                    <span className="text-xs text-slate-400 truncate max-w-[160px]">
-                      {contract.customer?.email}
-                    </span>
-                    {contract.customer?.customer_uid && (
-                      <Badge variant="outline" className="text-[10px] w-fit mt-1 border-slate-600 text-slate-300">
-                        {contract.customer.customer_uid}
-                      </Badge>
-                    )}
+                </th>
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[140px]">
+                  الخدمة
+                </th>
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[120px]">
+                  <div className="flex items-center gap-1.5">
+                    <Banknote className="h-3.5 w-3.5 text-slate-400" />
+                    القيمة
                   </div>
-                </TableCell>
-
-                {/* Service */}
-                <TableCell className="text-right">
-                  <span className="text-sm truncate block max-w-[140px] text-slate-200">
-                    {contract.service?.name_ar || contract.service?.name || '-'}
-                  </span>
-                </TableCell>
-
-                {/* Value */}
-                <TableCell className="text-right">
-                  {contract.pricing_json ? (
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm text-white">
-                        {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        شامل الضريبة
-                      </span>
+                </th>
+                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[130px]">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                    التاريخ
+                  </div>
+                </th>
+                <th className="py-3.5 px-4 text-center text-xs font-semibold text-slate-300 w-[120px]">
+                  الإجراءات
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/40">
+              {contracts.map((contract, index) => (
+                <motion.tr
+                  key={contract.id}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
+                  className={cn(
+                    'group hover:bg-slate-800/50 cursor-pointer transition-colors duration-150',
+                    contract.status === 'pre_approved_by_customer' && 'bg-amber-950/15'
+                  )}
+                  onClick={() => onViewDetails(contract)}
+                >
+                  <td className="py-3 px-4">
+                    {getStatusBadge(contract.status)}
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-2">
+                      <code className="px-2 py-1 bg-slate-700/60 rounded-md text-xs font-mono text-slate-200">
+                        {contract.contract_number}
+                      </code>
+                      <TooltipProvider delayDuration={300}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white hover:bg-slate-700"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onCopyNumber(contract.contract_number);
+                              }}
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">نسخ</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
-                  ) : '-'}
-                </TableCell>
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-medium text-sm text-white truncate max-w-[160px]">
+                        {contract.customer?.full_name_ar || contract.customer?.full_name || '-'}
+                      </span>
+                      <span className="text-xs text-slate-400 truncate max-w-[160px]">
+                        {contract.customer?.email}
+                      </span>
+                      {contract.customer?.customer_uid && (
+                        <Badge variant="outline" className="text-[9px] w-fit border-slate-600 text-slate-400 px-1.5 py-0">
+                          {contract.customer.customer_uid}
+                        </Badge>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <span className="text-sm text-slate-200 truncate block max-w-[130px]">
+                      {contract.service?.name_ar || contract.service?.name || '-'}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4">
+                    {contract.pricing_json ? (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-semibold text-sm text-white">
+                          {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
+                        </span>
+                        <span className="text-[10px] text-slate-400">شامل الضريبة</span>
+                      </div>
+                    ) : '-'}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-slate-400">
+                    {formatDate(contract.created_at)}
+                  </td>
+                  <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center justify-center gap-1">
+                      <TooltipProvider delayDuration={300}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700"
+                              onClick={() => onViewDetails(contract)}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">عرض</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      {contract.status === 'pre_approved_by_customer' && (
+                        <>
+                          <TooltipProvider delayDuration={300}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-900/40"
+                                  onClick={() => onApprove(contract)}
+                                >
+                                  <Check className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">موافقة</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider delayDuration={300}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40"
+                                  onClick={() => onReject(contract)}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">رفض</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </ScrollArea>
+      </div>
 
-                {/* Date */}
-                <TableCell className="text-sm text-slate-400 text-right">
-                  {formatDate(contract.created_at)}
-                </TableCell>
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {contracts.map((contract, index) => (
+          <motion.div
+            key={contract.id}
+            custom={index}
+            initial="hidden"
+            animate="visible"
+            variants={rowVariants}
+            onClick={() => onViewDetails(contract)}
+            className={cn(
+              "rounded-xl border border-slate-700/60 bg-slate-800/40 p-4 cursor-pointer",
+              "active:scale-[0.98] transition-transform duration-150 touch-manipulation",
+              contract.status === 'pre_approved_by_customer' && 'border-amber-700/40 bg-amber-950/20'
+            )}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                  {getStatusBadge(contract.status)}
+                  <code className="px-1.5 py-0.5 bg-slate-700/50 rounded text-[10px] font-mono text-slate-300">
+                    {contract.contract_number}
+                  </code>
+                </div>
+                <h3 className="font-semibold text-white text-sm truncate">
+                  {contract.customer?.full_name_ar || contract.customer?.full_name || '-'}
+                </h3>
+                <p className="text-xs text-slate-400 truncate">
+                  {contract.service?.name_ar || contract.service?.name || '-'}
+                </p>
+              </div>
+              {contract.pricing_json && (
+                <div className="text-left shrink-0">
+                  <p className="font-bold text-white text-sm">
+                    {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
+                  </p>
+                  <p className="text-[10px] text-slate-400">شامل الضريبة</p>
+                </div>
+              )}
+            </div>
 
-                {/* Actions */}
-                <TableCell>
-                  <div className="flex items-center justify-center gap-1 flex-row-reverse" onClick={(e) => e.stopPropagation()}>
-                    {/* View */}
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700"
-                            onClick={() => onViewDetails(contract)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          عرض
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    {/* Approve & Reject (only for pre_approved) */}
-                    {contract.status === 'pre_approved_by_customer' && (
-                      <>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-900/40"
-                                onClick={() => onApprove(contract)}
-                              >
-                                <Check className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              موافقة
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40"
-                                onClick={() => onReject(contract)}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              رفض
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </>
-                    )}
-                  </div>
-                </TableCell>
-              </motion.tr>
-            ))}
-          </TableBody>
-        </Table>
-      </ScrollArea>
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-3 border-t border-slate-700/40">
+              <span className="text-xs text-slate-400">
+                {formatDate(contract.created_at)}
+              </span>
+              
+              <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-3 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg"
+                  onClick={() => onViewDetails(contract)}
+                >
+                  <Eye className="h-4 w-4 me-1.5" />
+                  عرض
+                </Button>
+                
+                {contract.status === 'pre_approved_by_customer' && (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-900/40 rounded-lg"
+                      onClick={() => onApprove(contract)}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 text-red-400 hover:text-red-300 hover:bg-red-900/40 rounded-lg"
+                      onClick={() => onReject(contract)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }
 
 function AdminContractsTableSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-900 overflow-hidden" dir="rtl">
-      <div className="p-4 space-y-4">
-        <div className="flex gap-4 pb-2 border-b border-slate-700 flex-row-reverse">
-          {[100, 140, 180, 140, 100, 120, 120].map((w, i) => (
-            <Skeleton key={i} className="h-8 bg-slate-700" style={{ width: w }} />
+    <div dir="rtl">
+      {/* Desktop Skeleton */}
+      <div className="hidden lg:block rounded-2xl border border-slate-700/60 bg-slate-900/60 overflow-hidden p-4">
+        <div className="space-y-3">
+          <div className="flex gap-4 pb-3 border-b border-slate-700/40">
+            {[100, 140, 180, 140, 100, 120, 100].map((w, i) => (
+              <Skeleton key={i} className="h-8 bg-slate-700/60" style={{ width: w }} />
+            ))}
+          </div>
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex gap-4 py-3 items-center">
+              <Skeleton className="h-6 w-24 rounded-full bg-slate-700/60" />
+              <Skeleton className="h-6 w-32 bg-slate-700/60" />
+              <Skeleton className="h-12 flex-1 bg-slate-700/60" />
+              <Skeleton className="h-6 w-28 bg-slate-700/60" />
+              <Skeleton className="h-6 w-20 bg-slate-700/60" />
+              <Skeleton className="h-6 w-24 bg-slate-700/60" />
+              <Skeleton className="h-8 w-20 bg-slate-700/60" />
+            </div>
           ))}
         </div>
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="flex gap-4 py-3 items-center flex-row-reverse">
-            <Skeleton className="h-6 w-24 rounded-full bg-slate-700" />
-            <Skeleton className="h-6 w-32 bg-slate-700" />
-            <Skeleton className="h-12 flex-1 bg-slate-700" />
-            <Skeleton className="h-6 w-28 bg-slate-700" />
-            <Skeleton className="h-6 w-24 bg-slate-700" />
-            <Skeleton className="h-6 w-28 bg-slate-700" />
-            <Skeleton className="h-8 w-24 bg-slate-700" />
+      </div>
+
+      {/* Mobile Skeleton */}
+      <div className="lg:hidden space-y-3">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
+            <div className="flex justify-between mb-3">
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-24 rounded-full bg-slate-700/60" />
+                <Skeleton className="h-5 w-32 bg-slate-700/60" />
+                <Skeleton className="h-4 w-20 bg-slate-700/60" />
+              </div>
+              <Skeleton className="h-8 w-20 bg-slate-700/60" />
+            </div>
+            <div className="flex justify-between pt-3 border-t border-slate-700/40">
+              <Skeleton className="h-4 w-24 bg-slate-700/60" />
+              <Skeleton className="h-8 w-20 bg-slate-700/60" />
+            </div>
           </div>
         ))}
       </div>
