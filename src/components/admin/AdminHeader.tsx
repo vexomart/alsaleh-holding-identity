@@ -1,6 +1,7 @@
 /**
  * Admin Header - Enterprise Grade Design
  * Corporate professional style with breadcrumbs and enhanced functionality
+ * Fully responsive for all devices
  */
 
 import { useEffect, useState } from "react";
@@ -12,20 +13,20 @@ import {
   Moon, 
   Sun, 
   ChevronRight,
-  Command,
   X,
   Home,
   Maximize2,
   Minimize2,
-  HelpCircle
+  Menu
 } from "lucide-react";
 import { useLanguage, Language } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 import { useRBAC } from "@/hooks/useRBAC";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -95,6 +96,8 @@ export function AdminHeader({ className }: AdminHeaderProps) {
   const { language, setLanguage, isRTL } = useLanguage();
   const { profile, signOut } = useAuth();
   const { isSuperAdmin } = useRBAC();
+  const { toggleSidebar, setOpenMobile } = useSidebar();
+  const isMobile = useIsMobile();
   const location = useLocation();
   const navigate = useNavigate();
   const [isDark, setIsDark] = useState(false);
@@ -138,6 +141,14 @@ export function AdminHeader({ className }: AdminHeaderProps) {
     navigate(ROUTES.AUTH.LOGIN);
   };
 
+  const handleMenuClick = () => {
+    if (isMobile) {
+      setOpenMobile(true);
+    } else {
+      toggleSidebar();
+    }
+  };
+
   const breadcrumbs = routeToBreadcrumbs[location.pathname] || [];
   const unreadCount = notifications.filter(n => n.unread).length;
 
@@ -145,17 +156,29 @@ export function AdminHeader({ className }: AdminHeaderProps) {
     <TooltipProvider>
       <header
         className={cn(
-          "sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60",
+          "sticky top-0 z-50 flex items-center gap-2 sm:gap-4 border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60",
+          isMobile ? "h-14 px-3" : "h-16 px-4",
           className
         )}
       >
-        {/* Sidebar Trigger */}
-        <SidebarTrigger className="shrink-0 hover:bg-muted/80 transition-colors" />
+        {/* Menu Trigger - Visible on all devices */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleMenuClick}
+          className={cn(
+            "shrink-0 hover:bg-muted/80 transition-colors",
+            isMobile ? "h-10 w-10" : "h-9 w-9"
+          )}
+        >
+          <Menu className={cn(isMobile ? "h-5 w-5" : "h-4 w-4")} />
+          <span className="sr-only">Toggle Menu</span>
+        </Button>
 
-        {/* Separator */}
-        <div className="h-6 w-px bg-border/50" />
+        {/* Separator - Desktop only */}
+        <div className="hidden sm:block h-6 w-px bg-border/50" />
 
-        {/* Breadcrumbs */}
+        {/* Breadcrumbs - Desktop only */}
         <nav className="hidden md:flex items-center gap-1.5 text-sm">
           <Button
             variant="ghost"
@@ -175,21 +198,28 @@ export function AdminHeader({ className }: AdminHeaderProps) {
           ))}
         </nav>
 
-        {/* Spacer */}
-        <div className="flex-1" />
+        {/* Mobile Page Title */}
+        {isMobile && breadcrumbs.length > 0 && (
+          <span className="font-semibold text-sm truncate flex-1">
+            {language === "ar" ? breadcrumbs[0].labelAr : breadcrumbs[0].labelEn}
+          </span>
+        )}
 
-        {/* Search Button */}
+        {/* Spacer */}
+        <div className="flex-1 hidden md:block" />
+
+        {/* Search Button - Desktop only */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="outline"
               size="sm"
-              className="hidden md:flex items-center gap-2 h-9 px-3 text-muted-foreground hover:text-foreground border-dashed"
+              className="hidden lg:flex items-center gap-2 h-9 px-3 text-muted-foreground hover:text-foreground border-dashed"
               onClick={() => setSearchOpen(true)}
             >
               <Search className="h-4 w-4" />
               <span className="text-sm">{language === "ar" ? "بحث سريع..." : "Quick search..."}</span>
-              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground ml-2">
+              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground ms-2">
                 <span className="text-xs">⌘</span>K
               </kbd>
             </Button>
@@ -200,7 +230,20 @@ export function AdminHeader({ className }: AdminHeaderProps) {
         </Tooltip>
 
         {/* Actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          {/* Mobile Search */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen(true)}
+            className={cn(
+              "lg:hidden hover:bg-muted/80",
+              isMobile ? "h-10 w-10" : "h-9 w-9"
+            )}
+          >
+            <Search className={cn(isMobile ? "h-5 w-5" : "h-4 w-4")} />
+          </Button>
+
           {/* Language Toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -208,9 +251,12 @@ export function AdminHeader({ className }: AdminHeaderProps) {
                 variant="ghost"
                 size="icon"
                 onClick={toggleLanguage}
-                className="h-9 w-9 hover:bg-muted/80"
+                className={cn(
+                  "hover:bg-muted/80",
+                  isMobile ? "h-10 w-10" : "h-9 w-9"
+                )}
               >
-                <Globe className="h-4 w-4" />
+                <Globe className={cn(isMobile ? "h-5 w-5" : "h-4 w-4")} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -218,14 +264,17 @@ export function AdminHeader({ className }: AdminHeaderProps) {
             </TooltipContent>
           </Tooltip>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle - Tablet+ */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="h-9 w-9 hover:bg-muted/80"
+                className={cn(
+                  "hidden sm:flex hover:bg-muted/80",
+                  isMobile ? "h-10 w-10" : "h-9 w-9"
+                )}
               >
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -251,14 +300,14 @@ export function AdminHeader({ className }: AdminHeaderProps) {
             </TooltipContent>
           </Tooltip>
 
-          {/* Fullscreen Toggle */}
+          {/* Fullscreen Toggle - Desktop only */}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleFullscreen}
-                className="h-9 w-9 hover:bg-muted/80 hidden lg:flex"
+                className="h-9 w-9 hover:bg-muted/80 hidden xl:flex"
               >
                 {isFullscreen ? (
                   <Minimize2 className="h-4 w-4" />
@@ -277,13 +326,20 @@ export function AdminHeader({ className }: AdminHeaderProps) {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative h-9 w-9 hover:bg-muted/80">
-                <Bell className="h-4 w-4" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={cn(
+                  "relative hover:bg-muted/80",
+                  isMobile ? "h-10 w-10" : "h-9 w-9"
+                )}
+              >
+                <Bell className={cn(isMobile ? "h-5 w-5" : "h-4 w-4")} />
                 {unreadCount > 0 && (
                   <motion.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center"
+                    className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-[10px] font-medium text-destructive-foreground flex items-center justify-center"
                   >
                     {unreadCount}
                   </motion.span>
@@ -303,7 +359,7 @@ export function AdminHeader({ className }: AdminHeaderProps) {
                   <DropdownMenuItem key={notif.id} className="flex items-start gap-3 p-3 cursor-pointer">
                     <div className={cn(
                       "w-2 h-2 rounded-full mt-1.5 shrink-0",
-                      notif.unread ? "bg-blue-500" : "bg-muted"
+                      notif.unread ? "bg-primary" : "bg-muted"
                     )} />
                     <div className="flex-1 space-y-1">
                       <p className={cn("text-sm", notif.unread && "font-medium")}>
@@ -321,20 +377,29 @@ export function AdminHeader({ className }: AdminHeaderProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Separator */}
-          <div className="h-6 w-px bg-border/50 mx-2" />
+          {/* Separator - Desktop only */}
+          <div className="hidden sm:block h-6 w-px bg-border/50 mx-1 sm:mx-2" />
 
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-9 gap-2 px-2 hover:bg-muted/80">
-                <Avatar className="h-8 w-8 ring-2 ring-primary/20 ring-offset-1 ring-offset-background">
+              <Button 
+                variant="ghost" 
+                className={cn(
+                  "relative gap-2 hover:bg-muted/80",
+                  isMobile ? "h-10 px-1.5" : "h-9 px-2"
+                )}
+              >
+                <Avatar className={cn(
+                  "ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
+                  isMobile ? "h-8 w-8" : "h-8 w-8"
+                )}>
                   <AvatarImage src={profile?.avatar_url || undefined} />
                   <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-xs font-medium">
                     {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="hidden md:flex flex-col items-start">
+                <div className="hidden lg:flex flex-col items-start">
                   <span className="text-sm font-medium max-w-[100px] truncate">
                     {profile?.full_name || profile?.email?.split("@")[0]}
                   </span>

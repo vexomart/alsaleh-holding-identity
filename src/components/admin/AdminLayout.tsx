@@ -1,7 +1,7 @@
 /**
  * Admin Dashboard Layout
  * HARD RTL BOUNDARY - dir attribute enforced at root
- * Uses CSS Grid for proper sidebar placement
+ * Fully responsive for mobile, tablet, and desktop
  * 
  * OPTIMIZED: Uses centralized RouteGuard for auth checks
  */
@@ -10,6 +10,7 @@ import { type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAdminRealtime } from "@/hooks/useAdminRealtime";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
@@ -22,7 +23,8 @@ interface AdminLayoutProps {
 
 function AdminLayoutContent({ children }: AdminLayoutProps) {
   const { user, profile } = useAuth();
-  const { isRTL, language } = useLanguage();
+  const { isRTL } = useLanguage();
+  const isMobile = useIsMobile();
 
   // Real-time subscriptions for services and delivery confirmations
   const { isServicesConnected, isDeliveryConnected } = useAdminRealtime({
@@ -32,58 +34,53 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
   });
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={!isMobile}>
       {/* 
         HARD RTL BOUNDARY - dir attribute at root level
-        CSS Grid respects dir attribute for column order automatically
+        Flexbox layout for proper responsive behavior
       */}
       <div 
         dir={isRTL ? 'rtl' : 'ltr'}
         className={cn(
-          "min-h-screen w-full bg-background",
-          "grid",
+          "min-h-screen w-full bg-background flex",
           isRTL ? "text-right" : "text-left"
         )}
-        style={{
-          gridTemplateColumns: "auto 1fr",
-          gridTemplateAreas: '"sidebar content"'
-        }}
       >
-        {/* Sidebar - Grid placement respects RTL automatically */}
-        <div style={{ gridArea: 'sidebar' }}>
-          <AdminSidebar />
-        </div>
+        {/* Sidebar - Hidden on mobile (shown via Sheet) */}
+        <AdminSidebar />
         
         {/* Main Content Area */}
-        <SidebarInset 
-          className="flex flex-col min-w-0"
-          style={{ gridArea: 'content' }}
-        >
+        <SidebarInset className="flex flex-col min-w-0 flex-1">
           <AdminHeader />
-          <main className="flex-1 overflow-auto p-4 md:p-6">
+          <main className={cn(
+            "flex-1 overflow-auto",
+            isMobile ? "p-3 pb-safe" : "p-4 md:p-6"
+          )}>
             {children}
           </main>
           
-          {/* Real-time connection indicators (debug) */}
-          <div className={cn(
-            "fixed bottom-4 flex gap-2 z-50",
-            isRTL ? "left-4" : "right-4"
-          )}>
-            <div 
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors",
-                isServicesConnected ? "bg-primary" : "bg-muted"
-              )}
-              title={isRTL ? "اتصال الخدمات" : "Services connection"}
-            />
-            <div 
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors",
-                isDeliveryConnected ? "bg-primary" : "bg-muted"
-              )}
-              title={isRTL ? "تأكيدات التسليم" : "Delivery confirmations"}
-            />
-          </div>
+          {/* Real-time connection indicators (debug) - Desktop only */}
+          {!isMobile && (
+            <div className={cn(
+              "fixed bottom-4 flex gap-2 z-50",
+              isRTL ? "left-4" : "right-4"
+            )}>
+              <div 
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors",
+                  isServicesConnected ? "bg-primary" : "bg-muted"
+                )}
+                title={isRTL ? "اتصال الخدمات" : "Services connection"}
+              />
+              <div 
+                className={cn(
+                  "w-2 h-2 rounded-full transition-colors",
+                  isDeliveryConnected ? "bg-primary" : "bg-muted"
+                )}
+                title={isRTL ? "تأكيدات التسليم" : "Delivery confirmations"}
+              />
+            </div>
+          )}
         </SidebarInset>
       </div>
     </SidebarProvider>
