@@ -34,9 +34,13 @@
 }
 
 /* ===========================================
-   BASE RTL RULES
+   BASE RTL RULES (STRICT MODE)
+   Arabic is the DEFAULT language
    =========================================== */
 
+html, 
+html[dir="rtl"],
+body,
 [dir="rtl"] {
   text-align: right;
   direction: rtl;
@@ -46,12 +50,22 @@
   /* Official Corporate Font - IBM Plex Sans Arabic */
   font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   direction: rtl;
+  text-align: right;
 }
 
+/* LTR Override - Only when explicitly set */
+html[dir="ltr"],
+html[dir="ltr"] body,
+[dir="ltr"],
 [dir="ltr"] body {
   font-family: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   direction: ltr;
   text-align: left;
+}
+
+/* All containers inherit direction */
+* {
+  direction: inherit;
 }
 
 /* ===========================================

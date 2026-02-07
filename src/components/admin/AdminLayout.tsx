@@ -36,15 +36,20 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
   return (
     <SidebarProvider defaultOpen={!isMobile}>
       {/* 
-        HARD RTL BOUNDARY - dir attribute at root level
-        Flexbox layout for proper responsive behavior
+        HARD RTL BOUNDARY - STRICT MODE
+        dir attribute at root level, all children inherit
+        Uses logical properties for RTL-safe positioning
       */}
       <div 
         dir={isRTL ? 'rtl' : 'ltr'}
         className={cn(
-          "min-h-screen w-full bg-background flex",
+          "min-h-screen w-full bg-background flex overflow-x-hidden",
           isRTL ? "text-right" : "text-left"
         )}
+        style={{
+          direction: isRTL ? 'rtl' : 'ltr',
+          textAlign: isRTL ? 'right' : 'left'
+        }}
       >
         {/* Sidebar - Hidden on mobile (shown via Sheet) */}
         <AdminSidebar />
@@ -63,7 +68,7 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
           {!isMobile && (
             <div className={cn(
               "fixed bottom-4 flex gap-2 z-50",
-              isRTL ? "left-4" : "right-4"
+              isRTL ? "start-4" : "end-4" // Using logical properties
             )}>
               <div 
                 className={cn(
