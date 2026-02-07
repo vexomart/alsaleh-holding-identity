@@ -266,9 +266,10 @@
        console.error("Database error:", insertError);
        throw new Error("Failed to store OTP");
      }
- 
-     // Create SMS message
-     const message = `رمز التحقق الخاص بك هو: ${otp}\n\nصالح لمدة 5 دقائق.\nASH Holding`;
+  
+    // Create SMS message
+    const message = `رمز التحقق الخاص بك هو: ${otp}\n\nصالح لمدة 5 دقائق.\nASH HOLDING`;
+  
  
      // Send SMS via Msegat
      const smsResult = await sendViaMsegat(formattedPhone, message);
