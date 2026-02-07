@@ -10,6 +10,7 @@ interface VerifyOTPRequest {
   phone: string;
   otp: string;
   purpose?: string;
+  name?: string; // Added: customer name for registration
 }
 
 // Hash OTP for comparison
@@ -58,7 +59,7 @@ serve(async (req) => {
       },
     });
 
-    const { phone, otp, purpose = "login" }: VerifyOTPRequest = await req.json();
+    const { phone, otp, purpose = "login", name }: VerifyOTPRequest = await req.json();
 
     // Validate inputs
     if (!phone || !otp) {
@@ -268,7 +269,8 @@ serve(async (req) => {
         
         // For registration purpose, create new user
         const tempPassword = crypto.randomUUID();
-        const defaultName = `مستخدم ${formattedPhone.slice(-4)}`;
+        // Use provided name or fallback to default
+        const customerName = name?.trim() || `مستخدم ${formattedPhone.slice(-4)}`;
         
         const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
           email: syntheticEmail,
@@ -278,7 +280,7 @@ serve(async (req) => {
           phone_confirm: true,
           user_metadata: {
             phone: formattedPhone,
-            full_name: defaultName,
+            full_name: customerName,
             created_via: 'sms_otp',
           },
         });
@@ -297,16 +299,16 @@ serve(async (req) => {
 
         userId = newUser.user.id;
         userEmail = syntheticEmail;
-        userName = defaultName;
+        userName = customerName;
         isNewUser = true;
-        console.log("Created new user:", userId);
+        console.log("Created new user:", userId, "Name:", customerName);
 
         // Create profile for new user
         await supabase.from("profiles").upsert({
           id: userId,
           email: syntheticEmail,
           phone: formattedPhone,
-          full_name: defaultName,
+          full_name: customerName,
           preferred_language: 'ar',
           is_active: true,
         });

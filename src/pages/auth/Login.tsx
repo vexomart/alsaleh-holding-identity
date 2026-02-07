@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Mail, Lock, Eye, EyeOff, Smartphone, KeyRound, 
   Phone, Send, RefreshCw, CheckCircle2, ArrowRight,
-  UserPlus, AlertCircle, ChevronLeft, ArrowLeft, Shield
+  UserPlus, AlertCircle, ChevronLeft, ArrowLeft, Shield, User
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
@@ -84,9 +84,13 @@ function Login() {
   // Phone auth states
   const [phone, setPhone] = React.useState('');
   const [otpCode, setOtpCode] = React.useState('');
-  const [phoneStep, setPhoneStep] = React.useState<'phone' | 'otp'>('phone');
+  const [phoneStep, setPhoneStep] = React.useState<'phone' | 'register' | 'otp'>('phone');
   const [countdown, setCountdown] = React.useState(0);
   const [phoneError, setPhoneError] = React.useState('');
+  
+  // Registration info states (for phone-only registration)
+  const [registerName, setRegisterName] = React.useState('');
+  const [registerNameError, setRegisterNameError] = React.useState('');
   
   // Email auth states
   const [email, setEmail] = React.useState('');
@@ -174,7 +178,9 @@ function Login() {
     } else {
       if (response.error?.includes('غير مسجل') || response.error?.includes('not found') || response.error?.includes('لا يوجد')) {
         setUserNotFound(true);
-        setPhoneError('لا يوجد حساب مرتبط بهذا الرقم');
+        setPhone(normalizedPhone);
+        // Show registration form instead of just error
+        setPhoneStep('register');
       } else {
         setPhoneError(response.error || 'فشل في إرسال الرمز');
       }
@@ -191,7 +197,10 @@ function Login() {
       return;
     }
 
-    const response = await verifyOtp(phone, otpCode, 'login');
+    // Use 'register' purpose if user is new, pass name
+    const purpose = userNotFound ? 'register' : 'login';
+    const customerName = userNotFound ? registerName.trim() : undefined;
+    const response = await verifyOtp(phone, otpCode, purpose, customerName);
 
     if (response.success) {
       if (response.action_link) {
@@ -212,7 +221,7 @@ function Login() {
             }
             
             if (data?.session) {
-              toast.success('تم تسجيل الدخول بنجاح! مرحباً بك');
+              toast.success(userNotFound ? 'تم إنشاء حسابك بنجاح! مرحباً بك' : 'تم تسجيل الدخول بنجاح! مرحباً بك');
               await navigateBasedOnRole(data.session.user.id);
               return;
             }
@@ -223,7 +232,7 @@ function Login() {
       }
       
       const { data: refreshData } = await supabase.auth.refreshSession();
-      toast.success('تم تسجيل الدخول بنجاح! مرحباً بك');
+      toast.success(userNotFound ? 'تم إنشاء حسابك بنجاح! مرحباً بك' : 'تم تسجيل الدخول بنجاح! مرحباً بك');
       if (refreshData?.session?.user) {
         await navigateBasedOnRole(refreshData.session.user.id);
       } else {
@@ -241,7 +250,8 @@ function Login() {
   const handleResendOtp = async () => {
     if (countdown > 0) return;
     
-    const response = await sendOtp(phone, 'login');
+    const purpose = userNotFound ? 'register' : 'login';
+    const response = await sendOtp(phone, purpose);
     if (response.success) {
       setCountdown(response.expires_in || 180);
       setOtpCode('');
@@ -306,9 +316,51 @@ function Login() {
     }
   };
 
+  // Handle registration step - validate name and send OTP
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    setRegisterNameError('');
+
+    // Validate name
+    if (!registerName.trim()) {
+      setRegisterNameError('الاسم مطلوب');
+      return;
+    }
+    if (registerName.trim().length < 2) {
+      setRegisterNameError('الاسم يجب أن يكون حرفين على الأقل');
+      return;
+    }
+    if (!/^[\u0600-\u06FFa-zA-Z\s]+$/.test(registerName.trim())) {
+      setRegisterNameError('الاسم يجب أن يحتوي على حروف فقط');
+      return;
+    }
+
+    // Send OTP for registration
+    const response = await sendOtp(phone, 'register');
+
+    if (response.success) {
+      setPhoneStep('otp');
+      setCountdown(response.expires_in || 180);
+      toast.success('تم إرسال رمز التحقق إلى جوالك');
+    } else {
+      toast.error(response.error || 'فشل في إرسال رمز التحقق');
+    }
+  };
+
   // Go back to phone entry
   const handleBackToPhone = () => {
     setPhoneStep('phone');
+    setOtpCode('');
+    setCountdown(0);
+    setUserNotFound(false);
+    setRegisterName('');
+    setRegisterNameError('');
+  };
+
+  // Go back to register from OTP
+  const handleBackToRegister = () => {
+    setPhoneStep('register');
     setOtpCode('');
     setCountdown(0);
   };
@@ -410,7 +462,7 @@ function Login() {
                 {/* Phone Login */}
                 <TabsContent value="phone" className="mt-0 focus-visible:outline-none">
                   <AnimatePresence mode="wait">
-                    {phoneStep === 'phone' ? (
+                    {phoneStep === 'phone' && (
                       <motion.form
                         key="phone-form"
                         initial={{ opacity: 0, x: -15 }}
@@ -435,31 +487,6 @@ function Login() {
                           disabled={isSmsLoading}
                         />
 
-                        {/* User not found message */}
-                        {userNotFound && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -8, height: 0 }}
-                            animate={{ opacity: 1, y: 0, height: 'auto' }}
-                            className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
-                          >
-                            <div className="flex items-start gap-3">
-                              <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
-                              <div className="space-y-2">
-                                <p className="text-sm text-amber-200 font-medium">
-                                  لا يوجد حساب مرتبط بهذا الرقم
-                                </p>
-                                <Link 
-                                  to="/auth/register"
-                                  className="inline-flex items-center gap-1.5 text-sm text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
-                                >
-                                  <UserPlus className="w-4 h-4" />
-                                  إنشاء حساب جديد
-                                </Link>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-
                         <CyberButton
                           type="submit"
                           isLoading={isSmsLoading}
@@ -469,17 +496,19 @@ function Login() {
                           إرسال رمز التحقق
                         </CyberButton>
                       </motion.form>
-                    ) : (
+                    )}
+
+                    {phoneStep === 'register' && (
                       <motion.form
-                        key="otp-form"
+                        key="register-form"
                         initial={{ opacity: 0, x: 15 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -15 }}
                         transition={{ duration: 0.2 }}
-                        onSubmit={handleVerifyOtp}
+                        onSubmit={handleRegisterSubmit}
                         className="space-y-5"
                       >
-                        <CyberStepIndicator step={1} total={2} />
+                        <CyberStepIndicator step={1} total={3} />
                         
                         {/* Back button */}
                         <button
@@ -489,6 +518,102 @@ function Login() {
                         >
                           <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
                           تغيير الرقم
+                        </button>
+
+                        {/* Registration Header */}
+                        <div className="text-center space-y-3">
+                          <motion.div 
+                            className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-600/10 flex items-center justify-center border border-emerald-500/30"
+                            animate={{ 
+                              boxShadow: ['0 0 15px hsla(160, 100%, 50%, 0.2)', '0 0 25px hsla(160, 100%, 50%, 0.3)', '0 0 15px hsla(160, 100%, 50%, 0.2)'],
+                            }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <UserPlus className="w-6 h-6 text-emerald-400" />
+                          </motion.div>
+                          <div>
+                            <h3 className="text-lg font-bold text-white">إنشاء حساب جديد</h3>
+                            <p className="text-white/40 text-sm mt-1">أدخل بياناتك لإنشاء حسابك</p>
+                          </div>
+                        </div>
+
+                        {/* Info message */}
+                        <motion.div
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/30"
+                        >
+                          <div className="flex items-start gap-3">
+                            <Phone className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm text-cyan-200 font-medium">
+                                رقم الجوال: <span dir="ltr" className="font-mono">{phone}</span>
+                              </p>
+                              <p className="text-xs text-white/40 mt-1">
+                                هذا الرقم غير مسجّل. أكمل بياناتك لإنشاء حساب جديد.
+                              </p>
+                            </div>
+                          </div>
+                        </motion.div>
+
+                        {/* Name Input */}
+                        <CyberInput
+                          label="الاسم الكامل"
+                          icon={<User className="w-5 h-5" />}
+                          type="text"
+                          placeholder="أدخل اسمك الكامل"
+                          value={registerName}
+                          onChange={(e) => { setRegisterName(e.target.value); setRegisterNameError(''); }}
+                          error={registerNameError}
+                          disabled={isSmsLoading}
+                          autoFocus
+                        />
+
+                        <CyberButton
+                          type="submit"
+                          isLoading={isSmsLoading}
+                          disabled={!registerName.trim() || isSmsLoading}
+                          variant="success"
+                          icon={<ArrowRight className="w-4 h-4" />}
+                        >
+                          متابعة وإرسال رمز التحقق
+                        </CyberButton>
+
+                        {/* Alternative: Full registration link */}
+                        <div className="text-center pt-2">
+                          <p className="text-xs text-white/40">
+                            تريد التسجيل بالبريد الإلكتروني؟{' '}
+                            <Link 
+                              to="/auth/register"
+                              className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors"
+                            >
+                              تسجيل كامل
+                            </Link>
+                          </p>
+                        </div>
+                      </motion.form>
+                    )}
+
+                    {phoneStep === 'otp' && (
+                      <motion.form
+                        key="otp-form"
+                        initial={{ opacity: 0, x: 15 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -15 }}
+                        transition={{ duration: 0.2 }}
+                        onSubmit={handleVerifyOtp}
+                        className="space-y-5"
+                      >
+                        <CyberStepIndicator step={userNotFound ? 2 : 1} total={userNotFound ? 3 : 2} />
+                        
+                        {/* Back button */}
+                        <button
+                          type="button"
+                          onClick={userNotFound ? handleBackToRegister : handleBackToPhone}
+                          className="flex items-center gap-1.5 text-white/50 hover:text-cyan-400 transition-colors text-sm group"
+                        >
+                          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                          {userNotFound ? 'تعديل البيانات' : 'تغيير الرقم'}
                         </button>
 
                         {/* OTP Header */}
@@ -507,6 +632,15 @@ function Login() {
                             <p className="text-white/40 text-sm mt-1 font-mono" dir="ltr">{phone}</p>
                           </div>
                         </div>
+
+                        {/* Show name if registering */}
+                        {userNotFound && registerName && (
+                          <div className="text-center">
+                            <p className="text-sm text-emerald-400">
+                              مرحباً {registerName} 👋
+                            </p>
+                          </div>
+                        )}
 
                         {/* OTP Input */}
                         <div className="flex justify-center py-3" dir="ltr">
@@ -558,7 +692,7 @@ function Login() {
                           variant={otpCode.length === 6 ? 'success' : 'primary'}
                           icon={<CheckCircle2 className="w-4 h-4" />}
                         >
-                          تأكيد الدخول
+                          {userNotFound ? 'إنشاء الحساب' : 'تأكيد الدخول'}
                         </CyberButton>
                       </motion.form>
                     )}
