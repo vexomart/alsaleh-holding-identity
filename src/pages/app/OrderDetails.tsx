@@ -230,7 +230,7 @@ export default function CustomerOrderDetails() {
         title: isRTL ? 'خطأ في جلب الطلب' : 'Error fetching order',
         variant: 'destructive',
       });
-      navigate('/app');
+      navigate('/portal');
     } finally {
       setLoading(false);
     }
@@ -288,7 +288,7 @@ export default function CustomerOrderDetails() {
         >
           <Button
             variant="ghost"
-            onClick={() => navigate('/app')}
+            onClick={() => navigate('/portal')}
             className="mb-4 gap-2"
           >
             <BackIcon className="h-4 w-4" />

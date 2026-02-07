@@ -565,7 +565,7 @@ const ServiceRequestForm = ({
 
               {/* Customer Portal Link - Native RTL: text first, icon second */}
               <div className="pt-4 border-t border-border">
-                <Link to="/app">
+                <Link to="/portal">
                   <Button 
                     type="button"
                     variant="outline" 

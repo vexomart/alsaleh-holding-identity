@@ -216,7 +216,7 @@ export function ContractsSummary({ contracts, className }: ContractsSummaryProps
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => navigate(`/app/contracts/${contract.id}`)}
+                    onClick={() => navigate(`/portal/contracts/${contract.id}`)}
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Button>

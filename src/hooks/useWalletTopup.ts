@@ -32,7 +32,7 @@ export function useWalletTopup() {
       }
 
       // Get callback URL
-      const callbackUrl = `${window.location.origin}/app/wallet?topup=success`;
+      const callbackUrl = `${window.location.origin}/portal/wallet?topup=success`;
 
       const { data, error } = await supabase.functions.invoke("paylink-topup", {
         body: {

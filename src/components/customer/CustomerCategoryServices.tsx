@@ -476,7 +476,7 @@ export function CustomerCategoryServices() {
   }, [category, isRTL]);
 
   const handleRequestService = (service: Service) => {
-    navigate(`/app/service/${service.id}`);
+    navigate(`/portal/service/${service.id}`);
   };
 
   const goToPage = (page: number) => {
@@ -569,7 +569,7 @@ export function CustomerCategoryServices() {
         >
           <Button
             variant="ghost"
-            onClick={() => navigate("/app/services")}
+            onClick={() => navigate("/portal/services")}
             className="gap-2 text-muted-foreground hover:text-foreground group"
           >
             <BackIcon className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
@@ -691,7 +691,7 @@ export function CustomerCategoryServices() {
           <p className="text-muted-foreground mb-4">
             {isRTL ? "سيتم إضافة خدمات قريباً" : "Services will be added soon"}
           </p>
-          <Button onClick={() => navigate("/app/services")}>
+          <Button onClick={() => navigate("/portal/services")}>
             {isRTL ? "استعراض الأقسام الأخرى" : "Browse Other Categories"}
           </Button>
         </motion.div>

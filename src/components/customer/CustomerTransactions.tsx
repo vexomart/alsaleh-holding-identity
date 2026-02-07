@@ -186,7 +186,7 @@ export function CustomerTransactions() {
                     </div>
                     {tx.related_order_id && (
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/app/orders/${tx.related_order_id}`}><ExternalLink className="h-4 w-4" /></Link>
+                        <Link to={`/portal/orders/${tx.related_order_id}`}><ExternalLink className="h-4 w-4" /></Link>
                       </Button>
                     )}
                   </div>

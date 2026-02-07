@@ -420,7 +420,7 @@ async function createInvoiceNotification(invoice: Invoice): Promise<void> {
     message: `تم إصدار فاتورة رقم ${invoice.invoice_number} بقيمة ${invoice.total.toFixed(2)} ${invoice.currency}`,
     message_ar: `تم إصدار فاتورة رقم ${invoice.invoice_number} بقيمة ${invoice.total.toFixed(2)} ${invoice.currency}`,
     type: 'info' as const,
-    link: `/app/orders/${invoice.order_id}`,
+    link: `/portal/orders/${invoice.order_id}`,
     metadata: {
       invoice_id: invoice.id,
       invoice_number: invoice.invoice_number,

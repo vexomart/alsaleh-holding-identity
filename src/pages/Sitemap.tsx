@@ -141,7 +141,7 @@ const Sitemap = () => {
       links: [
         { name: "تسجيل الدخول", href: "/auth/login" },
         { name: "إنشاء حساب", href: "/auth/register" },
-        { name: "لوحة التحكم", href: "/app" },
+        { name: "لوحة التحكم", href: "/portal" },
         { name: "لوحة الإدارة", href: "/admin" },
       ]
     },

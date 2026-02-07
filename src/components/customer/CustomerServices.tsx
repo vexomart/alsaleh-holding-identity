@@ -319,7 +319,7 @@ export function CustomerServices() {
               whileTap={{ scale: 0.98 }}
             >
               <Card
-                onClick={() => navigate(`/app/services/${item.key}`)}
+                onClick={() => navigate(`/portal/services/${item.key}`)}
                 className={cn(
                   "cursor-pointer h-full overflow-hidden",
                   "border border-border/50 hover:border-primary/30",
@@ -401,7 +401,7 @@ export function CustomerServices() {
         </p>
         <Button
           variant="outline"
-          onClick={() => navigate("/app/profile")}
+          onClick={() => navigate("/portal/profile")}
           className="gap-2"
         >
           <Headphones className="h-4 w-4" />

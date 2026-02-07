@@ -660,7 +660,7 @@ export function CustomerOverview() {
                         initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.1 * index }}
-                        onClick={() => navigate(`/app/orders/${order.id}`)}
+                        onClick={() => navigate(`/portal/orders/${order.id}`)}
                         className={cn(
                           "group flex items-center gap-4 p-4 rounded-xl border bg-card hover:bg-accent/50 cursor-pointer transition-all duration-200",
                           isRTL && "flex-row-reverse"
