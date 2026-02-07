@@ -187,11 +187,11 @@ export function CustomerSidebar() {
             // Mobile: larger touch targets
             isMobile ? "h-12 px-4" : "h-11",
             active
-              ? "bg-primary/15 text-primary font-medium border border-primary/20"
+              ? "bg-[hsl(173_65%_32%/0.12)] text-[hsl(173_80%_48%)] font-medium border border-[hsl(173_65%_32%/0.2)]"
               : "text-slate-300 hover:bg-white/5 hover:text-white"
           )}
         >
-          <Icon className={cn("h-5 w-5 shrink-0", active && "text-primary")} />
+          <Icon className={cn("h-5 w-5 shrink-0", active && "text-[hsl(173_80%_48%)]")} />
           <span className="flex-1 text-start text-sm">
             {isRTL ? item.titleAr : item.titleEn}
           </span>
@@ -229,7 +229,7 @@ export function CustomerSidebar() {
       collapsible="icon"
       side={isRTL ? "right" : "left"}
       className={cn(
-        "bg-gradient-to-b from-slate-950 to-slate-900 text-white",
+        "bg-[hsl(222_47%_11%)] text-white",
         // Logical border - end side
         "border-e border-white/10"
       )}
@@ -242,7 +242,7 @@ export function CustomerSidebar() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className={cn(
-              "rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg",
+              "rounded-xl bg-gradient-to-br from-[hsl(173_65%_32%)] to-[hsl(173_70%_42%)] flex items-center justify-center shadow-lg shadow-[hsl(173_65%_32%/0.3)]",
               isMobile ? "w-11 h-11" : "w-10 h-10"
             )}>
               <Building2 className={cn("text-white", isMobile ? "h-6 w-6" : "h-5 w-5")} />
@@ -300,11 +300,11 @@ export function CustomerSidebar() {
           state === "collapsed" && !isMobile && "justify-center"
         )}>
           <Avatar className={cn(
-            "border-2 border-primary/30",
+            "border-2 border-[hsl(173_65%_32%/0.3)]",
             isMobile ? "h-11 w-11" : "h-9 w-9"
           )}>
             <AvatarImage src={profile?.avatar_url || undefined} />
-            <AvatarFallback className="bg-primary/20 text-primary font-bold">
+            <AvatarFallback className="bg-[hsl(173_65%_32%/0.2)] text-[hsl(173_80%_48%)] font-bold">
               {(profile?.full_name || profile?.email)?.[0]?.toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>

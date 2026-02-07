@@ -291,127 +291,139 @@
     --font-ar: 'IBM Plex Sans Arabic', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
     --font-en: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
     
-    /* Professional Corporate Color System */
-    --background: 0 0% 99%;
-    --foreground: 220 25% 12%;
+    /* ========================================
+       🎨 NEW PREMIUM COLOR SYSTEM - v2.0
+       Inspired by: Premium SaaS + Banking UI
+       ======================================== */
+    
+    /* Base Canvas */
+    --background: 220 20% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
+    --popover-foreground: 222 47% 11%;
     
-    /* Executive Primary - Deep Professional Blue */
-    --primary: 220 100% 20%;
+    /* 🔵 Primary - Deep Navy Slate (Trust & Authority) */
+    --primary: 222 47% 18%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 220 85% 35%;
-    --primary-variant: 220 90% 25%;
+    --primary-glow: 222 60% 28%;
+    --primary-variant: 222 55% 22%;
     
-    /* Corporate Secondary - Sophisticated Gold */
-    --secondary: 35 85% 45%;
+    /* 🟠 Secondary - Warm Copper (Premium Accent) */
+    --secondary: 25 80% 52%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-dark: 30 80% 35%;
-    --secondary-light: 40 90% 55%;
+    --secondary-dark: 20 75% 42%;
+    --secondary-light: 30 85% 60%;
     
-    /* Professional Accent - Elite Teal */
-    --accent: 190 100% 25%;
+    /* 🟢 Accent - Rich Teal (Innovation & Growth) */
+    --accent: 173 65% 32%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 190 85% 35%;
-    --accent-dark: 190 100% 15%;
+    --accent-light: 173 70% 42%;
+    --accent-dark: 173 60% 22%;
     
-    /* Executive Neutral System */
-    --muted: 220 20% 97%;
-    --muted-foreground: 220 25% 40%;
-    --border: 220 25% 90%;
-    --input: 220 20% 96%;
-    --ring: 220 100% 20%;
+    /* Neutral System */
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 45%;
+    --border: 220 15% 88%;
+    --input: 220 15% 95%;
+    --ring: 222 47% 18%;
     
-    /* Status Colors - Professional System */
-    --destructive: 0 75% 45%;
-    --destructive-foreground: 0 0% 98%;
-    --success: 145 75% 35%;
-    --success-foreground: 0 0% 98%;
-    --warning: 40 85% 50%;
-    --warning-foreground: 220 25% 12%;
+    /* Status Colors - Refined */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 70% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
     
-    /* Corporate Gradients - Executive Level */
-    --gradient-primary: linear-gradient(135deg, hsl(220 100% 20%), hsl(220 90% 25%));
-    --gradient-secondary: linear-gradient(135deg, hsl(35 85% 45%), hsl(30 80% 35%));
-    --gradient-accent: linear-gradient(135deg, hsl(190 100% 25%), hsl(190 85% 35%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 100% 20%) 0%, hsl(190 100% 25%) 50%, hsl(35 85% 45%) 100%);
-    --gradient-corporate: linear-gradient(135deg, hsl(220 100% 20% / 0.05), hsl(190 100% 25% / 0.05));
-    --gradient-section: linear-gradient(135deg, hsl(220 100% 20% / 0.02), hsl(0 0% 100%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 20% 98%));
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(222 47% 18%), hsl(222 55% 26%));
+    --gradient-secondary: linear-gradient(135deg, hsl(25 80% 52%), hsl(20 75% 42%));
+    --gradient-accent: linear-gradient(135deg, hsl(173 65% 32%), hsl(173 70% 42%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 18%) 0%, hsl(173 65% 32%) 50%, hsl(25 80% 52%) 100%);
+    --gradient-corporate: linear-gradient(135deg, hsl(222 47% 18% / 0.03), hsl(173 65% 32% / 0.03));
+    --gradient-section: linear-gradient(135deg, hsl(220 20% 98%), hsl(220 15% 96%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 15% 98%));
+    --gradient-mesh: radial-gradient(at 40% 20%, hsl(222 47% 18% / 0.04) 0px, transparent 50%),
+                     radial-gradient(at 80% 80%, hsl(173 65% 32% / 0.04) 0px, transparent 50%),
+                     radial-gradient(at 10% 80%, hsl(25 80% 52% / 0.03) 0px, transparent 50%);
     
-    /* Executive Shadow System */
-    --shadow-sm: 0 2px 8px -2px hsl(220 25% 15% / 0.08);
-    --shadow-md: 0 8px 24px -8px hsl(220 25% 15% / 0.12), 0 4px 8px -2px hsl(220 25% 15% / 0.06);
-    --shadow-lg: 0 20px 40px -8px hsl(220 25% 15% / 0.15), 0 8px 16px -4px hsl(220 25% 15% / 0.08);
-    --shadow-xl: 0 32px 64px -16px hsl(220 25% 15% / 0.25);
-    --shadow-glow: 0 0 40px hsl(220 100% 20% / 0.4);
-    --shadow-accent-glow: 0 0 40px hsl(190 100% 25% / 0.3);
-    --shadow-secondary-glow: 0 0 40px hsl(35 85% 45% / 0.3);
+    /* Premium Shadow System */
+    --shadow-sm: 0 1px 3px 0 hsl(222 47% 11% / 0.05), 0 1px 2px -1px hsl(222 47% 11% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(222 47% 11% / 0.07), 0 2px 4px -2px hsl(222 47% 11% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(222 47% 11% / 0.08), 0 4px 6px -4px hsl(222 47% 11% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(222 47% 11% / 0.1), 0 8px 10px -6px hsl(222 47% 11% / 0.05);
+    --shadow-glow: 0 0 30px hsl(222 47% 18% / 0.25);
+    --shadow-accent-glow: 0 0 30px hsl(173 65% 32% / 0.25);
+    --shadow-secondary-glow: 0 0 30px hsl(25 80% 52% / 0.25);
     
-    --radius: 0.875rem;
+    --radius: 0.75rem;
     
-    /* Executive Sidebar */
-    --sidebar-background: 220 100% 15%;
+    /* Executive Sidebar - Dark Theme */
+    --sidebar-background: 222 47% 11%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 35 85% 55%;
-    --sidebar-primary-foreground: 220 25% 12%;
-    --sidebar-accent: 220 90% 20%;
+    --sidebar-primary: 25 80% 55%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 50% 16%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 80% 30%;
-    --sidebar-ring: 35 85% 55%;
+    --sidebar-border: 222 40% 22%;
+    --sidebar-ring: 25 80% 55%;
   }
 
   .dark {
-    /* Dark Mode - Executive Professional System */
-    --background: 220 35% 4%;
-    --foreground: 0 0% 98%;
-    --card: 220 30% 6%;
-    --card-foreground: 0 0% 98%;
-    --popover: 220 30% 6%;
-    --popover-foreground: 0 0% 98%;
+    /* ========================================
+       🌙 DARK MODE - Premium Edition
+       ======================================== */
     
-    /* Dark Executive Primary */
-    --primary: 35 85% 55%;
-    --primary-foreground: 220 25% 12%;
-    --primary-glow: 35 95% 65%;
-    --primary-variant: 40 80% 50%;
+    /* Dark Canvas */
+    --background: 222 47% 6%;
+    --foreground: 0 0% 97%;
+    --card: 222 40% 9%;
+    --card-foreground: 0 0% 97%;
+    --popover: 222 40% 9%;
+    --popover-foreground: 0 0% 97%;
     
-    /* Dark Corporate Secondary */
-    --secondary: 220 100% 35%;
+    /* 🟠 Primary becomes Copper (Inverted for dark) */
+    --primary: 25 85% 58%;
+    --primary-foreground: 222 47% 11%;
+    --primary-glow: 25 90% 65%;
+    --primary-variant: 30 80% 52%;
+    
+    /* 🔵 Secondary becomes Bright Blue */
+    --secondary: 222 75% 55%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-dark: 220 100% 20%;
+    --secondary-dark: 222 70% 45%;
     
-    /* Dark Professional Accent */
-    --accent: 190 100% 45%;
-    --accent-foreground: 0 0% 100%;
-    --accent-light: 190 100% 55%;
+    /* 🟢 Accent - Bright Teal */
+    --accent: 173 80% 48%;
+    --accent-foreground: 222 47% 11%;
+    --accent-light: 173 85% 58%;
     
-    /* Dark Executive Neutrals */
-    --muted: 220 100% 8%;
-    --muted-foreground: 220 25% 75%;
-    --border: 220 80% 15%;
-    --input: 220 80% 10%;
-    --ring: 35 85% 55%;
+    /* Dark Neutrals */
+    --muted: 222 50% 12%;
+    --muted-foreground: 220 15% 65%;
+    --border: 222 40% 18%;
+    --input: 222 45% 12%;
+    --ring: 25 85% 58%;
     
     /* Dark Status Colors */
     --destructive: 0 75% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --success: 145 75% 50%;
-    --success-foreground: 0 0% 98%;
-    --warning: 35 85% 60%;
-    --warning-foreground: 220 25% 12%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 75% 48%;
+    --success-foreground: 222 47% 11%;
+    --warning: 38 95% 55%;
+    --warning-foreground: 222 47% 11%;
     
-    /* Dark Executive Sidebar */
-    --sidebar-background: 220 100% 3%;
+    /* Dark Sidebar */
+    --sidebar-background: 222 50% 5%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 35 85% 55%;
-    --sidebar-primary-foreground: 220 25% 12%;
-    --sidebar-accent: 220 90% 12%;
+    --sidebar-primary: 25 85% 58%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 45% 10%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 80% 18%;
-    --sidebar-ring: 35 85% 55%;
+    --sidebar-border: 222 40% 15%;
+    --sidebar-ring: 25 85% 58%;
   }
 }
 
