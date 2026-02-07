@@ -192,12 +192,24 @@ export const V3CardTitle: React.FC<React.HTMLAttributes<HTMLHeadingElement> & {
   </h3>
 );
 
-export const V3CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ 
+export interface V3CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  noPadding?: boolean;
+}
+
+export const V3CardContent: React.FC<V3CardContentProps> = ({ 
+  noPadding = false,
   style, 
   children, 
   ...props 
 }) => (
-  <div style={{ ...style }} {...props}>
+  <div 
+    style={{ 
+      margin: noPadding ? 'calc(var(--v3-space-5) * -1)' : undefined,
+      marginTop: noPadding ? '0' : undefined,
+      ...style 
+    }} 
+    {...props}
+  >
     {children}
   </div>
 );

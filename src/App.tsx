@@ -185,8 +185,9 @@ const IntegratedServicesPage = lazy(() => import("./pages/IntegratedServicesPage
 // NEW DASHBOARDS - EAGER LOAD for instant access
 import AuthEntry from "./pages/auth/Entry";
 import AuthLogin from "./pages/auth/Login";
-import AdminDashboard from "./pages/admin/Dashboard";
-import CustomerDashboard from "./pages/app/Dashboard";
+// V3 REBUILD - 100% Custom Dashboards
+import AdminDashboard from "./pages/admin/V3Dashboard";
+import CustomerDashboard from "./pages/app/V3Dashboard";
 
 // Lazy load less critical auth pages
 const AuthRegister = lazy(() => import("./pages/auth/Register"));
