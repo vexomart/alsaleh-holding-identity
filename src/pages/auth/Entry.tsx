@@ -28,5 +28,5 @@ export default function Entry() {
   }
 
   // Authenticated - instant redirect based on role
-  return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
+  return <Navigate to={isAdmin ? '/adminash' : '/portal'} replace />;
 }

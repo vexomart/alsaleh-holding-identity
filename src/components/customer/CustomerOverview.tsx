@@ -251,7 +251,7 @@ export function CustomerOverview() {
       descAr: "تصفح خدماتنا وابدأ طلبك",
       descEn: "Browse services and start your order",
       icon: Plus,
-      onClick: () => navigate("/dashboard/services"),
+      onClick: () => navigate("/portal/services"),
       gradient: "from-amber-500 to-orange-500",
     },
     {
@@ -260,7 +260,7 @@ export function CustomerOverview() {
       descAr: "متابعة حالة طلباتك",
       descEn: "Monitor your order status",
       icon: Package,
-      onClick: () => navigate("/dashboard/orders"),
+      onClick: () => navigate("/portal/orders"),
       gradient: "from-blue-500 to-indigo-500",
     },
     {
@@ -269,7 +269,7 @@ export function CustomerOverview() {
       descAr: "عرض وتحميل الفواتير",
       descEn: "View and download invoices",
       icon: Receipt,
-      onClick: () => navigate("/dashboard/orders"),
+      onClick: () => navigate("/portal/orders"),
       gradient: "from-emerald-500 to-teal-500",
     },
   ];
@@ -628,7 +628,7 @@ export function CustomerOverview() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => navigate("/dashboard/orders")}
+                onClick={() => navigate("/portal/orders")}
                 className="text-primary hover:text-primary/80"
               >
                 {isRTL ? "عرض الكل" : "View All"}
@@ -645,7 +645,7 @@ export function CustomerOverview() {
                   <p className="text-sm mb-4">
                     {isRTL ? "ابدأ بتصفح خدماتنا" : "Start by browsing our services"}
                   </p>
-                  <Button onClick={() => navigate("/dashboard/services")} size="sm">
+                  <Button onClick={() => navigate("/portal/services")} size="sm">
                     <Plus className={cn("h-4 w-4", isRTL ? "ms-2" : "me-2")} />
                     {isRTL ? "طلب جديد" : "New Order"}
                   </Button>
@@ -731,7 +731,7 @@ export function CustomerOverview() {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate("/dashboard/notifications")}
+              onClick={() => navigate("/portal/notifications")}
               className="text-primary hover:text-primary/80"
             >
               {isRTL ? "عرض الكل" : "View All"}

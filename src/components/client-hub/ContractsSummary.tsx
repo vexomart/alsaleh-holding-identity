@@ -232,7 +232,7 @@ export function ContractsSummary({ contracts, className }: ContractsSummaryProps
         <Button
           variant="ghost"
           className="w-full"
-          onClick={() => navigate('/dashboard/contracts')}
+          onClick={() => navigate('/portal/contracts')}
         >
           {isRTL ? 'عرض جميع العقود' : 'View All Contracts'}
         </Button>

@@ -61,7 +61,7 @@ const SettingsIcon = () => (
   </svg>
 );
 
-const CUSTOMER_BASE = '/dashboard';
+const CUSTOMER_BASE = '/portal';
 
 export interface V3CustomerLayoutProps {
   children: React.ReactNode;

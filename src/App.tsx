@@ -317,8 +317,8 @@ const App = () => {
                       <Route path="/adminash/*" element={<AdminDashboard />} />
                       
                       {/* Customer Dashboard - INSTANT (no Suspense) */}
-                      <Route path="/dashboard/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
-                      <Route path="/dashboard/*" element={<CustomerDashboard />} />
+                      <Route path="/portal/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
+                      <Route path="/portal/*" element={<CustomerDashboard />} />
                       
                       {/* Company Pages */}
                       <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />

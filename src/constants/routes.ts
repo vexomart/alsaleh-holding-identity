@@ -1,7 +1,7 @@
 /**
  * Routes Constants - Restructured
  * /adminash - لوحة الإدارة
- * /dashboard - لوحة العملاء
+ * /portal - بوابة العملاء
  */
 
 export const ROUTES = {
@@ -44,23 +44,23 @@ export const ROUTES = {
     SETTINGS: '/adminash/settings',
   },
   
-  // Customer Dashboard - /dashboard
+  // Customer Dashboard - /portal
   DASHBOARD: {
-    ROOT: '/dashboard',
-    OVERVIEW: '/dashboard',
-    CLIENT_HUB: '/dashboard/client-hub',
-    ORDERS: '/dashboard/orders',
-    ORDER_DETAIL: (id: string) => `/dashboard/orders/${id}`,
-    SERVICES: '/dashboard/services',
-    WALLET: '/dashboard/wallet',
-    REFERRALS: '/dashboard/referrals',
-    PROFILE: '/dashboard/profile',
-    SECURITY: '/dashboard/security',
-    NOTIFICATIONS: '/dashboard/notifications',
-    SUPPORT: '/dashboard/support',
-    CONTRACTS: '/dashboard/contracts',
-    INVOICES: '/dashboard/invoices',
-    FINANCE: '/dashboard/finance',
+    ROOT: '/portal',
+    OVERVIEW: '/portal',
+    CLIENT_HUB: '/portal/client-hub',
+    ORDERS: '/portal/orders',
+    ORDER_DETAIL: (id: string) => `/portal/orders/${id}`,
+    SERVICES: '/portal/services',
+    WALLET: '/portal/wallet',
+    REFERRALS: '/portal/referrals',
+    PROFILE: '/portal/profile',
+    SECURITY: '/portal/security',
+    NOTIFICATIONS: '/portal/notifications',
+    SUPPORT: '/portal/support',
+    CONTRACTS: '/portal/contracts',
+    INVOICES: '/portal/invoices',
+    FINANCE: '/portal/finance',
   },
 } as const;
 

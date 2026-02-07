@@ -91,7 +91,7 @@ export function ActiveServicesCard({ services, className }: ActiveServicesCardPr
             variant="outline"
             size="sm"
             className="mt-4"
-            onClick={() => navigate('/dashboard/services')}
+            onClick={() => navigate('/portal/services')}
           >
             {isRTL ? 'تصفح الخدمات' : 'Browse Services'}
           </Button>

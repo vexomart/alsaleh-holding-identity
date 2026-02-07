@@ -137,7 +137,7 @@ export function MyApplications() {
   };
 
   const handleViewDetails = (app: ApplicationWithRelations) => {
-    navigate(`/dashboard/finance/applications/${app.id}`);
+    navigate(`/portal/finance/applications/${app.id}`);
   };
 
   if (isLoading) {
@@ -165,7 +165,7 @@ export function MyApplications() {
           <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
             لم تقدم أي طلب تمويل بعد. ابدأ بتقديم طلبك الأول.
           </p>
-          <Button onClick={() => navigate("/dashboard/finance/apply")} size="lg" className="gap-2">
+          <Button onClick={() => navigate("/portal/finance/apply")} size="lg" className="gap-2">
             <Sparkles className="h-4 w-4" />
             تقديم طلب تمويل
           </Button>
@@ -191,7 +191,7 @@ export function MyApplications() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/dashboard/finance/apply")}
+                onClick={() => navigate("/portal/finance/apply")}
                 className="gap-1"
               >
                 <Sparkles className="h-4 w-4" />

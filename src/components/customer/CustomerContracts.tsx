@@ -313,7 +313,7 @@ export function CustomerContracts() {
                       }
                     </p>
                   </div>
-                  <Button onClick={() => navigate('/dashboard/services')} className="mt-4">
+                  <Button onClick={() => navigate('/portal/services')} className="mt-4">
                     {isRTL ? 'تصفح الخدمات' : 'Browse Services'}
                   </Button>
                 </div>

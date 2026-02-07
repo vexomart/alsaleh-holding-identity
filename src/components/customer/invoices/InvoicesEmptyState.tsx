@@ -61,7 +61,7 @@ export function InvoicesEmptyState({ hasFilters, onClearFilters }: InvoicesEmpty
                   {isRTL ? 'مسح الفلاتر' : 'Clear Filters'}
                 </Button>
               ) : (
-                <Button onClick={() => navigate('/dashboard/services')} className="gap-2">
+                <Button onClick={() => navigate('/portal/services')} className="gap-2">
                   <ShoppingBag className="h-4 w-4" />
                   {isRTL ? 'تصفح الخدمات' : 'Browse Services'}
                 </Button>

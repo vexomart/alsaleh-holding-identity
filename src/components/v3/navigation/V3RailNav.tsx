@@ -237,7 +237,7 @@ export const V3RailNav: React.FC<V3RailNavProps> = ({
   const [hoveredItem, setHoveredItem] = React.useState<string | null>(null);
 
   const isActive = (href: string) => {
-    if (href === '/adminash' || href === '/dashboard') {
+    if (href === '/adminash' || href === '/portal') {
       return location.pathname === href;
     }
     return location.pathname.startsWith(href);
