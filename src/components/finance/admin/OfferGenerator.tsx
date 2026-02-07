@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,6 +29,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { formatCurrencySAR } from "@/types/finance";
+import { useSmsNotifications } from "@/hooks/useSmsNotifications";
 
 interface OfferGeneratorProps {
   open: boolean;
@@ -49,6 +49,7 @@ export function OfferGenerator({ open, onOpenChange, application }: OfferGenerat
   const queryClient = useQueryClient();
   const [aprPercent, setAprPercent] = useState(0);
   const [feesSar, setFeesSar] = useState(0);
+  const { sendSms } = useSmsNotifications();
 
   // Calculate offer values
   const totalInterest = application
@@ -61,6 +62,8 @@ export function OfferGenerator({ open, onOpenChange, application }: OfferGenerat
     mutationFn: async () => {
       if (!application) throw new Error("No application selected");
 
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      
       const { data, error } = await supabase
         .from("finance_offers")
         .insert({
@@ -70,7 +73,7 @@ export function OfferGenerator({ open, onOpenChange, application }: OfferGenerat
           monthly_payment_sar: Math.round(monthlyPayment * 100) / 100,
           total_payable_sar: Math.round(totalPayable * 100) / 100,
           offer_status: "active",
-          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+          expires_at: expiresAt.toISOString(),
         })
         .select()
         .single();
@@ -86,10 +89,33 @@ export function OfferGenerator({ open, onOpenChange, application }: OfferGenerat
         })
         .eq("id", application.id);
 
+      // Fetch customer phone from entity via application
+      const { data: appData } = await supabase
+        .from("finance_applications")
+        .select("entity:entities(phone)")
+        .eq("id", application.id)
+        .single();
+
+      const customerPhone = (appData?.entity as { phone?: string } | null)?.phone;
+
+      // Send SMS notification with full offer details
+      if (customerPhone) {
+        await sendSms(customerPhone, "finance_offer_created", {
+          application_number: application.application_number,
+          amount: application.amount_sar.toLocaleString("ar-SA"),
+          tenor: application.tenor_months.toString(),
+          monthly: (Math.round(monthlyPayment * 100) / 100).toLocaleString("ar-SA"),
+          apr: aprPercent.toString(),
+          total: (Math.round(totalPayable * 100) / 100).toLocaleString("ar-SA"),
+          fees: feesSar.toLocaleString("ar-SA"),
+          expires_at: expiresAt.toLocaleDateString("ar-SA"),
+        });
+      }
+
       return data;
     },
     onSuccess: () => {
-      toast.success("تم إنشاء العرض بنجاح");
+      toast.success("تم إنشاء العرض وإرسال رسالة للعميل بنجاح");
       queryClient.invalidateQueries({ queryKey: ["admin-finance-applications"] });
       onOpenChange(false);
       // Reset form
