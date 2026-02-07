@@ -548,3 +548,30 @@
 .bank-transaction-item__amount--negative {
   color: hsl(var(--bank-text-primary));
 }
+
+/* =========================================
+   LOADING & EMPTY STATES
+   ========================================= */
+
+.cmd-loading,
+.cmd-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v3-space-8);
+  color: hsl(var(--cmd-text-muted));
+  font-size: var(--v3-text-sm);
+}
+
+.cmd-empty-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v3-space-4);
+  color: hsl(var(--cmd-text-dim));
+  font-size: var(--v3-text-sm);
+}
+
+.cmd-quick-stat__value--warning {
+  color: hsl(var(--cmd-accent-amber));
+}
