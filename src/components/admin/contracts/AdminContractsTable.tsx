@@ -105,49 +105,49 @@ const statusConfig: Record<ContractStatus, {
   draft: {
     labelAr: 'مسودة',
     labelEn: 'Draft',
-    color: 'text-muted-foreground',
-    bgColor: 'bg-muted',
-    borderColor: 'border-muted',
+    color: 'text-slate-300',
+    bgColor: 'bg-slate-700/50',
+    borderColor: 'border-slate-600',
     icon: FileText,
   },
   pre_approved_by_customer: {
     labelAr: 'بانتظار الموافقة',
     labelEn: 'Pending Approval',
-    color: 'text-amber-700 dark:text-amber-400',
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
-    borderColor: 'border-amber-200 dark:border-amber-800',
+    color: 'text-amber-300',
+    bgColor: 'bg-amber-900/40',
+    borderColor: 'border-amber-700',
     icon: AlertTriangle,
   },
   pending_admin_approval: {
     labelAr: 'بانتظار الإدارة',
     labelEn: 'Pending Admin',
-    color: 'text-amber-700 dark:text-amber-400',
-    bgColor: 'bg-amber-100 dark:bg-amber-900/30',
-    borderColor: 'border-amber-200 dark:border-amber-800',
+    color: 'text-amber-300',
+    bgColor: 'bg-amber-900/40',
+    borderColor: 'border-amber-700',
     icon: AlertTriangle,
   },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',
     labelEn: 'Awaiting Signature',
-    color: 'text-indigo-700 dark:text-indigo-400',
-    bgColor: 'bg-indigo-100 dark:bg-indigo-900/30',
-    borderColor: 'border-indigo-200 dark:border-indigo-800',
+    color: 'text-indigo-300',
+    bgColor: 'bg-indigo-900/40',
+    borderColor: 'border-indigo-700',
     icon: FileSignature,
   },
   signed: {
     labelAr: 'موقّع',
     labelEn: 'Signed',
-    color: 'text-emerald-700 dark:text-emerald-400',
-    bgColor: 'bg-emerald-100 dark:bg-emerald-900/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-800',
+    color: 'text-emerald-300',
+    bgColor: 'bg-emerald-900/40',
+    borderColor: 'border-emerald-700',
     icon: CheckCircle,
   },
   cancelled: {
     labelAr: 'ملغي',
     labelEn: 'Cancelled',
-    color: 'text-red-700 dark:text-red-400',
-    bgColor: 'bg-red-100 dark:bg-red-900/30',
-    borderColor: 'border-red-200 dark:border-red-800',
+    color: 'text-red-300',
+    bgColor: 'bg-red-900/40',
+    borderColor: 'border-red-700',
     icon: XCircle,
   },
 };
@@ -208,14 +208,14 @@ export function AdminContractsTable({
     const Icon = config.icon;
     return (
       <div className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border flex-row-reverse",
         config.bgColor,
         config.color,
         config.borderColor
       )}>
         <Icon className="h-3 w-3" />
         <span className="hidden sm:inline">
-          {isRTL ? config.labelAr : config.labelEn}
+          {config.labelAr}
         </span>
       </div>
     );
@@ -227,53 +227,53 @@ export function AdminContractsTable({
 
   if (contracts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl border bg-card">
-        <FileText className="h-16 w-16 text-muted-foreground/30 mb-4" />
-        <h3 className="font-semibold text-lg">
-          {isRTL ? 'لا توجد عقود' : 'No contracts found'}
+      <div className="flex flex-col items-center justify-center p-12 text-center rounded-xl border border-slate-700 bg-slate-800/50">
+        <FileText className="h-16 w-16 text-slate-500 mb-4" />
+        <h3 className="font-semibold text-lg text-white">
+          لا توجد عقود
         </h3>
-        <p className="text-muted-foreground text-sm">
-          {isRTL ? 'لم يتم العثور على أي عقود مطابقة' : 'No matching contracts found'}
+        <p className="text-slate-400 text-sm">
+          لم يتم العثور على أي عقود مطابقة
         </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border bg-card overflow-hidden shadow-sm">
+    <div className="rounded-xl border border-slate-700 bg-slate-900 overflow-hidden shadow-xl" dir="rtl">
       <ScrollArea className="h-[600px]">
         <Table>
-          <TableHeader className="bg-muted/50 sticky top-0 z-10">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
-                {isRTL ? 'الحالة' : 'Status'}
+          <TableHeader className="bg-slate-800/80 sticky top-0 z-10">
+            <TableRow className="hover:bg-transparent border-slate-700">
+              <TableHead className="w-[120px] text-right text-slate-300">
+                الحالة
               </TableHead>
-              <TableHead className={cn("min-w-[160px]", isRTL && "text-right")}>
-                {isRTL ? 'رقم العقد' : 'Contract #'}
+              <TableHead className="min-w-[160px] text-right text-slate-300">
+                رقم العقد
               </TableHead>
-              <TableHead className={cn("min-w-[180px]", isRTL && "text-right")}>
-                <div className={cn("flex items-center gap-1.5", isRTL && "flex-row-reverse")}>
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  {isRTL ? 'العميل' : 'Customer'}
+              <TableHead className="min-w-[180px] text-right text-slate-300">
+                <div className="flex items-center gap-1.5 flex-row-reverse">
+                  <User className="h-4 w-4 text-slate-400" />
+                  العميل
                 </div>
               </TableHead>
-              <TableHead className={cn("min-w-[140px]", isRTL && "text-right")}>
-                {isRTL ? 'الخدمة' : 'Service'}
+              <TableHead className="min-w-[140px] text-right text-slate-300">
+                الخدمة
               </TableHead>
-              <TableHead className={cn("w-[120px]", isRTL && "text-right")}>
-                <div className={cn("flex items-center gap-1.5", isRTL && "flex-row-reverse")}>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                  {isRTL ? 'القيمة' : 'Value'}
+              <TableHead className="w-[120px] text-right text-slate-300">
+                <div className="flex items-center gap-1.5 flex-row-reverse">
+                  <DollarSign className="h-4 w-4 text-slate-400" />
+                  القيمة
                 </div>
               </TableHead>
-              <TableHead className={cn("w-[130px]", isRTL && "text-right")}>
-                <div className={cn("flex items-center gap-1.5", isRTL && "flex-row-reverse")}>
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  {isRTL ? 'التاريخ' : 'Date'}
+              <TableHead className="w-[130px] text-right text-slate-300">
+                <div className="flex items-center gap-1.5 flex-row-reverse">
+                  <Calendar className="h-4 w-4 text-slate-400" />
+                  التاريخ
                 </div>
               </TableHead>
-              <TableHead className="w-[140px] text-center">
-                {isRTL ? 'الإجراءات' : 'Actions'}
+              <TableHead className="w-[140px] text-center text-slate-300">
+                الإجراءات
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -286,20 +286,20 @@ export function AdminContractsTable({
                 animate="visible"
                 variants={rowVariants}
                 className={cn(
-                  'group hover:bg-muted/30 cursor-pointer transition-colors',
-                  contract.status === 'pre_approved_by_customer' && 'bg-amber-50/50 dark:bg-amber-950/10'
+                  'group hover:bg-slate-800/50 cursor-pointer transition-colors border-slate-700/50',
+                  contract.status === 'pre_approved_by_customer' && 'bg-amber-950/20'
                 )}
                 onClick={() => onViewDetails(contract)}
               >
                 {/* Status */}
-                <TableCell className={cn(isRTL && "text-right")}>
+                <TableCell className="text-right">
                   {getStatusBadge(contract.status)}
                 </TableCell>
 
                 {/* Contract Number */}
-                <TableCell className={cn(isRTL && "text-right")}>
-                  <div className="flex items-center gap-2">
-                    <code className="px-2 py-1 bg-muted rounded text-xs font-mono">
+                <TableCell className="text-right">
+                  <div className="flex items-center gap-2 flex-row-reverse">
+                    <code className="px-2 py-1 bg-slate-700 rounded text-xs font-mono text-slate-200">
                       {contract.contract_number}
                     </code>
                     <TooltipProvider>
@@ -308,7 +308,7 @@ export function AdminContractsTable({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-6 w-6 opacity-0 group-hover:opacity-100"
+                            className="h-6 w-6 opacity-0 group-hover:opacity-100 text-slate-400 hover:text-white hover:bg-slate-700"
                             onClick={(e) => {
                               e.stopPropagation();
                               onCopyNumber(contract.contract_number);
@@ -318,7 +318,7 @@ export function AdminContractsTable({
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          {isRTL ? 'نسخ' : 'Copy'}
+                          نسخ
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -326,19 +326,16 @@ export function AdminContractsTable({
                 </TableCell>
 
                 {/* Customer */}
-                <TableCell className={cn(isRTL && "text-right")}>
+                <TableCell className="text-right">
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm">
-                      {isRTL 
-                        ? contract.customer?.full_name_ar || contract.customer?.full_name || '-'
-                        : contract.customer?.full_name || '-'
-                      }
+                    <span className="font-medium text-sm text-white">
+                      {contract.customer?.full_name_ar || contract.customer?.full_name || '-'}
                     </span>
-                    <span className="text-xs text-muted-foreground truncate max-w-[160px]">
+                    <span className="text-xs text-slate-400 truncate max-w-[160px]">
                       {contract.customer?.email}
                     </span>
                     {contract.customer?.customer_uid && (
-                      <Badge variant="outline" className="text-[10px] w-fit mt-1">
+                      <Badge variant="outline" className="text-[10px] w-fit mt-1 border-slate-600 text-slate-300">
                         {contract.customer.customer_uid}
                       </Badge>
                     )}
@@ -346,37 +343,34 @@ export function AdminContractsTable({
                 </TableCell>
 
                 {/* Service */}
-                <TableCell className={cn(isRTL && "text-right")}>
-                  <span className="text-sm truncate block max-w-[140px]">
-                    {isRTL 
-                      ? contract.service?.name_ar || contract.service?.name || '-'
-                      : contract.service?.name || '-'
-                    }
+                <TableCell className="text-right">
+                  <span className="text-sm truncate block max-w-[140px] text-slate-200">
+                    {contract.service?.name_ar || contract.service?.name || '-'}
                   </span>
                 </TableCell>
 
                 {/* Value */}
-                <TableCell className={cn(isRTL && "text-right")}>
+                <TableCell className="text-right">
                   {contract.pricing_json ? (
                     <div className="flex flex-col">
-                      <span className="font-semibold text-sm">
+                      <span className="font-semibold text-sm text-white">
                         {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
-                        {isRTL ? 'شامل الضريبة' : 'incl. VAT'}
+                      <span className="text-[10px] text-slate-400">
+                        شامل الضريبة
                       </span>
                     </div>
                   ) : '-'}
                 </TableCell>
 
                 {/* Date */}
-                <TableCell className={cn("text-sm text-muted-foreground", isRTL && "text-right")}>
+                <TableCell className="text-sm text-slate-400 text-right">
                   {formatDate(contract.created_at)}
                 </TableCell>
 
                 {/* Actions */}
                 <TableCell>
-                  <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-center gap-1 flex-row-reverse" onClick={(e) => e.stopPropagation()}>
                     {/* View */}
                     <TooltipProvider>
                       <Tooltip>
@@ -384,14 +378,14 @@ export function AdminContractsTable({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700"
                             onClick={() => onViewDetails(contract)}
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          {isRTL ? 'عرض' : 'View'}
+                          عرض
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -405,14 +399,14 @@ export function AdminContractsTable({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
+                                className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-900/40"
                                 onClick={() => onApprove(contract)}
                               >
                                 <Check className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {isRTL ? 'موافقة' : 'Approve'}
+                              موافقة
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -423,14 +417,14 @@ export function AdminContractsTable({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+                                className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-900/40"
                                 onClick={() => onReject(contract)}
                               >
                                 <X className="h-4 w-4" />
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {isRTL ? 'رفض' : 'Reject'}
+                              رفض
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -449,22 +443,22 @@ export function AdminContractsTable({
 
 function AdminContractsTableSkeleton() {
   return (
-    <div className="rounded-xl border bg-card overflow-hidden">
+    <div className="rounded-xl border border-slate-700 bg-slate-900 overflow-hidden" dir="rtl">
       <div className="p-4 space-y-4">
-        <div className="flex gap-4 pb-2 border-b">
+        <div className="flex gap-4 pb-2 border-b border-slate-700 flex-row-reverse">
           {[100, 140, 180, 140, 100, 120, 120].map((w, i) => (
-            <Skeleton key={i} className="h-8" style={{ width: w }} />
+            <Skeleton key={i} className="h-8 bg-slate-700" style={{ width: w }} />
           ))}
         </div>
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="flex gap-4 py-3 items-center">
-            <Skeleton className="h-6 w-24 rounded-full" />
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-12 flex-1" />
-            <Skeleton className="h-6 w-28" />
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-6 w-28" />
-            <Skeleton className="h-8 w-24" />
+          <div key={i} className="flex gap-4 py-3 items-center flex-row-reverse">
+            <Skeleton className="h-6 w-24 rounded-full bg-slate-700" />
+            <Skeleton className="h-6 w-32 bg-slate-700" />
+            <Skeleton className="h-12 flex-1 bg-slate-700" />
+            <Skeleton className="h-6 w-28 bg-slate-700" />
+            <Skeleton className="h-6 w-24 bg-slate-700" />
+            <Skeleton className="h-6 w-28 bg-slate-700" />
+            <Skeleton className="h-8 w-24 bg-slate-700" />
           </div>
         ))}
       </div>

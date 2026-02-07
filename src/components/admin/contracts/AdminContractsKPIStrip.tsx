@@ -165,7 +165,7 @@ export function AdminContractsKPIStrip({
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3" dir="rtl">
       {kpis.map((kpi, index) => (
         <motion.div
           key={kpi.key}
@@ -195,7 +195,7 @@ export function AdminContractsKPIStrip({
             
             {/* Highlight indicator for pending items */}
             {kpi.highlight && (
-              <div className="absolute top-2 right-2 rtl:right-auto rtl:left-2">
+              <div className="absolute top-2 left-2">
                 <span className="flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
@@ -204,17 +204,14 @@ export function AdminContractsKPIStrip({
             )}
             
             {/* Content */}
-            <div className={cn(
-              "relative z-10 flex items-center gap-3",
-              isRTL && "flex-row-reverse"
-            )}>
+            <div className="relative z-10 flex items-center gap-3 flex-row-reverse">
               <div className={cn(
                 "p-2.5 rounded-lg shrink-0",
                 kpi.iconBg
               )}>
                 <kpi.icon className={cn("h-5 w-5", kpi.iconColor)} />
               </div>
-              <div className={cn("flex-1 min-w-0", isRTL ? "text-right" : "text-left")}>
+              <div className="flex-1 min-w-0 text-right">
                 <p className="text-2xl sm:text-3xl font-bold">
                   <AnimatedNumber 
                     value={kpi.value} 
@@ -223,13 +220,13 @@ export function AdminContractsKPIStrip({
                   />
                 </p>
                 <p className="text-xs text-white/80 truncate font-medium">
-                  {isRTL ? kpi.labelAr : kpi.labelEn}
+                  {kpi.labelAr}
                 </p>
               </div>
             </div>
             
             {/* Decorative circle */}
-            <div className="absolute -bottom-4 -right-4 rtl:-right-auto rtl:-left-4 w-16 h-16 rounded-full bg-white/5" />
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-white/5" />
           </button>
         </motion.div>
       ))}
@@ -239,14 +236,14 @@ export function AdminContractsKPIStrip({
 
 function AdminContractsKPISkeleton({ count = 5 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3" dir="rtl">
       {[...Array(count)].map((_, i) => (
-        <div key={i} className="rounded-xl bg-muted animate-pulse p-4">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-10 w-10 rounded-lg" />
+        <div key={i} className="rounded-xl bg-slate-800 animate-pulse p-4">
+          <div className="flex items-center gap-3 flex-row-reverse">
+            <Skeleton className="h-10 w-10 rounded-lg bg-slate-700" />
             <div className="flex-1 space-y-2">
-              <Skeleton className="h-7 w-14" />
-              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-7 w-14 bg-slate-700" />
+              <Skeleton className="h-3 w-20 bg-slate-700" />
             </div>
           </div>
         </div>
