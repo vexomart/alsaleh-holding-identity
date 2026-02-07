@@ -1,164 +1,41 @@
 /**
  * Navigation Dark - ASH HOLDING
- * Clean sticky header inspired by MaxioCore
- * With all original header sections
+ * Clean sticky header - Simplified without dropdowns
+ * Services, Products, Others moved to Footer
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Menu, 
   X, 
-  ChevronDown,
   Phone,
   Mail,
   LogIn,
   Sparkles,
-  MessageCircle,
-  Code2,
-  Cpu,
-  Brain,
-  Rocket,
-  Wrench,
-  Cloud,
-  Smartphone,
-  Monitor,
-  Layout,
-  Lightbulb,
-  BookOpen,
-  HelpCircle,
-  Users,
-  Briefcase,
-  Newspaper,
-  LucideIcon
+  MessageCircle
 } from "lucide-react";
 
-// Navigation Data - Same as MainHeaderV2
-interface NavLink {
-  label: string;
-  href: string;
-  icon?: LucideIcon;
-  desc?: string;
-}
-
+// Navigation Data - Simple direct links
 interface NavItem {
   label: string;
   href: string;
-  submenu?: NavLink[];
 }
 
-// Services Menu
-const servicesMenu: NavLink[] = [
-  { label: 'تطوير البرمجيات', href: '/technical-services', icon: Code2, desc: 'حلول برمجية متكاملة' },
-  { label: 'الحلول التقنية', href: '/tech-ecosystem', icon: Cpu, desc: 'بنية تقنية متطورة' },
-  { label: 'الذكاء الاصطناعي', href: '/ai-solutions', icon: Brain, desc: 'تقنيات AI متقدمة' },
-  { label: 'التحول الرقمي', href: '/digital-transformation', icon: Rocket, desc: 'رقمنة الأعمال' },
-  { label: 'خدمات مخصصة أخرى', href: '/services-catalog', icon: Wrench, desc: 'حلول مخصصة' },
-];
-
-// Products Menu
-const productsMenu: NavLink[] = [
-  { label: 'الحلول السحابية', href: '/cloud-solutions', icon: Cloud, desc: 'منصات سحابية' },
-  { label: 'تطبيقات ويب', href: '/ready-projects', icon: Monitor, desc: 'تطبيقات متقدمة' },
-  { label: 'تطبيقات جوال', href: '/mobile-apps', icon: Smartphone, desc: 'iOS & Android' },
-  { label: 'منصات إدارية', href: '/software-products', icon: Layout, desc: 'أنظمة إدارة' },
-  { label: 'المشاريع التقنية', href: '/tech-projects', icon: Lightbulb, desc: 'مشاريع متكاملة' },
-];
-
-// Others Menu
-const othersMenu: NavLink[] = [
-  { label: 'الأخبار والتحديثات', href: '/news', icon: Newspaper },
-  { label: 'الأسئلة الشائعة', href: '/faq', icon: HelpCircle },
-  { label: 'الشركاء', href: '/partnerships', icon: Users },
-  { label: 'الوظائف', href: '/careers', icon: Briefcase },
-  { label: 'دليل المستخدم', href: '/user-guide', icon: BookOpen },
-];
-
-// Main Navigation Links
 const navLinks: NavItem[] = [
   { label: "الرئيسية", href: "/" },
   { label: "من نحن", href: "/about" },
-  { 
-    label: "خدماتنا", 
-    href: "/services-catalog",
-    submenu: servicesMenu
-  },
-  { 
-    label: "منتجاتنا", 
-    href: "/software-products",
-    submenu: productsMenu
-  },
-  { 
-    label: "أخرى", 
-    href: "#",
-    submenu: othersMenu
-  },
+  { label: "خدماتنا", href: "/services-catalog" },
+  { label: "منتجاتنا", href: "/software-products" },
   { label: "شركاتنا", href: "/subsidiaries" },
   { label: "تواصل معنا", href: "/contact" },
 ];
 
-// Dropdown Portal Component for Grid Layout
-function DropdownPortal({ 
-  isOpen, 
-  triggerRef, 
-  children,
-  variant = 'list'
-}: { 
-  isOpen: boolean; 
-  triggerRef: React.RefObject<HTMLDivElement>; 
-  children: React.ReactNode;
-  variant?: 'list' | 'grid';
-}) {
-  const [position, setPosition] = useState({ top: 0, right: 0 });
-
-  useEffect(() => {
-    if (isOpen && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
-      });
-    }
-  }, [isOpen, triggerRef]);
-
-  if (!isOpen) return null;
-
-  return createPortal(
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.15 }}
-      style={{
-        position: 'fixed',
-        top: position.top,
-        right: position.right,
-        zIndex: 10000,
-      }}
-      className={`${variant === 'grid' ? 'w-[420px]' : 'w-56'} bg-[hsl(222_50%_8%)] border border-[hsl(var(--hp-border))] rounded-xl shadow-2xl overflow-hidden`}
-    >
-      {children}
-    </motion.div>,
-    document.body
-  );
-}
-
 export function NavigationDark() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
-  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(null);
   const location = useLocation();
-  const submenuRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
-
-  // Initialize refs for submenu items
-  navLinks.forEach(link => {
-    if (link.submenu && !submenuRefs.current[link.label]) {
-      submenuRefs.current[link.label] = { current: null } as React.RefObject<HTMLDivElement>;
-    }
-  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -170,17 +47,7 @@ export function NavigationDark() {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
-    setActiveSubmenu(null);
   }, [location.pathname]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = () => setActiveSubmenu(null);
-    if (activeSubmenu) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [activeSubmenu]);
 
   const openWhatsApp = () => {
     window.open('https://wa.me/966555812567?text=' + encodeURIComponent('مرحباً، أريد الاستفسار عن خدماتكم'), '_blank');
@@ -253,84 +120,21 @@ export function NavigationDark() {
                 </div>
               </Link>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
-                {navLinks.map((link) => {
-                  const isGridVariant = link.label === 'خدماتنا' || link.label === 'منتجاتنا';
-                  
-                  return (
-                    <div 
-                      key={link.label}
-                      ref={link.submenu ? (submenuRefs.current[link.label] as React.RefObject<HTMLDivElement>) : undefined}
-                      className="relative"
-                      onMouseEnter={() => link.submenu && setActiveSubmenu(link.label)}
-                      onMouseLeave={() => setActiveSubmenu(null)}
-                    >
-                      {link.submenu ? (
-                        <button
-                          className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                            activeSubmenu === link.label
-                              ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
-                              : 'text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
-                          }`}
-                        >
-                          {link.label}
-                          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeSubmenu === link.label ? 'rotate-180' : ''}`} />
-                        </button>
-                      ) : (
-                        <Link
-                          to={link.href}
-                          className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                            location.pathname === link.href
-                              ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
-                              : 'text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
-                          }`}
-                        >
-                          {link.label}
-                        </Link>
-                      )}
-
-                      {/* Submenu Portal */}
-                      <AnimatePresence>
-                        {link.submenu && (
-                          <DropdownPortal 
-                            isOpen={activeSubmenu === link.label} 
-                            triggerRef={submenuRefs.current[link.label]}
-                            variant={isGridVariant ? 'grid' : 'list'}
-                          >
-                            <div 
-                              onMouseEnter={() => setActiveSubmenu(link.label)}
-                              onMouseLeave={() => setActiveSubmenu(null)}
-                              className={isGridVariant ? 'grid grid-cols-2 gap-1 p-2' : ''}
-                            >
-                              {link.submenu.map((item) => (
-                                <Link
-                                  key={item.href}
-                                  to={item.href}
-                                  className={`flex items-center gap-3 text-sm text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))] transition-colors ${
-                                    isGridVariant ? 'px-3 py-2.5 rounded-lg' : 'px-4 py-3'
-                                  }`}
-                                >
-                                  {item.icon && (
-                                    <div className="w-8 h-8 rounded-lg bg-[hsl(var(--hp-primary)/0.15)] flex items-center justify-center shrink-0">
-                                      <item.icon className="w-4 h-4 text-[hsl(var(--hp-primary))]" />
-                                    </div>
-                                  )}
-                                  <div className="flex flex-col">
-                                    <span className="font-medium">{item.label}</span>
-                                    {item.desc && (
-                                      <span className="text-xs text-[hsl(var(--hp-text-subtle))]">{item.desc}</span>
-                                    )}
-                                  </div>
-                                </Link>
-                              ))}
-                            </div>
-                          </DropdownPortal>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
+              {/* Desktop Navigation - Simple Links */}
+              <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      location.pathname === link.href
+                        ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
+                        : 'text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </nav>
 
               {/* Desktop Actions */}
@@ -404,66 +208,21 @@ export function NavigationDark() {
                 </button>
               </div>
 
-              {/* Navigation Links */}
+              {/* Navigation Links - Simple */}
               <nav className="space-y-1">
                 {navLinks.map((link) => (
-                  <div key={link.label}>
-                    {link.submenu ? (
-                      <>
-                        <button
-                          onClick={() => setMobileExpandedMenu(mobileExpandedMenu === link.label ? null : link.label)}
-                          className={`w-full flex flex-row-reverse items-center justify-between px-4 py-3 text-base font-medium rounded-xl transition-colors ${
-                            mobileExpandedMenu === link.label
-                              ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
-                              : 'text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
-                          }`}
-                        >
-                          <span>{link.label}</span>
-                          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobileExpandedMenu === link.label ? 'rotate-180' : ''}`} />
-                        </button>
-                        <AnimatePresence>
-                          {mobileExpandedMenu === link.label && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="me-4 mt-1 space-y-1 pb-2">
-                                {link.submenu.map((item) => (
-                                  <Link
-                                    key={item.href}
-                                    to={item.href}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex flex-row-reverse items-center justify-end gap-3 px-4 py-2.5 text-sm text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))] rounded-lg transition-colors"
-                                  >
-                                    {item.icon && <item.icon className="w-4 h-4 text-[hsl(var(--hp-primary))]" />}
-                                    <div className="flex flex-col text-end">
-                                      <span>{item.label}</span>
-                                      {item.desc && <span className="text-xs text-[hsl(var(--hp-text-subtle))]">{item.desc}</span>}
-                                    </div>
-                                  </Link>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </>
-                    ) : (
-                      <Link
-                        to={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`block px-4 py-3 text-base font-medium rounded-xl transition-colors text-end ${
-                          location.pathname === link.href
-                            ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
-                            : 'text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </div>
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-4 py-3 text-base font-medium rounded-xl transition-colors text-end ${
+                      location.pathname === link.href
+                        ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
+                        : 'text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
                 ))}
               </nav>
 
