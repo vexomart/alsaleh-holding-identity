@@ -339,28 +339,28 @@ const App = () => {
                       <Toaster />
                       <Sonner />
                     
-                    {/* Unified Layout wraps ALL routes */}
+                    {/* Unified Layout wraps ALL routes - auto-hides nav for dashboard routes */}
                     <UnifiedLayout>
                       <Routes>
                         {/* Public Website - Lazy loaded with optimized skeleton */}
                         <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
-                      {/* Auth Routes - INSTANT (no Suspense) */}
-                      <Route path="/entry" element={<AuthEntry />} />
-                      <Route path="/auth" element={<AuthEntry />} />
-                      <Route path="/auth/login" element={<AuthLogin />} />
-                      <Route path="/auth/register" element={<Suspense fallback={<PageLoader />}><AuthRegister /></Suspense>} />
-                      <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
-                      <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
-                      
-                      {/* Admin Dashboard - INSTANT (no Suspense) */}
-                      <Route path="/adminash/*" element={<AdminDashboard />} />
-                      
-                      {/* Customer Dashboard - INSTANT (no Suspense) */}
-                      <Route path="/portal/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
-                      <Route path="/portal/*" element={<CustomerDashboard />} />
-                      
-                      {/* Company Pages */}
+                        {/* Auth Routes - INSTANT (no Suspense) */}
+                        <Route path="/entry" element={<AuthEntry />} />
+                        <Route path="/auth" element={<AuthEntry />} />
+                        <Route path="/auth/login" element={<AuthLogin />} />
+                        <Route path="/auth/register" element={<Suspense fallback={<PageLoader />}><AuthRegister /></Suspense>} />
+                        <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
+                        <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
+                        
+                        {/* Admin Dashboard - INSTANT (no Suspense) - Navigation auto-hidden */}
+                        <Route path="/adminash/*" element={<AdminDashboard />} />
+                        
+                        {/* Customer Dashboard - INSTANT - Navigation auto-hidden */}
+                        <Route path="/portal/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
+                        <Route path="/portal/*" element={<CustomerDashboard />} />
+                        
+                        {/* Company Pages */}
                       <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
                       <Route path="/about" element={<Suspense fallback={<PageLoader />}><About /></Suspense>} />
                       <Route path="/story" element={<Suspense fallback={<PageLoader />}><Story /></Suspense>} />
