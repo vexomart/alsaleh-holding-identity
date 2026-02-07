@@ -328,7 +328,7 @@ function UsersManagementComponent() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6 p-1">
+      <div className="space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -336,15 +336,31 @@ function UsersManagementComponent() {
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-              <Users2 className="h-7 w-7 text-primary" />
+            <div 
+              className="p-3 rounded-xl"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--cmd-accent-cyan) / 0.2), hsl(var(--cmd-accent-blue) / 0.1))',
+                border: '1px solid hsl(var(--cmd-accent-cyan) / 0.3)',
+              }}
+            >
+              <Users2 className="h-7 w-7" style={{ color: 'hsl(var(--cmd-accent-cyan))' }} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
+              <h1 
+                className="text-2xl font-bold flex items-center gap-2"
+                style={{ color: 'hsl(var(--cmd-text-primary))' }}
+              >
                 {language === "ar" ? "إدارة المستخدمين" : "User Management"}
-                <Sparkles className="h-5 w-5 text-amber-500" />
+                <Sparkles className="h-5 w-5" style={{ color: 'hsl(var(--cmd-accent-amber))' }} />
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p 
+                className="text-sm flex items-center gap-2"
+                style={{ color: 'hsl(var(--cmd-text-muted))' }}
+              >
+                <span 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ background: 'hsl(var(--cmd-accent-green))' }}
+                />
                 {language === "ar" 
                   ? "إدارة وتتبع جميع المستخدمين في النظام"
                   : "Manage and track all users in the system"}
@@ -353,31 +369,36 @@ function UsersManagementComponent() {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/50">
-            <Button
-              variant={viewMode === "grid" ? "default" : "ghost"}
-              size="sm"
+          <div 
+            className="flex items-center gap-1 p-1 rounded-xl"
+            style={{ background: 'hsl(var(--cmd-bg-elevated))' }}
+          >
+            <button
               className={cn(
-                "h-9 px-3 rounded-lg",
-                viewMode === "grid" && "shadow-sm"
+                "h-9 px-4 rounded-lg flex items-center gap-2 text-sm font-medium transition-all",
               )}
+              style={{
+                background: viewMode === "grid" ? 'hsl(var(--cmd-accent-cyan))' : 'transparent',
+                color: viewMode === "grid" ? 'hsl(var(--cmd-bg-deep))' : 'hsl(var(--cmd-text-secondary))',
+              }}
               onClick={() => setViewMode("grid")}
             >
-              <LayoutGrid className="h-4 w-4 me-2" />
+              <LayoutGrid className="h-4 w-4" />
               {language === "ar" ? "شبكة" : "Grid"}
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
-              size="sm"
+            </button>
+            <button
               className={cn(
-                "h-9 px-3 rounded-lg",
-                viewMode === "list" && "shadow-sm"
+                "h-9 px-4 rounded-lg flex items-center gap-2 text-sm font-medium transition-all",
               )}
+              style={{
+                background: viewMode === "list" ? 'hsl(var(--cmd-accent-cyan))' : 'transparent',
+                color: viewMode === "list" ? 'hsl(var(--cmd-bg-deep))' : 'hsl(var(--cmd-text-secondary))',
+              }}
               onClick={() => setViewMode("list")}
             >
-              <List className="h-4 w-4 me-2" />
+              <List className="h-4 w-4" />
               {language === "ar" ? "قائمة" : "List"}
-            </Button>
+            </button>
           </div>
         </motion.div>
 
@@ -389,44 +410,67 @@ function UsersManagementComponent() {
         />
 
         {/* Filters */}
-        <Card className="border-border/50 shadow-sm">
-          <CardContent className="p-4">
-            <UsersFilters
-              language={language}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              statusFilter={statusFilter}
-              onStatusChange={setStatusFilter}
-              roleFilter={roleFilter}
-              onRoleChange={setRoleFilter}
-              onRefresh={handleRefresh}
-              isRefreshing={isRefreshing}
-              selectedCount={selectedUsers.size}
-              onClearSelection={() => setSelectedUsers(new Set())}
-            />
-          </CardContent>
-        </Card>
+        <div 
+          className="rounded-xl p-4"
+          style={{
+            background: 'hsl(var(--cmd-bg-card))',
+            border: '1px solid hsl(var(--cmd-border-subtle))',
+          }}
+        >
+          <UsersFilters
+            language={language}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            statusFilter={statusFilter}
+            onStatusChange={setStatusFilter}
+            roleFilter={roleFilter}
+            onRoleChange={setRoleFilter}
+            onRefresh={handleRefresh}
+            isRefreshing={isRefreshing}
+            selectedCount={selectedUsers.size}
+            onClearSelection={() => setSelectedUsers(new Set())}
+          />
+        </div>
 
         {/* Users List */}
-        <Card className="border-border/50 shadow-sm overflow-hidden">
-          <CardHeader className="border-b bg-muted/30 py-4">
-            <CardTitle className="flex items-center gap-2 text-base font-semibold">
-              <Users className="h-5 w-5 text-primary" />
+        <div 
+          className="rounded-xl overflow-hidden"
+          style={{
+            background: 'hsl(var(--cmd-bg-card))',
+            border: '1px solid hsl(var(--cmd-border-subtle))',
+          }}
+        >
+          <div 
+            className="flex items-center gap-2 px-5 py-4"
+            style={{ borderBottom: '1px solid hsl(var(--cmd-border-subtle))' }}
+          >
+            <Users className="h-5 w-5" style={{ color: 'hsl(var(--cmd-accent-cyan))' }} />
+            <h2 
+              className="text-base font-semibold"
+              style={{ color: 'hsl(var(--cmd-text-primary))' }}
+            >
               {language === "ar" ? "قائمة المستخدمين" : "Users List"}
-              <span className="ms-2 text-sm font-normal text-muted-foreground">
-                ({filteredUsers.length})
-              </span>
-            </CardTitle>
-          </CardHeader>
+            </h2>
+            <span 
+              className="ms-2 text-sm font-normal"
+              style={{ color: 'hsl(var(--cmd-text-muted))' }}
+            >
+              ({filteredUsers.length})
+            </span>
+          </div>
           
-          <CardContent className="p-4">
+          <div className="p-4">
             {isLoading ? (
               <div className={cn(
                 "grid gap-4",
                 viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
               )}>
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-40 rounded-2xl bg-muted animate-pulse" />
+                  <div 
+                    key={i} 
+                    className="h-40 rounded-xl animate-pulse"
+                    style={{ background: 'hsl(var(--cmd-bg-elevated))' }}
+                  />
                 ))}
               </div>
             ) : filteredUsers.length === 0 ? (
@@ -435,13 +479,22 @@ function UsersManagementComponent() {
                 animate={{ opacity: 1 }}
                 className="flex flex-col items-center justify-center py-16 text-center"
               >
-                <div className="p-4 rounded-full bg-muted/50 mb-4">
-                  <Users className="h-8 w-8 text-muted-foreground" />
+                <div 
+                  className="p-4 rounded-full mb-4"
+                  style={{ background: 'hsl(var(--cmd-bg-elevated))' }}
+                >
+                  <Users className="h-8 w-8" style={{ color: 'hsl(var(--cmd-text-muted))' }} />
                 </div>
-                <h3 className="font-semibold text-lg mb-1">
+                <h3 
+                  className="font-semibold text-lg mb-1"
+                  style={{ color: 'hsl(var(--cmd-text-primary))' }}
+                >
                   {language === "ar" ? "لا يوجد مستخدمين" : "No users found"}
                 </h3>
-                <p className="text-sm text-muted-foreground max-w-sm">
+                <p 
+                  className="text-sm max-w-sm"
+                  style={{ color: 'hsl(var(--cmd-text-muted))' }}
+                >
                   {language === "ar" 
                     ? "لم يتم العثور على مستخدمين مطابقين للبحث"
                     : "No users match your current filters"}
@@ -477,8 +530,8 @@ function UsersManagementComponent() {
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Dialogs */}
         <UserDialogs

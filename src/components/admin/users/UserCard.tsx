@@ -1,3 +1,8 @@
+/**
+ * User Card - Command Center Dark Theme
+ * Premium Bloomberg-style design
+ */
+
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -16,23 +21,6 @@ import {
   Crown,
   Star
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 interface User {
@@ -62,15 +50,15 @@ interface UserCardProps {
   formatRelativeTime: (date: string | null) => string;
 }
 
-const roleConfig: Record<string, { labelAr: string; labelEn: string; color: string; icon: typeof Crown }> = {
-  super_admin: { labelAr: "مدير النظام", labelEn: "Super Admin", color: "bg-gradient-to-r from-amber-500 to-orange-500 text-white", icon: Crown },
-  admin: { labelAr: "مدير", labelEn: "Admin", color: "bg-gradient-to-r from-purple-500 to-violet-500 text-white", icon: Star },
-  manager: { labelAr: "مشرف", labelEn: "Manager", color: "bg-blue-500/20 text-blue-700 border-blue-500/30", icon: Shield },
-  support: { labelAr: "دعم فني", labelEn: "Support", color: "bg-cyan-500/20 text-cyan-700 border-cyan-500/30", icon: Shield },
-  finance: { labelAr: "مالية", labelEn: "Finance", color: "bg-emerald-500/20 text-emerald-700 border-emerald-500/30", icon: Shield },
-  content_editor: { labelAr: "محرر", labelEn: "Editor", color: "bg-pink-500/20 text-pink-700 border-pink-500/30", icon: Shield },
-  staff: { labelAr: "موظف", labelEn: "Staff", color: "bg-slate-500/20 text-slate-700 border-slate-500/30", icon: Shield },
-  customer: { labelAr: "عميل", labelEn: "Customer", color: "bg-gray-500/20 text-gray-700 border-gray-500/30", icon: Shield },
+const roleConfig: Record<string, { labelAr: string; labelEn: string; color: string }> = {
+  super_admin: { labelAr: "مدير النظام", labelEn: "Super Admin", color: "var(--cmd-accent-amber)" },
+  admin: { labelAr: "مدير", labelEn: "Admin", color: "var(--cmd-accent-purple)" },
+  manager: { labelAr: "مشرف", labelEn: "Manager", color: "var(--cmd-accent-blue)" },
+  support: { labelAr: "دعم فني", labelEn: "Support", color: "var(--cmd-accent-cyan)" },
+  finance: { labelAr: "مالية", labelEn: "Finance", color: "var(--cmd-accent-green)" },
+  content_editor: { labelAr: "محرر", labelEn: "Editor", color: "265 70% 60%" },
+  staff: { labelAr: "موظف", labelEn: "Staff", color: "220 15% 50%" },
+  customer: { labelAr: "عميل", labelEn: "Customer", color: "220 12% 45%" },
 };
 
 export const UserCard = memo(function UserCard({
@@ -93,6 +81,8 @@ export const UserCard = memo(function UserCard({
   const isOnline = user.last_login_at && 
     (new Date().getTime() - new Date(user.last_login_at).getTime()) < 5 * 60 * 1000;
 
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -100,19 +90,29 @@ export const UserCard = memo(function UserCard({
       transition={{ duration: 0.2 }}
       whileHover={{ y: -2 }}
       className={cn(
-        "group relative p-4 rounded-2xl border transition-all duration-200",
-        "bg-card/50 backdrop-blur-sm hover:bg-card",
-        "hover:shadow-lg hover:shadow-primary/5",
-        isSelected && "ring-2 ring-primary border-primary/50 bg-primary/5"
+        "group relative p-4 rounded-xl transition-all duration-200",
+        isSelected && "ring-2 ring-[hsl(var(--cmd-accent-cyan))]"
       )}
+      style={{
+        background: isSelected 
+          ? 'hsl(var(--cmd-accent-cyan) / 0.1)' 
+          : 'hsl(var(--cmd-bg-card))',
+        border: '1px solid hsl(var(--cmd-border-subtle))',
+      }}
     >
       {/* Selection Checkbox */}
       {onSelect && (
         <div className="absolute top-3 start-3 z-10">
-          <Checkbox
+          <input
+            type="checkbox"
             checked={isSelected}
-            onCheckedChange={onSelect}
-            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            onChange={(e) => onSelect(e.target.checked)}
+            className="w-4 h-4 rounded border-2 cursor-pointer"
+            style={{
+              borderColor: 'hsl(var(--cmd-border-default))',
+              background: isSelected ? 'hsl(var(--cmd-accent-cyan))' : 'transparent',
+              accentColor: 'hsl(var(--cmd-accent-cyan))',
+            }}
           />
         </div>
       )}
@@ -121,21 +121,41 @@ export const UserCard = memo(function UserCard({
       <div className="flex items-start gap-4">
         {/* Avatar Section */}
         <div className="relative shrink-0">
-          <Avatar className="h-14 w-14 ring-2 ring-background shadow-lg">
-            <AvatarImage src={user.avatar_url || undefined} />
-            <AvatarFallback className="bg-gradient-to-br from-primary/80 to-primary text-primary-foreground font-semibold text-lg">
-              {displayName.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div 
+            className="h-14 w-14 rounded-xl flex items-center justify-center text-lg font-bold"
+            style={{
+              background: `linear-gradient(135deg, hsl(${roleInfo.color} / 0.3), hsl(${roleInfo.color} / 0.1))`,
+              color: `hsl(${roleInfo.color})`,
+              border: `1px solid hsl(${roleInfo.color} / 0.3)`,
+            }}
+          >
+            {user.avatar_url ? (
+              <img 
+                src={user.avatar_url} 
+                alt={displayName}
+                className="w-full h-full rounded-xl object-cover"
+              />
+            ) : (
+              displayName.charAt(0).toUpperCase()
+            )}
+          </div>
           
           {/* Online Indicator */}
-          <div className={cn(
-            "absolute -bottom-0.5 -end-0.5 h-4 w-4 rounded-full border-2 border-background",
-            isOnline ? "bg-emerald-500" : user.is_active ? "bg-amber-500" : "bg-gray-400"
-          )}>
+          <div 
+            className="absolute -bottom-0.5 -end-0.5 h-4 w-4 rounded-full border-2"
+            style={{
+              borderColor: 'hsl(var(--cmd-bg-card))',
+              background: isOnline 
+                ? 'hsl(var(--cmd-accent-green))' 
+                : user.is_active 
+                  ? 'hsl(var(--cmd-accent-amber))' 
+                  : 'hsl(var(--cmd-text-dim))',
+            }}
+          >
             {isOnline && (
               <motion.div
-                className="absolute inset-0 rounded-full bg-emerald-500"
+                className="absolute inset-0 rounded-full"
+                style={{ background: 'hsl(var(--cmd-accent-green))' }}
                 animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               />
@@ -148,26 +168,37 @@ export const UserCard = memo(function UserCard({
           {/* Name & Role */}
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="min-w-0">
-              <h3 className="font-semibold text-foreground truncate text-base">
+              <h3 
+                className="font-semibold truncate text-base"
+                style={{ color: 'hsl(var(--cmd-text-primary))' }}
+              >
                 {displayName}
               </h3>
-              <Badge 
-                variant="outline" 
-                className={cn("text-xs mt-1 border", roleInfo.color)}
+              <span 
+                className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md mt-1"
+                style={{
+                  background: `hsl(${roleInfo.color} / 0.15)`,
+                  color: `hsl(${roleInfo.color})`,
+                  border: `1px solid hsl(${roleInfo.color} / 0.3)`,
+                }}
               >
+                {primaryRole === 'super_admin' && <Crown className="h-3 w-3" />}
+                {primaryRole === 'admin' && <Star className="h-3 w-3" />}
                 {language === "ar" ? roleInfo.labelAr : roleInfo.labelEn}
-              </Badge>
+              </span>
             </div>
 
             {/* Status Badge */}
-            <Badge 
-              variant={user.is_active ? "default" : "secondary"}
-              className={cn(
-                "shrink-0 text-xs gap-1",
-                user.is_active 
-                  ? "bg-emerald-500/20 text-emerald-700 border-emerald-500/30 hover:bg-emerald-500/30" 
-                  : "bg-gray-500/20 text-gray-600 border-gray-500/30"
-              )}
+            <span 
+              className="shrink-0 inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg"
+              style={{
+                background: user.is_active 
+                  ? 'hsl(var(--cmd-accent-green) / 0.15)' 
+                  : 'hsl(var(--cmd-text-dim) / 0.15)',
+                color: user.is_active 
+                  ? 'hsl(var(--cmd-accent-green))' 
+                  : 'hsl(var(--cmd-text-dim))',
+              }}
             >
               {user.is_active ? (
                 <CheckCircle2 className="h-3 w-3" />
@@ -177,20 +208,15 @@ export const UserCard = memo(function UserCard({
               {user.is_active 
                 ? (language === "ar" ? "نشط" : "Active")
                 : (language === "ar" ? "معطل" : "Inactive")}
-            </Badge>
+            </span>
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-1.5 text-sm text-muted-foreground">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center gap-2 truncate cursor-default">
-                  <Mail className="h-3.5 w-3.5 shrink-0" />
-                  <span className="truncate">{user.email}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>{user.email}</TooltipContent>
-            </Tooltip>
+          <div className="space-y-1.5 text-sm" style={{ color: 'hsl(var(--cmd-text-muted))' }}>
+            <div className="flex items-center gap-2 truncate">
+              <Mail className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{user.email}</span>
+            </div>
 
             {user.phone && (
               <div className="flex items-center gap-2">
@@ -207,57 +233,98 @@ export const UserCard = memo(function UserCard({
         </div>
 
         {/* Actions Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="h-9 w-9 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-            >
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuLabel>
-              {language === "ar" ? "الإجراءات" : "Actions"}
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onView}>
-              <Eye className="h-4 w-4 me-2" />
-              {language === "ar" ? "عرض التفاصيل" : "View Details"}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onEdit}>
-              <Edit className="h-4 w-4 me-2" />
-              {language === "ar" ? "تعديل" : "Edit"}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onChangeRole}>
-              <Shield className="h-4 w-4 me-2" />
-              {language === "ar" ? "تغيير الدور" : "Change Role"}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onToggleStatus}>
-              {user.is_active ? (
-                <>
-                  <UserX className="h-4 w-4 me-2" />
-                  {language === "ar" ? "تعطيل" : "Deactivate"}
-                </>
-              ) : (
-                <>
-                  <UserCheck className="h-4 w-4 me-2" />
-                  {language === "ar" ? "تفعيل" : "Activate"}
-                </>
-              )}
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="text-red-600 focus:text-red-600"
-              onClick={onDelete}
-            >
-              <Trash2 className="h-4 w-4 me-2" />
-              {language === "ar" ? "حذف" : "Delete"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="relative">
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="h-9 w-9 flex items-center justify-center rounded-lg transition-all opacity-100 md:opacity-0 md:group-hover:opacity-100"
+            style={{
+              background: menuOpen ? 'hsl(var(--cmd-bg-hover))' : 'transparent',
+              color: 'hsl(var(--cmd-text-secondary))',
+            }}
+          >
+            <MoreVertical className="h-4 w-4" />
+          </button>
+          
+          {menuOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setMenuOpen(false)} 
+              />
+              <div 
+                className="absolute end-0 top-10 z-50 w-48 rounded-xl p-1 shadow-xl"
+                style={{
+                  background: 'hsl(var(--cmd-bg-elevated))',
+                  border: '1px solid hsl(var(--cmd-border-subtle))',
+                }}
+              >
+                <p 
+                  className="px-3 py-2 text-xs font-medium"
+                  style={{ color: 'hsl(var(--cmd-text-dim))' }}
+                >
+                  {language === "ar" ? "الإجراءات" : "Actions"}
+                </p>
+                <div 
+                  className="h-px my-1" 
+                  style={{ background: 'hsl(var(--cmd-border-subtle))' }} 
+                />
+                
+                <MenuItem icon={Eye} label={language === "ar" ? "عرض التفاصيل" : "View Details"} onClick={() => { onView(); setMenuOpen(false); }} />
+                <MenuItem icon={Edit} label={language === "ar" ? "تعديل" : "Edit"} onClick={() => { onEdit(); setMenuOpen(false); }} />
+                <MenuItem icon={Shield} label={language === "ar" ? "تغيير الدور" : "Change Role"} onClick={() => { onChangeRole(); setMenuOpen(false); }} />
+                
+                <div 
+                  className="h-px my-1" 
+                  style={{ background: 'hsl(var(--cmd-border-subtle))' }} 
+                />
+                
+                <MenuItem 
+                  icon={user.is_active ? UserX : UserCheck} 
+                  label={user.is_active 
+                    ? (language === "ar" ? "تعطيل" : "Deactivate")
+                    : (language === "ar" ? "تفعيل" : "Activate")
+                  } 
+                  onClick={() => { onToggleStatus(); setMenuOpen(false); }} 
+                />
+                <MenuItem 
+                  icon={Trash2} 
+                  label={language === "ar" ? "حذف" : "Delete"} 
+                  onClick={() => { onDelete(); setMenuOpen(false); }} 
+                  danger 
+                />
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </motion.div>
   );
 });
+
+// Menu Item Component
+const MenuItem: React.FC<{
+  icon: React.ElementType;
+  label: string;
+  onClick: () => void;
+  danger?: boolean;
+}> = ({ icon: Icon, label, onClick, danger }) => (
+  <button
+    onClick={onClick}
+    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors"
+    style={{
+      color: danger ? 'hsl(var(--cmd-accent-red))' : 'hsl(var(--cmd-text-secondary))',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = 'hsl(var(--cmd-bg-hover))';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'transparent';
+    }}
+  >
+    <Icon className="h-4 w-4" />
+    {label}
+  </button>
+);
+
+// Add React import at top
+import React from "react";

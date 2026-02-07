@@ -1,8 +1,12 @@
+/**
+ * Users Filters - Command Center Dark Theme
+ * Premium Bloomberg-style design
+ */
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
-  Filter, 
   X, 
   SlidersHorizontal,
   CheckCircle2,
@@ -11,21 +15,6 @@ import {
   UserPlus,
   ChevronDown
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 interface UsersFiltersProps {
@@ -62,6 +51,79 @@ const statuses = [
   { value: "inactive", labelAr: "معطل", labelEn: "Inactive" },
 ];
 
+// Custom Select Component for dark theme
+const DarkSelect: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; labelAr: string; labelEn: string }[];
+  language: string;
+  placeholder?: string;
+}> = ({ value, onChange, options, language, placeholder }) => {
+  const [open, setOpen] = useState(false);
+  const selectedOption = options.find(o => o.value === value);
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between gap-2 h-11 px-4 min-w-[140px] rounded-xl text-sm transition-all"
+        style={{
+          background: 'hsl(var(--cmd-bg-elevated))',
+          border: '1px solid hsl(var(--cmd-border-subtle))',
+          color: 'hsl(var(--cmd-text-secondary))',
+        }}
+      >
+        <span>{selectedOption ? (language === 'ar' ? selectedOption.labelAr : selectedOption.labelEn) : placeholder}</span>
+        <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+      </button>
+      
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div 
+            className="absolute top-full mt-1 start-0 z-50 min-w-full rounded-xl p-1 shadow-xl"
+            style={{
+              background: 'hsl(var(--cmd-bg-elevated))',
+              border: '1px solid hsl(var(--cmd-border-subtle))',
+            }}
+          >
+            {options.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => { onChange(option.value); setOpen(false); }}
+                className={cn(
+                  "w-full px-3 py-2 text-sm text-start rounded-lg transition-colors",
+                  value === option.value && "font-medium"
+                )}
+                style={{
+                  color: value === option.value 
+                    ? 'hsl(var(--cmd-accent-cyan))' 
+                    : 'hsl(var(--cmd-text-secondary))',
+                  background: value === option.value 
+                    ? 'hsl(var(--cmd-accent-cyan) / 0.1)' 
+                    : 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  if (value !== option.value) {
+                    e.currentTarget.style.background = 'hsl(var(--cmd-bg-hover))';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (value !== option.value) {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                {language === 'ar' ? option.labelAr : option.labelEn}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 export function UsersFilters({
   language,
   searchQuery,
@@ -77,8 +139,6 @@ export function UsersFilters({
   selectedCount = 0,
   onClearSelection,
 }: UsersFiltersProps) {
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-  
   const activeFiltersCount = [
     statusFilter !== "all",
     roleFilter !== "all",
@@ -96,165 +156,117 @@ export function UsersFilters({
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+          <Search 
+            className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4" 
+            style={{ color: 'hsl(var(--cmd-text-muted))' }}
+          />
+          <input
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={language === "ar" ? "بحث بالاسم أو البريد أو الهاتف..." : "Search by name, email or phone..."}
-            className="ps-10 pe-10 h-11 rounded-xl border-border/50 bg-background/50 backdrop-blur-sm focus:bg-background transition-colors"
+            className="w-full h-11 ps-10 pe-10 rounded-xl text-sm transition-all outline-none"
+            style={{
+              background: 'hsl(var(--cmd-bg-elevated))',
+              border: '1px solid hsl(var(--cmd-border-subtle))',
+              color: 'hsl(var(--cmd-text-primary))',
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'hsl(var(--cmd-accent-cyan))';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'hsl(var(--cmd-border-subtle))';
+            }}
           />
           {searchQuery && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute end-1 top-1/2 -translate-y-1/2 h-8 w-8"
+            <button
+              className="absolute end-2 top-1/2 -translate-y-1/2 h-7 w-7 flex items-center justify-center rounded-lg transition-colors"
               onClick={() => onSearchChange("")}
+              style={{ color: 'hsl(var(--cmd-text-muted))' }}
             >
               <X className="h-4 w-4" />
-            </Button>
+            </button>
           )}
         </div>
 
         {/* Quick Filters */}
         <div className="flex items-center gap-2 flex-wrap">
           {/* Status Filter */}
-          <Select value={statusFilter} onValueChange={onStatusChange}>
-            <SelectTrigger className="w-[140px] h-11 rounded-xl border-border/50 bg-background/50">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {statuses.map((status) => (
-                <SelectItem key={status.value} value={status.value}>
-                  {language === "ar" ? status.labelAr : status.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <DarkSelect
+            value={statusFilter}
+            onChange={onStatusChange}
+            options={statuses}
+            language={language}
+          />
 
           {/* Role Filter */}
-          <Select value={roleFilter} onValueChange={onRoleChange}>
-            <SelectTrigger className="w-[140px] h-11 rounded-xl border-border/50 bg-background/50">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {roles.map((role) => (
-                <SelectItem key={role.value} value={role.value}>
-                  {language === "ar" ? role.labelAr : role.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <DarkSelect
+            value={roleFilter}
+            onChange={onRoleChange}
+            options={roles}
+            language={language}
+          />
 
-          {/* Advanced Filters Toggle */}
-          <Popover open={showAdvancedFilters} onOpenChange={setShowAdvancedFilters}>
-            <PopoverTrigger asChild>
-              <Button 
-                variant="outline" 
-                className={cn(
-                  "h-11 rounded-xl border-border/50 gap-2",
-                  activeFiltersCount > 0 && "border-primary/50 bg-primary/5"
-                )}
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-                <span className="hidden sm:inline">
-                  {language === "ar" ? "فلترة متقدمة" : "Advanced"}
-                </span>
-                {activeFiltersCount > 0 && (
-                  <Badge variant="secondary" className="h-5 px-1.5 text-xs">
-                    {activeFiltersCount}
-                  </Badge>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-4" align="end">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium">
-                    {language === "ar" ? "فلترة متقدمة" : "Advanced Filters"}
-                  </h4>
-                  {activeFiltersCount > 0 && (
-                    <Button variant="ghost" size="sm" onClick={clearAllFilters}>
-                      {language === "ar" ? "مسح الكل" : "Clear all"}
-                    </Button>
-                  )}
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      {language === "ar" ? "الحالة" : "Status"}
-                    </label>
-                    <Select value={statusFilter} onValueChange={onStatusChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {statuses.map((status) => (
-                          <SelectItem key={status.value} value={status.value}>
-                            {language === "ar" ? status.labelAr : status.labelEn}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-1.5 block">
-                      {language === "ar" ? "الدور" : "Role"}
-                    </label>
-                    <Select value={roleFilter} onValueChange={onRoleChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {roles.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {language === "ar" ? role.labelAr : role.labelEn}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+          {/* Filter indicator */}
+          {activeFiltersCount > 0 && (
+            <span 
+              className="px-2 py-1 rounded-lg text-xs font-medium"
+              style={{
+                background: 'hsl(var(--cmd-accent-cyan) / 0.15)',
+                color: 'hsl(var(--cmd-accent-cyan))',
+              }}
+            >
+              {activeFiltersCount} {language === 'ar' ? 'فلتر' : 'filter'}
+            </span>
+          )}
 
           {/* Divider */}
-          <div className="h-8 w-px bg-border/50 hidden sm:block" />
+          <div 
+            className="h-8 w-px hidden sm:block" 
+            style={{ background: 'hsl(var(--cmd-border-subtle))' }}
+          />
 
           {/* Action Buttons */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 rounded-xl border-border/50"
+          <button
+            className="h-11 w-11 flex items-center justify-center rounded-xl transition-all"
             onClick={onRefresh}
             disabled={isRefreshing}
+            style={{
+              background: 'hsl(var(--cmd-bg-elevated))',
+              border: '1px solid hsl(var(--cmd-border-subtle))',
+              color: 'hsl(var(--cmd-text-secondary))',
+            }}
           >
             <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-          </Button>
+          </button>
 
           {onExport && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-11 w-11 rounded-xl border-border/50"
+            <button
+              className="h-11 w-11 flex items-center justify-center rounded-xl transition-all"
               onClick={onExport}
+              style={{
+                background: 'hsl(var(--cmd-bg-elevated))',
+                border: '1px solid hsl(var(--cmd-border-subtle))',
+                color: 'hsl(var(--cmd-text-secondary))',
+              }}
             >
               <Download className="h-4 w-4" />
-            </Button>
+            </button>
           )}
 
           {onAddUser && (
-            <Button
-              className="h-11 rounded-xl gap-2 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg shadow-primary/20"
+            <button
+              className="h-11 px-4 flex items-center gap-2 rounded-xl text-sm font-medium transition-all"
               onClick={onAddUser}
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--cmd-accent-cyan)), hsl(var(--cmd-accent-blue)))',
+                color: 'white',
+              }}
             >
               <UserPlus className="h-4 w-4" />
               <span className="hidden sm:inline">
                 {language === "ar" ? "إضافة مستخدم" : "Add User"}
               </span>
-            </Button>
+            </button>
           )}
         </div>
       </div>
@@ -272,58 +284,72 @@ export function UsersFilters({
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                style={{
+                  background: 'hsl(var(--cmd-accent-cyan) / 0.15)',
+                  border: '1px solid hsl(var(--cmd-accent-cyan) / 0.3)',
+                }}
               >
-                <CheckCircle2 className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">
+                <CheckCircle2 
+                  className="h-4 w-4" 
+                  style={{ color: 'hsl(var(--cmd-accent-cyan))' }} 
+                />
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: 'hsl(var(--cmd-accent-cyan))' }}
+                >
                   {language === "ar" 
                     ? `${selectedCount} محدد`
                     : `${selectedCount} selected`}
                 </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
+                <button
+                  className="text-xs px-2 py-0.5 rounded transition-colors"
                   onClick={onClearSelection}
+                  style={{ color: 'hsl(var(--cmd-text-muted))' }}
                 >
                   {language === "ar" ? "إلغاء التحديد" : "Clear"}
-                </Button>
+                </button>
               </motion.div>
             )}
 
             {statusFilter !== "all" && (
-              <Badge 
-                variant="secondary" 
-                className="gap-1.5 px-3 py-1.5 cursor-pointer hover:bg-secondary/80"
+              <span 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer transition-colors"
                 onClick={() => onStatusChange("all")}
+                style={{
+                  background: 'hsl(var(--cmd-bg-elevated))',
+                  color: 'hsl(var(--cmd-text-secondary))',
+                }}
               >
                 {language === "ar" ? "الحالة:" : "Status:"}{" "}
                 {statuses.find(s => s.value === statusFilter)?.[language === "ar" ? "labelAr" : "labelEn"]}
                 <X className="h-3 w-3" />
-              </Badge>
+              </span>
             )}
 
             {roleFilter !== "all" && (
-              <Badge 
-                variant="secondary" 
-                className="gap-1.5 px-3 py-1.5 cursor-pointer hover:bg-secondary/80"
+              <span 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer transition-colors"
                 onClick={() => onRoleChange("all")}
+                style={{
+                  background: 'hsl(var(--cmd-bg-elevated))',
+                  color: 'hsl(var(--cmd-text-secondary))',
+                }}
               >
                 {language === "ar" ? "الدور:" : "Role:"}{" "}
                 {roles.find(r => r.value === roleFilter)?.[language === "ar" ? "labelAr" : "labelEn"]}
                 <X className="h-3 w-3" />
-              </Badge>
+              </span>
             )}
 
             {activeFiltersCount > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-foreground"
+              <button
+                className="text-sm transition-colors"
                 onClick={clearAllFilters}
+                style={{ color: 'hsl(var(--cmd-text-muted))' }}
               >
                 {language === "ar" ? "مسح الكل" : "Clear all"}
-              </Button>
+              </button>
             )}
           </motion.div>
         )}
