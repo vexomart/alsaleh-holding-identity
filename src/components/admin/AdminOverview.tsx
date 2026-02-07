@@ -213,19 +213,19 @@ export function AdminOverview() {
       titleAr: "إضافة طلب", 
       titleEn: "Add Order", 
       icon: Plus, 
-      color: "bg-blue-500 hover:bg-blue-600" 
+      color: "bg-primary hover:bg-primary/90" 
     },
     { 
       titleAr: "إضافة خدمة", 
       titleEn: "Add Service", 
       icon: Package, 
-      color: "bg-emerald-500 hover:bg-emerald-600" 
+      color: "bg-accent hover:bg-accent/90" 
     },
     { 
       titleAr: "عرض التقارير", 
       titleEn: "View Reports", 
       icon: BarChart3, 
-      color: "bg-violet-500 hover:bg-violet-600" 
+      color: "bg-secondary hover:bg-secondary/90" 
     },
   ];
 
@@ -238,7 +238,7 @@ export function AdminOverview() {
       titleEn: `New order: ${order.title}`,
       time: order.created_at,
       icon: ShoppingCart,
-      color: "text-blue-500",
+      color: "text-primary",
     }));
   }, [analytics.recentOrders]);
 
@@ -550,7 +550,7 @@ export function AdminOverview() {
         >
           <CardHeader className="p-4 md:p-6">
             <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-              <Star className="h-4 w-4 md:h-5 md:w-5 text-amber-500" />
+              <Star className="h-4 w-4 md:h-5 md:w-5 text-secondary" />
               {language === "ar" ? "أفضل الخدمات" : "Top Services"}
             </CardTitle>
           </CardHeader>
@@ -616,7 +616,7 @@ export function AdminOverview() {
         >
           <CardHeader className="p-4 md:p-6">
             <CardTitle className="flex items-center gap-2 text-base md:text-lg">
-              <Zap className="h-4 w-4 md:h-5 md:w-5 text-violet-500" />
+              <Zap className="h-4 w-4 md:h-5 md:w-5 text-accent" />
               {language === "ar" ? "النشاط الأخير" : "Recent Activity"}
             </CardTitle>
           </CardHeader>
@@ -684,8 +684,8 @@ export function AdminOverview() {
         <CardContent className="py-4 md:py-6 px-3 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="text-center">
-              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-1.5 md:mb-2">
-                <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-emerald-600" />
+              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-accent/10 dark:bg-accent/20 mb-1.5 md:mb-2">
+                <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6 text-accent" />
               </div>
               <p className="text-lg md:text-2xl font-bold">
                 {isLoading ? "--" : `${completionRate}%`}
@@ -695,8 +695,8 @@ export function AdminOverview() {
               </p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/30 mb-1.5 md:mb-2">
-                <Users className="h-5 w-5 md:h-6 md:w-6 text-blue-600" />
+              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-primary/10 dark:bg-primary/20 mb-1.5 md:mb-2">
+                <Users className="h-5 w-5 md:h-6 md:w-6 text-primary" />
               </div>
               <p className="text-lg md:text-2xl font-bold">
                 {isLoading ? "--" : analytics.activeUsers}
@@ -706,8 +706,8 @@ export function AdminOverview() {
               </p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/30 mb-1.5 md:mb-2">
-                <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-amber-600" />
+              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-secondary/10 dark:bg-secondary/20 mb-1.5 md:mb-2">
+                <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-secondary" />
               </div>
               <p className="text-lg md:text-2xl font-bold">
                 {isLoading ? "--" : formatCurrency(avgOrderValue)}
@@ -717,8 +717,8 @@ export function AdminOverview() {
               </p>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-violet-100 dark:bg-violet-900/30 mb-1.5 md:mb-2">
-                <AlertCircle className="h-5 w-5 md:h-6 md:w-6 text-violet-600" />
+              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full bg-muted mb-1.5 md:mb-2">
+                <AlertCircle className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground" />
               </div>
               <p className="text-lg md:text-2xl font-bold">
                 {isLoading ? "--" : analytics.ordersByStatus.pending}

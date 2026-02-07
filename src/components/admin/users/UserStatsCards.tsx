@@ -42,9 +42,10 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
       titleEn: "Total Users",
       value: stats.total,
       icon: Users,
-      gradient: "from-blue-500 to-blue-600",
-      bgGradient: "from-blue-500/10 to-blue-600/5",
-      iconBg: "bg-blue-500/20",
+      gradient: "from-primary to-primary/80",
+      bgGradient: "from-primary/10 to-primary/5",
+      iconBg: "bg-primary/20",
+      iconColor: "text-primary",
       trend: null
     },
     {
@@ -53,9 +54,10 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
       titleEn: "Active Users",
       value: stats.active,
       icon: UserCheck,
-      gradient: "from-emerald-500 to-emerald-600",
-      bgGradient: "from-emerald-500/10 to-emerald-600/5",
-      iconBg: "bg-emerald-500/20",
+      gradient: "from-accent to-accent/80",
+      bgGradient: "from-accent/10 to-accent/5",
+      iconBg: "bg-accent/20",
+      iconColor: "text-accent",
       trend: stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0,
       trendLabel: language === "ar" ? "من الإجمالي" : "of total"
     },
@@ -65,9 +67,10 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
       titleEn: "Inactive Users",
       value: stats.inactive,
       icon: UserX,
-      gradient: "from-red-500 to-red-600",
-      bgGradient: "from-red-500/10 to-red-600/5",
-      iconBg: "bg-red-500/20",
+      gradient: "from-destructive to-destructive/80",
+      bgGradient: "from-destructive/10 to-destructive/5",
+      iconBg: "bg-destructive/20",
+      iconColor: "text-destructive",
       trend: null
     },
     {
@@ -76,9 +79,10 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
       titleEn: "New This Month",
       value: stats.newThisMonth,
       icon: UserPlus,
-      gradient: "from-amber-500 to-amber-600",
-      bgGradient: "from-amber-500/10 to-amber-600/5",
-      iconBg: "bg-amber-500/20",
+      gradient: "from-secondary to-secondary/80",
+      bgGradient: "from-secondary/10 to-secondary/5",
+      iconBg: "bg-secondary/20",
+      iconColor: "text-secondary",
       trend: stats.growthRate,
       trendLabel: language === "ar" ? "نمو" : "growth",
       showTrendIcon: true
@@ -129,10 +133,7 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
                   "p-2.5 rounded-xl",
                   card.iconBg
                 )}>
-                  <Icon className={cn(
-                    "h-5 w-5 bg-gradient-to-br bg-clip-text",
-                    card.gradient.replace("from-", "text-").split(" ")[0]
-                  )} />
+                  <Icon className={cn("h-5 w-5", card.iconColor)} />
                 </div>
                 
                 {card.trend !== null && card.trend !== undefined && (
