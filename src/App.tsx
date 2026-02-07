@@ -15,6 +15,9 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider, useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
 
+// Unified Layout - Single layout for entire app
+import { UnifiedLayout } from "@/components/layouts/UnifiedLayout";
+
 // Lazy load ALL pages including Index for optimal performance
 const Index = lazy(() => import("./pages/OptimizedIndex"));
 
@@ -320,9 +323,11 @@ const App = () => {
                       <Toaster />
                       <Sonner />
                     
-                    <Routes>
-                      {/* Public Website - Lazy loaded with optimized skeleton */}
-                      <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
+                    {/* Unified Layout wraps ALL routes */}
+                    <UnifiedLayout>
+                      <Routes>
+                        {/* Public Website - Lazy loaded with optimized skeleton */}
+                        <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
                       {/* Auth Routes - INSTANT (no Suspense) */}
                       <Route path="/entry" element={<AuthEntry />} />
@@ -545,7 +550,8 @@ const App = () => {
                       
                       {/* 404 */}
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
-                  </Routes>
+                    </Routes>
+                    </UnifiedLayout>
                   </RTLAppShell>
                 </ReCaptchaProvider>
               </TooltipProvider>

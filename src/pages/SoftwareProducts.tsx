@@ -112,7 +112,7 @@ const SoftwareProducts = () => {
   });
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-blue-50/50 to-indigo-50/30 dark:from-primary/10 dark:via-slate-900 dark:to-slate-800 py-20 mb-12">
         <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25"></div>
