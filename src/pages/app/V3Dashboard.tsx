@@ -19,6 +19,8 @@ import { CustomerNotifications } from '@/components/customer/CustomerNotificatio
 import { CustomerProfile } from '@/components/customer/CustomerProfile';
 import { CustomerWallet } from '@/components/customer/CustomerWallet';
 import { CustomerTransactions } from '@/components/customer/CustomerTransactions';
+import { CustomerSupport } from '@/components/customer/CustomerSupport';
+import { CustomerSettings } from '@/components/customer/CustomerSettings';
 import { CustomerContractsCenter } from '@/components/customer/contracts';
 import { CustomerContractDetails } from '@/components/customer/CustomerContractDetails';
 import { ContractSigningPage } from '@/components/customer/contracts/ContractSigningPage';
@@ -128,6 +130,8 @@ const V3CustomerDashboard = () => {
         <Route path="notifications" element={<LegacyPageWrapper><CustomerNotifications /></LegacyPageWrapper>} />
         <Route path="profile" element={<LegacyPageWrapper><CustomerProfile /></LegacyPageWrapper>} />
         <Route path="security" element={<LegacyPageWrapper><SecurityPage /></LegacyPageWrapper>} />
+        <Route path="support" element={<LegacyPageWrapper><CustomerSupport /></LegacyPageWrapper>} />
+        <Route path="settings" element={<LegacyPageWrapper><CustomerSettings /></LegacyPageWrapper>} />
         <Route path="version" element={<LegacyPageWrapper><VersionPage /></LegacyPageWrapper>} />
       </Routes>
     </V3CustomerLayout>
