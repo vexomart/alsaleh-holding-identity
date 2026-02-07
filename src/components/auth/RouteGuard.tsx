@@ -78,14 +78,29 @@ export function CustomerGuard({ children }: { children: ReactNode }) {
 }
 
 export function AdminGuard({ children }: { children: ReactNode }) {
-  return (
-    <RouteGuard 
-      requireAuth 
-      requireRoles={['super_admin', 'admin', 'manager', 'support', 'finance', 'content_editor', 'staff']}
-    >
-      {children}
-    </RouteGuard>
-  );
+  const { isAdmin, isLoading, user } = useAuth();
+  const { isRTL } = useLanguage();
+  
+  // Wait for auth to load
+  if (isLoading) {
+    return (
+      <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  
+  // Redirect unauthenticated users
+  if (!user) {
+    return <Navigate to="/auth/login" replace />;
+  }
+  
+  // Redirect non-admin users
+  if (!isAdmin) {
+    return <Navigate to="/app" replace />;
+  }
+  
+  return <>{children}</>;
 }
 
 export function GuestGuard({ children }: { children: ReactNode }) {

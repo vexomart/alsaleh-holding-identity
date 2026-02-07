@@ -249,8 +249,10 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return roles.some((r) => r.role === role);
   };
 
-  const isAdmin = roles.some((r) => ['super_admin', 'admin'].includes(r.role));
-  const isCustomer = roles.some((r) => r.role === 'customer') || roles.length === 0;
+  // Admin roles that have access to /admin dashboard
+  const ADMIN_ROLES = ['super_admin', 'admin', 'manager', 'staff', 'support', 'finance', 'content_editor'];
+  const isAdmin = roles.some((r) => ADMIN_ROLES.includes(r.role));
+  const isCustomer = !isAdmin && (roles.some((r) => r.role === 'customer') || roles.length === 0);
 
   const value: AuthContextType = {
     user,
