@@ -341,7 +341,7 @@ serve(async (req) => {
                 customer_name: customerName,
                 data: {
                   user_id: userId,
-                  welcome_message: 'مرحباً بك في شركة الصالح القابضة! تم إنشاء حسابك بنجاح.',
+                  welcome_message: 'مرحباً بك في ASH HOLDING! تم إنشاء حسابك بنجاح ويمكنك الآن الاستفادة من جميع خدماتنا.',
                   initial_balance: 0,
                   wallet_features: [
                     'طلب الخدمات المتنوعة',
@@ -359,6 +359,24 @@ serve(async (req) => {
         } catch (emailError) {
           // Don't fail registration if email fails
           console.error("Failed to send welcome email:", emailError);
+        }
+
+        // Send welcome SMS to new user
+        try {
+          console.log("Sending welcome SMS to:", formattedPhone);
+          await supabase.functions.invoke('sms-send-notification', {
+            body: {
+              phone: formattedPhone,
+              message_type: 'welcome',
+              template_data: {
+                name: customerName
+              }
+            }
+          });
+          console.log("Welcome SMS sent successfully");
+        } catch (smsError) {
+          // Don't fail registration if SMS fails
+          console.error("Failed to send welcome SMS:", smsError);
         }
       }
     }
