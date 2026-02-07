@@ -107,7 +107,7 @@ export function ClientRecentActivity({ orders, isRTL }: ClientRecentActivityProp
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate("/app/services")}
+              onClick={() => navigate("/portal/services")}
             >
               {isRTL ? "تصفح الخدمات" : "Browse Services"}
             </Button>
@@ -128,7 +128,7 @@ export function ClientRecentActivity({ orders, isRTL }: ClientRecentActivityProp
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/app/orders")}
+            onClick={() => navigate("/portal/orders")}
             className={cn("gap-1 text-xs h-8", rtlRow)}
           >
             {isRTL ? "عرض الكل" : "View All"}
@@ -150,7 +150,7 @@ export function ClientRecentActivity({ orders, isRTL }: ClientRecentActivityProp
                   "group flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors",
                   rtlRow
                 )}
-                onClick={() => navigate(`/app/orders`)}
+                onClick={() => navigate(`/portal/orders`)}
               >
                 <div className={cn("p-2 rounded-lg bg-muted shrink-0")}>
                   <StatusIcon className={cn("h-4 w-4", status.color)} />

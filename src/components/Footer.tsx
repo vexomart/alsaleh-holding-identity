@@ -436,7 +436,7 @@ const Footer = () => {
                 <li><FooterLink href="/pricing" icon={BarChart3}>الأسعار</FooterLink></li>
                 <li><FooterLink href="/offers" icon={Zap}>العروض الحالية</FooterLink></li>
                 <li><FooterLink href="/payment-methods" icon={Shield}>طرق الدفع</FooterLink></li>
-                <li><FooterLink href="/app" icon={LayoutGrid}>بوابة العملاء</FooterLink></li>
+                <li><FooterLink href="/portal" icon={LayoutGrid}>بوابة العملاء</FooterLink></li>
               </ul>
             </FooterSection>
           </div>

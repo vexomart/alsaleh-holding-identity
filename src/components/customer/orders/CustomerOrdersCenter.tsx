@@ -236,7 +236,7 @@ export function CustomerOrdersCenter() {
                 whileTap={reducedMotion ? {} : { scale: 0.95 }}
               >
                 <Button 
-                  onClick={() => navigate('/app/services')}
+                  onClick={() => navigate('/portal/services')}
                   className="gap-2 h-10 px-5 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
                 >
                   <Plus className="h-4 w-4" />
