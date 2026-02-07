@@ -1,6 +1,6 @@
 /**
  * V3 Admin Dashboard Layout
- * Uses UnifiedAppShell with Light Theme
+ * Modern Stripe/Notion Inspired Design
  * RTL-First Arabic Native
  * V3 Unified Real-time Sync
  */
@@ -9,8 +9,8 @@ import * as React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminDashboardSync } from '@/hooks/realtime';
 import { AdminGuard } from '@/components/auth/RouteGuard';
-import { UnifiedAppShell } from './UnifiedAppShell';
-import { SidebarNavGroup } from './UnifiedSidebar';
+import { ModernAppShell } from './ModernAppShell';
+import { SidebarNavGroup } from './ModernSidebar';
 import { RealtimeIndicator } from './RealtimeIndicator';
 import { 
   LayoutDashboard, 
@@ -40,9 +40,9 @@ const adminNavGroups: SidebarNavGroup[] = [
     labelAr: 'الرئيسية',
     labelEn: 'Main',
     items: [
-      { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: <LayoutDashboard size={20} />, href: '/adminash' },
-      { id: 'users', labelAr: 'المستخدمين', labelEn: 'Users', icon: <Users size={20} />, href: '/adminash/users' },
-      { id: 'roles', labelAr: 'الأدوار', labelEn: 'Roles', icon: <Shield size={20} />, href: '/adminash/roles' },
+      { id: 'overview', labelAr: 'نظرة عامة', labelEn: 'Overview', icon: <LayoutDashboard size={18} />, href: '/adminash' },
+      { id: 'users', labelAr: 'المستخدمين', labelEn: 'Users', icon: <Users size={18} />, href: '/adminash/users' },
+      { id: 'roles', labelAr: 'الأدوار', labelEn: 'Roles', icon: <Shield size={18} />, href: '/adminash/roles' },
     ],
   },
   {
@@ -50,9 +50,9 @@ const adminNavGroups: SidebarNavGroup[] = [
     labelAr: 'العمليات',
     labelEn: 'Operations',
     items: [
-      { id: 'services', labelAr: 'الخدمات', labelEn: 'Services', icon: <Briefcase size={20} />, href: '/adminash/services' },
-      { id: 'orders', labelAr: 'الطلبات', labelEn: 'Orders', icon: <ShoppingCart size={20} />, href: '/adminash/orders' },
-      { id: 'contracts', labelAr: 'العقود', labelEn: 'Contracts', icon: <FileSignature size={20} />, href: '/adminash/contracts' },
+      { id: 'services', labelAr: 'الخدمات', labelEn: 'Services', icon: <Briefcase size={18} />, href: '/adminash/services' },
+      { id: 'orders', labelAr: 'الطلبات', labelEn: 'Orders', icon: <ShoppingCart size={18} />, href: '/adminash/orders' },
+      { id: 'contracts', labelAr: 'العقود', labelEn: 'Contracts', icon: <FileSignature size={18} />, href: '/adminash/contracts' },
     ],
   },
   {
@@ -60,9 +60,9 @@ const adminNavGroups: SidebarNavGroup[] = [
     labelAr: 'المالية',
     labelEn: 'Finance',
     items: [
-      { id: 'wallets', labelAr: 'المحافظ', labelEn: 'Wallets', icon: <Wallet size={20} />, href: '/adminash/wallets' },
-      { id: 'finance-center', labelAr: 'مركز التمويل', labelEn: 'Finance Center', icon: <Building2 size={20} />, href: '/adminash/finance' },
-      { id: 'referrals', labelAr: 'الإحالات', labelEn: 'Referrals', icon: <Gift size={20} />, href: '/adminash/referrals' },
+      { id: 'wallets', labelAr: 'المحافظ', labelEn: 'Wallets', icon: <Wallet size={18} />, href: '/adminash/wallets' },
+      { id: 'finance-center', labelAr: 'مركز التمويل', labelEn: 'Finance Center', icon: <Building2 size={18} />, href: '/adminash/finance' },
+      { id: 'referrals', labelAr: 'الإحالات', labelEn: 'Referrals', icon: <Gift size={18} />, href: '/adminash/referrals' },
     ],
   },
   {
@@ -70,11 +70,11 @@ const adminNavGroups: SidebarNavGroup[] = [
     labelAr: 'النظام',
     labelEn: 'System',
     items: [
-      { id: 'integrations', labelAr: 'التكاملات', labelEn: 'Integrations', icon: <Link2 size={20} />, href: '/adminash/integrations' },
-      { id: 'reports', labelAr: 'التقارير', labelEn: 'Reports', icon: <BarChart3 size={20} />, href: '/adminash/reports' },
-      { id: 'notifications', labelAr: 'الإشعارات', labelEn: 'Notifications', icon: <Bell size={20} />, href: '/adminash/notifications' },
-      { id: 'audit', labelAr: 'سجل المراجعة', labelEn: 'Audit Log', icon: <History size={20} />, href: '/adminash/audit' },
-      { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: <Settings size={20} />, href: '/adminash/settings' },
+      { id: 'integrations', labelAr: 'التكاملات', labelEn: 'Integrations', icon: <Link2 size={18} />, href: '/adminash/integrations' },
+      { id: 'reports', labelAr: 'التقارير', labelEn: 'Reports', icon: <BarChart3 size={18} />, href: '/adminash/reports' },
+      { id: 'notifications', labelAr: 'الإشعارات', labelEn: 'Notifications', icon: <Bell size={18} />, href: '/adminash/notifications' },
+      { id: 'audit', labelAr: 'سجل المراجعة', labelEn: 'Audit Log', icon: <History size={18} />, href: '/adminash/audit' },
+      { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: <Settings size={18} />, href: '/adminash/settings' },
     ],
   },
 ];
@@ -97,13 +97,13 @@ const V3AdminLayoutContent: React.FC<V3AdminLayoutProps> = ({ children }) => {
   ), [isConnected, connectionStatus, eventCount]);
 
   return (
-    <UnifiedAppShell
+    <ModernAppShell
       variant="admin"
       navGroups={adminNavGroups}
       sidebarFooter={sidebarFooter}
     >
       {children}
-    </UnifiedAppShell>
+    </ModernAppShell>
   );
 };
 

@@ -1,0 +1,825 @@
+/**
+ * V3 MODERN DESIGN SYSTEM
+ * Inspired by: Stripe, Notion, Apple SaaS
+ * Clean, Minimal, Professional
+ * RTL-FIRST ARABIC NATIVE
+ */
+
+:root {
+  /* =========================================
+     MODERN LIGHT PALETTE
+     Clean whites with soft grays
+     ========================================= */
+  
+  /* Background Layers - Soft, clean */
+  --modern-bg-page: 0 0% 99%;
+  --modern-bg-card: 0 0% 100%;
+  --modern-bg-elevated: 220 14% 96%;
+  --modern-bg-hover: 220 14% 94%;
+  --modern-bg-active: 220 14% 91%;
+  --modern-bg-muted: 220 14% 97%;
+  
+  /* Text Hierarchy - High contrast */
+  --modern-text-primary: 220 12% 10%;
+  --modern-text-secondary: 220 9% 46%;
+  --modern-text-muted: 220 9% 60%;
+  --modern-text-disabled: 220 8% 75%;
+  
+  /* Brand Colors - Stripe-inspired */
+  --modern-brand-primary: 217 91% 60%;
+  --modern-brand-primary-hover: 217 91% 55%;
+  --modern-brand-secondary: 165 82% 51%;
+  --modern-brand-accent: 262 83% 58%;
+  
+  /* Status Colors - Refined */
+  --modern-success: 152 69% 41%;
+  --modern-success-bg: 152 69% 96%;
+  --modern-warning: 38 92% 50%;
+  --modern-warning-bg: 38 92% 96%;
+  --modern-error: 0 72% 51%;
+  --modern-error-bg: 0 72% 97%;
+  --modern-info: 199 89% 48%;
+  --modern-info-bg: 199 89% 96%;
+  
+  /* Borders - Subtle */
+  --modern-border-light: 220 13% 93%;
+  --modern-border-default: 220 13% 89%;
+  --modern-border-strong: 220 13% 80%;
+  --modern-border-focus: 217 91% 60%;
+  
+  /* Shadows - Apple-style subtle elevation */
+  --modern-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --modern-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --modern-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --modern-shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.08), 0 4px 8px -4px rgb(0 0 0 / 0.04);
+  --modern-shadow-xl: 0 24px 48px -12px rgb(0 0 0 / 0.12);
+  --modern-shadow-card: 0 0 0 1px rgb(0 0 0 / 0.04), 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --modern-shadow-card-hover: 0 0 0 1px rgb(0 0 0 / 0.06), 0 4px 12px -2px rgb(0 0 0 / 0.08);
+  
+  /* =========================================
+     TYPOGRAPHY - System Font Stack
+     ========================================= */
+  
+  --modern-font-sans: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --modern-font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace;
+  
+  /* Type Scale - Clean hierarchy */
+  --modern-text-xs: 0.75rem;      /* 12px */
+  --modern-text-sm: 0.8125rem;    /* 13px */
+  --modern-text-base: 0.875rem;   /* 14px */
+  --modern-text-md: 0.9375rem;    /* 15px */
+  --modern-text-lg: 1rem;         /* 16px */
+  --modern-text-xl: 1.125rem;     /* 18px */
+  --modern-text-2xl: 1.375rem;    /* 22px */
+  --modern-text-3xl: 1.75rem;     /* 28px */
+  --modern-text-4xl: 2.25rem;     /* 36px */
+  
+  /* Font Weights */
+  --modern-font-normal: 400;
+  --modern-font-medium: 500;
+  --modern-font-semibold: 600;
+  --modern-font-bold: 700;
+  
+  /* =========================================
+     SPACING - Generous & Comfortable
+     ========================================= */
+  
+  --modern-space-0: 0;
+  --modern-space-1: 0.25rem;      /* 4px */
+  --modern-space-2: 0.5rem;       /* 8px */
+  --modern-space-3: 0.75rem;      /* 12px */
+  --modern-space-4: 1rem;         /* 16px */
+  --modern-space-5: 1.25rem;      /* 20px */
+  --modern-space-6: 1.5rem;       /* 24px */
+  --modern-space-8: 2rem;         /* 32px */
+  --modern-space-10: 2.5rem;      /* 40px */
+  --modern-space-12: 3rem;        /* 48px */
+  --modern-space-16: 4rem;        /* 64px */
+  --modern-space-20: 5rem;        /* 80px */
+  
+  /* =========================================
+     BORDER RADIUS - Softer, Modern
+     ========================================= */
+  
+  --modern-radius-none: 0;
+  --modern-radius-sm: 0.375rem;   /* 6px */
+  --modern-radius-md: 0.5rem;     /* 8px */
+  --modern-radius-lg: 0.75rem;    /* 12px */
+  --modern-radius-xl: 1rem;       /* 16px */
+  --modern-radius-2xl: 1.25rem;   /* 20px */
+  --modern-radius-full: 9999px;
+  
+  /* =========================================
+     TRANSITIONS - Smooth & Subtle
+     ========================================= */
+  
+  --modern-duration-instant: 75ms;
+  --modern-duration-fast: 150ms;
+  --modern-duration-normal: 200ms;
+  --modern-duration-slow: 300ms;
+  --modern-duration-slower: 400ms;
+  --modern-ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --modern-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --modern-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --modern-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  /* =========================================
+     LAYOUT DIMENSIONS
+     ========================================= */
+  
+  --modern-sidebar-collapsed: 4.5rem;    /* 72px */
+  --modern-sidebar-expanded: 16rem;      /* 256px */
+  --modern-header-height: 3.5rem;        /* 56px */
+  --modern-content-max-width: 1440px;
+}
+
+/* =========================================
+   BASE APPLICATION STYLES
+   ========================================= */
+
+.modern-app {
+  font-family: var(--modern-font-sans);
+  background: hsl(var(--modern-bg-page));
+  color: hsl(var(--modern-text-primary));
+  min-height: 100dvh;
+  direction: rtl;
+  text-align: right;
+  font-size: var(--modern-text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* =========================================
+   APP SHELL STRUCTURE - RTL Native
+   ========================================= */
+
+.modern-shell {
+  display: flex;
+  flex-direction: row;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Sidebar - RIGHT side for RTL */
+.modern-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  width: var(--modern-sidebar-collapsed);
+  background: hsl(var(--modern-bg-card));
+  border-inline-start: 1px solid hsl(var(--modern-border-light));
+  display: flex;
+  flex-direction: column;
+  transition: width var(--modern-duration-normal) var(--modern-ease-out);
+  z-index: 50;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.modern-sidebar.expanded {
+  width: var(--modern-sidebar-expanded);
+}
+
+/* Main Content Area */
+.modern-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-x: hidden;
+  background: hsl(var(--modern-bg-page));
+}
+
+/* Header - Clean minimal */
+.modern-header {
+  height: var(--modern-header-height);
+  background: hsl(var(--modern-bg-card));
+  border-bottom: 1px solid hsl(var(--modern-border-light));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--modern-space-6);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Content Area */
+.modern-content {
+  flex: 1;
+  padding: var(--modern-space-8);
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: var(--modern-content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* =========================================
+   SIDEBAR COMPONENTS
+   ========================================= */
+
+.modern-sidebar-header {
+  height: var(--modern-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--modern-space-4);
+  border-bottom: 1px solid hsl(var(--modern-border-light));
+}
+
+.modern-sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--modern-space-3);
+}
+
+.modern-sidebar-footer {
+  padding: var(--modern-space-4);
+  border-top: 1px solid hsl(var(--modern-border-light));
+}
+
+/* Navigation Group */
+.modern-nav-group {
+  margin-bottom: var(--modern-space-6);
+}
+
+.modern-nav-group-label {
+  font-size: var(--modern-text-xs);
+  font-weight: var(--modern-font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: hsl(var(--modern-text-muted));
+  padding: var(--modern-space-2) var(--modern-space-3);
+  margin-bottom: var(--modern-space-1);
+}
+
+/* Navigation Item - Notion-inspired */
+.modern-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--modern-space-3);
+  padding: var(--modern-space-2) var(--modern-space-3);
+  border-radius: var(--modern-radius-md);
+  cursor: pointer;
+  transition: all var(--modern-duration-fast) var(--modern-ease-out);
+  color: hsl(var(--modern-text-secondary));
+  font-weight: var(--modern-font-medium);
+  font-size: var(--modern-text-sm);
+  position: relative;
+  margin-bottom: var(--modern-space-1);
+}
+
+.modern-nav-item:hover {
+  background: hsl(var(--modern-bg-hover));
+  color: hsl(var(--modern-text-primary));
+}
+
+.modern-nav-item.active {
+  background: hsl(var(--modern-brand-primary) / 0.08);
+  color: hsl(var(--modern-brand-primary));
+}
+
+.modern-nav-item.active::before {
+  content: '';
+  position: absolute;
+  inset-inline-end: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: hsl(var(--modern-brand-primary));
+  border-radius: var(--modern-radius-full);
+}
+
+.modern-nav-item-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.modern-nav-item:hover .modern-nav-item-icon,
+.modern-nav-item.active .modern-nav-item-icon {
+  opacity: 1;
+}
+
+.modern-nav-item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity var(--modern-duration-fast), width var(--modern-duration-fast);
+}
+
+.modern-sidebar:not(.expanded) .modern-nav-item-label,
+.modern-sidebar:not(.expanded) .modern-nav-group-label {
+  opacity: 0;
+  width: 0;
+}
+
+.modern-sidebar:not(.expanded) .modern-nav-item {
+  justify-content: center;
+  padding: var(--modern-space-2);
+}
+
+/* Badge - Clean pill style */
+.modern-nav-badge {
+  font-size: var(--modern-text-xs);
+  font-weight: var(--modern-font-semibold);
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--modern-radius-full);
+  background: hsl(var(--modern-brand-primary));
+  color: white;
+  margin-inline-start: auto;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+/* Toggle Button */
+.modern-sidebar-toggle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--modern-radius-md);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: hsl(var(--modern-text-muted));
+  transition: all var(--modern-duration-fast) var(--modern-ease-out);
+}
+
+.modern-sidebar-toggle:hover {
+  background: hsl(var(--modern-bg-hover));
+  color: hsl(var(--modern-text-primary));
+}
+
+/* =========================================
+   CARD STYLES - Apple/Stripe Inspired
+   ========================================= */
+
+.modern-card {
+  background: hsl(var(--modern-bg-card));
+  border: 1px solid hsl(var(--modern-border-light));
+  border-radius: var(--modern-radius-xl);
+  box-shadow: var(--modern-shadow-card);
+  overflow: hidden;
+  transition: all var(--modern-duration-normal) var(--modern-ease-out);
+}
+
+.modern-card:hover {
+  box-shadow: var(--modern-shadow-card-hover);
+}
+
+.modern-card-header {
+  padding: var(--modern-space-5) var(--modern-space-6);
+  border-bottom: 1px solid hsl(var(--modern-border-light));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--modern-space-4);
+}
+
+.modern-card-title {
+  font-size: var(--modern-text-lg);
+  font-weight: var(--modern-font-semibold);
+  color: hsl(var(--modern-text-primary));
+  margin: 0;
+}
+
+.modern-card-description {
+  font-size: var(--modern-text-sm);
+  color: hsl(var(--modern-text-muted));
+  margin: var(--modern-space-1) 0 0;
+}
+
+.modern-card-content {
+  padding: var(--modern-space-6);
+}
+
+.modern-card-footer {
+  padding: var(--modern-space-4) var(--modern-space-6);
+  border-top: 1px solid hsl(var(--modern-border-light));
+  background: hsl(var(--modern-bg-muted));
+}
+
+/* Stat Card - Dashboard KPIs */
+.modern-stat-card {
+  background: hsl(var(--modern-bg-card));
+  border: 1px solid hsl(var(--modern-border-light));
+  border-radius: var(--modern-radius-xl);
+  padding: var(--modern-space-6);
+  box-shadow: var(--modern-shadow-card);
+  transition: all var(--modern-duration-normal) var(--modern-ease-out);
+}
+
+.modern-stat-card:hover {
+  box-shadow: var(--modern-shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.modern-stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--modern-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--modern-space-4);
+}
+
+.modern-stat-value {
+  font-size: var(--modern-text-3xl);
+  font-weight: var(--modern-font-bold);
+  color: hsl(var(--modern-text-primary));
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.modern-stat-label {
+  font-size: var(--modern-text-sm);
+  color: hsl(var(--modern-text-muted));
+  margin-top: var(--modern-space-1);
+}
+
+.modern-stat-change {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--modern-space-1);
+  font-size: var(--modern-text-xs);
+  font-weight: var(--modern-font-medium);
+  padding: var(--modern-space-1) var(--modern-space-2);
+  border-radius: var(--modern-radius-full);
+  margin-top: var(--modern-space-3);
+}
+
+.modern-stat-change.positive {
+  color: hsl(var(--modern-success));
+  background: hsl(var(--modern-success-bg));
+}
+
+.modern-stat-change.negative {
+  color: hsl(var(--modern-error));
+  background: hsl(var(--modern-error-bg));
+}
+
+/* =========================================
+   BUTTON STYLES - Stripe-inspired
+   ========================================= */
+
+.modern-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--modern-space-2);
+  height: 2.25rem;
+  padding: 0 var(--modern-space-4);
+  border-radius: var(--modern-radius-md);
+  font-weight: var(--modern-font-medium);
+  font-size: var(--modern-text-sm);
+  cursor: pointer;
+  transition: all var(--modern-duration-fast) var(--modern-ease-out);
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.modern-btn:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--modern-bg-card)), 0 0 0 4px hsl(var(--modern-brand-primary) / 0.3);
+}
+
+.modern-btn-primary {
+  background: hsl(var(--modern-brand-primary));
+  color: white;
+}
+
+.modern-btn-primary:hover {
+  background: hsl(var(--modern-brand-primary-hover));
+}
+
+.modern-btn-secondary {
+  background: hsl(var(--modern-bg-card));
+  color: hsl(var(--modern-text-primary));
+  border: 1px solid hsl(var(--modern-border-default));
+}
+
+.modern-btn-secondary:hover {
+  background: hsl(var(--modern-bg-hover));
+  border-color: hsl(var(--modern-border-strong));
+}
+
+.modern-btn-ghost {
+  background: transparent;
+  color: hsl(var(--modern-text-secondary));
+}
+
+.modern-btn-ghost:hover {
+  background: hsl(var(--modern-bg-hover));
+  color: hsl(var(--modern-text-primary));
+}
+
+.modern-btn-sm {
+  height: 1.875rem;
+  padding: 0 var(--modern-space-3);
+  font-size: var(--modern-text-xs);
+}
+
+.modern-btn-lg {
+  height: 2.75rem;
+  padding: 0 var(--modern-space-6);
+  font-size: var(--modern-text-md);
+}
+
+/* =========================================
+   TABLE STYLES - Clean data presentation
+   ========================================= */
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  direction: rtl;
+  text-align: right;
+}
+
+.modern-table th {
+  font-size: var(--modern-text-xs);
+  font-weight: var(--modern-font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: hsl(var(--modern-text-muted));
+  padding: var(--modern-space-3) var(--modern-space-4);
+  background: hsl(var(--modern-bg-muted));
+  border-bottom: 1px solid hsl(var(--modern-border-light));
+}
+
+.modern-table td {
+  font-size: var(--modern-text-sm);
+  color: hsl(var(--modern-text-primary));
+  padding: var(--modern-space-4);
+  border-bottom: 1px solid hsl(var(--modern-border-light));
+}
+
+.modern-table tbody tr {
+  transition: background var(--modern-duration-fast) var(--modern-ease-out);
+}
+
+.modern-table tbody tr:hover {
+  background: hsl(var(--modern-bg-hover));
+}
+
+/* =========================================
+   INPUT STYLES
+   ========================================= */
+
+.modern-input {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0 var(--modern-space-4);
+  border-radius: var(--modern-radius-md);
+  border: 1px solid hsl(var(--modern-border-default));
+  background: hsl(var(--modern-bg-card));
+  color: hsl(var(--modern-text-primary));
+  font-size: var(--modern-text-sm);
+  transition: all var(--modern-duration-fast) var(--modern-ease-out);
+  direction: rtl;
+  text-align: right;
+}
+
+.modern-input::placeholder {
+  color: hsl(var(--modern-text-muted));
+}
+
+.modern-input:hover {
+  border-color: hsl(var(--modern-border-strong));
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: hsl(var(--modern-brand-primary));
+  box-shadow: 0 0 0 3px hsl(var(--modern-brand-primary) / 0.1);
+}
+
+/* =========================================
+   STATUS BADGES
+   ========================================= */
+
+.modern-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--modern-space-1);
+  font-size: var(--modern-text-xs);
+  font-weight: var(--modern-font-medium);
+  padding: var(--modern-space-1) var(--modern-space-2);
+  border-radius: var(--modern-radius-full);
+}
+
+.modern-badge-success {
+  color: hsl(var(--modern-success));
+  background: hsl(var(--modern-success-bg));
+}
+
+.modern-badge-warning {
+  color: hsl(var(--modern-warning));
+  background: hsl(var(--modern-warning-bg));
+}
+
+.modern-badge-error {
+  color: hsl(var(--modern-error));
+  background: hsl(var(--modern-error-bg));
+}
+
+.modern-badge-info {
+  color: hsl(var(--modern-info));
+  background: hsl(var(--modern-info-bg));
+}
+
+.modern-badge-neutral {
+  color: hsl(var(--modern-text-secondary));
+  background: hsl(var(--modern-bg-elevated));
+}
+
+/* =========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .modern-sidebar {
+    position: fixed;
+    inset-inline-start: 0;
+    top: 0;
+    transform: translateX(100%);
+    transition: transform var(--modern-duration-slow) var(--modern-ease-out);
+  }
+  
+  [dir="ltr"] .modern-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .modern-sidebar.open {
+    transform: translateX(0);
+    width: var(--modern-sidebar-expanded);
+  }
+  
+  .modern-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.2);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--modern-duration-slow) var(--modern-ease-out);
+    backdrop-filter: blur(2px);
+  }
+  
+  .modern-sidebar.open + .modern-sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .modern-content {
+    padding: var(--modern-space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .modern-content {
+    padding: var(--modern-space-4);
+  }
+  
+  .modern-header {
+    padding: 0 var(--modern-space-4);
+  }
+  
+  .modern-card-content,
+  .modern-card-header {
+    padding: var(--modern-space-4);
+  }
+  
+  .modern-stat-card {
+    padding: var(--modern-space-4);
+  }
+}
+
+/* =========================================
+   UTILITY CLASSES
+   ========================================= */
+
+.modern-text-mono {
+  font-family: var(--modern-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.modern-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Grid Layouts */
+.modern-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--modern-space-6);
+}
+
+.modern-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--modern-space-6);
+}
+
+.modern-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--modern-space-6);
+}
+
+@media (max-width: 1024px) {
+  .modern-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .modern-grid-2,
+  .modern-grid-3,
+  .modern-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* RTL-Safe Spacing */
+.modern-ps-4 { padding-inline-start: var(--modern-space-4); }
+.modern-pe-4 { padding-inline-end: var(--modern-space-4); }
+.modern-ms-4 { margin-inline-start: var(--modern-space-4); }
+.modern-me-4 { margin-inline-end: var(--modern-space-4); }
+.modern-ms-auto { margin-inline-start: auto; }
+.modern-me-auto { margin-inline-end: auto; }
+
+/* Scrollbar Styling */
+.modern-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--modern-border-default));
+  border-radius: var(--modern-radius-full);
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--modern-border-strong));
+}
+
+/* Empty State */
+.modern-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--modern-space-12);
+  text-align: center;
+}
+
+.modern-empty-state-icon {
+  width: 4rem;
+  height: 4rem;
+  color: hsl(var(--modern-text-muted));
+  margin-bottom: var(--modern-space-4);
+  opacity: 0.5;
+}
+
+.modern-empty-state-title {
+  font-size: var(--modern-text-lg);
+  font-weight: var(--modern-font-semibold);
+  color: hsl(var(--modern-text-primary));
+  margin-bottom: var(--modern-space-2);
+}
+
+.modern-empty-state-description {
+  font-size: var(--modern-text-sm);
+  color: hsl(var(--modern-text-muted));
+  max-width: 24rem;
+}
+
+/* Divider */
+.modern-divider {
+  width: 100%;
+  height: 1px;
+  background: hsl(var(--modern-border-light));
+  margin: var(--modern-space-6) 0;
+}
