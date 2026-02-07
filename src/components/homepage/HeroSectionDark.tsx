@@ -67,7 +67,7 @@ export function HeroSectionDark() {
   return (
     <section 
       dir="rtl" 
-      className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="hero-section relative min-h-[calc(100vh-100px)] flex items-center justify-center overflow-hidden"
     >
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
