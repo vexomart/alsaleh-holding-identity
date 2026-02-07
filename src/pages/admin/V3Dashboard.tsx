@@ -6,10 +6,9 @@
  */
 
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, ReactNode } from 'react';
 import { V3AdminLayout } from '@/components/v3/layouts/V3AdminLayout';
 import { V3AdminOverview } from '@/components/v3/pages/V3AdminOverview';
-import { Loader2 } from 'lucide-react';
 
 // Keep existing page imports for functionality
 import { UsersManagement } from '@/components/admin/users/UsersManagement';
@@ -39,7 +38,6 @@ const V3PageLoader = () => (
       alignItems: 'center',
       justifyContent: 'center',
       minHeight: '400px',
-      background: 'hsl(220 25% 6%)',
     }}
   >
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
@@ -58,30 +56,116 @@ const V3PageLoader = () => (
   </div>
 );
 
+/**
+ * Legacy Page Wrapper
+ * Provides a light-mode container for legacy shadcn pages
+ * within the dark Command Center layout
+ */
+const LegacyPageWrapper = ({ children }: { children: ReactNode }) => (
+  <div 
+    className="legacy-page-container"
+    style={{
+      background: 'hsl(0 0% 100%)',
+      borderRadius: 'var(--v3-radius-xl)',
+      padding: 'var(--v3-space-6)',
+      minHeight: 'calc(100vh - 8rem)',
+      boxShadow: '0 4px 24px hsl(0 0% 0% / 0.2)',
+      // Reset text colors for light mode
+      color: 'hsl(222 47% 11%)',
+    }}
+  >
+    {/* Override dark mode variables for legacy content */}
+    <style>{`
+      .legacy-page-container {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 222 47% 18%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222 47% 18%;
+      }
+      .legacy-page-container * {
+        border-color: hsl(214.3 31.8% 91.4%);
+      }
+      .legacy-page-container .bg-background {
+        background: hsl(0 0% 100%) !important;
+      }
+      .legacy-page-container .text-foreground {
+        color: hsl(222.2 84% 4.9%) !important;
+      }
+      .legacy-page-container .bg-card {
+        background: hsl(0 0% 100%) !important;
+      }
+      .legacy-page-container .text-card-foreground {
+        color: hsl(222.2 84% 4.9%) !important;
+      }
+      .legacy-page-container .bg-muted {
+        background: hsl(210 40% 96.1%) !important;
+      }
+      .legacy-page-container .text-muted-foreground {
+        color: hsl(215.4 16.3% 46.9%) !important;
+      }
+      .legacy-page-container .border {
+        border-color: hsl(214.3 31.8% 91.4%) !important;
+      }
+      .legacy-page-container input,
+      .legacy-page-container select,
+      .legacy-page-container textarea {
+        background: hsl(0 0% 100%) !important;
+        color: hsl(222.2 84% 4.9%) !important;
+        border-color: hsl(214.3 31.8% 91.4%) !important;
+      }
+      .legacy-page-container button {
+        color: inherit;
+      }
+      .legacy-page-container .bg-white {
+        background: hsl(0 0% 100%) !important;
+      }
+      .legacy-page-container [class*="skeleton"] {
+        background: hsl(210 40% 96.1%) !important;
+      }
+    `}</style>
+    {children}
+  </div>
+);
+
 const V3AdminDashboard = () => {
   return (
     <V3AdminLayout>
       <Routes>
-        {/* Main Routes - V3 Overview */}
+        {/* Main Routes - V3 Overview (Native V3) */}
         <Route index element={<V3AdminOverview />} />
         
-        {/* Keep existing routes for functionality */}
-        <Route path="users" element={<UsersManagement />} />
-        <Route path="roles" element={<RolesPermissions />} />
-        <Route path="clients/:id" element={<AdminClientHub />} />
-        <Route path="services" element={<ServicesManagement />} />
-        <Route path="orders" element={<OrdersManagement />} />
-        <Route path="contracts" element={<ContractsManagement />} />
-        <Route path="wallets" element={<WalletsManagement />} />
-        <Route path="wallets/:id" element={<WalletDetailsPage />} />
-        <Route path="finance" element={<FinanceCenter />} />
-        <Route path="finance-internal" element={<FinanceManagement />} />
-        <Route path="referrals" element={<Suspense fallback={<V3PageLoader />}><AdminReferralsPage /></Suspense>} />
-        <Route path="integrations" element={<Suspense fallback={<V3PageLoader />}><IntegrationsPage /></Suspense>} />
-        <Route path="reports" element={<ReportsPage />} />
-        <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="audit" element={<AuditLogPage />} />
-        <Route path="settings" element={<SettingsPage />} />
+        {/* Legacy pages wrapped for compatibility */}
+        <Route path="users" element={<LegacyPageWrapper><UsersManagement /></LegacyPageWrapper>} />
+        <Route path="roles" element={<LegacyPageWrapper><RolesPermissions /></LegacyPageWrapper>} />
+        <Route path="clients/:id" element={<LegacyPageWrapper><AdminClientHub /></LegacyPageWrapper>} />
+        <Route path="services" element={<LegacyPageWrapper><ServicesManagement /></LegacyPageWrapper>} />
+        <Route path="orders" element={<LegacyPageWrapper><OrdersManagement /></LegacyPageWrapper>} />
+        <Route path="contracts" element={<LegacyPageWrapper><ContractsManagement /></LegacyPageWrapper>} />
+        <Route path="wallets" element={<LegacyPageWrapper><WalletsManagement /></LegacyPageWrapper>} />
+        <Route path="wallets/:id" element={<LegacyPageWrapper><WalletDetailsPage /></LegacyPageWrapper>} />
+        <Route path="finance" element={<LegacyPageWrapper><FinanceCenter /></LegacyPageWrapper>} />
+        <Route path="finance-internal" element={<LegacyPageWrapper><FinanceManagement /></LegacyPageWrapper>} />
+        <Route path="referrals" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><AdminReferralsPage /></Suspense></LegacyPageWrapper>} />
+        <Route path="integrations" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><IntegrationsPage /></Suspense></LegacyPageWrapper>} />
+        <Route path="reports" element={<LegacyPageWrapper><ReportsPage /></LegacyPageWrapper>} />
+        <Route path="notifications" element={<LegacyPageWrapper><NotificationsPage /></LegacyPageWrapper>} />
+        <Route path="audit" element={<LegacyPageWrapper><AuditLogPage /></LegacyPageWrapper>} />
+        <Route path="settings" element={<LegacyPageWrapper><SettingsPage /></LegacyPageWrapper>} />
       </Routes>
     </V3AdminLayout>
   );
