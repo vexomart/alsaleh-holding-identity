@@ -19,7 +19,7 @@ type SmsMessageType =
   | "finance_documents_required" | "finance_scoring_started" | "finance_scoring_complete"
   // Finance - Application
   | "finance_submitted" | "finance_under_review" | "finance_approved" | "finance_rejected"
-  | "finance_offer_ready" | "finance_offer_selected" | "finance_offer_expired"
+  | "finance_offer_ready" | "finance_offer_created" | "finance_offer_selected" | "finance_offer_expired"
   // Finance - Contract
   | "finance_contract_ready" | "finance_contract_signed" | "finance_disbursed"
   // Finance - Payments
@@ -255,6 +255,29 @@ export function useSmsNotifications() {
     return sendSms(phone, "finance_offer_expired", { application_number: applicationNumber });
   };
 
+  const notifyFinanceOfferCreated = async (
+    phone: string,
+    applicationNumber: string,
+    amount: number,
+    tenor: number,
+    monthlyPayment: number,
+    apr: number,
+    totalPayable: number,
+    fees: number,
+    expiresAt: string
+  ) => {
+    return sendSms(phone, "finance_offer_created", {
+      application_number: applicationNumber,
+      amount: amount.toLocaleString("ar-SA"),
+      tenor: tenor.toString(),
+      monthly: monthlyPayment.toLocaleString("ar-SA"),
+      apr: apr.toString(),
+      total: totalPayable.toLocaleString("ar-SA"),
+      fees: fees.toLocaleString("ar-SA"),
+      expires_at: expiresAt,
+    });
+  };
+
   // ===== Finance - Contract Notifications =====
 
   const notifyFinanceContractReady = async (
@@ -417,6 +440,7 @@ export function useSmsNotifications() {
     notifyFinanceOfferReady,
     notifyFinanceOfferSelected,
     notifyFinanceOfferExpired,
+    notifyFinanceOfferCreated,
 
     // Finance - Contract
     notifyFinanceContractReady,
