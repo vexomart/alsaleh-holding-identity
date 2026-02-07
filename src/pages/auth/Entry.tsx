@@ -1,79 +1,32 @@
 /**
  * Entry Point - Instant Smart Routing
  * Ultra-fast redirect based on auth state
+ * Zero unnecessary renders or delays
  */
 
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/hooks/useLanguage';
-import { Loader2, Shield, Sparkles } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+
+// Minimal loader during auth check
+const FastLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+  </div>
+);
 
 export default function Entry() {
   const { user, isLoading, isAdmin } = useAuth();
-  const { isRTL } = useLanguage();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoading) return;
+  // Show minimal loader only during initial check
+  if (isLoading) {
+    return <FastLoader />;
+  }
 
-    if (!user) {
-      // Not authenticated - go to login immediately
-      navigate('/auth/login', { replace: true });
-      return;
-    }
+  // Not authenticated - go to login
+  if (!user) {
+    return <Navigate to="/auth/login" replace />;
+  }
 
-    // Authenticated - instant redirect based on role
-    if (isAdmin) {
-      navigate('/adminash', { replace: true });
-    } else {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [user, isLoading, isAdmin, navigate]);
-
-  return (
-    <div 
-      dir={isRTL ? 'rtl' : 'ltr'}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5"
-    >
-      <motion.div 
-        className="flex flex-col items-center gap-6 text-center p-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Logo Animation */}
-        <motion.div 
-          className="relative"
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <div className={cn(
-            "w-16 h-16 rounded-2xl flex items-center justify-center",
-            "bg-gradient-to-br from-primary to-primary/80",
-            "shadow-xl shadow-primary/25"
-          )}>
-            <Shield className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <motion.div 
-            className="absolute -top-1 -right-1"
-            animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <Sparkles className="w-4 h-4 text-primary" />
-          </motion.div>
-        </motion.div>
-        
-        {/* Loader */}
-        <div className="flex items-center gap-2">
-          <Loader2 className="w-5 h-5 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">
-            {isRTL ? "جاري التحويل..." : "Redirecting..."}
-          </span>
-        </div>
-      </motion.div>
-    </div>
-  );
+  // Authenticated - instant redirect based on role
+  return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
 }

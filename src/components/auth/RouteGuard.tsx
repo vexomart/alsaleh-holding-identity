@@ -1,13 +1,12 @@
 /**
- * RouteGuard - Instant Authentication Guard
+ * RouteGuard - Ultra-Fast Authentication Guard
  * Zero-delay render when auth ready
+ * Minimal loading UI for instant perceived performance
  */
 
 import { type ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useLanguage } from '@/hooks/useLanguage';
-import { Loader2 } from 'lucide-react';
 
 interface RouteGuardProps {
   children: ReactNode;
@@ -18,6 +17,13 @@ interface RouteGuardProps {
   authenticatedRedirect?: string;
 }
 
+// Ultra-minimal loader - fastest possible render
+const FastLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+  </div>
+);
+
 export function RouteGuard({
   children,
   requireAuth = false,
@@ -27,25 +33,20 @@ export function RouteGuard({
   authenticatedRedirect,
 }: RouteGuardProps) {
   const { user, roles, isLoading, isAdmin } = useAuth();
-  const { isRTL } = useLanguage();
   const location = useLocation();
 
-  // Quick loading state
+  // Show minimal loader only during initial auth check
   if (isLoading) {
-    return (
-      <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+    return <FastLoader />;
   }
 
-  // Guest-only: redirect authenticated users
+  // Guest-only: redirect authenticated users immediately
   if (guestOnly && user) {
     const redirect = authenticatedRedirect || (isAdmin ? '/adminash' : '/dashboard');
     return <Navigate to={redirect} replace />;
   }
 
-  // Require auth: redirect unauthenticated
+  // Require auth: redirect unauthenticated immediately
   if (requireAuth && !user) {
     const returnUrl = location.pathname + location.search;
     return <Navigate to={`${redirectTo}?returnUrl=${encodeURIComponent(returnUrl)}`} replace />;
@@ -65,39 +66,50 @@ export function RouteGuard({
 }
 
 /**
- * Pre-configured guards - Instant render
+ * CustomerGuard - For /dashboard/* routes
+ * Requires authentication, redirects non-auth to login
  */
-
 export function CustomerGuard({ children }: { children: ReactNode }) {
-  return <RouteGuard requireAuth>{children}</RouteGuard>;
-}
-
-export function AdminGuard({ children }: { children: ReactNode }) {
-  const { isAdmin, isLoading, user } = useAuth();
-  const { isRTL } = useLanguage();
+  const { user, isLoading } = useAuth();
   
-  // Wait for auth to load
-  if (isLoading) {
-    return (
-      <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-  
-  // Redirect unauthenticated users
-  if (!user) {
-    return <Navigate to="/auth/login" replace />;
-  }
-  
-  // Redirect non-admin users to dashboard
-  if (!isAdmin) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (isLoading) return <FastLoader />;
+  if (!user) return <Navigate to="/auth/login" replace />;
   
   return <>{children}</>;
 }
 
+/**
+ * AdminGuard - For /adminash/* routes
+ * Requires authentication + admin role
+ */
+export function AdminGuard({ children }: { children: ReactNode }) {
+  const { user, isAdmin, isLoading } = useAuth();
+  
+  // Show loader only during initial check
+  if (isLoading) return <FastLoader />;
+  
+  // Not logged in - redirect to login
+  if (!user) return <Navigate to="/auth/login" replace />;
+  
+  // Not admin - redirect to customer dashboard
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+  
+  return <>{children}</>;
+}
+
+/**
+ * GuestGuard - For login/register pages
+ * Redirects authenticated users away
+ */
 export function GuestGuard({ children }: { children: ReactNode }) {
-  return <RouteGuard guestOnly>{children}</RouteGuard>;
+  const { user, isAdmin, isLoading } = useAuth();
+  
+  if (isLoading) return <FastLoader />;
+  
+  // Already logged in - redirect to appropriate dashboard
+  if (user) {
+    return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
+  }
+  
+  return <>{children}</>;
 }
