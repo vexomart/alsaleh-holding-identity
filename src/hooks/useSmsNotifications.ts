@@ -14,10 +14,16 @@ type SmsMessageType =
   // Contracts
   | "contract_created" | "contract_approved" | "contract_rejected" | "contract_pending_signature"
   | "contract_signed" | "contract_active" | "contract_expired"
-  // Finance
-  | "finance_submitted" | "finance_approved" | "finance_rejected" | "finance_offer_ready"
-  | "finance_contract_ready" | "finance_disbursed" | "finance_payment_due"
-  | "finance_payment_reminder" | "finance_payment_received" | "finance_payment_overdue"
+  // Finance - Eligibility
+  | "finance_eligibility_checking" | "finance_eligibility_approved" | "finance_eligibility_rejected"
+  | "finance_documents_required" | "finance_scoring_started" | "finance_scoring_complete"
+  // Finance - Application
+  | "finance_submitted" | "finance_under_review" | "finance_approved" | "finance_rejected"
+  | "finance_offer_ready" | "finance_offer_selected" | "finance_offer_expired"
+  // Finance - Contract
+  | "finance_contract_ready" | "finance_contract_signed" | "finance_disbursed"
+  // Finance - Payments
+  | "finance_payment_due" | "finance_payment_reminder" | "finance_payment_received" | "finance_payment_overdue"
   // Payments
   | "payment_success" | "payment_failed" | "wallet_topup" | "wallet_withdrawal"
   // General
@@ -139,10 +145,68 @@ export function useSmsNotifications() {
     return sendSms(phone, "contract_expired", { contract_number: contractNumber });
   };
 
-  // ===== Finance Notifications =====
+  // ===== Finance - Eligibility Notifications =====
 
-  const notifyFinanceSubmitted = async (phone: string, applicationNumber: string) => {
-    return sendSms(phone, "finance_submitted", { application_number: applicationNumber });
+  const notifyFinanceEligibilityChecking = async (phone: string, name: string) => {
+    return sendSms(phone, "finance_eligibility_checking", { name });
+  };
+
+  const notifyFinanceEligibilityApproved = async (
+    phone: string,
+    name: string,
+    creditLimit: number
+  ) => {
+    return sendSms(phone, "finance_eligibility_approved", {
+      name,
+      credit_limit: creditLimit.toLocaleString("ar-SA"),
+    });
+  };
+
+  const notifyFinanceEligibilityRejected = async (
+    phone: string,
+    name: string,
+    reason: string
+  ) => {
+    return sendSms(phone, "finance_eligibility_rejected", { name, reason });
+  };
+
+  const notifyFinanceDocumentsRequired = async (
+    phone: string,
+    applicationNumber: string,
+    documents: string
+  ) => {
+    return sendSms(phone, "finance_documents_required", {
+      application_number: applicationNumber,
+      documents,
+    });
+  };
+
+  const notifyFinanceScoringStarted = async (phone: string, applicationNumber: string) => {
+    return sendSms(phone, "finance_scoring_started", { application_number: applicationNumber });
+  };
+
+  const notifyFinanceScoringComplete = async (
+    phone: string,
+    applicationNumber: string,
+    riskLevel: string
+  ) => {
+    return sendSms(phone, "finance_scoring_complete", {
+      application_number: applicationNumber,
+      risk_level: riskLevel,
+    });
+  };
+
+  // ===== Finance - Application Notifications =====
+
+  const notifyFinanceSubmitted = async (phone: string, applicationNumber: string, amount: number) => {
+    return sendSms(phone, "finance_submitted", {
+      application_number: applicationNumber,
+      amount: amount.toLocaleString("ar-SA"),
+    });
+  };
+
+  const notifyFinanceUnderReview = async (phone: string, applicationNumber: string) => {
+    return sendSms(phone, "finance_under_review", { application_number: applicationNumber });
   };
 
   const notifyFinanceApproved = async (
@@ -158,34 +222,81 @@ export function useSmsNotifications() {
     });
   };
 
-  const notifyFinanceRejected = async (phone: string, applicationNumber: string) => {
-    return sendSms(phone, "finance_rejected", { application_number: applicationNumber });
+  const notifyFinanceRejected = async (phone: string, applicationNumber: string, reason?: string) => {
+    return sendSms(phone, "finance_rejected", {
+      application_number: applicationNumber,
+      reason: reason || "لم يتم استيفاء الشروط",
+    });
   };
 
-  const notifyFinanceOfferReady = async (phone: string, applicationNumber: string) => {
-    return sendSms(phone, "finance_offer_ready", { application_number: applicationNumber });
+  const notifyFinanceOfferReady = async (phone: string, applicationNumber: string, offersCount: number) => {
+    return sendSms(phone, "finance_offer_ready", {
+      application_number: applicationNumber,
+      offers_count: offersCount.toString(),
+    });
   };
 
-  const notifyFinanceContractReady = async (phone: string, contractNumber: string) => {
-    return sendSms(phone, "finance_contract_ready", { contract_number: contractNumber });
+  const notifyFinanceOfferSelected = async (
+    phone: string,
+    applicationNumber: string,
+    amount: number,
+    monthlyPayment: number,
+    tenor: number
+  ) => {
+    return sendSms(phone, "finance_offer_selected", {
+      application_number: applicationNumber,
+      amount: amount.toLocaleString("ar-SA"),
+      monthly: monthlyPayment.toLocaleString("ar-SA"),
+      tenor: tenor.toString(),
+    });
   };
 
-  const notifyFinanceDisbursed = async (phone: string, amount: number) => {
-    return sendSms(phone, "finance_disbursed", {
+  const notifyFinanceOfferExpired = async (phone: string, applicationNumber: string) => {
+    return sendSms(phone, "finance_offer_expired", { application_number: applicationNumber });
+  };
+
+  // ===== Finance - Contract Notifications =====
+
+  const notifyFinanceContractReady = async (
+    phone: string,
+    contractNumber: string,
+    amount: number
+  ) => {
+    return sendSms(phone, "finance_contract_ready", {
+      contract_number: contractNumber,
       amount: amount.toLocaleString("ar-SA"),
     });
   };
+
+  const notifyFinanceContractSigned = async (phone: string, contractNumber: string) => {
+    return sendSms(phone, "finance_contract_signed", { contract_number: contractNumber });
+  };
+
+  const notifyFinanceDisbursed = async (
+    phone: string,
+    amount: number,
+    contractNumber: string
+  ) => {
+    return sendSms(phone, "finance_disbursed", {
+      amount: amount.toLocaleString("ar-SA"),
+      contract_number: contractNumber,
+    });
+  };
+
+  // ===== Finance - Payment Notifications =====
 
   const notifyFinancePaymentDue = async (
     phone: string,
     installmentNo: number,
     amount: number,
-    dueDate: string
+    dueDate: string,
+    contractNumber: string
   ) => {
     return sendSms(phone, "finance_payment_due", {
       installment: installmentNo.toString(),
       amount: amount.toLocaleString("ar-SA"),
       due_date: dueDate,
+      contract_number: contractNumber,
     });
   };
 
@@ -203,10 +314,12 @@ export function useSmsNotifications() {
   const notifyFinancePaymentReceived = async (
     phone: string,
     installmentNo: number,
+    amount: number,
     remainingInstallments: number
   ) => {
     return sendSms(phone, "finance_payment_received", {
       installment: installmentNo.toString(),
+      amount: amount.toLocaleString("ar-SA"),
       remaining: remainingInstallments.toString(),
     });
   };
@@ -288,13 +401,29 @@ export function useSmsNotifications() {
     notifyContractActive,
     notifyContractExpired,
 
-    // Finance
+    // Finance - Eligibility
+    notifyFinanceEligibilityChecking,
+    notifyFinanceEligibilityApproved,
+    notifyFinanceEligibilityRejected,
+    notifyFinanceDocumentsRequired,
+    notifyFinanceScoringStarted,
+    notifyFinanceScoringComplete,
+
+    // Finance - Application
     notifyFinanceSubmitted,
+    notifyFinanceUnderReview,
     notifyFinanceApproved,
     notifyFinanceRejected,
     notifyFinanceOfferReady,
+    notifyFinanceOfferSelected,
+    notifyFinanceOfferExpired,
+
+    // Finance - Contract
     notifyFinanceContractReady,
+    notifyFinanceContractSigned,
     notifyFinanceDisbursed,
+
+    // Finance - Payment
     notifyFinancePaymentDue,
     notifyFinancePaymentReminder,
     notifyFinancePaymentReceived,
