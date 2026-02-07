@@ -2,6 +2,7 @@
  * useUnifiedRealtime Hook - V3 Cross-Dashboard Sync
  * Unified real-time synchronization between Admin and Customer dashboards
  * Handles: Orders, Contracts, Wallets, Services, Notifications
+ * With modern toast notifications
  */
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
