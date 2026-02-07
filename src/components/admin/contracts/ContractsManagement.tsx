@@ -1,10 +1,10 @@
 /**
- * Admin Contracts Management - Redesigned Enterprise Grade
- * Command Center style with real-time updates
+ * Admin Contracts Management - iOS-Style Premium Design
+ * صفحة إدارة العقود بتصميم احترافي متوافق مع iOS وRTL صارم
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -34,11 +34,12 @@ import {
   AlertTriangle,
   Users,
   Calendar,
-  DollarSign,
+  Banknote,
   FileSignature,
   Clock,
   CheckCircle,
   Filter,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 // Local components
@@ -66,7 +67,6 @@ export function ContractsManagement() {
   const fetchContracts = useCallback(async () => {
     setIsLoading(true);
     try {
-      // First fetch contracts with services
       const { data: contractsData, error: contractsError } = await supabase
         .from('contracts')
         .select(`
@@ -77,7 +77,6 @@ export function ContractsManagement() {
 
       if (contractsError) throw contractsError;
 
-      // Fetch customer profiles separately
       const customerIds = [...new Set((contractsData || []).map((c: any) => c.customer_user_id))];
       
       let profilesMap: Record<string, any> = {};
@@ -106,11 +105,11 @@ export function ContractsManagement() {
       setContracts(transformedContracts);
     } catch (error) {
       console.error('Error fetching contracts:', error);
-      toast.error(isRTL ? 'فشل في تحميل العقود' : 'Failed to load contracts');
+      toast.error('فشل في تحميل العقود');
     } finally {
       setIsLoading(false);
     }
-  }, [isRTL]);
+  }, []);
 
   useEffect(() => {
     fetchContracts();
@@ -123,10 +122,7 @@ export function ContractsManagement() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'contracts' },
-        (payload) => {
-          console.log('[Contracts Realtime]', payload.eventType);
-          fetchContracts();
-        }
+        () => fetchContracts()
       )
       .subscribe();
 
@@ -151,12 +147,13 @@ export function ContractsManagement() {
   // Filtered contracts
   const filteredContracts = useMemo(() => {
     return contracts.filter(contract => {
+      const searchLower = searchQuery.toLowerCase();
       const matchesSearch = 
-        contract.contract_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.customer?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.customer?.full_name_ar?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.customer?.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        contract.customer?.customer_uid?.toLowerCase().includes(searchQuery.toLowerCase());
+        contract.contract_number.toLowerCase().includes(searchLower) ||
+        contract.customer?.full_name?.toLowerCase().includes(searchLower) ||
+        contract.customer?.full_name_ar?.toLowerCase().includes(searchLower) ||
+        contract.customer?.email.toLowerCase().includes(searchLower) ||
+        contract.customer?.customer_uid?.toLowerCase().includes(searchLower);
 
       const matchesStatus = statusFilter === 'all' || contract.status === statusFilter;
 
@@ -164,13 +161,12 @@ export function ContractsManagement() {
     });
   }, [contracts, searchQuery, statusFilter]);
 
-  // Pending approval count for alert
   const pendingApprovalCount = contracts.filter(c => c.status === 'pre_approved_by_customer').length;
 
   // Handlers
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success(isRTL ? 'تم النسخ' : 'Copied');
+    toast.success('تم النسخ');
   };
 
   const handleApprove = async () => {
@@ -189,9 +185,8 @@ export function ContractsManagement() {
 
       if (error) throw error;
 
-      toast.success(isRTL ? 'تمت الموافقة على العقد' : 'Contract approved');
+      toast.success('تمت الموافقة على العقد');
       
-      // Send notification
       if (selectedContract.customer?.email) {
         sendContractEmail({
           contractId: selectedContract.id,
@@ -213,7 +208,7 @@ export function ContractsManagement() {
       fetchContracts();
     } catch (error) {
       console.error('Error approving contract:', error);
-      toast.error(isRTL ? 'فشل في الموافقة' : 'Failed to approve');
+      toast.error('فشل في الموافقة');
     } finally {
       setIsProcessing(false);
     }
@@ -221,7 +216,7 @@ export function ContractsManagement() {
 
   const handleReject = async () => {
     if (!selectedContract || !rejectionReason.trim()) {
-      toast.error(isRTL ? 'يرجى إدخال سبب الرفض' : 'Please enter rejection reason');
+      toast.error('يرجى إدخال سبب الرفض');
       return;
     }
     setIsProcessing(true);
@@ -238,9 +233,8 @@ export function ContractsManagement() {
 
       if (error) throw error;
 
-      toast.success(isRTL ? 'تم رفض العقد' : 'Contract rejected');
+      toast.success('تم رفض العقد');
       
-      // Send notification
       if (selectedContract.customer?.email) {
         sendContractEmail({
           contractId: selectedContract.id,
@@ -262,7 +256,7 @@ export function ContractsManagement() {
       fetchContracts();
     } catch (error) {
       console.error('Error rejecting contract:', error);
-      toast.error(isRTL ? 'فشل في الرفض' : 'Failed to reject');
+      toast.error('فشل في الرفض');
     } finally {
       setIsProcessing(false);
     }
@@ -273,7 +267,7 @@ export function ContractsManagement() {
   };
 
   const formatCurrency = (amount: number, currency: string = 'SAR') => {
-    return new Intl.NumberFormat(isRTL ? 'ar-SA' : 'en-SA', {
+    return new Intl.NumberFormat('ar-SA', {
       style: 'currency',
       currency,
     }).format(amount);
@@ -281,7 +275,7 @@ export function ContractsManagement() {
 
   const formatDateTime = (dateString: string | null) => {
     if (!dateString) return '-';
-    return new Intl.DateTimeFormat(isRTL ? 'ar-SA' : 'en-US', {
+    return new Intl.DateTimeFormat('ar-SA', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -291,8 +285,15 @@ export function ContractsManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950" dir="rtl">
-      <div className="space-y-6 p-6">
+    <div 
+      className="min-h-screen bg-slate-950 overflow-x-hidden"
+      dir="rtl"
+      style={{ 
+        maxWidth: '100%',
+        overflowX: 'hidden',
+      }}
+    >
+      <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
         {/* Header */}
         <AdminContractsHeader
           searchValue={searchQuery}
@@ -311,45 +312,49 @@ export function ContractsManagement() {
         />
 
         {/* Pending Approval Alert */}
-        {pendingApprovalCount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Card className="border-amber-700/50 bg-amber-950/30">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3 flex-row-reverse">
-                  <div className="p-2 rounded-full bg-amber-500/20">
-                    <AlertTriangle className="h-5 w-5 text-amber-400" />
+        <AnimatePresence>
+          {pendingApprovalCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Card className="border-amber-700/50 bg-gradient-to-l from-amber-950/40 to-amber-900/20 shadow-lg">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-amber-500/20 shrink-0">
+                      <AlertTriangle className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-amber-200 text-sm sm:text-base">
+                        {pendingApprovalCount} عقود بانتظار موافقتك
+                      </p>
+                      <p className="text-xs sm:text-sm text-amber-400/80 hidden sm:block">
+                        العملاء قدموا موافقتهم المبدئية
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-amber-600/50 text-amber-300 hover:bg-amber-900/50 rounded-xl h-9 px-3 shrink-0"
+                      onClick={() => setStatusFilter('pre_approved_by_customer')}
+                    >
+                      عرض الكل
+                    </Button>
                   </div>
-                  <div className="flex-1 text-right">
-                    <p className="font-semibold text-amber-200">
-                      {pendingApprovalCount} عقود بانتظار موافقتك
-                    </p>
-                    <p className="text-sm text-amber-400/80">
-                      العملاء قدموا موافقتهم المبدئية
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-amber-600/50 text-amber-300 hover:bg-amber-900/50"
-                    onClick={() => setStatusFilter('pre_approved_by_customer')}
-                  >
-                    عرض الكل
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Filter Row */}
-        <div className="flex items-center gap-4 flex-row-reverse">
-          <div className="flex items-center gap-2 flex-row-reverse">
-            <Filter className="h-4 w-4 text-slate-400" />
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-4 w-4 text-slate-400 hidden sm:block" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] bg-slate-800 border-slate-700 text-white">
+              <SelectTrigger className="w-40 sm:w-48 bg-slate-800/60 border-slate-700 text-white rounded-xl h-10">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
@@ -361,23 +366,26 @@ export function ContractsManagement() {
               </SelectContent>
             </Select>
           </div>
+          
           {statusFilter !== 'all' && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setStatusFilter('all')}
-              className="text-slate-400 hover:text-white"
+              className="text-slate-400 hover:text-white rounded-xl h-9"
             >
               مسح الفلتر
             </Button>
           )}
+          
           <div className="flex-1" />
-          <Badge variant="outline" className="text-slate-300 border-slate-600">
+          
+          <Badge variant="outline" className="text-slate-300 border-slate-600 rounded-lg px-3 py-1">
             {filteredContracts.length} عقد
           </Badge>
         </div>
 
-        {/* Contracts Table */}
+        {/* Contracts Table/Cards */}
         <AdminContractsTable
           contracts={filteredContracts}
           isLoading={isLoading}
@@ -399,45 +407,45 @@ export function ContractsManagement() {
 
       {/* Detail Dialog */}
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent 
+          className="max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 border-slate-700 rounded-2xl"
+          dir="rtl"
+        >
           <DialogHeader>
-            <DialogTitle className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+            <DialogTitle className="flex items-center gap-2 text-white">
               <FileSignature className="h-5 w-5 text-primary" />
-              {isRTL ? 'تفاصيل العقد' : 'Contract Details'}
+              تفاصيل العقد
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-slate-400">
               {selectedContract?.contract_number}
             </DialogDescription>
           </DialogHeader>
 
           {selectedContract && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Customer Info */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className={cn("text-sm flex items-center gap-2", isRTL && "flex-row-reverse")}>
-                    <Users className="h-4 w-4" />
-                    {isRTL ? 'بيانات العميل' : 'Customer Information'}
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-slate-200">
+                    <Users className="h-4 w-4 text-slate-400" />
+                    بيانات العميل
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
-                  <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                    <span className="text-muted-foreground">{isRTL ? 'الاسم:' : 'Name:'}</span>
-                    <span className="font-medium">
-                      {isRTL 
-                        ? selectedContract.customer?.full_name_ar || selectedContract.customer?.full_name
-                        : selectedContract.customer?.full_name
-                      }
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">الاسم:</span>
+                    <span className="font-medium text-white">
+                      {selectedContract.customer?.full_name_ar || selectedContract.customer?.full_name || '-'}
                     </span>
                   </div>
-                  <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                    <span className="text-muted-foreground">{isRTL ? 'البريد:' : 'Email:'}</span>
-                    <span>{selectedContract.customer?.email}</span>
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">البريد:</span>
+                    <span className="text-slate-200">{selectedContract.customer?.email}</span>
                   </div>
                   {selectedContract.customer?.phone && (
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'الهاتف:' : 'Phone:'}</span>
-                      <span>{selectedContract.customer.phone}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">الهاتف:</span>
+                      <span className="text-slate-200 ltr">{selectedContract.customer.phone}</span>
                     </div>
                   )}
                 </CardContent>
@@ -445,24 +453,24 @@ export function ContractsManagement() {
 
               {/* Pricing */}
               {selectedContract.pricing_json && (
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className={cn("text-sm flex items-center gap-2", isRTL && "flex-row-reverse")}>
-                      <DollarSign className="h-4 w-4" />
-                      {isRTL ? 'تفاصيل الأسعار' : 'Pricing Details'}
+                <Card className="bg-slate-800/50 border-slate-700">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2 text-slate-200">
+                      <Banknote className="h-4 w-4 text-slate-400" />
+                      تفاصيل الأسعار
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2 text-sm">
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'المجموع الفرعي:' : 'Subtotal:'}</span>
-                      <span>{formatCurrency(selectedContract.pricing_json.subtotal, selectedContract.pricing_json.currency)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">المجموع الفرعي:</span>
+                      <span className="text-slate-200">{formatCurrency(selectedContract.pricing_json.subtotal, selectedContract.pricing_json.currency)}</span>
                     </div>
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'الضريبة:' : 'VAT:'}</span>
-                      <span>{formatCurrency(selectedContract.pricing_json.vat_amount, selectedContract.pricing_json.currency)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">الضريبة:</span>
+                      <span className="text-slate-200">{formatCurrency(selectedContract.pricing_json.vat_amount, selectedContract.pricing_json.currency)}</span>
                     </div>
-                    <div className={cn("flex justify-between pt-2 border-t font-semibold", isRTL && "flex-row-reverse")}>
-                      <span>{isRTL ? 'الإجمالي:' : 'Total:'}</span>
+                    <div className="flex justify-between pt-2 border-t border-slate-700 font-semibold">
+                      <span className="text-slate-200">الإجمالي:</span>
                       <span className="text-primary">{formatCurrency(selectedContract.pricing_json.total, selectedContract.pricing_json.currency)}</span>
                     </div>
                   </CardContent>
@@ -470,34 +478,34 @@ export function ContractsManagement() {
               )}
 
               {/* Timeline */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className={cn("text-sm flex items-center gap-2", isRTL && "flex-row-reverse")}>
-                    <Clock className="h-4 w-4" />
-                    {isRTL ? 'التسلسل الزمني' : 'Timeline'}
+              <Card className="bg-slate-800/50 border-slate-700">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-slate-200">
+                    <Clock className="h-4 w-4 text-slate-400" />
+                    التسلسل الزمني
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 text-sm">
-                  <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                    <span className="text-muted-foreground">{isRTL ? 'تاريخ الإنشاء:' : 'Created:'}</span>
-                    <span>{formatDateTime(selectedContract.created_at)}</span>
+                <CardContent className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">تاريخ الإنشاء:</span>
+                    <span className="text-slate-200">{formatDateTime(selectedContract.created_at)}</span>
                   </div>
                   {selectedContract.pre_approval_timestamp && (
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'الموافقة المبدئية:' : 'Pre-approved:'}</span>
-                      <span>{formatDateTime(selectedContract.pre_approval_timestamp)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">الموافقة المبدئية:</span>
+                      <span className="text-slate-200">{formatDateTime(selectedContract.pre_approval_timestamp)}</span>
                     </div>
                   )}
                   {selectedContract.admin_approved_at && (
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'موافقة الإدارة:' : 'Admin Approved:'}</span>
-                      <span className="text-accent">{formatDateTime(selectedContract.admin_approved_at)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">موافقة الإدارة:</span>
+                      <span className="text-emerald-400">{formatDateTime(selectedContract.admin_approved_at)}</span>
                     </div>
                   )}
                   {selectedContract.signed_at && (
-                    <div className={cn("flex justify-between", isRTL && "flex-row-reverse")}>
-                      <span className="text-muted-foreground">{isRTL ? 'تاريخ التوقيع:' : 'Signed:'}</span>
-                      <span className="text-accent">{formatDateTime(selectedContract.signed_at)}</span>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">تاريخ التوقيع:</span>
+                      <span className="text-emerald-400">{formatDateTime(selectedContract.signed_at)}</span>
                     </div>
                   )}
                 </CardContent>
@@ -505,26 +513,26 @@ export function ContractsManagement() {
 
               {/* Actions */}
               {selectedContract.status === 'pre_approved_by_customer' && (
-                <div className={cn("flex gap-3", isRTL && "flex-row-reverse")}>
+                <div className="flex gap-3 pt-2">
                   <Button
                     onClick={() => {
                       setIsDetailOpen(false);
-                      setTimeout(() => setIsApproveOpen(true), 100);
+                      setTimeout(() => setIsApproveOpen(true), 150);
                     }}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 h-11 rounded-xl"
                   >
                     <CheckCircle className="h-4 w-4 me-2" />
-                    {isRTL ? 'موافقة' : 'Approve'}
+                    موافقة
                   </Button>
                   <Button
                     variant="destructive"
                     onClick={() => {
                       setIsDetailOpen(false);
-                      setTimeout(() => setIsRejectOpen(true), 100);
+                      setTimeout(() => setIsRejectOpen(true), 150);
                     }}
-                    className="flex-1"
+                    className="flex-1 h-11 rounded-xl"
                   >
-                    {isRTL ? 'رفض' : 'Reject'}
+                    رفض
                   </Button>
                 </div>
               )}
@@ -535,46 +543,46 @@ export function ContractsManagement() {
 
       {/* Approve Dialog */}
       <Dialog open={isApproveOpen} onOpenChange={setIsApproveOpen}>
-        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="bg-slate-900 border-slate-700 rounded-2xl" dir="rtl">
           <DialogHeader>
-            <DialogTitle className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
+            <DialogTitle className="flex items-center gap-2 text-white">
               <CheckCircle className="h-5 w-5 text-emerald-500" />
-              {isRTL ? 'تأكيد الموافقة' : 'Confirm Approval'}
+              تأكيد الموافقة
             </DialogTitle>
-            <DialogDescription>
-              {isRTL 
-                ? 'سيتم إرسال إشعار للعميل لتوقيع العقد'
-                : 'Customer will be notified to sign the contract'
-              }
+            <DialogDescription className="text-slate-400">
+              سيتم إرسال إشعار للعميل لتوقيع العقد
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">
-                {isRTL ? 'ملاحظات (اختياري)' : 'Notes (optional)'}
+              <label className="text-sm font-medium mb-2 block text-slate-200">
+                ملاحظات (اختياري)
               </label>
               <Textarea
-                placeholder={isRTL ? 'أضف ملاحظات...' : 'Add notes...'}
+                placeholder="أضف ملاحظات..."
                 value={approvalNotes}
                 onChange={(e) => setApprovalNotes(e.target.value)}
                 rows={3}
+                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 rounded-xl resize-none"
               />
             </div>
           </div>
 
-          <DialogFooter className={cn(isRTL && "flex-row-reverse")}>
-            <Button variant="outline" onClick={() => setIsApproveOpen(false)}>
-              {isRTL ? 'إلغاء' : 'Cancel'}
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsApproveOpen(false)}
+              className="border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl h-11"
+            >
+              إلغاء
             </Button>
             <Button 
               onClick={handleApprove} 
               disabled={isProcessing}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 rounded-xl h-11 min-w-[100px]"
             >
-              {isProcessing 
-                ? (isRTL ? 'جاري الموافقة...' : 'Approving...') 
-                : (isRTL ? 'موافقة' : 'Approve')}
+              {isProcessing ? 'جاري الموافقة...' : 'موافقة'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -582,47 +590,48 @@ export function ContractsManagement() {
 
       {/* Reject Dialog */}
       <Dialog open={isRejectOpen} onOpenChange={setIsRejectOpen}>
-        <DialogContent dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="bg-slate-900 border-slate-700 rounded-2xl" dir="rtl">
           <DialogHeader>
-            <DialogTitle className={cn("flex items-center gap-2 text-destructive", isRTL && "flex-row-reverse")}>
+            <DialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
-              {isRTL ? 'تأكيد الرفض' : 'Confirm Rejection'}
+              تأكيد الرفض
             </DialogTitle>
-            <DialogDescription>
-              {isRTL 
-                ? 'سيتم إشعار العميل بسبب الرفض'
-                : 'Customer will be notified with the rejection reason'
-              }
+            <DialogDescription className="text-slate-400">
+              سيتم إشعار العميل بسبب الرفض
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">
-                {isRTL ? 'سبب الرفض *' : 'Rejection reason *'}
+              <label className="text-sm font-medium mb-2 block text-slate-200">
+                سبب الرفض <span className="text-destructive">*</span>
               </label>
               <Textarea
-                placeholder={isRTL ? 'اكتب سبب الرفض...' : 'Enter rejection reason...'}
+                placeholder="اكتب سبب الرفض..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 rows={3}
                 required
+                className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 rounded-xl resize-none"
               />
             </div>
           </div>
 
-          <DialogFooter className={cn(isRTL && "flex-row-reverse")}>
-            <Button variant="outline" onClick={() => setIsRejectOpen(false)}>
-              {isRTL ? 'إلغاء' : 'Cancel'}
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsRejectOpen(false)}
+              className="border-slate-700 text-slate-300 hover:bg-slate-800 rounded-xl h-11"
+            >
+              إلغاء
             </Button>
             <Button 
               variant="destructive"
               onClick={handleReject} 
               disabled={isProcessing || !rejectionReason.trim()}
+              className="rounded-xl h-11 min-w-[100px]"
             >
-              {isProcessing 
-                ? (isRTL ? 'جاري الرفض...' : 'Rejecting...') 
-                : (isRTL ? 'رفض العقد' : 'Reject Contract')}
+              {isProcessing ? 'جاري الرفض...' : 'رفض العقد'}
             </Button>
           </DialogFooter>
         </DialogContent>
