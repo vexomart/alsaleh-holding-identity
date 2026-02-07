@@ -291,7 +291,7 @@ export function ContractsManagement() {
   };
 
   return (
-    <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-slate-950" dir="rtl">
       <div className="space-y-6 p-6">
         {/* Header */}
         <AdminContractsHeader
@@ -316,33 +316,27 @@ export function ContractsManagement() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <Card className="border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20">
+            <Card className="border-amber-700/50 bg-amber-950/30">
               <CardContent className="p-4">
-                <div className={cn("flex items-center gap-3", isRTL && "flex-row-reverse")}>
+                <div className="flex items-center gap-3 flex-row-reverse">
                   <div className="p-2 rounded-full bg-amber-500/20">
-                    <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <AlertTriangle className="h-5 w-5 text-amber-400" />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-amber-800 dark:text-amber-200">
-                      {isRTL 
-                        ? `${pendingApprovalCount} عقود بانتظار موافقتك`
-                        : `${pendingApprovalCount} contracts awaiting your approval`
-                      }
+                  <div className="flex-1 text-right">
+                    <p className="font-semibold text-amber-200">
+                      {pendingApprovalCount} عقود بانتظار موافقتك
                     </p>
-                    <p className="text-sm text-amber-600 dark:text-amber-400">
-                      {isRTL 
-                        ? 'العملاء قدموا موافقتهم المبدئية'
-                        : 'Customers have submitted their pre-approval'
-                      }
+                    <p className="text-sm text-amber-400/80">
+                      العملاء قدموا موافقتهم المبدئية
                     </p>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-amber-500/50 text-amber-700 hover:bg-amber-100 dark:text-amber-300 dark:hover:bg-amber-950/50"
+                    className="border-amber-600/50 text-amber-300 hover:bg-amber-900/50"
                     onClick={() => setStatusFilter('pre_approved_by_customer')}
                   >
-                    {isRTL ? 'عرض الكل' : 'View All'}
+                    عرض الكل
                   </Button>
                 </div>
               </CardContent>
@@ -351,19 +345,19 @@ export function ContractsManagement() {
         )}
 
         {/* Filter Row */}
-        <div className={cn("flex items-center gap-4", isRTL && "flex-row-reverse")}>
-          <div className={cn("flex items-center gap-2", isRTL && "flex-row-reverse")}>
-            <Filter className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-center gap-4 flex-row-reverse">
+          <div className="flex items-center gap-2 flex-row-reverse">
+            <Filter className="h-4 w-4 text-slate-400" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] bg-slate-800 border-slate-700 text-white">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{isRTL ? 'جميع الحالات' : 'All Status'}</SelectItem>
-                <SelectItem value="pre_approved_by_customer">{isRTL ? 'بانتظار الموافقة' : 'Pending Approval'}</SelectItem>
-                <SelectItem value="pending_signature">{isRTL ? 'بانتظار التوقيع' : 'Pending Signature'}</SelectItem>
-                <SelectItem value="signed">{isRTL ? 'موقّع' : 'Signed'}</SelectItem>
-                <SelectItem value="cancelled">{isRTL ? 'ملغي' : 'Cancelled'}</SelectItem>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">جميع الحالات</SelectItem>
+                <SelectItem value="pre_approved_by_customer">بانتظار الموافقة</SelectItem>
+                <SelectItem value="pending_signature">بانتظار التوقيع</SelectItem>
+                <SelectItem value="signed">موقّع</SelectItem>
+                <SelectItem value="cancelled">ملغي</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -372,14 +366,14 @@ export function ContractsManagement() {
               variant="ghost"
               size="sm"
               onClick={() => setStatusFilter('all')}
-              className="text-muted-foreground"
+              className="text-slate-400 hover:text-white"
             >
-              {isRTL ? 'مسح الفلتر' : 'Clear filter'}
+              مسح الفلتر
             </Button>
           )}
           <div className="flex-1" />
-          <Badge variant="outline" className="text-muted-foreground">
-            {filteredContracts.length} {isRTL ? 'عقد' : 'contracts'}
+          <Badge variant="outline" className="text-slate-300 border-slate-600">
+            {filteredContracts.length} عقد
           </Badge>
         </div>
 
