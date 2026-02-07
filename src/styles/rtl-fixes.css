@@ -111,19 +111,75 @@ html[dir="ltr"] body,
 }
 
 /* ===========================================
-   ICON MIRRORING
-   Directional icons should flip in RTL
+   ICON MIRRORING - DIRECTIONAL ONLY
+   Only mirror navigation/directional icons
+   DO NOT mirror: status, brand, UI state icons
    =========================================== */
 
+/* Directional icons that SHOULD be mirrored */
 [dir="rtl"] .icon-mirror,
-[dir="rtl"] [data-icon="arrow-right"],
-[dir="rtl"] [data-icon="arrow-left"],
-[dir="rtl"] [data-icon="chevron-right"],
-[dir="rtl"] [data-icon="chevron-left"] {
+[dir="rtl"] .icon-directional {
   transform: scaleX(-1);
 }
 
-/* Icons with text - adjust spacing */
+/* Lucide directional icons - specific selectors */
+[dir="rtl"] [data-lucide="arrow-right"],
+[dir="rtl"] [data-lucide="arrow-left"],
+[dir="rtl"] [data-lucide="arrow-right-circle"],
+[dir="rtl"] [data-lucide="arrow-left-circle"],
+[dir="rtl"] [data-lucide="chevron-right"],
+[dir="rtl"] [data-lucide="chevron-left"],
+[dir="rtl"] [data-lucide="chevrons-right"],
+[dir="rtl"] [data-lucide="chevrons-left"],
+[dir="rtl"] [data-lucide="move-right"],
+[dir="rtl"] [data-lucide="move-left"],
+[dir="rtl"] [data-lucide="corner-down-right"],
+[dir="rtl"] [data-lucide="corner-down-left"],
+[dir="rtl"] [data-lucide="corner-up-right"],
+[dir="rtl"] [data-lucide="corner-up-left"],
+[dir="rtl"] [data-lucide="log-out"],
+[dir="rtl"] [data-lucide="log-in"],
+[dir="rtl"] [data-lucide="external-link"],
+[dir="rtl"] [data-lucide="undo"],
+[dir="rtl"] [data-lucide="redo"],
+[dir="rtl"] [data-lucide="reply"],
+[dir="rtl"] [data-lucide="forward"] {
+  transform: scaleX(-1);
+}
+
+/* Explicit class to prevent mirroring */
+.icon-no-mirror,
+.icon-static,
+[data-mirror="false"] {
+  transform: none !important;
+}
+
+/* Icons that should NEVER be mirrored */
+/* Status, brand, checkmarks, UI state */
+[dir="rtl"] [data-lucide="check"],
+[dir="rtl"] [data-lucide="check-circle"],
+[dir="rtl"] [data-lucide="x"],
+[dir="rtl"] [data-lucide="x-circle"],
+[dir="rtl"] [data-lucide="alert-circle"],
+[dir="rtl"] [data-lucide="info"],
+[dir="rtl"] [data-lucide="plus"],
+[dir="rtl"] [data-lucide="minus"],
+[dir="rtl"] [data-lucide="star"],
+[dir="rtl"] [data-lucide="heart"],
+[dir="rtl"] [data-lucide="home"],
+[dir="rtl"] [data-lucide="settings"],
+[dir="rtl"] [data-lucide="user"],
+[dir="rtl"] [data-lucide="users"],
+[dir="rtl"] [data-lucide="mail"],
+[dir="rtl"] [data-lucide="phone"],
+[dir="rtl"] [data-lucide="search"],
+[dir="rtl"] [data-lucide="loader"],
+[dir="rtl"] [data-lucide="loader-2"],
+[dir="rtl"] [data-lucide="spinner"] {
+  transform: none;
+}
+
+/* Icons with text - use logical spacing */
 [dir="rtl"] .icon-start {
   margin-inline-end: 0.5rem;
   margin-inline-start: 0;
@@ -132,6 +188,13 @@ html[dir="ltr"] body,
 [dir="rtl"] .icon-end {
   margin-inline-start: 0.5rem;
   margin-inline-end: 0;
+}
+
+/* Flex gap for icon + text (better than margins) */
+.icon-gap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ===========================================
@@ -347,33 +410,152 @@ html[dir="ltr"] body,
 }
 
 /* ===========================================
-   ANIMATION DIRECTION FIXES
-   Ensure animations respect RTL
+   ANIMATION SYSTEM - GPU Accelerated
+   Using transform only (no left/right)
+   Smooth 60fps performance
    =========================================== */
 
+/* Base animation settings for performance */
+.animate-gpu {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* RTL-aware slide animations */
 [dir="rtl"] .animate-slide-in-right {
-  animation-name: slideInLeft;
+  animation-name: slideInFromStart;
 }
 
 [dir="rtl"] .animate-slide-in-left {
-  animation-name: slideInRight;
+  animation-name: slideInFromEnd;
 }
 
-@keyframes slideInLeft {
+[dir="ltr"] .animate-slide-in-right,
+.animate-slide-in-right {
+  animation-name: slideInFromEnd;
+}
+
+[dir="ltr"] .animate-slide-in-left,
+.animate-slide-in-left {
+  animation-name: slideInFromStart;
+}
+
+/* RTL-agnostic slide keyframes using logical direction */
+@keyframes slideInFromStart {
   from {
-    transform: translateX(-100%);
+    opacity: 0;
+    transform: translateX(-20px);
   }
   to {
+    opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes slideInRight {
+@keyframes slideInFromEnd {
   from {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateX(20px);
   }
   to {
+    opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Fade animations - direction agnostic */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth hover/interaction animations */
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+@keyframes smoothFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-smooth-float {
+  animation: smoothFloat 4s ease-in-out infinite;
+}
+
+/* Stagger animation delays (use with multiple children) */
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
