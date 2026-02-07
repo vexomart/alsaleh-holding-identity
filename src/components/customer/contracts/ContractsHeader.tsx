@@ -278,7 +278,7 @@ export function ContractsHeader({
 
             {/* Browse Services CTA */}
             <Button 
-              onClick={() => navigate('/app/services')}
+              onClick={() => navigate('/portal/services')}
               className={cn(
                 "gap-2 hidden sm:flex",
                 "bg-amber-400 hover:bg-amber-500 text-amber-950 font-semibold",
