@@ -163,14 +163,12 @@ export function WalletDetailsPage() {
 
     if (txError) throw txError;
 
-    // Send notifications in parallel for speed
+    // Get customer info for notifications
     const customerPhone = customerData.profile?.phone;
     const customerEmail = customerData.profile?.email;
     const customerName = customerData.profile?.full_name || "عميلنا الكريم";
 
-    const notificationPromises: Promise<any>[] = [];
-
-    // Format date and time for banking SMS
+    // Format date and time for banking SMS - INSTANT
     const now = new Date();
     const dateStr = now.toLocaleDateString("ar-SA", { 
       year: "numeric", 
@@ -186,36 +184,37 @@ export function WalletDetailsPage() {
       ? "إيداع نقدي - تعديل إداري" 
       : "خصم إداري";
 
-    // SMS Notification - ALWAYS send if phone exists
+    // ⚡ INSTANT SMS - Send IMMEDIATELY and AWAIT before continuing
     if (customerPhone) {
       const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
-      const smsPromise = supabase.functions.invoke("sms-send-notification", {
-        body: {
-          phone: customerPhone,
-          message_type: messageType,
-          template_data: {
-            amount: amount.toLocaleString("ar-SA"),
-            balance: newBalance.toLocaleString("ar-SA"),
-            date: dateStr,
-            time: timeStr,
-            operation_type: operationType,
+      console.log("📤 Sending INSTANT SMS to:", customerPhone);
+      
+      try {
+        const smsResult = await supabase.functions.invoke("sms-send-notification", {
+          body: {
+            phone: customerPhone,
+            message_type: messageType,
+            template_data: {
+              amount: amount.toLocaleString("ar-SA"),
+              balance: newBalance.toLocaleString("ar-SA"),
+              date: dateStr,
+              time: timeStr,
+              operation_type: operationType,
+            },
           },
-        },
-      }).then(res => {
-        console.log("✅ SMS notification sent successfully:", res);
-        toast.success(isRTL ? "تم إرسال إشعار SMS للعميل" : "SMS notification sent");
-        return res;
-      }).catch(err => {
-        console.error("❌ SMS notification failed:", err);
+        });
+        
+        console.log("✅ SMS sent INSTANTLY:", smsResult);
+        toast.success(isRTL ? "📱 تم إرسال إشعار SMS للعميل" : "📱 SMS notification sent");
+      } catch (smsErr) {
+        console.error("❌ SMS failed:", smsErr);
         toast.error(isRTL ? "فشل إرسال SMS" : "SMS failed");
-        return null;
-      });
-      notificationPromises.push(smsPromise);
+      }
     }
 
-    // Email Notification - send if real email exists
+    // Email Notification - send in background (less critical)
     if (customerEmail && !customerEmail.endsWith("@ash.local")) {
-      const emailPromise = supabase.functions.invoke("wallet-email-notifications", {
+      supabase.functions.invoke("wallet-email-notifications", {
         body: {
           type: adjustmentType === "add" ? "deposit" : "withdrawal",
           customer_email: customerEmail,
@@ -225,19 +224,9 @@ export function WalletDetailsPage() {
           transactionId: `ADJ-${Date.now()}`,
         },
       }).then(res => {
-        console.log("✅ Email notification sent successfully:", res);
-        return res;
+        console.log("✅ Email notification sent:", res);
       }).catch(err => {
         console.error("❌ Email notification failed:", err);
-        return null;
-      });
-      notificationPromises.push(emailPromise);
-    }
-
-    // Wait for all notifications (don't block the main flow)
-    if (notificationPromises.length > 0) {
-      Promise.all(notificationPromises).then(results => {
-        console.log("All notifications processed:", results);
       });
     }
 
