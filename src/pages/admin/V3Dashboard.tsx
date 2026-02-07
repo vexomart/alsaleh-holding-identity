@@ -31,6 +31,11 @@ const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/Admin
 const IntegrationsPage = lazy(() => import('@/components/admin/integrations/IntegrationsPage'));
 const OrderDetailsPage = lazy(() => import('@/pages/admin/OrderDetailsPage'));
 
+// User pages
+const UserDetailsPage = lazy(() => import('@/pages/admin/users/UserDetailsPage'));
+const UserEditPage = lazy(() => import('@/pages/admin/users/UserEditPage'));
+const AddUserPage = lazy(() => import('@/pages/admin/users/AddUserPage'));
+
 // V3 Loader - Command Center Style
 const V3PageLoader = () => (
   <div 
@@ -74,8 +79,13 @@ const V3AdminDashboard = () => {
         {/* Main Routes - V3 Overview (Native V3) */}
         <Route index element={<V3AdminOverview />} />
         
-        {/* Legacy pages wrapped for compatibility */}
+        {/* User Management Routes */}
         <Route path="users" element={<LegacyPageWrapper><UsersManagement /></LegacyPageWrapper>} />
+        <Route path="users/new" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><AddUserPage /></Suspense></LegacyPageWrapper>} />
+        <Route path="users/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><UserDetailsPage /></Suspense></LegacyPageWrapper>} />
+        <Route path="users/:id/edit" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><UserEditPage /></Suspense></LegacyPageWrapper>} />
+        
+        {/* Legacy pages wrapped for compatibility */}
         <Route path="roles" element={<LegacyPageWrapper><RolesPermissions /></LegacyPageWrapper>} />
         <Route path="clients/:id" element={<LegacyPageWrapper><AdminClientHub /></LegacyPageWrapper>} />
         <Route path="services" element={<LegacyPageWrapper><ServicesManagement /></LegacyPageWrapper>} />
