@@ -30,6 +30,7 @@ import { AdminClientHub } from '@/components/admin/clients';
 const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/AdminReferralsPage'));
 const IntegrationsPage = lazy(() => import('@/components/admin/integrations/IntegrationsPage'));
 const OrderDetailsPage = lazy(() => import('@/pages/admin/OrderDetailsPage'));
+const ContractDetailsPage = lazy(() => import('@/pages/admin/contracts/ContractDetailsPage'));
 
 // User pages
 const UserDetailsPage = lazy(() => import('@/pages/admin/users/UserDetailsPage'));
@@ -92,6 +93,7 @@ const V3AdminDashboard = () => {
         <Route path="orders" element={<LegacyPageWrapper><OrdersManagement /></LegacyPageWrapper>} />
         <Route path="orders/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><OrderDetailsPage /></Suspense></LegacyPageWrapper>} />
         <Route path="contracts" element={<LegacyPageWrapper><ContractsManagement /></LegacyPageWrapper>} />
+        <Route path="contracts/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><ContractDetailsPage /></Suspense></LegacyPageWrapper>} />
         <Route path="wallets" element={<LegacyPageWrapper><WalletsManagement /></LegacyPageWrapper>} />
         <Route path="wallets/:id" element={<LegacyPageWrapper><WalletDetailsPage /></LegacyPageWrapper>} />
         <Route path="finance" element={<LegacyPageWrapper><FinanceCenter /></LegacyPageWrapper>} />
