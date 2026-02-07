@@ -100,9 +100,9 @@ export function HeroSectionDark() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-center mb-6"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
+          <h1 dir="ltr" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
+            <span className="text-[hsl(var(--hp-text))]">ASH </span>
             <span className="hp-gradient-text">HOLDING</span>
-            <span className="text-[hsl(var(--hp-text))]"> ASH</span>
           </h1>
           {/* Animated Underline */}
           <motion.div
