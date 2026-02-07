@@ -76,85 +76,20 @@ export interface FinanceEmailData {
   dueDate?: string;
 }
 
-// SMS notification helper
-async function sendSmsNotification(
-  phone: string | undefined,
-  messageType: string,
-  templateData: Record<string, string>
-): Promise<void> {
-  if (!phone) {
-    console.log('SMS skipped: no phone number');
-    return;
-  }
-
-  try {
-    const { error } = await supabase.functions.invoke('sms-send-notification', {
-      body: {
-        phone,
-        message_type: messageType,
-        template_data: templateData,
-      },
-    });
-
-    if (error) {
-      console.error('SMS notification error:', error);
-    } else {
-      console.log(`SMS notification sent: ${messageType}`);
-    }
-  } catch (err) {
-    console.error('SMS notification exception:', err);
-  }
-}
-
-// Map order status to SMS message type
-function getOrderSmsType(status: string): string {
-  const statusMap: Record<string, string> = {
-    'pending': 'order_created',
-    'confirmed': 'order_confirmed',
-    'in_progress': 'order_processing',
-    'processing': 'order_processing',
-    'completed': 'order_completed',
-    'cancelled': 'order_cancelled',
-    'rejected': 'order_cancelled',
-  };
-  return statusMap[status.toLowerCase()] || 'order_status';
-}
-
-// Map contract event to SMS message type
-function getContractSmsType(eventType: string): string {
-  const eventMap: Record<string, string> = {
-    'created': 'contract_created',
-    'admin_approved': 'contract_approved',
-    'pending_signature': 'contract_pending_signature',
-    'signed': 'contract_signed',
-    'rejected': 'contract_rejected',
-    'cancelled': 'contract_expired',
-  };
-  return eventMap[eventType] || 'contract_created';
-}
-
-// Map finance event to SMS message type
-function getFinanceSmsType(eventType: string): string {
-  const eventMap: Record<string, string> = {
-    'application_submitted': 'finance_submitted',
-    'under_review': 'finance_submitted',
-    'offer_ready': 'finance_offer_ready',
-    'approved': 'finance_approved',
-    'rejected': 'finance_rejected',
-    'contract_ready': 'finance_contract_ready',
-    'disbursed': 'finance_disbursed',
-    'payment_reminder': 'finance_payment_due',
-    'payment_received': 'finance_payment_received',
-  };
-  return eventMap[eventType] || 'finance_submitted';
-}
+// NOTE: SMS notifications are now handled automatically by database triggers:
+// - order_status_sms_trigger (orders table)
+// - contract_status_sms_trigger (contracts table)
+// - finance_app_status_sms_trigger (finance_applications table)
+// - finance_contract_status_sms_trigger (finance_contracts table)
+// - wallet_transaction_sms_trigger (financial_transactions table)
 
 /**
- * Send order status change email + SMS
+ * Send order status change email
+ * NOTE: SMS is now handled automatically by database triggers
  */
 export async function sendOrderStatusEmail(data: OrderEmailData): Promise<{ success: boolean; error?: string }> {
   try {
-    // Send email
+    // Send email only - SMS is handled by database trigger on orders table
     const { data: result, error } = await supabase.functions.invoke('order-status-email', {
       body: data,
     });
@@ -165,14 +100,7 @@ export async function sendOrderStatusEmail(data: OrderEmailData): Promise<{ succ
     }
 
     console.log('Order email sent:', result);
-
-    // Send SMS (fire and forget)
-    sendSmsNotification(data.customerPhone, getOrderSmsType(data.status), {
-      order_number: data.orderNumber,
-      amount: data.totalAmount.toLocaleString('ar-SA'),
-      status: data.status,
-    });
-
+    // SMS is automatically triggered by database trigger (order_status_sms_trigger)
     return { success: true };
   } catch (err) {
     console.error('Order email exception:', err);
@@ -181,11 +109,12 @@ export async function sendOrderStatusEmail(data: OrderEmailData): Promise<{ succ
 }
 
 /**
- * Send contract notification email + SMS
+ * Send contract notification email
+ * NOTE: SMS is now handled automatically by database triggers
  */
 export async function sendContractEmail(data: ContractEmailData): Promise<{ success: boolean; error?: string }> {
   try {
-    // Send email
+    // Send email only - SMS is handled by database trigger on contracts table
     const { data: result, error } = await supabase.functions.invoke('contract-notification', {
       body: data,
     });
@@ -196,13 +125,7 @@ export async function sendContractEmail(data: ContractEmailData): Promise<{ succ
     }
 
     console.log('Contract email sent:', result);
-
-    // Send SMS (fire and forget)
-    sendSmsNotification(data.customerPhone, getContractSmsType(data.eventType), {
-      contract_number: data.contractNumber,
-      reason: data.rejectionReason || '',
-    });
-
+    // SMS is automatically triggered by database trigger (contract_status_sms_trigger)
     return { success: true };
   } catch (err) {
     console.error('Contract email exception:', err);
@@ -211,11 +134,12 @@ export async function sendContractEmail(data: ContractEmailData): Promise<{ succ
 }
 
 /**
- * Send invoice notification email + SMS
+ * Send invoice notification email
+ * NOTE: Payment SMS is handled by wallet transaction trigger
  */
 export async function sendInvoiceEmail(data: InvoiceEmailData): Promise<{ success: boolean; error?: string }> {
   try {
-    // Send email
+    // Send email only
     const { data: result, error } = await supabase.functions.invoke('invoice-notification', {
       body: data,
     });
@@ -226,15 +150,7 @@ export async function sendInvoiceEmail(data: InvoiceEmailData): Promise<{ succes
     }
 
     console.log('Invoice email sent:', result);
-
-    // Send SMS for payment events
-    if (data.eventType === 'paid') {
-      sendSmsNotification(data.customerPhone, 'payment_success', {
-        amount: data.total.toLocaleString('ar-SA'),
-        transaction_id: data.invoiceNumber,
-      });
-    }
-
+    // Payment SMS is handled by wallet_transaction_sms_trigger
     return { success: true };
   } catch (err) {
     console.error('Invoice email exception:', err);
@@ -243,11 +159,12 @@ export async function sendInvoiceEmail(data: InvoiceEmailData): Promise<{ succes
 }
 
 /**
- * Send finance notification email + SMS
+ * Send finance notification email
+ * NOTE: SMS is now handled automatically by database triggers
  */
 export async function sendFinanceEmail(data: FinanceEmailData): Promise<{ success: boolean; error?: string }> {
   try {
-    // Send email
+    // Send email only - SMS is handled by database triggers
     const { data: result, error } = await supabase.functions.invoke('finance-notification', {
       body: data,
     });
@@ -258,28 +175,7 @@ export async function sendFinanceEmail(data: FinanceEmailData): Promise<{ succes
     }
 
     console.log('Finance email sent:', result);
-
-    // Send SMS (fire and forget)
-    const smsData: Record<string, string> = {
-      application_number: data.applicationNumber || '',
-      contract_number: data.contractNumber || '',
-      amount: data.amountSar.toLocaleString('ar-SA'),
-    };
-
-    if (data.offerDetails) {
-      smsData.monthly = data.offerDetails.monthlyPayment.toLocaleString('ar-SA');
-    }
-
-    if (data.installmentNumber) {
-      smsData.installment = data.installmentNumber.toString();
-    }
-
-    if (data.installmentAmount) {
-      smsData.amount = data.installmentAmount.toLocaleString('ar-SA');
-    }
-
-    sendSmsNotification(data.customerPhone, getFinanceSmsType(data.eventType), smsData);
-
+    // SMS is automatically triggered by database triggers (finance_app_status_sms_trigger, finance_contract_status_sms_trigger)
     return { success: true };
   } catch (err) {
     console.error('Finance email exception:', err);
