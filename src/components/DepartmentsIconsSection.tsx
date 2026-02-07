@@ -168,7 +168,7 @@ const mainServices = [
     icon: Activity,
     color: "from-emerald-600 to-teal-600",
     shadowColor: "shadow-emerald-600/20",
-    link: "/app",
+    link: "/portal",
     description: "تابع تقدم مشاريعك في الوقت الفعلي مع تقارير مفصلة",
     category: "تقنية"
   }
