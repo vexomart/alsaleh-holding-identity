@@ -31,7 +31,9 @@ export function UnifiedLayout({
         direction: 'rtl',
         width: '100%',
         maxWidth: '100%',
+        minWidth: 0,
         overflowX: 'hidden',
+        boxSizing: 'border-box',
       }}
     >
       {/* Sticky Header - Always visible */}
@@ -46,8 +48,10 @@ export function UnifiedLayout({
         style={{
           width: '100%',
           maxWidth: '100%',
+          minWidth: 0,
           overflowX: 'hidden',
           flex: '1 0 auto',
+          boxSizing: 'border-box',
         }}
       >
         {children}
@@ -55,7 +59,10 @@ export function UnifiedLayout({
       
       {/* Footer - Always at bottom, never floats */}
       {!hideFooter && (
-        <div className="flex-shrink-0 mt-auto w-full">
+        <div 
+          className="flex-shrink-0 mt-auto w-full"
+          style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
+        >
           <Footer />
         </div>
       )}
