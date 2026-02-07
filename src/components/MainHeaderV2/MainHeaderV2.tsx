@@ -63,7 +63,7 @@ export function MainHeaderV2() {
               </button>
 
               {/* Customer Portal - Desktop */}
-              <Link to="/app" className={cn(btn.secondary, 'hidden lg:inline-flex')}>
+              <Link to="/portal" className={cn(btn.secondary, 'hidden lg:inline-flex')}>
                 <User className="w-4 h-4" />
                 <span>بوابة العملاء</span>
               </Link>

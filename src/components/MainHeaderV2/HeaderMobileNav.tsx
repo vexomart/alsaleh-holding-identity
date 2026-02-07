@@ -175,11 +175,11 @@ export function HeaderMobileNav({ isOpen, onClose }: HeaderMobileNavProps) {
               {/* Customer Portal */}
               <div className="mt-4 pt-4 border-t border-white/5">
                 <button
-                  onClick={() => handleNav('/app')}
+                  onClick={() => handleNav('/portal')}
                   className={cn(
                     s.link,
                     'bg-white/5 border border-white/10',
-                    isActive('/app') && s.linkActive
+                    isActive('/portal') && s.linkActive
                   )}
                 >
                   <User className="w-5 h-5" />
