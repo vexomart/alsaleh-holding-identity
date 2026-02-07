@@ -319,7 +319,7 @@ export function ContractDetailsDrawer({
                       <button
                         onClick={() => {
                           onClose();
-                          navigate(`/app/orders/${contract.order!.id}`);
+                          navigate(`/portal/orders/${contract.order!.id}`);
                         }}
                         className="font-medium text-primary hover:underline inline-flex items-center gap-1"
                       >
@@ -416,7 +416,7 @@ export function ContractDetailsDrawer({
                   className="w-full gap-2" 
                   onClick={() => {
                     onClose();
-                    navigate(`/app/contracts/${contract.id}`);
+                    navigate(`/portal/contracts/${contract.id}`);
                   }}
                 >
                   <Eye className="h-4 w-4" />
@@ -429,7 +429,7 @@ export function ContractDetailsDrawer({
                     className="w-full gap-2" 
                     onClick={() => {
                       onClose();
-                      navigate(`/app/contracts/${contract.id}`);
+                      navigate(`/portal/contracts/${contract.id}`);
                     }}
                   >
                     <FileSignature className="h-4 w-4" />
@@ -459,7 +459,7 @@ export function ContractDetailsDrawer({
                     className="w-full gap-2" 
                     onClick={() => {
                       onClose();
-                      navigate(`/app/orders/${contract.order!.id}`);
+                      navigate(`/portal/orders/${contract.order!.id}`);
                     }}
                   >
                     <ExternalLink className="h-4 w-4" />

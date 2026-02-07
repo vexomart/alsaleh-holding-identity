@@ -178,7 +178,7 @@ export function CustomerContracts() {
         <Button
           variant="default"
           size="sm"
-          onClick={() => navigate(`/app/contracts/${contract.id}`)}
+          onClick={() => navigate(`/portal/contracts/${contract.id}`)}
           className={cn("w-full gap-2", rtlRow)}
         >
           <FileSignature className="h-4 w-4" />
@@ -429,7 +429,7 @@ export function CustomerContracts() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => navigate(`/app/contracts/${contract.id}`)}
+                                onClick={() => navigate(`/portal/contracts/${contract.id}`)}
                                 className={cn("w-full justify-between group/btn", rtlRow)}
                               >
                                 <span className={cn("flex items-center gap-2", rtlRow)}>

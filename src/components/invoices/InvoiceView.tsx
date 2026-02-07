@@ -83,7 +83,7 @@ export function InvoiceView({
         <InvoiceActions
           invoiceNumber={invoice.invoiceNumber}
           orderNumber={invoice.orderNumber}
-          contractUrl={invoice.contractId ? `/app/contracts/${invoice.contractId}` : undefined}
+          contractUrl={invoice.contractId ? `/portal/contracts/${invoice.contractId}` : undefined}
           paymentUrl={invoice.paymentUrl}
           status={invoice.status}
           onDownload={onDownload}

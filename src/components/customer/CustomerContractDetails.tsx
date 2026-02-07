@@ -261,7 +261,7 @@ export function CustomerContractDetails() {
                 </p>
                 <p className="text-sm text-muted-foreground">{error}</p>
               </div>
-              <Button variant="outline" onClick={() => navigate('/app/contracts')}>
+              <Button variant="outline" onClick={() => navigate('/portal/contracts')}>
                 <ArrowRight className="h-4 w-4 ms-2" />
                 العودة للعقود
               </Button>
@@ -284,7 +284,7 @@ export function CustomerContractDetails() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate('/app/contracts')}
+              onClick={() => navigate('/portal/contracts')}
               className="gap-2"
             >
               <ArrowRight className="h-4 w-4" />
@@ -294,7 +294,7 @@ export function CustomerContractDetails() {
             <div className="flex gap-2">
               {contract.status === 'pending_signature' && (
                 <Button
-                  onClick={() => navigate(`/app/contracts/${contract.id}/sign`)}
+                  onClick={() => navigate(`/portal/contracts/${contract.id}/sign`)}
                   className="gap-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700"
                 >
                   <FileSignature className="h-4 w-4" />

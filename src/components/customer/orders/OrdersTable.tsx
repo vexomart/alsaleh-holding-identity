@@ -160,7 +160,7 @@ export function OrdersTable({
   const handleViewContract = (e: React.MouseEvent, order: CustomerOrder) => {
     e.stopPropagation();
     if (order.contract_id) {
-      navigate(`/app/contracts/${order.contract_id}`);
+      navigate(`/portal/contracts/${order.contract_id}`);
     }
   };
 

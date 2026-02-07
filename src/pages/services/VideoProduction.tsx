@@ -422,7 +422,7 @@ const VideoProduction = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     ادخل إلى بوابة العملاء لتتبع طلباتك ومشاريعك
                   </p>
-                  <Link to="/app">
+                  <Link to="/portal">
                     <Button className="w-full bg-gradient-to-l from-orange-500 to-red-500 text-white">
                       بوابة العملاء
                       <ArrowLeft className="w-4 h-4 mr-2" />

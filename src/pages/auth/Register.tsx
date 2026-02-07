@@ -202,7 +202,7 @@ function Register() {
   // Redirect if already logged in
   React.useEffect(() => {
     if (user) {
-      navigate('/app');
+      navigate('/portal');
     }
   }, [user, navigate]);
 
@@ -361,7 +361,7 @@ function Register() {
         toast.info('يرجى تأكيد بريدك الإلكتروني للبدء');
         navigate('/auth/login');
       } else {
-        navigate('/app');
+        navigate('/portal');
       }
     } catch (error) {
       toast.error('حدث خطأ أثناء إنشاء الحساب');

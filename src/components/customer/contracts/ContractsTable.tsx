@@ -109,7 +109,7 @@ export function ContractsTable({
   );
 
   const handleNavigateToDetails = (contract: CustomerContract) => {
-    navigate(`/app/contracts/${contract.id}`);
+    navigate(`/portal/contracts/${contract.id}`);
   };
 
   if (isLoading) {

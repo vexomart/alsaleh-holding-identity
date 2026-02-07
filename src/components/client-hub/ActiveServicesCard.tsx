@@ -179,7 +179,7 @@ export function ActiveServicesCard({ services, className }: ActiveServicesCardPr
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => navigate(`/app/orders/${service.orderId}`)}
+                    onClick={() => navigate(`/portal/orders/${service.orderId}`)}
                   >
                     <ExternalLink className="h-4 w-4" />
                   </Button>

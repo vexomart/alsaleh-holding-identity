@@ -125,14 +125,14 @@ export function OrderDetailsDrawer({
   const handleViewContract = () => {
     if (!order?.contract_id) return;
     onClose();
-    navigate(`/app/contracts/${order.contract_id}`);
+    navigate(`/portal/contracts/${order.contract_id}`);
   };
 
   // Handle full details
   const handleViewFullDetails = () => {
     if (!order) return;
     onClose();
-    navigate(`/app/orders/${order.id}`);
+    navigate(`/portal/orders/${order.id}`);
   };
 
   // Fetch order events when order changes
