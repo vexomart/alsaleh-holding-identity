@@ -170,6 +170,22 @@ export function WalletDetailsPage() {
 
     const notificationPromises: Promise<any>[] = [];
 
+    // Format date and time for banking SMS
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("ar-SA", { 
+      year: "numeric", 
+      month: "2-digit", 
+      day: "2-digit" 
+    });
+    const timeStr = now.toLocaleTimeString("ar-SA", { 
+      hour: "2-digit", 
+      minute: "2-digit",
+      hour12: true 
+    });
+    const operationType = adjustmentType === "add" 
+      ? "إيداع نقدي - تعديل إداري" 
+      : "خصم إداري";
+
     // SMS Notification - ALWAYS send if phone exists
     if (customerPhone) {
       const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
@@ -180,6 +196,9 @@ export function WalletDetailsPage() {
           template_data: {
             amount: amount.toLocaleString("ar-SA"),
             balance: newBalance.toLocaleString("ar-SA"),
+            date: dateStr,
+            time: timeStr,
+            operation_type: operationType,
           },
         },
       }).then(res => {

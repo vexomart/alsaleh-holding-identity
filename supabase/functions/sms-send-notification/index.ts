@@ -161,13 +161,30 @@ ASH HOLDING`,
 يرجى المحاولة مرة أخرى.
 ASH HOLDING`,
 
-  wallet_topup: `💳 تم شحن محفظتكم بنجاح!
-المبلغ: {{amount}} ريال
-الرصيد الجديد: {{balance}} ريال
+  wallet_topup: `🏦 إشعار إيداع - ASH HOLDING
+
+تم إيداع مبلغ {{amount}} ر.س في محفظتكم بنجاح.
+
+📅 التاريخ: {{date}}
+⏰ الوقت: {{time}}
+📝 نوع العملية: {{operation_type}}
+💰 الرصيد الحالي: {{balance}} ر.س
+
+━━━━━━━━━━━━━━
+الإدارة المالية
 ASH HOLDING`,
 
-  wallet_withdrawal: `💸 تم تحويل {{amount}} ريال من محفظتكم.
-الرصيد المتبقي: {{balance}} ريال
+  wallet_withdrawal: `🏦 إشعار خصم - ASH HOLDING
+
+تم خصم مبلغ {{amount}} ر.س من محفظتكم.
+
+📅 التاريخ: {{date}}
+⏰ الوقت: {{time}}
+📝 نوع العملية: {{operation_type}}
+💰 الرصيد المتبقي: {{balance}} ر.س
+
+━━━━━━━━━━━━━━
+الإدارة المالية
 ASH HOLDING`,
 
   // ===== General =====
