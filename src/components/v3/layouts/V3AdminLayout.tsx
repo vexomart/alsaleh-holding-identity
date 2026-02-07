@@ -97,17 +97,24 @@ const V3AdminLayoutContent: React.FC<V3AdminLayoutProps> = ({ children }) => {
   return (
     <div 
       dir={isRTL ? 'rtl' : 'ltr'}
-      className="min-h-full bg-background flex"
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      className="min-h-full flex"
+      style={{ 
+        direction: isRTL ? 'rtl' : 'ltr',
+        background: 'hsl(var(--cmd-bg-deep))',
+      }}
     >
       {/* Mobile Sidebar Toggle */}
       {isMobile && (
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           className={cn(
-            "fixed top-20 z-50 p-2 rounded-lg bg-primary text-primary-foreground shadow-lg",
+            "fixed top-20 z-50 p-2 rounded-lg shadow-lg",
             isRTL ? "right-4" : "left-4"
           )}
+          style={{
+            background: 'hsl(var(--cmd-accent-cyan))',
+            color: 'hsl(var(--cmd-bg-deep))',
+          }}
         >
           {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -139,10 +146,16 @@ const V3AdminLayoutContent: React.FC<V3AdminLayoutProps> = ({ children }) => {
       )}
 
       {/* Content Area */}
-      <main className={cn(
-        "flex-1 min-w-0 overflow-x-hidden",
-        isMobile ? "px-3 py-4 pt-16" : "px-4 py-6 lg:px-8 lg:py-8"
-      )}>
+      <main 
+        className={cn(
+          "flex-1 min-w-0 overflow-x-hidden",
+          isMobile ? "px-3 py-4 pt-16" : "px-4 py-6 lg:px-8 lg:py-8"
+        )}
+        style={{
+          background: 'hsl(var(--cmd-bg-deep))',
+          color: 'hsl(var(--cmd-text-primary))',
+        }}
+      >
         {children}
       </main>
     </div>
