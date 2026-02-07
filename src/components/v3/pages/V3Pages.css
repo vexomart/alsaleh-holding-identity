@@ -410,6 +410,23 @@
   gap: var(--v3-space-4);
 }
 
+/* Empty State */
+.bank-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--v3-space-8) var(--v3-space-4);
+  text-align: center;
+  color: hsl(var(--bank-text-muted));
+  gap: var(--v3-space-4);
+}
+
+.bank-empty-state p {
+  margin: 0;
+  font-size: var(--v3-text-sm);
+}
+
 .bank-order-item {
   display: flex;
   flex-direction: column;

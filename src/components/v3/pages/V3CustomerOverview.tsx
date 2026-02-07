@@ -2,11 +2,14 @@
  * V3 Customer Banking Portal Overview
  * 100% Custom - NO SHADCN
  * Premium Banking App Inspired
+ * NOW WITH REAL DATA - NO MOCK DATA
  */
 
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { V3StatCard } from '../data/V3StatCard';
 import { V3Badge } from '../primitives/V3Badge';
 import { V3Button } from '../primitives/V3Button';
@@ -49,33 +52,158 @@ const ArrowIcon = () => (
   </svg>
 );
 
-// Mock data
-const recentTransactions = [
-  { id: 1, type: 'deposit', amount: 5000, description: 'إيداع بنكي', date: '2024-01-15', status: 'completed' },
-  { id: 2, type: 'payment', amount: -2500, description: 'دفعة خدمة', date: '2024-01-14', status: 'completed' },
-  { id: 3, type: 'refund', amount: 1000, description: 'استرداد', date: '2024-01-13', status: 'pending' },
-];
+interface WalletData {
+  id: string;
+  balance: number;
+  wallet_number: string;
+  currency: string;
+}
 
-const activeOrders = [
-  { id: 'ORD-001', service: 'تطوير موقع إلكتروني', progress: 75, status: 'in_progress' },
-  { id: 'ORD-002', service: 'تصميم هوية بصرية', progress: 40, status: 'in_progress' },
-];
+interface OrderData {
+  id: string;
+  order_number: string;
+  title?: string;
+  status: string;
+  created_at: string;
+  total_amount?: number;
+}
 
-const quickActions = [
-  { id: 'order', label: 'طلب جديد', labelEn: 'New Order', icon: <OrderIcon /> },
-  { id: 'deposit', label: 'إيداع رصيد', labelEn: 'Deposit', icon: <WalletIcon /> },
-  { id: 'services', label: 'تصفح الخدمات', labelEn: 'Browse Services', icon: <ServiceIcon /> },
-  { id: 'contracts', label: 'العقود', labelEn: 'Contracts', icon: <ContractIcon /> },
-];
+interface ContractData {
+  id: string;
+  contract_number: string;
+  status: string;
+}
+
+interface TransactionData {
+  id: string;
+  transaction_type: string;
+  amount: number;
+  description?: string;
+  description_ar?: string;
+  created_at: string;
+  status: string;
+}
+
+interface DashboardStats {
+  activeOrders: number;
+  activeContracts: number;
+  totalServices: number;
+}
 
 export const V3CustomerOverview: React.FC = () => {
   const { language } = useLanguage();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const isAr = language === 'ar';
+
+  // Real data state
+  const [wallet, setWallet] = React.useState<WalletData | null>(null);
+  const [recentOrders, setRecentOrders] = React.useState<OrderData[]>([]);
+  const [recentTransactions, setRecentTransactions] = React.useState<TransactionData[]>([]);
+  const [stats, setStats] = React.useState<DashboardStats>({
+    activeOrders: 0,
+    activeContracts: 0,
+    totalServices: 0,
+  });
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // Fetch real data from database
+  React.useEffect(() => {
+    if (!user?.id) {
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch wallet - filtered by current user
+        const { data: walletData } = await supabase
+          .from('customer_wallets')
+          .select('id, balance, wallet_number, currency')
+          .eq('customer_user_id', user.id)
+          .maybeSingle();
+
+        if (walletData) {
+          setWallet(walletData as WalletData);
+        }
+
+        // Fetch orders - filtered by current user
+        const { data: ordersData } = await supabase
+          .from('orders')
+          .select('id, order_number, title, status, created_at, total_amount')
+          .eq('customer_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (ordersData) {
+          setRecentOrders(ordersData as OrderData[]);
+        }
+
+        // Fetch contracts count - filtered by current user
+        const { count: contractsCount } = await supabase
+          .from('contracts')
+          .select('*', { count: 'exact', head: true })
+          .eq('customer_user_id', user.id)
+          .in('status', ['signed', 'pending_signature', 'pre_approved_by_customer']);
+
+        // Fetch active orders count
+        const activeOrdersCount = (ordersData || []).filter(
+          o => ['pending', 'processing', 'in_progress'].includes(o.status)
+        ).length;
+
+        // Fetch services count (public services)
+        const { count: servicesCount } = await supabase
+          .from('services')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_active', true)
+          .eq('is_visible_to_customers', true);
+
+        setStats({
+          activeOrders: activeOrdersCount,
+          activeContracts: contractsCount || 0,
+          totalServices: servicesCount || 0,
+        });
+
+        // Fetch transactions - filtered by current user
+        const { data: transactionsData } = await supabase
+          .from('financial_transactions')
+          .select('id, transaction_type, amount, description, description_ar, created_at, status')
+          .eq('customer_user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (transactionsData) {
+          setRecentTransactions(transactionsData as TransactionData[]);
+        }
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user?.id]);
 
   const formatCurrency = (amount: number) => {
     const formatted = Math.abs(amount).toLocaleString('ar-SA');
     return `${amount < 0 ? '-' : ''}${formatted}`;
+  };
+
+  const formatWalletNumber = (walletNumber: string | undefined) => {
+    if (!walletNumber || walletNumber.length < 4) return '****';
+    return `${walletNumber.slice(0, 4).replace(/./g, '*')} **** **** ${walletNumber.slice(-4)}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
   const getGreeting = () => {
@@ -84,6 +212,52 @@ export const V3CustomerOverview: React.FC = () => {
     if (hour < 18) return isAr ? 'مساء الخير' : 'Good Afternoon';
     return isAr ? 'مساء الخير' : 'Good Evening';
   };
+
+  const getTransactionIcon = (type: string) => {
+    switch (type) {
+      case 'topup':
+      case 'deposit':
+        return <span className="bank-tx-icon bank-tx-icon--in">↓</span>;
+      case 'invoice_payment':
+      case 'payment':
+        return <span className="bank-tx-icon bank-tx-icon--out">↑</span>;
+      case 'refund':
+        return <span className="bank-tx-icon bank-tx-icon--refund">↻</span>;
+      default:
+        return <span className="bank-tx-icon">•</span>;
+    }
+  };
+
+  const quickActions = [
+    { id: 'order', label: 'طلب جديد', labelEn: 'New Order', icon: <OrderIcon />, path: '/portal/services' },
+    { id: 'deposit', label: 'إيداع رصيد', labelEn: 'Deposit', icon: <WalletIcon />, path: '/portal/wallet' },
+    { id: 'services', label: 'تصفح الخدمات', labelEn: 'Browse Services', icon: <ServiceIcon />, path: '/portal/services' },
+    { id: 'contracts', label: 'العقود', labelEn: 'Contracts', icon: <ContractIcon />, path: '/portal/contracts' },
+  ];
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="bank-overview">
+        <div className="bank-overview__welcome">
+          <div className="bank-overview__greeting">
+            <div style={{ height: '24px', width: '120px', background: 'var(--v3-neutral-200)', borderRadius: '4px', marginBottom: '8px' }} />
+            <div style={{ height: '32px', width: '200px', background: 'var(--v3-neutral-200)', borderRadius: '4px' }} />
+          </div>
+        </div>
+        <div className="bank-wallet-hero">
+          <div className="bank-wallet-hero__card" style={{ opacity: 0.5 }}>
+            <div className="bank-wallet-hero__background" />
+            <div className="bank-wallet-hero__content">
+              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                {isAr ? 'جاري التحميل...' : 'Loading...'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bank-overview">
@@ -105,7 +279,7 @@ export const V3CustomerOverview: React.FC = () => {
         </div>
       </div>
 
-      {/* Wallet Card - Hero Element */}
+      {/* Wallet Card - Real Data */}
       <div className="bank-wallet-hero">
         <div className="bank-wallet-hero__card">
           <div className="bank-wallet-hero__background" />
@@ -119,7 +293,9 @@ export const V3CustomerOverview: React.FC = () => {
               </div>
             </div>
             <div className="bank-wallet-hero__amount">
-              <span className="bank-wallet-hero__value">12,450</span>
+              <span className="bank-wallet-hero__value">
+                {formatCurrency(wallet?.balance || 0)}
+              </span>
               <span className="bank-wallet-hero__currency">SAR</span>
             </div>
             <div className="bank-wallet-hero__footer">
@@ -127,9 +303,16 @@ export const V3CustomerOverview: React.FC = () => {
                 <span className="bank-wallet-hero__account-label">
                   {isAr ? 'رقم المحفظة' : 'Wallet No.'}
                 </span>
-                <span className="bank-wallet-hero__account-number">4*** **** **** 8521</span>
+                <span className="bank-wallet-hero__account-number">
+                  {formatWalletNumber(wallet?.wallet_number)}
+                </span>
               </div>
-              <V3Button context="bank" variant="secondary" size="sm">
+              <V3Button 
+                context="bank" 
+                variant="secondary" 
+                size="sm"
+                onClick={() => navigate('/portal/wallet')}
+              >
                 {isAr ? 'إيداع' : 'Deposit'}
               </V3Button>
             </div>
@@ -144,7 +327,11 @@ export const V3CustomerOverview: React.FC = () => {
         </h2>
         <div className="bank-quick-actions__grid">
           {quickActions.map((action) => (
-            <button key={action.id} className="bank-quick-action">
+            <button 
+              key={action.id} 
+              className="bank-quick-action"
+              onClick={() => navigate(action.path)}
+            >
               <div className="bank-quick-action__icon">{action.icon}</div>
               <span className="bank-quick-action__label">
                 {isAr ? action.label : action.labelEn}
@@ -154,95 +341,143 @@ export const V3CustomerOverview: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Row */}
+      {/* Stats Row - Real Data */}
       <div className="bank-overview__stats">
         <V3StatCard
           context="bank"
           title={isAr ? 'الطلبات النشطة' : 'Active Orders'}
-          value="2"
+          value={String(stats.activeOrders)}
           icon={<OrderIcon />}
           variant="info"
         />
         <V3StatCard
           context="bank"
           title={isAr ? 'العقود السارية' : 'Active Contracts'}
-          value="3"
+          value={String(stats.activeContracts)}
           icon={<ContractIcon />}
           variant="success"
         />
         <V3StatCard
           context="bank"
           title={isAr ? 'الخدمات المتاحة' : 'Available Services'}
-          value="15"
+          value={String(stats.totalServices)}
           icon={<ServiceIcon />}
         />
       </div>
 
       {/* Content Grid */}
       <div className="bank-overview__grid">
-        {/* Active Orders */}
+        {/* Active Orders - Real Data */}
         <V3Card context="bank">
           <V3CardHeader>
             <V3CardTitle context="bank">
               {isAr ? 'طلباتي النشطة' : 'My Active Orders'}
             </V3CardTitle>
-            <V3Button context="bank" variant="ghost" size="sm">
+            <V3Button 
+              context="bank" 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/portal/orders')}
+            >
               {isAr ? 'عرض الكل' : 'View All'}
               <ArrowIcon />
             </V3Button>
           </V3CardHeader>
           <V3CardContent>
             <div className="bank-orders-list">
-              {activeOrders.map((order) => (
-                <div key={order.id} className="bank-order-item">
-                  <div className="bank-order-item__info">
-                    <span className="bank-order-item__id">{order.id}</span>
-                    <span className="bank-order-item__service">{order.service}</span>
-                  </div>
-                  <div className="bank-order-item__progress">
-                    <div className="bank-order-item__progress-bar">
-                      <div 
-                        className="bank-order-item__progress-fill"
-                        style={{ width: `${order.progress}%` }}
-                      />
-                    </div>
-                    <span className="bank-order-item__progress-text">{order.progress}%</span>
-                  </div>
+              {recentOrders.length === 0 ? (
+                <div className="bank-empty-state">
+                  <p>{isAr ? 'لا توجد طلبات بعد' : 'No orders yet'}</p>
+                  <V3Button 
+                    context="bank" 
+                    variant="primary" 
+                    size="sm"
+                    onClick={() => navigate('/portal/services')}
+                  >
+                    {isAr ? 'اطلب خدمة الآن' : 'Request a Service'}
+                  </V3Button>
                 </div>
-              ))}
+              ) : (
+                recentOrders.slice(0, 3).map((order) => (
+                  <div key={order.id} className="bank-order-item">
+                    <div className="bank-order-item__info">
+                      <span className="bank-order-item__id">{order.order_number}</span>
+                      <span className="bank-order-item__service">
+                        {order.title || (isAr ? 'طلب خدمة' : 'Service Order')}
+                      </span>
+                    </div>
+                    <div className="bank-order-item__status">
+                      <V3Badge 
+                        context="bank"
+                        variant={
+                          order.status === 'completed' ? 'success' :
+                          order.status === 'pending' ? 'warning' :
+                          order.status === 'cancelled' ? 'danger' : 'info'
+                        }
+                      >
+                        {isAr ? (
+                          order.status === 'pending' ? 'قيد الانتظار' :
+                          order.status === 'processing' ? 'قيد المعالجة' :
+                          order.status === 'in_progress' ? 'قيد التنفيذ' :
+                          order.status === 'completed' ? 'مكتمل' :
+                          order.status === 'cancelled' ? 'ملغي' : order.status
+                        ) : order.status}
+                      </V3Badge>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </V3CardContent>
         </V3Card>
 
-        {/* Recent Transactions */}
+        {/* Recent Transactions - Real Data */}
         <V3Card context="bank">
           <V3CardHeader>
             <V3CardTitle context="bank">
               {isAr ? 'آخر المعاملات' : 'Recent Transactions'}
             </V3CardTitle>
-            <V3Button context="bank" variant="ghost" size="sm">
+            <V3Button 
+              context="bank" 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/portal/wallet')}
+            >
               {isAr ? 'عرض الكل' : 'View All'}
               <ArrowIcon />
             </V3Button>
           </V3CardHeader>
           <V3CardContent>
             <div className="bank-transactions-list">
-              {recentTransactions.map((tx) => (
-                <div key={tx.id} className="bank-transaction-item">
-                  <div className="bank-transaction-item__icon">
-                    {tx.type === 'deposit' && <span className="bank-tx-icon bank-tx-icon--in">↓</span>}
-                    {tx.type === 'payment' && <span className="bank-tx-icon bank-tx-icon--out">↑</span>}
-                    {tx.type === 'refund' && <span className="bank-tx-icon bank-tx-icon--refund">↻</span>}
-                  </div>
-                  <div className="bank-transaction-item__info">
-                    <span className="bank-transaction-item__desc">{tx.description}</span>
-                    <span className="bank-transaction-item__date">{tx.date}</span>
-                  </div>
-                  <div className={`bank-transaction-item__amount ${tx.amount >= 0 ? 'bank-transaction-item__amount--positive' : 'bank-transaction-item__amount--negative'}`}>
-                    {formatCurrency(tx.amount)} SAR
-                  </div>
+              {recentTransactions.length === 0 ? (
+                <div className="bank-empty-state">
+                  <p>{isAr ? 'لا توجد معاملات بعد' : 'No transactions yet'}</p>
                 </div>
-              ))}
+              ) : (
+                recentTransactions.map((tx) => (
+                  <div key={tx.id} className="bank-transaction-item">
+                    <div className="bank-transaction-item__icon">
+                      {getTransactionIcon(tx.transaction_type)}
+                    </div>
+                    <div className="bank-transaction-item__info">
+                      <span className="bank-transaction-item__desc">
+                        {isAr ? (tx.description_ar || tx.description || tx.transaction_type) : (tx.description || tx.transaction_type)}
+                      </span>
+                      <span className="bank-transaction-item__date">
+                        {formatDate(tx.created_at)}
+                      </span>
+                    </div>
+                    <div className={`bank-transaction-item__amount ${
+                      tx.transaction_type === 'topup' || tx.transaction_type === 'refund' 
+                        ? 'bank-transaction-item__amount--positive' 
+                        : 'bank-transaction-item__amount--negative'
+                    }`}>
+                      {tx.transaction_type === 'topup' || tx.transaction_type === 'refund' ? '+' : '-'}
+                      {formatCurrency(tx.amount)} SAR
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </V3CardContent>
         </V3Card>

@@ -5,6 +5,7 @@
  */
 
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { V3RailNav, RailNavGroup } from '../navigation/V3RailNav';
 import { V3BankHeader } from '../navigation/V3BankHeader';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -70,27 +71,39 @@ export interface V3CustomerLayoutProps {
 export const V3CustomerLayout: React.FC<V3CustomerLayoutProps> = ({ children }) => {
   const { language } = useLanguage();
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [isRailExpanded, setIsRailExpanded] = React.useState(false);
   const [walletBalance, setWalletBalance] = React.useState<number>(0);
+  const [unreadNotifications, setUnreadNotifications] = React.useState<number>(0);
 
-  // Fetch wallet balance
+  // Fetch wallet balance and notifications count - filtered by current user
   React.useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
-    const fetchBalance = async () => {
-      const { data } = await supabase
+    const fetchUserData = async () => {
+      // Fetch wallet balance - use maybeSingle() for users without wallets
+      const { data: walletData } = await supabase
         .from('customer_wallets')
         .select('balance')
         .eq('customer_user_id', user.id)
-        .single();
+        .maybeSingle();
       
-      if (data) {
-        setWalletBalance(data.balance || 0);
+      if (walletData) {
+        setWalletBalance(walletData.balance || 0);
       }
+
+      // Fetch unread notifications count
+      const { count } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('is_read', false);
+
+      setUnreadNotifications(count || 0);
     };
 
-    fetchBalance();
-  }, [user]);
+    fetchUserData();
+  }, [user?.id]);
 
   // Time-based greeting
   const getGreeting = () => {
@@ -107,7 +120,7 @@ export const V3CustomerLayout: React.FC<V3CustomerLayoutProps> = ({ children }) 
       labelEn: 'Main',
       items: [
         { id: 'home', labelAr: 'الرئيسية', labelEn: 'Home', icon: <HomeIcon />, href: CUSTOMER_BASE },
-        { id: 'orders', labelAr: 'طلباتي', labelEn: 'My Orders', icon: <ShoppingCartIcon />, href: `${CUSTOMER_BASE}/orders`, badge: 2 },
+        { id: 'orders', labelAr: 'طلباتي', labelEn: 'My Orders', icon: <ShoppingCartIcon />, href: `${CUSTOMER_BASE}/orders` },
         { id: 'wallet', labelAr: 'المحفظة', labelEn: 'Wallet', icon: <WalletIcon />, href: `${CUSTOMER_BASE}/wallet` },
       ],
     },
@@ -152,10 +165,10 @@ export const V3CustomerLayout: React.FC<V3CustomerLayoutProps> = ({ children }) 
             customerId={profile?.customer_uid}
             isVerified={profile?.is_kyc_verified}
             balance={walletBalance}
-            notifications={2}
-            onNotifications={() => console.log('Notifications')}
-            onProfile={() => console.log('Profile')}
-            onHelp={() => console.log('Help')}
+            notifications={unreadNotifications}
+            onNotifications={() => navigate('/portal/notifications')}
+            onProfile={() => navigate('/portal/profile')}
+            onHelp={() => navigate('/portal/support')}
             language={language}
           />
 
