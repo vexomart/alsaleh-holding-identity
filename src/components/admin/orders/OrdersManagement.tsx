@@ -1,77 +1,18 @@
 /**
- * Orders Management - Modern Enterprise Design
+ * Orders Management - Premium Dark Theme
  * Full CRUD with workflow management and real-time updates
  * Navigation-based order details (no popups)
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShoppingCart, 
-  Plus, 
-  Search, 
-  Eye,
-  MoreVertical,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  ArrowUpRight,
-  Calendar,
-  User,
-  Filter,
-  Download,
-  RefreshCw,
-  ChevronRight,
-  Package,
-  Truck,
-  CreditCard,
+  Zap,
+  Radio,
   TrendingUp,
-  BarChart3,
-  FileText,
-  Edit,
-  Trash2,
-  Copy,
-  ExternalLink,
-  ArrowLeft,
-  ArrowRight,
-  Hash,
-  Banknote,
-  MessageSquare,
-  Send,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -81,6 +22,13 @@ import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { sendOrderStatusEmail } from '@/lib/api/email-notifications';
+
+// Import sub-components
+import { OrdersStats } from './OrdersStats';
+import { OrdersFilters } from './OrdersFilters';
+import { OrderCard } from './OrderCard';
+import { OrdersTable } from './OrdersTable';
+import { OrdersPagination } from './OrdersPagination';
 
 interface Order {
   id: string;
@@ -98,7 +46,6 @@ interface Order {
   created_at: string | null;
   updated_at: string | null;
   description: string | null;
-  // Customer profile data
   customer?: {
     full_name: string | null;
     phone: string | null;
@@ -106,93 +53,22 @@ interface Order {
   } | null;
 }
 
-const statusConfig: Record<string, { 
-  labelAr: string; 
-  labelEn: string; 
-  color: string; 
-  bgColor: string;
-  borderColor: string;
-  icon: React.ElementType;
-  gradient: string;
-}> = {
-  pending: { 
-    labelAr: "قيد الانتظار", 
-    labelEn: "Pending", 
-    color: "text-secondary dark:text-secondary", 
-    bgColor: "bg-secondary/10 dark:bg-secondary/20",
-    borderColor: "border-secondary/30 dark:border-secondary/40",
-    icon: Clock,
-    gradient: "from-secondary to-secondary/80"
-  },
-  processing: { 
-    labelAr: "قيد المعالجة", 
-    labelEn: "Processing", 
-    color: "text-primary dark:text-primary", 
-    bgColor: "bg-primary/10 dark:bg-primary/20",
-    borderColor: "border-primary/30 dark:border-primary/40",
-    icon: Package,
-    gradient: "from-primary to-primary/80"
-  },
-  in_progress: { 
-    labelAr: "قيد التنفيذ", 
-    labelEn: "In Progress", 
-    color: "text-accent dark:text-accent", 
-    bgColor: "bg-accent/10 dark:bg-accent/20",
-    borderColor: "border-accent/30 dark:border-accent/40",
-    icon: Truck,
-    gradient: "from-accent to-accent/80"
-  },
-  completed: { 
-    labelAr: "مكتمل", 
-    labelEn: "Completed", 
-    color: "text-accent dark:text-accent", 
-    bgColor: "bg-accent/10 dark:bg-accent/20",
-    borderColor: "border-accent/30 dark:border-accent/40",
-    icon: CheckCircle,
-    gradient: "from-accent to-accent/80"
-  },
-  cancelled: { 
-    labelAr: "ملغي", 
-    labelEn: "Cancelled", 
-    color: "text-destructive dark:text-destructive", 
-    bgColor: "bg-destructive/10 dark:bg-destructive/20",
-    borderColor: "border-destructive/30 dark:border-destructive/40",
-    icon: XCircle,
-    gradient: "from-destructive to-destructive/80"
-  },
-  refunded: { 
-    labelAr: "مسترد", 
-    labelEn: "Refunded", 
-    color: "text-muted-foreground dark:text-muted-foreground", 
-    bgColor: "bg-muted dark:bg-muted",
-    borderColor: "border-border dark:border-border",
-    icon: CreditCard,
-    gradient: "from-muted-foreground to-muted-foreground/80"
-  },
-};
-
-const priorityConfig: Record<number, { labelAr: string; labelEn: string; color: string }> = {
-  1: { labelAr: 'منخفضة', labelEn: 'Low', color: 'text-muted-foreground' },
-  2: { labelAr: 'متوسطة', labelEn: 'Medium', color: 'text-secondary' },
-  3: { labelAr: 'عالية', labelEn: 'High', color: 'text-destructive' },
-};
+const ITEMS_PER_PAGE = 10;
 
 export function OrdersManagement() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
   const navigate = useNavigate();
+  
+  // State
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [activeTab, setActiveTab] = useState('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  
-  // Inline price editing
-  const [editingPriceOrderId, setEditingPriceOrderId] = useState<string | null>(null);
-  const [editingPriceValue, setEditingPriceValue] = useState<string>('');
+  const [isLive, setIsLive] = useState(true);
 
   // SMS Hook for status notifications
   const {
@@ -252,11 +128,14 @@ export function OrdersManagement() {
 
     // Real-time subscription
     const channel = supabase
-      .channel('orders-changes')
+      .channel('orders-realtime-v2')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'orders' },
-        () => fetchOrders()
+        () => {
+          setIsLive(true);
+          fetchOrders();
+        }
       )
       .subscribe();
 
@@ -266,41 +145,53 @@ export function OrdersManagement() {
   }, []);
 
   // Stats
-  const stats = {
+  const stats = useMemo(() => ({
     total: orders.length,
     pending: orders.filter(o => o.status === 'pending').length,
     inProgress: orders.filter(o => ['processing', 'in_progress'].includes(o.status || '')).length,
     completed: orders.filter(o => o.status === 'completed').length,
     cancelled: orders.filter(o => o.status === 'cancelled').length,
     totalRevenue: orders.filter(o => o.status === 'completed').reduce((sum, o) => sum + (o.total_amount || 0), 0),
-  };
+  }), [orders]);
 
   // Filter orders
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = 
-      order.order_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.title.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    
-    const matchesTab = activeTab === 'all' || 
-      (activeTab === 'pending' && order.status === 'pending') ||
-      (activeTab === 'active' && ['processing', 'in_progress'].includes(order.status || '')) ||
-      (activeTab === 'completed' && order.status === 'completed');
-    
-    return matchesSearch && matchesStatus && matchesTab;
-  });
+  const filteredOrders = useMemo(() => {
+    return orders.filter(order => {
+      const matchesSearch = 
+        order.order_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (order.customer?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      
+      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, searchQuery, statusFilter]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-  const paginatedOrders = filteredOrders.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+  const paginatedOrders = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredOrders.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredOrders, currentPage]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
+  // Status config for notifications
+  const statusLabels: Record<string, { ar: string; en: string }> = {
+    pending: { ar: 'قيد الانتظار', en: 'Pending' },
+    processing: { ar: 'قيد المعالجة', en: 'Processing' },
+    in_progress: { ar: 'قيد التنفيذ', en: 'In Progress' },
+    completed: { ar: 'مكتمل', en: 'Completed' },
+    cancelled: { ar: 'ملغي', en: 'Cancelled' },
+    refunded: { ar: 'مسترد', en: 'Refunded' },
+  };
 
   // Handle status change with SMS notification
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    // Find order to get customer info
     const order = orders.find(o => o.id === orderId);
     const previousStatus = order?.status;
     
@@ -335,8 +226,8 @@ export function OrdersManagement() {
             break;
           default:
             const statusLabel = isRTL 
-              ? statusConfig[newStatus]?.labelAr 
-              : statusConfig[newStatus]?.labelEn;
+              ? statusLabels[newStatus]?.ar 
+              : statusLabels[newStatus]?.en;
             smsResult = await notifyOrderStatus(phone, orderNumber, statusLabel || newStatus);
         }
 
@@ -373,17 +264,8 @@ export function OrdersManagement() {
     }
   };
 
-  // Handle inline price update
-  const handlePriceUpdate = async (orderId: string) => {
-    const newPrice = parseFloat(editingPriceValue);
-    if (isNaN(newPrice) || newPrice < 0) {
-      toast({
-        title: isRTL ? 'يرجى إدخال مبلغ صحيح' : 'Please enter a valid amount',
-        variant: 'destructive',
-      });
-      return;
-    }
-
+  // Handle price update
+  const handlePriceUpdate = async (orderId: string, newPrice: number) => {
     try {
       const { error } = await db
         .from('orders')
@@ -395,8 +277,6 @@ export function OrdersManagement() {
       toast({ 
         title: isRTL ? 'تم تحديث المبلغ' : 'Amount updated' 
       });
-      setEditingPriceOrderId(null);
-      setEditingPriceValue('');
     } catch (err) {
       console.error('Error updating price:', err);
       toast({
@@ -406,54 +286,7 @@ export function OrdersManagement() {
     }
   };
 
-  const startEditingPrice = (order: Order, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingPriceOrderId(order.id);
-    setEditingPriceValue(order.total_amount?.toString() || '');
-  };
-
-  const formatCurrency = (amount: number | null) => {
-    if (!amount) return '-';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'SAR',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return '-';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }).format(new Date(dateString));
-  };
-
-  const formatTime = (dateString: string | null) => {
-    if (!dateString) return '';
-    return new Intl.DateTimeFormat('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(dateString));
-  };
-
-  const getStatusBadge = (status: string | null) => {
-    const config = statusConfig[status || 'pending'];
-    const Icon = config.icon;
-    return (
-      <div className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-        config.bgColor,
-        config.color,
-        config.borderColor
-      )}>
-        <Icon className="h-3 w-3" />
-        {isRTL ? config.labelAr : config.labelEn}
-      </div>
-    );
-  };
-
+  // Copy order number
   const copyOrderNumber = (orderNumber: string) => {
     navigator.clipboard.writeText(orderNumber);
     toast({
@@ -464,7 +297,6 @@ export function OrdersManagement() {
   // Handle PDF download
   const handleDownloadPDF = async (order: Order) => {
     try {
-      console.log('[PDF] CLICK', { kind: 'invoice', id: order.id });
       toast({
         title: isRTL ? 'جاري إنشاء الفاتورة...' : 'Generating invoice...',
       });
@@ -522,529 +354,179 @@ export function OrdersManagement() {
       console.error('Error generating PDF:', error);
       toast({
         title: isRTL ? 'خطأ في إنشاء الفاتورة' : 'Error generating invoice',
-        description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
     }
   };
 
-  // Stats cards data
-  const statsCards = [
-    { 
-      key: 'total',
-      label: isRTL ? 'إجمالي الطلبات' : 'Total Orders', 
-      value: stats.total, 
-      icon: ShoppingCart, 
-      gradient: 'from-primary to-primary/70',
-      bgGradient: 'from-primary/10 to-primary/5',
-      change: '+12%'
-    },
-    { 
-      key: 'pending',
-      label: isRTL ? 'قيد الانتظار' : 'Pending', 
-      value: stats.pending, 
-      icon: Clock, 
-      gradient: 'from-secondary to-secondary/70',
-      bgGradient: 'from-secondary/10 to-secondary/5',
-      change: '-3%'
-    },
-    { 
-      key: 'inProgress',
-      label: isRTL ? 'قيد التنفيذ' : 'In Progress', 
-      value: stats.inProgress, 
-      icon: Truck, 
-      gradient: 'from-primary to-primary/70',
-      bgGradient: 'from-primary/10 to-primary/5',
-      change: '+8%'
-    },
-    { 
-      key: 'completed',
-      label: isRTL ? 'مكتمل' : 'Completed', 
-      value: stats.completed, 
-      icon: CheckCircle, 
-      gradient: 'from-accent to-accent/70',
-      bgGradient: 'from-accent/10 to-accent/5',
-      change: '+24%'
-    },
-    { 
-      key: 'revenue',
-      label: isRTL ? 'الإيرادات' : 'Revenue', 
-      value: formatCurrency(stats.totalRevenue), 
-      icon: TrendingUp, 
-      gradient: 'from-primary to-secondary',
-      bgGradient: 'from-primary/10 to-secondary/5',
-      change: '+18%',
-      isRevenue: true
-    },
-  ];
+  // View details
+  const handleViewDetails = (orderId: string) => {
+    navigate(`/adminash/orders/${orderId}`);
+  };
+
+  // Handle refresh
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchOrders();
+  };
 
   return (
-    <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="space-y-6 p-6">
-        {/* Hero Header */}
+    <div className="min-h-screen bg-[#0a0e1a]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="space-y-6 p-4 lg:p-6">
+        {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/90 via-primary to-primary/80 p-8 text-white"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 lg:p-8 border border-slate-800"
         >
-          <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+          {/* Background effects */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 start-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 end-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
           </div>
           
-          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <ShoppingCart className="h-8 w-8" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold">
-                    {isRTL ? 'إدارة الطلبات' : 'Order Management'}
-                  </h1>
-                  <p className="text-white/80 text-sm mt-1">
-                    {isRTL ? 'تتبع وإدارة جميع طلباتك في مكان واحد' : 'Track and manage all your orders in one place'}
-                  </p>
-                </div>
+          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25">
+                <ShoppingCart className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl lg:text-3xl font-bold text-white">
+                  {isRTL ? 'إدارة الطلبات' : 'Orders Management'}
+                </h1>
+                <p className="text-slate-400 text-sm mt-1">
+                  {isRTL ? 'تتبع وإدارة جميع طلباتك في مكان واحد' : 'Track and manage all your orders in one place'}
+                </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-3 flex-wrap">
-              <Button 
-                className="bg-white text-primary hover:bg-white/90 shadow-lg gap-2 min-w-fit"
-                size="lg"
-              >
-                <Plus className="h-5 w-5 shrink-0" />
-                <span>{isRTL ? 'طلب جديد' : 'New Order'}</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="border-white/30 bg-white/10 text-white hover:bg-white/20 gap-2 min-w-fit"
-              >
-                <Download className="h-4 w-4 shrink-0" />
-                <span>{isRTL ? 'تصدير' : 'Export'}</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="border-white/30 bg-white/10 text-white hover:bg-white/20"
-                onClick={() => {
-                  setRefreshing(true);
-                  fetchOrders();
-                }}
-                disabled={refreshing}
-              >
-                <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
-              </Button>
+            {/* Live indicator */}
+            <div className="flex items-center gap-4">
+              <div className={cn(
+                "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium",
+                isLive 
+                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30" 
+                  : "bg-slate-800 text-slate-400 border border-slate-700"
+              )}>
+                <Radio className={cn("h-3 w-3", isLive && "animate-pulse")} />
+                {isLive ? (isRTL ? 'مباشر' : 'LIVE') : (isRTL ? 'غير متصل' : 'OFFLINE')}
+              </div>
+              
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700">
+                <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="text-xs text-slate-300">
+                  {stats.total} {isRTL ? 'طلب' : 'orders'}
+                </span>
+              </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {statsCards.map((stat, index) => (
-            <motion.div
-              key={stat.key}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Card className={cn(
-                "relative overflow-hidden border-0 shadow-md hover:shadow-xl transition-all duration-300 group cursor-pointer",
-                `bg-gradient-to-br ${stat.bgGradient}`
-              )}>
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br opacity-20 rounded-full -translate-y-1/2 translate-x-1/2" 
-                  style={{ background: `linear-gradient(135deg, var(--primary), transparent)` }}
-                />
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className={cn(
-                      "p-2.5 rounded-xl bg-gradient-to-br shadow-lg",
-                      stat.gradient
-                    )}>
-                      <stat.icon className="h-5 w-5 text-white" />
-                    </div>
-                    <Badge variant="secondary" className="text-[10px] font-medium bg-white/80 dark:bg-slate-800/80">
-                      {stat.change}
-                    </Badge>
-                  </div>
-                  <div className="mt-4 space-y-1">
-                    <p className={cn(
-                      "text-2xl font-bold",
-                      stat.isRevenue ? "text-secondary dark:text-secondary" : "text-foreground"
-                    )}>
-                      {stat.value}
-                    </p>
-                    <p className="text-xs text-muted-foreground font-medium">{stat.label}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {/* Stats */}
+        <OrdersStats stats={stats} isRTL={isRTL} />
 
-        {/* Main Content Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="border-0 shadow-lg overflow-hidden">
-            {/* Tabs Header */}
-            <div className="border-b bg-muted/30">
-              <div className="p-4">
-                <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); setCurrentPage(1); }} className="w-full">
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <TabsList className="grid w-full lg:w-auto grid-cols-4 h-11 p-1 bg-muted/50">
-                      <TabsTrigger value="all" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
-                        {isRTL ? 'الكل' : 'All'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-muted text-[10px] font-semibold">
-                          {orders.length}
-                        </span>
-                      </TabsTrigger>
-                      <TabsTrigger value="pending" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                        {isRTL ? 'انتظار' : 'Pending'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-secondary/10 dark:bg-secondary/20 text-secondary text-[10px] font-semibold">
-                          {stats.pending}
-                        </span>
-                      </TabsTrigger>
-                      <TabsTrigger value="active" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                        {isRTL ? 'نشط' : 'Active'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-primary/10 dark:bg-primary/20 text-primary text-[10px] font-semibold">
-                          {stats.inProgress}
-                        </span>
-                      </TabsTrigger>
-                      <TabsTrigger value="completed" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                        {isRTL ? 'مكتمل' : 'Done'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-accent/10 dark:bg-accent/20 text-accent text-[10px] font-semibold">
-                          {stats.completed}
-                        </span>
-                      </TabsTrigger>
-                    </TabsList>
+        {/* Filters */}
+        <OrdersFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onRefresh={handleRefresh}
+          refreshing={refreshing}
+          isRTL={isRTL}
+        />
 
-                    <div className="flex items-center gap-3">
-                      <div className="relative flex-1 lg:w-72">
-                        <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          placeholder={isRTL ? 'بحث برقم الطلب أو العنوان...' : 'Search by order # or title...'}
-                          value={searchQuery}
-                          onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                          className="ps-10 h-11 bg-white dark:bg-slate-900 border-muted"
-                        />
-                      </div>
-                      <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setCurrentPage(1); }}>
-                        <SelectTrigger className="w-[180px] h-11 bg-white dark:bg-slate-900">
-                          <Filter className="h-4 w-4 me-2 text-muted-foreground" />
-                          <SelectValue placeholder={isRTL ? 'فلتر الحالة' : 'Filter Status'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">{isRTL ? 'جميع الحالات' : 'All Status'}</SelectItem>
-                          <Separator className="my-1" />
-                          {Object.entries(statusConfig).map(([key, config]) => (
-                            <SelectItem key={key} value={key}>
-                              <div className="flex items-center gap-2">
-                                <config.icon className={cn("h-3.5 w-3.5", config.color)} />
-                                {isRTL ? config.labelAr : config.labelEn}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <TabsContent value={activeTab} className="mt-0">
-                    {/* Table Content moved outside for consistent rendering */}
-                  </TabsContent>
-                </Tabs>
+        {/* Content */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Zap className="h-6 w-6 text-blue-500" />
               </div>
             </div>
+            <p className="text-sm text-slate-400">
+              {isRTL ? 'جاري تحميل الطلبات...' : 'Loading orders...'}
+            </p>
+          </div>
+        ) : paginatedOrders.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center py-20 gap-4 rounded-xl bg-[#0f1629] border border-slate-800"
+          >
+            <div className="p-6 rounded-full bg-slate-800/50">
+              <ShoppingCart className="h-16 w-16 text-slate-600" />
+            </div>
+            <div className="text-center">
+              <p className="font-semibold text-white text-lg">
+                {isRTL ? 'لا توجد طلبات' : 'No orders found'}
+              </p>
+              <p className="text-sm text-slate-400 mt-2 max-w-md">
+                {isRTL 
+                  ? 'جرب تغيير معايير البحث أو الفلتر للعثور على ما تبحث عنه' 
+                  : 'Try adjusting your search or filter criteria to find what you\'re looking for'}
+              </p>
+            </div>
+          </motion.div>
+        ) : (
+          <AnimatePresence mode="wait">
+            {viewMode === 'grid' ? (
+              <motion.div
+                key="grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              >
+                {paginatedOrders.map((order, index) => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    index={index}
+                    isRTL={isRTL}
+                    onStatusChange={handleStatusChange}
+                    onViewDetails={handleViewDetails}
+                    onDownloadPDF={handleDownloadPDF}
+                    onCopyOrderNumber={copyOrderNumber}
+                  />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="table"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <OrdersTable
+                  orders={paginatedOrders}
+                  isRTL={isRTL}
+                  onStatusChange={handleStatusChange}
+                  onViewDetails={handleViewDetails}
+                  onDownloadPDF={handleDownloadPDF}
+                  onCopyOrderNumber={copyOrderNumber}
+                  onPriceUpdate={handlePriceUpdate}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
 
-            {/* Table Content */}
-            <CardContent className="p-0">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {isRTL ? 'جاري تحميل الطلبات...' : 'Loading orders...'}
-                  </p>
-                </div>
-              ) : paginatedOrders.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <div className="p-4 rounded-full bg-muted/50">
-                    <ShoppingCart className="h-12 w-12 text-muted-foreground/50" />
-                  </div>
-                  <div className="text-center">
-                    <p className="font-medium text-foreground">
-                      {isRTL ? 'لا توجد طلبات' : 'No orders found'}
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {isRTL ? 'جرب تغيير معايير البحث أو الفلتر' : 'Try adjusting your search or filter criteria'}
-                    </p>
-                  </div>
-                  <Button variant="outline" className="mt-2 gap-2">
-                    <Plus className="h-4 w-4" />
-                    {isRTL ? 'إضافة طلب جديد' : 'Add New Order'}
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <div className="overflow-x-auto">
-                    <Table className="w-full">
-                      <TableHeader>
-                        <TableRow className="bg-muted/30 hover:bg-muted/30">
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'رقم الطلب' : 'Order #'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'العنوان' : 'Title'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'الحالة' : 'Status'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'المبلغ' : 'Amount'}
-                          </TableHead>
-                          <TableHead className="font-semibold text-xs uppercase tracking-wider">
-                            {isRTL ? 'التاريخ' : 'Date'}
-                          </TableHead>
-                          <TableHead className="w-[60px]"></TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <AnimatePresence mode="popLayout">
-                          {paginatedOrders.map((order, index) => (
-                            <motion.tr
-                              key={order.id}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0, y: -10 }}
-                              transition={{ delay: index * 0.03 }}
-                              className="group hover:bg-muted/50 cursor-pointer border-b last:border-0"
-                              onClick={() => navigate(`/adminash/orders/${order.id}`)}
-                            >
-                              {/* رقم الطلب */}
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <div className="p-1.5 rounded-lg bg-primary/10">
-                                    <Hash className="h-3.5 w-3.5 text-primary" />
-                                  </div>
-                                  <span className="font-mono text-sm font-semibold text-primary">
-                                    {order.order_number}
-                                  </span>
-                                </div>
-                              </TableCell>
-                              {/* العنوان */}
-                              <TableCell className="min-w-[200px] max-w-[300px]">
-                                <div className="space-y-0.5">
-                                  <p className="font-medium line-clamp-1">
-                                    {isRTL ? order.title_ar || order.title : order.title}
-                                  </p>
-                                  {order.description && (
-                                    <p className="text-xs text-muted-foreground line-clamp-1">
-                                      {order.description}
-                                    </p>
-                                  )}
-                                </div>
-                              </TableCell>
-                              {/* الحالة */}
-                              <TableCell>
-                                {getStatusBadge(order.status)}
-                              </TableCell>
-                              {/* المبلغ */}
-                              <TableCell onClick={(e) => e.stopPropagation()}>
-                                {editingPriceOrderId === order.id ? (
-                                  <div className="flex items-center gap-1">
-                                    <Input
-                                      type="number"
-                                      value={editingPriceValue}
-                                      onChange={(e) => setEditingPriceValue(e.target.value)}
-                                      className="h-8 w-24 text-sm"
-                                      placeholder="0"
-                                      autoFocus
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter') handlePriceUpdate(order.id);
-                                        if (e.key === 'Escape') {
-                                          setEditingPriceOrderId(null);
-                                          setEditingPriceValue('');
-                                        }
-                                      }}
-                                    />
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7 text-accent hover:text-accent hover:bg-accent/10"
-                                      onClick={() => handlePriceUpdate(order.id)}
-                                    >
-                                      <CheckCircle className="h-4 w-4" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                      onClick={() => {
-                                        setEditingPriceOrderId(null);
-                                        setEditingPriceValue('');
-                                      }}
-                                    >
-                                      <XCircle className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-                                ) : (
-                                  <div 
-                                    className="flex items-center gap-2 cursor-pointer group hover:bg-muted/50 rounded px-2 py-1 -mx-2 -my-1 transition-colors"
-                                    onClick={(e) => startEditingPrice(order, e)}
-                                    title={isRTL ? 'انقر للتعديل' : 'Click to edit'}
-                                  >
-                                    <Banknote className="h-4 w-4 text-accent" />
-                                    <span className="font-semibold text-foreground">
-                                      {formatCurrency(order.total_amount)}
-                                    </span>
-                                    <Edit className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  </div>
-                                )}
-                              </TableCell>
-                              {/* التاريخ */}
-                              <TableCell>
-                                <div className="space-y-0.5">
-                                  <p className="text-sm text-foreground">{formatDate(order.created_at)}</p>
-                                  <p className="text-xs text-muted-foreground">{formatTime(order.created_at)}</p>
-                                </div>
-                              </TableCell>
-                              {/* الإجراءات */}
-                              <TableCell className="w-[60px]">
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="icon" 
-                                      className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                      <MoreVertical className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align={isRTL ? "start" : "end"} className="w-48">
-                                    <DropdownMenuLabel className="text-xs text-muted-foreground">
-                                      {isRTL ? 'إجراءات' : 'Actions'}
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigate(`/adminash/orders/${order.id}`);
-                                    }}>
-                                      <Eye className="h-4 w-4 me-2" />
-                                      {isRTL ? 'عرض التفاصيل' : 'View Details'}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => {
-                                      e.stopPropagation();
-                                      copyOrderNumber(order.order_number);
-                                    }}>
-                                      <Copy className="h-4 w-4 me-2" />
-                                      {isRTL ? 'نسخ الرقم' : 'Copy Number'}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDownloadPDF(order);
-                                    }}>
-                                      <FileText className="h-4 w-4 me-2" />
-                                      {isRTL ? 'تحميل PDF' : 'Download PDF'}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuLabel className="text-xs text-muted-foreground">
-                                      {isRTL ? 'تغيير الحالة' : 'Change Status'}
-                                    </DropdownMenuLabel>
-                                    {Object.entries(statusConfig).map(([key, config]) => (
-                                      order.status !== key && (
-                                        <DropdownMenuItem 
-                                          key={key}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleStatusChange(order.id, key);
-                                          }}
-                                          className="gap-2"
-                                        >
-                                          <config.icon className={cn("h-4 w-4", config.color)} />
-                                          {isRTL ? config.labelAr : config.labelEn}
-                                        </DropdownMenuItem>
-                                      )
-                                    ))}
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </motion.tr>
-                          ))}
-                        </AnimatePresence>
-                      </TableBody>
-                    </Table>
-                  </div>
-
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/20">
-                      <p className="text-sm text-muted-foreground">
-                        {isRTL 
-                          ? `عرض ${(currentPage - 1) * itemsPerPage + 1} إلى ${Math.min(currentPage * itemsPerPage, filteredOrders.length)} من ${filteredOrders.length} طلب`
-                          : `Showing ${(currentPage - 1) * itemsPerPage + 1} to ${Math.min(currentPage * itemsPerPage, filteredOrders.length)} of ${filteredOrders.length} orders`
-                        }
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                          disabled={currentPage === 1}
-                          className="gap-1"
-                        >
-                          {isRTL ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
-                          {isRTL ? 'السابق' : 'Previous'}
-                        </Button>
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            let pageNum;
-                            if (totalPages <= 5) {
-                              pageNum = i + 1;
-                            } else if (currentPage <= 3) {
-                              pageNum = i + 1;
-                            } else if (currentPage >= totalPages - 2) {
-                              pageNum = totalPages - 4 + i;
-                            } else {
-                              pageNum = currentPage - 2 + i;
-                            }
-                            return (
-                              <Button
-                                key={pageNum}
-                                variant={currentPage === pageNum ? "default" : "ghost"}
-                                size="sm"
-                                onClick={() => setCurrentPage(pageNum)}
-                                className="w-8 h-8 p-0"
-                              >
-                                {pageNum}
-                              </Button>
-                            );
-                          })}
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                          disabled={currentPage === totalPages}
-                          className="gap-1"
-                        >
-                          {isRTL ? 'التالي' : 'Next'}
-                          {isRTL ? <ArrowLeft className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+        {/* Pagination */}
+        {!loading && filteredOrders.length > 0 && (
+          <OrdersPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredOrders.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setCurrentPage}
+            isRTL={isRTL}
+          />
+        )}
       </div>
-
     </div>
   );
 }
