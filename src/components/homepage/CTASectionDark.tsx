@@ -43,28 +43,28 @@ export function CTASectionDark() {
             transition={{ delay: 0.1 }}
             className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10"
           >
-            <div className="service-card p-5 text-center">
+            <a href="tel:0555812567" className="service-card p-5 text-center block hover:scale-105 transition-transform">
               <div className="hp-icon-box hp-icon-green mx-auto mb-3">
                 <Phone className="w-5 h-5 text-white" />
               </div>
               <div className="font-semibold text-[hsl(var(--hp-text))] mb-1">اتصل بنا</div>
-              <div className="text-sm text-[hsl(var(--hp-text-muted))] ltr-token">+966 55 123 4567</div>
-            </div>
+              <div className="text-sm text-[hsl(var(--hp-text-muted))] ltr-token">0555812567</div>
+            </a>
             
-            <div className="service-card p-5 text-center">
+            <a href="mailto:info@ash-holding.sa" className="service-card p-5 text-center block hover:scale-105 transition-transform">
               <div className="hp-icon-box hp-icon-blue mx-auto mb-3">
                 <Mail className="w-5 h-5 text-white" />
               </div>
               <div className="font-semibold text-[hsl(var(--hp-text))] mb-1">راسلنا</div>
-              <div className="text-sm text-[hsl(var(--hp-text-muted))] ltr-token">info@ashholding.com</div>
-            </div>
+              <div className="text-sm text-[hsl(var(--hp-text-muted))] ltr-token">info@ash-holding.sa</div>
+            </a>
             
             <div className="service-card p-5 text-center">
               <div className="hp-icon-box hp-icon-orange mx-auto mb-3">
                 <MapPin className="w-5 h-5 text-white" />
               </div>
               <div className="font-semibold text-[hsl(var(--hp-text))] mb-1">موقعنا</div>
-              <div className="text-sm text-[hsl(var(--hp-text-muted))]">الرياض، المملكة العربية السعودية</div>
+              <div className="text-sm text-[hsl(var(--hp-text-muted))]">جدة، المملكة العربية السعودية</div>
             </div>
           </motion.div>
 

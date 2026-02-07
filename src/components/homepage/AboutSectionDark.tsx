@@ -45,8 +45,8 @@ const features = [
 
 const achievements = [
   { icon: Building2, value: "2016", label: "سنة التأسيس" },
-  { icon: Award, value: "500+", label: "مشروع منجز" },
-  { icon: TrendingUp, value: "98%", label: "معدل النجاح" },
+  { icon: Award, value: "14,883", label: "مشروع منجز" },
+  { icon: TrendingUp, value: "9,512", label: "عميل راضٍ" },
 ];
 
 export function AboutSectionDark() {

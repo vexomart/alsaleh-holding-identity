@@ -33,11 +33,11 @@ const services = [
 ];
 
 const socialLinks = [
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Youtube, href: "#", label: "YouTube" },
-  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Twitter, href: "https://twitter.com/ash_holdings", label: "Twitter" },
+  { icon: Instagram, href: "https://instagram.com/ash.holdings", label: "Instagram" },
+  { icon: Linkedin, href: "https://linkedin.com/company/ash-holdings", label: "LinkedIn" },
+  { icon: Youtube, href: "https://youtube.com/@ash.holdings", label: "YouTube" },
+  { icon: Facebook, href: "https://facebook.com/ash.holdings", label: "Facebook" },
 ];
 
 export function FooterDark() {
@@ -114,15 +114,15 @@ export function FooterDark() {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-sm text-[hsl(var(--hp-text-muted))]">
                 <MapPin className="w-4 h-4 text-[hsl(var(--hp-primary))] shrink-0" />
-                <span>الرياض، المملكة العربية السعودية</span>
+                <span>جدة، المملكة العربية السعودية</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-[hsl(var(--hp-text-muted))]">
                 <Phone className="w-4 h-4 text-[hsl(var(--hp-primary))] shrink-0" />
-                <span className="ltr-token">+966 55 123 4567</span>
+                <span className="ltr-token">0555812567</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-[hsl(var(--hp-text-muted))]">
                 <Mail className="w-4 h-4 text-[hsl(var(--hp-primary))] shrink-0" />
-                <span className="ltr-token">info@ashholding.com</span>
+                <span className="ltr-token">info@ash-holding.sa</span>
               </li>
             </ul>
           </div>
