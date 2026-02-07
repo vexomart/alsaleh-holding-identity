@@ -452,7 +452,11 @@ export default function ContractDetailsPage() {
 
       setIsApproveOpen(false);
       setApprovalNotes('');
-      queryClient.invalidateQueries({ queryKey: ['admin-contract-details', id] });
+      
+      // CRITICAL: Immediate refetch for instant UI update
+      await refetch();
+      await queryClient.invalidateQueries({ queryKey: ['admin-contract-details', id] });
+      await queryClient.invalidateQueries({ queryKey: ['admin-contracts'] });
     } catch (error) {
       console.error('Error approving contract:', error);
       toast.error('فشل في الموافقة على العقد');
