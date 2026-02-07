@@ -1,0 +1,550 @@
+/**
+ * V3 Pages CSS
+ * Command Center & Banking Portal
+ * 100% Custom - NO SHADCN
+ */
+
+/* =========================================
+   COMMAND CENTER - OVERVIEW PAGE
+   ========================================= */
+
+.cmd-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-6);
+}
+
+.cmd-overview__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--v3-space-4);
+  flex-wrap: wrap;
+}
+
+.cmd-overview__title {
+  font-size: var(--v3-text-2xl);
+  font-weight: 700;
+  color: hsl(var(--cmd-text-primary));
+  margin: 0;
+}
+
+.cmd-overview__subtitle {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--cmd-text-muted));
+  margin-top: var(--v3-space-1);
+}
+
+.cmd-overview__actions {
+  display: flex;
+  gap: var(--v3-space-3);
+}
+
+.cmd-overview__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--v3-space-4);
+}
+
+@media (max-width: 1200px) {
+  .cmd-overview__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cmd-overview__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cmd-overview__grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--v3-space-6);
+}
+
+@media (max-width: 1024px) {
+  .cmd-overview__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cmd-overview__main {
+  min-width: 0;
+}
+
+.cmd-overview__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-4);
+}
+
+/* Alerts */
+.cmd-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-3);
+}
+
+.cmd-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v3-space-3);
+  padding: var(--v3-space-3);
+  background: hsl(var(--cmd-bg-elevated));
+  border-radius: var(--v3-radius-md);
+  border-inline-start: 3px solid transparent;
+}
+
+.cmd-alert--warning {
+  border-color: hsl(var(--cmd-accent-amber));
+}
+
+.cmd-alert--danger {
+  border-color: hsl(var(--cmd-accent-red));
+}
+
+.cmd-alert--info {
+  border-color: hsl(var(--cmd-accent-cyan));
+}
+
+.cmd-alert__icon {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.cmd-alert--warning .cmd-alert__icon {
+  color: hsl(var(--cmd-accent-amber));
+}
+
+.cmd-alert--danger .cmd-alert__icon {
+  color: hsl(var(--cmd-accent-red));
+}
+
+.cmd-alert--info .cmd-alert__icon {
+  color: hsl(var(--cmd-accent-cyan));
+}
+
+.cmd-alert__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.cmd-alert__message {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--cmd-text-primary));
+  margin: 0;
+}
+
+.cmd-alert__time {
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--cmd-text-dim));
+}
+
+/* Quick Stats */
+.cmd-quick-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-4);
+}
+
+.cmd-quick-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--v3-space-3);
+  border-bottom: 1px solid hsl(var(--cmd-border-subtle));
+}
+
+.cmd-quick-stat:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cmd-quick-stat__label {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--cmd-text-muted));
+}
+
+.cmd-quick-stat__value {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-lg);
+  font-weight: 700;
+  color: hsl(var(--cmd-text-primary));
+}
+
+.cmd-quick-stat__value--success {
+  color: hsl(var(--cmd-accent-green));
+}
+
+.cmd-quick-stat__value--info {
+  color: hsl(var(--cmd-accent-cyan));
+}
+
+/* =========================================
+   BANKING PORTAL - OVERVIEW PAGE
+   ========================================= */
+
+.bank-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-6);
+}
+
+/* Welcome Section */
+.bank-overview__welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--v3-space-4);
+}
+
+.bank-overview__greeting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-1);
+}
+
+.bank-overview__greeting-time {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--bank-text-muted));
+}
+
+.bank-overview__greeting-name {
+  font-size: var(--v3-text-2xl);
+  font-weight: 700;
+  color: hsl(var(--bank-text-primary));
+  margin: 0;
+}
+
+.bank-overview__date {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--bank-text-muted));
+}
+
+/* Wallet Hero Card */
+.bank-wallet-hero {
+  margin: var(--v3-space-2) 0;
+}
+
+.bank-wallet-hero__card {
+  position: relative;
+  padding: var(--v3-space-6);
+  border-radius: var(--v3-radius-2xl);
+  background: linear-gradient(135deg, hsl(var(--bank-brand-primary)), hsl(var(--bank-brand-secondary)));
+  color: white;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.bank-wallet-hero__background {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.bank-wallet-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-4);
+  height: 100%;
+}
+
+.bank-wallet-hero__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bank-wallet-hero__label {
+  font-size: var(--v3-text-sm);
+  opacity: 0.85;
+}
+
+.bank-wallet-hero__icon {
+  opacity: 0.7;
+}
+
+.bank-wallet-hero__amount {
+  display: flex;
+  align-items: baseline;
+  gap: var(--v3-space-2);
+}
+
+.bank-wallet-hero__value {
+  font-size: var(--v3-text-4xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.bank-wallet-hero__currency {
+  font-size: var(--v3-text-lg);
+  opacity: 0.85;
+}
+
+.bank-wallet-hero__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.bank-wallet-hero__account {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-1);
+}
+
+.bank-wallet-hero__account-label {
+  font-size: var(--v3-text-xs);
+  opacity: 0.7;
+}
+
+.bank-wallet-hero__account-number {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-sm);
+  letter-spacing: 0.1em;
+}
+
+/* Quick Actions */
+.bank-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-4);
+}
+
+.bank-section-title {
+  font-size: var(--v3-text-lg);
+  font-weight: 600;
+  color: hsl(var(--bank-text-primary));
+  margin: 0;
+}
+
+.bank-quick-actions__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--v3-space-3);
+}
+
+@media (max-width: 768px) {
+  .bank-quick-actions__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.bank-quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--v3-space-2);
+  padding: var(--v3-space-4);
+  background: hsl(var(--bank-bg-card));
+  border: 1px solid hsl(var(--bank-border-light));
+  border-radius: var(--v3-radius-xl);
+  cursor: pointer;
+  transition: all var(--v3-duration-normal) var(--v3-ease-out);
+}
+
+.bank-quick-action:hover {
+  background: hsl(var(--bank-bg-hover));
+  border-color: hsl(var(--bank-brand-primary) / 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--bank-shadow-md);
+}
+
+.bank-quick-action__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: hsl(var(--bank-bg-accent));
+  border-radius: var(--v3-radius-lg);
+  color: hsl(var(--bank-brand-primary));
+}
+
+.bank-quick-action__label {
+  font-size: var(--v3-text-sm);
+  font-weight: 500;
+  color: hsl(var(--bank-text-primary));
+  text-align: center;
+}
+
+/* Stats Row */
+.bank-overview__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--v3-space-4);
+}
+
+@media (max-width: 768px) {
+  .bank-overview__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Content Grid */
+.bank-overview__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--v3-space-6);
+}
+
+@media (max-width: 1024px) {
+  .bank-overview__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Orders List */
+.bank-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-4);
+}
+
+.bank-order-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-2);
+  padding: var(--v3-space-3);
+  background: hsl(var(--bank-bg-elevated));
+  border-radius: var(--v3-radius-lg);
+}
+
+.bank-order-item__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bank-order-item__id {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--bank-text-muted));
+}
+
+.bank-order-item__service {
+  font-size: var(--v3-text-sm);
+  font-weight: 500;
+  color: hsl(var(--bank-text-primary));
+}
+
+.bank-order-item__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--v3-space-3);
+}
+
+.bank-order-item__progress-bar {
+  flex: 1;
+  height: 6px;
+  background: hsl(var(--bank-border-light));
+  border-radius: var(--v3-radius-full);
+  overflow: hidden;
+}
+
+.bank-order-item__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, hsl(var(--bank-brand-primary)), hsl(var(--bank-brand-secondary)));
+  border-radius: var(--v3-radius-full);
+  transition: width 0.3s ease;
+}
+
+.bank-order-item__progress-text {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--bank-text-muted));
+  min-width: 2.5rem;
+  text-align: end;
+}
+
+/* Transactions List */
+.bank-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-3);
+}
+
+.bank-transaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--v3-space-3);
+  padding: var(--v3-space-3);
+  border-radius: var(--v3-radius-lg);
+  transition: background var(--v3-duration-fast);
+}
+
+.bank-transaction-item:hover {
+  background: hsl(var(--bank-bg-elevated));
+}
+
+.bank-transaction-item__icon {
+  flex-shrink: 0;
+}
+
+.bank-tx-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--v3-radius-full);
+  font-size: var(--v3-text-lg);
+  font-weight: 700;
+}
+
+.bank-tx-icon--in {
+  background: hsl(var(--bank-success) / 0.1);
+  color: hsl(var(--bank-success));
+}
+
+.bank-tx-icon--out {
+  background: hsl(var(--bank-error) / 0.1);
+  color: hsl(var(--bank-error));
+}
+
+.bank-tx-icon--refund {
+  background: hsl(var(--bank-info) / 0.1);
+  color: hsl(var(--bank-info));
+}
+
+.bank-transaction-item__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-1);
+}
+
+.bank-transaction-item__desc {
+  font-size: var(--v3-text-sm);
+  font-weight: 500;
+  color: hsl(var(--bank-text-primary));
+}
+
+.bank-transaction-item__date {
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--bank-text-muted));
+}
+
+.bank-transaction-item__amount {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-sm);
+  font-weight: 600;
+}
+
+.bank-transaction-item__amount--positive {
+  color: hsl(var(--bank-success));
+}
+
+.bank-transaction-item__amount--negative {
+  color: hsl(var(--bank-text-primary));
+}

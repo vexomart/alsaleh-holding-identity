@@ -1,0 +1,487 @@
+/**
+ * V3 Data Components CSS
+ * Command Center & Banking Portal
+ * 100% Custom - NO SHADCN
+ */
+
+/* =========================================
+   COMMAND CENTER - STAT CARDS
+   Bloomberg Terminal Style
+   ========================================= */
+
+.cmd-stat-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v3-space-4);
+  padding: var(--v3-space-5);
+  background: hsl(var(--cmd-bg-card));
+  border: 1px solid hsl(var(--cmd-border-subtle));
+  border-radius: var(--v3-radius-lg);
+  overflow: hidden;
+  transition: all var(--v3-duration-normal) var(--v3-ease-out);
+}
+
+.cmd-stat-card:hover {
+  background: hsl(var(--cmd-bg-elevated));
+  border-color: hsl(var(--cmd-border-default));
+}
+
+.cmd-stat-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: hsl(var(--cmd-bg-elevated));
+  border-radius: var(--v3-radius-md);
+  color: hsl(var(--cmd-text-secondary));
+  flex-shrink: 0;
+}
+
+.cmd-stat-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.cmd-stat-card__title {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--cmd-text-muted));
+  font-weight: 500;
+}
+
+.cmd-stat-card__value {
+  font-family: var(--v3-font-mono);
+  font-size: var(--v3-text-2xl);
+  font-weight: 700;
+  color: hsl(var(--cmd-text-primary));
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.cmd-stat-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--v3-space-3);
+  margin-top: var(--v3-space-1);
+}
+
+.cmd-stat-card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v3-space-1);
+  font-size: var(--v3-text-sm);
+  font-weight: 600;
+}
+
+.cmd-stat-card__trend--up {
+  color: hsl(var(--cmd-accent-green));
+}
+
+.cmd-stat-card__trend--down {
+  color: hsl(var(--cmd-accent-red));
+}
+
+.cmd-stat-card__trend--neutral {
+  color: hsl(var(--cmd-text-muted));
+}
+
+.cmd-stat-card__subtitle {
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--cmd-text-dim));
+}
+
+/* Glow effect for variants */
+.cmd-stat-card__glow {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  opacity: 0.8;
+}
+
+.cmd-stat-card__glow--success {
+  background: hsl(var(--cmd-accent-green));
+  box-shadow: var(--cmd-glow-green);
+}
+
+.cmd-stat-card__glow--warning {
+  background: hsl(var(--cmd-accent-amber));
+  box-shadow: var(--cmd-glow-amber);
+}
+
+.cmd-stat-card__glow--danger {
+  background: hsl(var(--cmd-accent-red));
+}
+
+.cmd-stat-card__glow--info {
+  background: hsl(var(--cmd-accent-cyan));
+  box-shadow: var(--cmd-glow-cyan);
+}
+
+/* Size variants */
+.cmd-stat-card--sm {
+  padding: var(--v3-space-3);
+}
+
+.cmd-stat-card--sm .cmd-stat-card__value {
+  font-size: var(--v3-text-xl);
+}
+
+.cmd-stat-card--lg {
+  padding: var(--v3-space-6);
+}
+
+.cmd-stat-card--lg .cmd-stat-card__value {
+  font-size: var(--v3-text-3xl);
+}
+
+/* =========================================
+   BANKING PORTAL - STAT CARDS
+   Premium Fintech Style
+   ========================================= */
+
+.bank-stat-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--v3-space-4);
+  padding: var(--v3-space-5);
+  background: hsl(var(--bank-bg-card));
+  border: 1px solid hsl(var(--bank-border-light));
+  border-radius: var(--v3-radius-xl);
+  box-shadow: var(--bank-shadow-sm);
+  transition: all var(--v3-duration-normal) var(--v3-ease-out);
+}
+
+.bank-stat-card:hover {
+  box-shadow: var(--bank-shadow-md);
+  transform: translateY(-2px);
+}
+
+.bank-stat-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: hsl(var(--bank-bg-accent));
+  border-radius: var(--v3-radius-lg);
+  color: hsl(var(--bank-brand-primary));
+  flex-shrink: 0;
+}
+
+.bank-stat-card--success .bank-stat-card__icon {
+  background: hsl(var(--bank-success) / 0.1);
+  color: hsl(var(--bank-success));
+}
+
+.bank-stat-card--warning .bank-stat-card__icon {
+  background: hsl(var(--bank-warning) / 0.1);
+  color: hsl(var(--bank-warning));
+}
+
+.bank-stat-card--danger .bank-stat-card__icon {
+  background: hsl(var(--bank-error) / 0.1);
+  color: hsl(var(--bank-error));
+}
+
+.bank-stat-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--v3-space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.bank-stat-card__title {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--bank-text-muted));
+  font-weight: 500;
+}
+
+.bank-stat-card__value {
+  font-size: var(--v3-text-2xl);
+  font-weight: 700;
+  color: hsl(var(--bank-text-primary));
+  line-height: 1.2;
+}
+
+.bank-stat-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--v3-space-3);
+  margin-top: var(--v3-space-2);
+}
+
+.bank-stat-card__trend {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--v3-space-1);
+  font-size: var(--v3-text-sm);
+  font-weight: 600;
+  padding: var(--v3-space-1) var(--v3-space-2);
+  border-radius: var(--v3-radius-full);
+}
+
+.bank-stat-card__trend--up {
+  color: hsl(var(--bank-success));
+  background: hsl(var(--bank-success) / 0.1);
+}
+
+.bank-stat-card__trend--down {
+  color: hsl(var(--bank-error));
+  background: hsl(var(--bank-error) / 0.1);
+}
+
+.bank-stat-card__trend--neutral {
+  color: hsl(var(--bank-text-muted));
+  background: hsl(var(--bank-bg-accent));
+}
+
+.bank-stat-card__subtitle {
+  font-size: var(--v3-text-xs);
+  color: hsl(var(--bank-text-dim));
+}
+
+/* Size variants */
+.bank-stat-card--sm {
+  padding: var(--v3-space-4);
+}
+
+.bank-stat-card--sm .bank-stat-card__value {
+  font-size: var(--v3-text-xl);
+}
+
+.bank-stat-card--lg {
+  padding: var(--v3-space-6);
+}
+
+.bank-stat-card--lg .bank-stat-card__value {
+  font-size: var(--v3-text-3xl);
+}
+
+/* =========================================
+   COMMAND CENTER - TABLE
+   ========================================= */
+
+.cmd-table {
+  width: 100%;
+  background: hsl(var(--cmd-bg-card));
+  border: 1px solid hsl(var(--cmd-border-subtle));
+  border-radius: var(--v3-radius-lg);
+  overflow: hidden;
+}
+
+.cmd-table__wrapper {
+  overflow-x: auto;
+}
+
+.cmd-table__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cmd-table__thead {
+  background: hsl(var(--cmd-bg-panel));
+}
+
+.cmd-table__th {
+  padding: var(--v3-space-3) var(--v3-space-4);
+  font-size: var(--v3-text-xs);
+  font-weight: 600;
+  color: hsl(var(--cmd-text-muted));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid hsl(var(--cmd-border-subtle));
+  white-space: nowrap;
+}
+
+.cmd-table__tbody {
+  background: hsl(var(--cmd-bg-card));
+}
+
+.cmd-table__tr {
+  border-bottom: 1px solid hsl(var(--cmd-border-subtle));
+  transition: background var(--v3-duration-fast);
+}
+
+.cmd-table__tr:last-child {
+  border-bottom: none;
+}
+
+.cmd-table__tr:hover {
+  background: hsl(var(--cmd-bg-hover));
+}
+
+.cmd-table__tr--clickable {
+  cursor: pointer;
+}
+
+.cmd-table__td {
+  padding: var(--v3-space-3) var(--v3-space-4);
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--cmd-text-primary));
+  vertical-align: middle;
+}
+
+.cmd-table__empty {
+  padding: var(--v3-space-8);
+  text-align: center;
+  color: hsl(var(--cmd-text-muted));
+  font-size: var(--v3-text-sm);
+}
+
+/* Striped variant */
+.cmd-table--striped .cmd-table__tr:nth-child(even) {
+  background: hsl(var(--cmd-bg-panel));
+}
+
+/* Compact variant */
+.cmd-table--compact .cmd-table__th,
+.cmd-table--compact .cmd-table__td {
+  padding: var(--v3-space-2) var(--v3-space-3);
+}
+
+/* Loading skeleton */
+.cmd-table--loading {
+  min-height: 300px;
+}
+
+.cmd-table__skeleton {
+  padding: var(--v3-space-4);
+}
+
+.cmd-table__skeleton-row {
+  display: flex;
+  gap: var(--v3-space-4);
+  padding: var(--v3-space-3) 0;
+  border-bottom: 1px solid hsl(var(--cmd-border-subtle));
+}
+
+.cmd-table__skeleton-cell {
+  flex: 1;
+  height: 1.25rem;
+  background: hsl(var(--cmd-bg-elevated));
+  border-radius: var(--v3-radius-sm);
+  animation: cmd-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes cmd-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+/* =========================================
+   BANKING PORTAL - TABLE
+   ========================================= */
+
+.bank-table {
+  width: 100%;
+  background: hsl(var(--bank-bg-card));
+  border: 1px solid hsl(var(--bank-border-light));
+  border-radius: var(--v3-radius-xl);
+  box-shadow: var(--bank-shadow-sm);
+  overflow: hidden;
+}
+
+.bank-table__wrapper {
+  overflow-x: auto;
+}
+
+.bank-table__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bank-table__thead {
+  background: hsl(var(--bank-bg-elevated));
+}
+
+.bank-table__th {
+  padding: var(--v3-space-4) var(--v3-space-5);
+  font-size: var(--v3-text-sm);
+  font-weight: 600;
+  color: hsl(var(--bank-text-secondary));
+  border-bottom: 1px solid hsl(var(--bank-border-light));
+  white-space: nowrap;
+}
+
+.bank-table__tbody {
+  background: hsl(var(--bank-bg-card));
+}
+
+.bank-table__tr {
+  border-bottom: 1px solid hsl(var(--bank-border-light));
+  transition: background var(--v3-duration-fast);
+}
+
+.bank-table__tr:last-child {
+  border-bottom: none;
+}
+
+.bank-table__tr:hover {
+  background: hsl(var(--bank-bg-hover));
+}
+
+.bank-table__tr--clickable {
+  cursor: pointer;
+}
+
+.bank-table__td {
+  padding: var(--v3-space-4) var(--v3-space-5);
+  font-size: var(--v3-text-base);
+  color: hsl(var(--bank-text-primary));
+  vertical-align: middle;
+}
+
+.bank-table__empty {
+  padding: var(--v3-space-10);
+  text-align: center;
+  color: hsl(var(--bank-text-muted));
+  font-size: var(--v3-text-base);
+}
+
+/* Striped variant */
+.bank-table--striped .bank-table__tr:nth-child(even) {
+  background: hsl(var(--bank-bg-elevated));
+}
+
+/* Compact variant */
+.bank-table--compact .bank-table__th,
+.bank-table--compact .bank-table__td {
+  padding: var(--v3-space-3) var(--v3-space-4);
+}
+
+/* Loading skeleton */
+.bank-table--loading {
+  min-height: 300px;
+}
+
+.bank-table__skeleton {
+  padding: var(--v3-space-4);
+}
+
+.bank-table__skeleton-row {
+  display: flex;
+  gap: var(--v3-space-4);
+  padding: var(--v3-space-4) 0;
+  border-bottom: 1px solid hsl(var(--bank-border-light));
+}
+
+.bank-table__skeleton-cell {
+  flex: 1;
+  height: 1.5rem;
+  background: hsl(var(--bank-bg-accent));
+  border-radius: var(--v3-radius-md);
+  animation: bank-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes bank-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}

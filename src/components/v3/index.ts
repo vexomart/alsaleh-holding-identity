@@ -12,3 +12,9 @@ export * from './navigation';
 
 // Layouts
 export * from './layouts';
+
+// Data Components
+export * from './data';
+
+// Pages
+export * from './pages';
