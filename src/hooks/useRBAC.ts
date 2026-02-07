@@ -1,8 +1,11 @@
 /**
- * useRBAC Hook - Phase 0.5
+ * useRBAC Hook - INSTANT Loading with Cache
  * Role-Based Access Control hook for permission checks
- * Fixed race condition: waits for auth session before fetching roles
- * Uses synchronized loading with useAuth
+ * 
+ * OPTIMIZATION: Uses localStorage cache for instant initial render
+ * - Shows cached roles/permissions immediately
+ * - Fetches fresh data in background
+ * - No loading delay for cached users
  */
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
@@ -19,6 +22,38 @@ import {
   isSuperAdmin,
   isAdmin,
 } from '@/lib/permissions';
+
+const RBAC_CACHE_KEY = 'rbac_cache';
+
+interface CachedRBAC {
+  userId: string;
+  roles: AppRole[];
+  permissions: string[];
+  timestamp: number;
+}
+
+// Get cached RBAC data synchronously
+function getCachedRBAC(userId: string | null): { roles: AppRole[]; permissions: string[] } | null {
+  if (!userId) return null;
+  try {
+    const cached = localStorage.getItem(RBAC_CACHE_KEY);
+    if (cached) {
+      const parsed: CachedRBAC = JSON.parse(cached);
+      if (parsed.userId === userId) {
+        return { roles: parsed.roles, permissions: parsed.permissions };
+      }
+    }
+  } catch {}
+  return null;
+}
+
+// Cache RBAC data
+function cacheRBAC(userId: string, roles: AppRole[], permissions: string[]) {
+  try {
+    const data: CachedRBAC = { userId, roles, permissions, timestamp: Date.now() };
+    localStorage.setItem(RBAC_CACHE_KEY, JSON.stringify(data));
+  } catch {}
+}
 
 interface UseRBACReturn {
   // State
@@ -45,12 +80,32 @@ interface UseRBACReturn {
 }
 
 export const useRBAC = (): UseRBACReturn => {
-  const [roles, setRoles] = useState<AppRole[]>([]);
-  const [permissions, setPermissions] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const isMountedRef = useRef(true);
-  const initialLoadCompleteRef = useRef(false);
   const currentUserIdRef = useRef<string | null>(null);
+  
+  // INSTANT: Get initial user ID from localStorage session
+  const getInitialUserId = (): string | null => {
+    try {
+      const storageKey = `sb-iuzzapnmiopbbjfravww-auth-token`;
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.user?.id && parsed?.expires_at * 1000 > Date.now()) {
+          return parsed.user.id;
+        }
+      }
+    } catch {}
+    return null;
+  };
+  
+  const initialUserId = getInitialUserId();
+  const cachedData = getCachedRBAC(initialUserId);
+  
+  // Start with cached data if available
+  const [roles, setRoles] = useState<AppRole[]>(cachedData?.roles || []);
+  const [permissions, setPermissions] = useState<string[]>(cachedData?.permissions || []);
+  // Only loading if no cache
+  const [isLoading, setIsLoading] = useState(!cachedData);
 
   const fetchUserPermissions = useCallback(async (userId: string): Promise<boolean> => {
     if (!isMountedRef.current) return false;
@@ -78,6 +133,7 @@ export const useRBAC = (): UseRBACReturn => {
       }
 
       // Fetch permissions based on roles
+      let fetchedPermissions: string[] = [];
       if (fetchedRoles.length > 0) {
         const { data: rolePerms, error: permsError } = await supabase
           .from('role_permissions')
@@ -95,19 +151,24 @@ export const useRBAC = (): UseRBACReturn => {
           return false;
         }
 
-        const fetchedPermissions = (rolePerms || [])
+        fetchedPermissions = (rolePerms || [])
           .map(rp => (rp.permissions as unknown as { name: string })?.name)
           .filter((name): name is string => !!name);
 
         // Remove duplicates
+        fetchedPermissions = [...new Set(fetchedPermissions)];
+        
         if (isMountedRef.current) {
-          setPermissions([...new Set(fetchedPermissions)]);
+          setPermissions(fetchedPermissions);
         }
       } else {
         if (isMountedRef.current) {
           setPermissions([]);
         }
       }
+
+      // Cache the results
+      cacheRBAC(userId, fetchedRoles, fetchedPermissions);
 
       return true;
     } catch (error) {
@@ -125,8 +186,9 @@ export const useRBAC = (): UseRBACReturn => {
 
   useEffect(() => {
     isMountedRef.current = true;
+    let initialLoadComplete = false;
 
-    // INITIAL LOAD - Controls isLoading state
+    // INITIAL LOAD - Fetch fresh data (cache already loaded in state)
     const initializeRBAC = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -142,16 +204,16 @@ export const useRBAC = (): UseRBACReturn => {
         }
       } catch (error) {
         console.error('Error initializing RBAC:', error);
-        clearPermissions();
+        // Keep cached data on error
       } finally {
+        initialLoadComplete = true;
         if (isMountedRef.current) {
-          initialLoadCompleteRef.current = true;
           setIsLoading(false);
         }
       }
     };
 
-    // ONGOING AUTH CHANGES - Does NOT control isLoading after initial load
+    // ONGOING AUTH CHANGES
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!isMountedRef.current) return;
@@ -160,29 +222,21 @@ export const useRBAC = (): UseRBACReturn => {
         if (event === 'SIGNED_OUT' || !session?.user) {
           currentUserIdRef.current = null;
           clearPermissions();
-          // Only set loading false if initial load is complete
-          if (initialLoadCompleteRef.current) {
-            setIsLoading(false);
-          }
+          // Clear cache on sign out
+          localStorage.removeItem(RBAC_CACHE_KEY);
+          setIsLoading(false);
           return;
         }
 
         // Skip if same user (avoid re-fetching on token refresh)
-        if (session?.user && currentUserIdRef.current === session.user.id && initialLoadCompleteRef.current) {
+        if (session?.user && currentUserIdRef.current === session.user.id && initialLoadComplete) {
           return;
         }
 
         // New user signed in
         if (session?.user) {
           currentUserIdRef.current = session.user.id;
-          
-          // Only show loading if this is a new sign in after initial load
-          if (initialLoadCompleteRef.current) {
-            setIsLoading(true);
-          }
-          
           await fetchUserPermissions(session.user.id);
-          
           if (isMountedRef.current) {
             setIsLoading(false);
           }
