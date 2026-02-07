@@ -19,6 +19,7 @@ import {
   X,
   Sparkles,
   Zap,
+  MessageSquare,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,6 +43,7 @@ import { cn } from '@/lib/utils';
 import { NotificationStats } from './NotificationStats';
 import { NotificationItem } from './NotificationItem';
 import { SendNotificationDialog } from './SendNotificationDialog';
+import { SendSmsDialog } from './SendSmsDialog';
 import type { NotificationType, NotificationSeverity } from '@/types/notifications';
 
 const typeLabels: Record<NotificationType, { ar: string; en: string }> = {
@@ -77,6 +79,7 @@ export function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
+  const [smsDialogOpen, setSmsDialogOpen] = useState(false);
 
   const {
     notifications,
@@ -257,6 +260,11 @@ export function NotificationsPage() {
               {language === 'ar' ? 'قراءة الكل' : 'Read all'}
             </Button>
           )}
+
+          <Button variant="outline" onClick={() => setSmsDialogOpen(true)} className="gap-2">
+            <MessageSquare className="h-4 w-4" />
+            {language === 'ar' ? 'رسالة SMS' : 'Send SMS'}
+          </Button>
 
           <Button onClick={() => setSendDialogOpen(true)} className="gap-2">
             <Send className="h-4 w-4" />
@@ -447,6 +455,13 @@ export function NotificationsPage() {
         open={sendDialogOpen}
         onOpenChange={setSendDialogOpen}
         onSend={handleSendNotification}
+        language={language}
+      />
+
+      {/* SMS Dialog */}
+      <SendSmsDialog
+        open={smsDialogOpen}
+        onOpenChange={setSmsDialogOpen}
         language={language}
       />
     </div>
