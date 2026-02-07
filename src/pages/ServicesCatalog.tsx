@@ -78,7 +78,7 @@ const ServicesCatalog = () => {
   ];
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       <SEO title={title} description={description} canonicalUrl={canonical} jsonLd={jsonLd} />
 
       {/* Enhanced Hero Section */}

@@ -23,7 +23,7 @@ export default function HostingServices() {
   };
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       <PageHeader 
         title="الاستضافات و الخوادم"
         description="خدمات الاستضافة والخوادم المتقدمة"

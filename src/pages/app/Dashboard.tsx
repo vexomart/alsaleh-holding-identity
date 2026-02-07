@@ -1,8 +1,6 @@
 /**
  * Customer Dashboard - World-Class Client Hub
- * 
- * STATUS: IMPLEMENTED
- * PHASE: MVP - Premium Experience
+ * Uses CustomerLayout with unified Header/Footer
  */
 
 import { Routes, Route } from 'react-router-dom';

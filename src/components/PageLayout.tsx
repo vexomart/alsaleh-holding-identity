@@ -1,27 +1,27 @@
 /**
- * PageLayout - RTL-Native Page Layout Wrapper
- * Enforces strict RTL direction for all public pages
+ * PageLayout - Simple Content Wrapper
+ * UnifiedLayout provides Header/Footer globally
+ * This component only adds RTL direction to content
  */
 
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { PageContainer } from "@/components/ui/page-container";
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface PageLayoutProps {
   children: ReactNode;
+  className?: string;
 }
 
-export function PageLayout({ children }: PageLayoutProps) {
+export function PageLayout({ children, className }: PageLayoutProps) {
   return (
-    <PageContainer>
-      <div dir="rtl" className="w-full text-start">
-        <Navigation />
-        <main className="animate-fade-in">
-          {children}
-        </main>
-        <Footer />
-      </div>
-    </PageContainer>
+    <div 
+      dir="rtl" 
+      className={cn(
+        "w-full text-start animate-fade-in",
+        className
+      )}
+    >
+      {children}
+    </div>
   );
 }

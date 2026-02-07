@@ -123,7 +123,7 @@ export default function CompanyProfile() {
   ];
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       <PageHeader
         title="الملف التعريفي للشركة"
         description="شركة علي صالح الشهري القابضة - رؤية مستقبلية في عالم التقنية والإعلام"

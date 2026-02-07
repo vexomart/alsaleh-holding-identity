@@ -1,7 +1,7 @@
 /**
- * Admin Dashboard Layout
- * HARD RTL BOUNDARY - dir attribute enforced at root
- * Fully responsive for mobile, tablet, and desktop
+ * Admin Dashboard Layout - Simplified
+ * Uses UnifiedLayout for Header/Footer
+ * Only provides dashboard navigation and content area
  * 
  * OPTIMIZED: Uses centralized RouteGuard for auth checks
  */
@@ -12,9 +12,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useAdminRealtime } from "@/hooks/useAdminRealtime";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AdminSidebar } from "./AdminSidebar";
-import { AdminHeader } from "./AdminHeader";
+import { DashboardNav } from "@/components/layouts/DashboardNav";
 import { AdminGuard } from "@/components/auth/RouteGuard";
 
 interface AdminLayoutProps {
@@ -34,61 +32,47 @@ function AdminLayoutContent({ children }: AdminLayoutProps) {
   });
 
   return (
-    <SidebarProvider defaultOpen={!isMobile}>
-      {/* 
-        HARD RTL BOUNDARY - STRICT MODE
-        dir attribute at root level, all children inherit
-        Uses logical properties for RTL-safe positioning
-      */}
-      <div 
-        dir={isRTL ? 'rtl' : 'ltr'}
-        className={cn(
-          "min-h-screen w-full bg-background flex overflow-x-hidden",
-          isRTL ? "text-right" : "text-left"
-        )}
-        style={{
-          direction: isRTL ? 'rtl' : 'ltr',
-          textAlign: isRTL ? 'right' : 'left'
-        }}
-      >
-        {/* Sidebar - Hidden on mobile (shown via Sheet) */}
-        <AdminSidebar />
-        
-        {/* Main Content Area */}
-        <SidebarInset className="flex flex-col min-w-0 flex-1">
-          <AdminHeader />
-          <main className={cn(
-            "flex-1 overflow-auto",
-            isMobile ? "p-3 pb-safe" : "p-4 md:p-6"
-          )}>
-            {children}
-          </main>
-          
-          {/* Real-time connection indicators (debug) - Desktop only */}
-          {!isMobile && (
-            <div className={cn(
-              "fixed bottom-4 flex gap-2 z-50",
-              isRTL ? "start-4" : "end-4" // Using logical properties
-            )}>
-              <div 
-                className={cn(
-                  "w-2 h-2 rounded-full transition-colors",
-                  isServicesConnected ? "bg-primary" : "bg-muted"
-                )}
-                title={isRTL ? "اتصال الخدمات" : "Services connection"}
-              />
-              <div 
-                className={cn(
-                  "w-2 h-2 rounded-full transition-colors",
-                  isDeliveryConnected ? "bg-primary" : "bg-muted"
-                )}
-                title={isRTL ? "تأكيدات التسليم" : "Delivery confirmations"}
-              />
-            </div>
-          )}
-        </SidebarInset>
-      </div>
-    </SidebarProvider>
+    <div 
+      dir={isRTL ? 'rtl' : 'ltr'}
+      className={cn(
+        "min-h-full w-full bg-background",
+        isRTL ? "text-right" : "text-left"
+      )}
+    >
+      {/* Dashboard Navigation Bar */}
+      <DashboardNav variant="admin" />
+      
+      {/* Main Content Area */}
+      <main className={cn(
+        "container mx-auto",
+        isMobile ? "px-3 py-4" : "px-4 py-6 lg:py-8"
+      )}>
+        {children}
+      </main>
+      
+      {/* Real-time connection indicators (debug) - Desktop only */}
+      {!isMobile && (
+        <div className={cn(
+          "fixed bottom-4 flex gap-2 z-50",
+          isRTL ? "start-4" : "end-4"
+        )}>
+          <div 
+            className={cn(
+              "w-2 h-2 rounded-full transition-colors",
+              isServicesConnected ? "bg-primary" : "bg-muted"
+            )}
+            title={isRTL ? "اتصال الخدمات" : "Services connection"}
+          />
+          <div 
+            className={cn(
+              "w-2 h-2 rounded-full transition-colors",
+              isDeliveryConnected ? "bg-primary" : "bg-muted"
+            )}
+            title={isRTL ? "تأكيدات التسليم" : "Delivery confirmations"}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -1,11 +1,9 @@
 /**
  * Admin Dashboard - Enterprise Grade Design
- * 
- * STATUS: Fully Implemented
- * PHASE: Production Ready
+ * Uses AdminLayout with unified Header/Footer
  */
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { AdminLayout } from '@/components/admin';
 import { AdminOverview } from '@/components/admin/AdminOverview';
@@ -23,8 +21,7 @@ import { AuditLogPage } from '@/components/admin/audit/AuditLogPage';
 import { FinanceCenter } from '@/components/admin/finance';
 import { FinanceManagement } from '@/components/finance/admin/FinanceManagement';
 import { AdminClientHub } from '@/components/admin/clients';
-import { Card, CardContent } from '@/components/ui/card';
-import { Construction, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 // Lazy load pages
 const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/AdminReferralsPage'));
@@ -36,25 +33,6 @@ const PageLoader = () => (
     <Loader2 className="h-8 w-8 animate-spin text-primary" />
   </div>
 );
-
-// Placeholder for pages under development
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="flex items-center justify-center h-[60vh]">
-      <Card className="w-full max-w-md border-0 shadow-lg">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-            <Construction className="h-8 w-8 text-primary" />
-          </div>
-          <p className="text-xl font-semibold text-foreground">{title}</p>
-          <p className="text-sm text-muted-foreground mt-2">
-            قيد التطوير - Coming Soon
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
 
 const AdminDashboard = () => {
   return (

@@ -48,7 +48,7 @@ const CompanyUpdates = () => {
   };
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       <PageHeader 
         title="تحديثات الشركة"
         description="آخر التطورات والإنجازات والتحديثات الداخلية للشركة"

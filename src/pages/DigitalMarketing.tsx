@@ -450,7 +450,7 @@ const DigitalMarketing = () => {
   ];
 
   return (
-    <PageContainer showNavigation showFooter>
+    <PageContainer>
       <SEO title={title} description={description} canonicalUrl={canonical} jsonLd={jsonLd} />
 
       {/* Hero Section */}
