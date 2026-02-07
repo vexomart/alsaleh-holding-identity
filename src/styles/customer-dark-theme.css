@@ -1,0 +1,303 @@
+/**
+ * Customer Portal - Dark Theme Styles
+ * Matches Admin Command Center aesthetic
+ * Premium Banking Dark Mode
+ */
+
+/* =========================================
+   CUSTOMER PORTAL - DARK THEME VARIABLES
+   ========================================= */
+
+.cmd-center.customer-portal,
+.customer-dark {
+  /* Override to dark theme */
+  --background: 220 25% 6%;
+  --foreground: 0 0% 98%;
+  --card: 220 22% 9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 220 22% 9%;
+  --popover-foreground: 0 0% 98%;
+  
+  /* Primary - Teal accent for customer */
+  --primary: 173 65% 40%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 173 70% 50%;
+  
+  /* Secondary */
+  --secondary: 220 20% 15%;
+  --secondary-foreground: 0 0% 98%;
+  
+  /* Accent */
+  --accent: 220 20% 12%;
+  --accent-foreground: 0 0% 98%;
+  
+  /* Muted */
+  --muted: 220 20% 12%;
+  --muted-foreground: 220 15% 60%;
+  
+  /* Border */
+  --border: 220 18% 18%;
+  --input: 220 20% 12%;
+  --ring: 173 65% 40%;
+  
+  /* Destructive */
+  --destructive: 0 85% 58%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Success */
+  --success: 145 72% 45%;
+  --success-foreground: 0 0% 100%;
+  
+  /* Warning */
+  --warning: 38 95% 55%;
+  --warning-foreground: 220 25% 6%;
+}
+
+/* =========================================
+   CUSTOMER SIDEBAR DARK STYLING
+   ========================================= */
+
+/* Force sidebar dark colors */
+[data-sidebar="sidebar"].customer-sidebar,
+.customer-portal [data-sidebar="sidebar"] {
+  background: hsl(222 47% 11%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+/* Main content area dark */
+.customer-portal main,
+.customer-portal .main-content {
+  background: hsl(220 25% 6%);
+  color: hsl(0 0% 98%);
+}
+
+/* =========================================
+   CARD OVERRIDES FOR DARK MODE
+   ========================================= */
+
+.customer-portal .card,
+.customer-portal [class*="Card"] {
+  background: hsl(220 22% 9%);
+  border-color: hsl(220 18% 18%);
+  color: hsl(0 0% 98%);
+}
+
+.customer-portal .card-header,
+.customer-portal [class*="CardHeader"] {
+  border-color: hsl(220 18% 18%);
+}
+
+/* =========================================
+   TEXT COLOR OVERRIDES
+   ========================================= */
+
+.customer-portal .text-foreground {
+  color: hsl(0 0% 98%) !important;
+}
+
+.customer-portal .text-muted-foreground {
+  color: hsl(220 15% 60%) !important;
+}
+
+/* =========================================
+   BUTTON OVERRIDES
+   ========================================= */
+
+.customer-portal .btn-outline,
+.customer-portal [class*="outline"] {
+  border-color: hsl(220 18% 25%);
+  color: hsl(0 0% 90%);
+}
+
+.customer-portal .btn-outline:hover,
+.customer-portal [class*="outline"]:hover {
+  background: hsl(220 20% 15%);
+  border-color: hsl(220 18% 35%);
+}
+
+/* =========================================
+   FORM ELEMENTS DARK
+   ========================================= */
+
+.customer-portal input,
+.customer-portal textarea,
+.customer-portal select {
+  background: hsl(220 20% 10%);
+  border-color: hsl(220 18% 20%);
+  color: hsl(0 0% 98%);
+}
+
+.customer-portal input::placeholder,
+.customer-portal textarea::placeholder {
+  color: hsl(220 15% 50%);
+}
+
+.customer-portal input:focus,
+.customer-portal textarea:focus,
+.customer-portal select:focus {
+  border-color: hsl(173 65% 40%);
+  box-shadow: 0 0 0 2px hsl(173 65% 40% / 0.2);
+}
+
+/* =========================================
+   TABLE DARK MODE
+   ========================================= */
+
+.customer-portal table {
+  background: hsl(220 22% 9%);
+}
+
+.customer-portal th {
+  background: hsl(220 20% 12%);
+  color: hsl(220 15% 70%);
+  border-color: hsl(220 18% 18%);
+}
+
+.customer-portal td {
+  border-color: hsl(220 18% 15%);
+  color: hsl(0 0% 90%);
+}
+
+.customer-portal tr:hover {
+  background: hsl(220 20% 12%);
+}
+
+/* =========================================
+   BADGE OVERRIDES
+   ========================================= */
+
+.customer-portal .badge-outline,
+.customer-portal [class*="Badge"][class*="outline"] {
+  border-color: hsl(220 18% 30%);
+  color: hsl(0 0% 85%);
+}
+
+/* =========================================
+   SCROLLBAR DARK THEME
+   ========================================= */
+
+.customer-portal ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.customer-portal ::-webkit-scrollbar-track {
+  background: hsl(220 25% 8%);
+}
+
+.customer-portal ::-webkit-scrollbar-thumb {
+  background: hsl(220 18% 25%);
+  border-radius: 4px;
+}
+
+.customer-portal ::-webkit-scrollbar-thumb:hover {
+  background: hsl(220 18% 35%);
+}
+
+/* =========================================
+   SIDEBAR INSET DARK
+   ========================================= */
+
+.customer-portal [data-sidebar="inset"],
+.customer-portal .peer-data-\\[variant\\=inset\\] {
+  background: hsl(220 25% 6%) !important;
+}
+
+/* =========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================= */
+
+@media (max-width: 768px) {
+  .customer-portal .mobile-header {
+    background: hsl(220 22% 9%);
+    border-color: hsl(220 18% 18%);
+  }
+}
+
+/* =========================================
+   GRADIENT OVERRIDES FOR DARK
+   ========================================= */
+
+.customer-portal .gradient-hero,
+.customer-portal [class*="gradient"] {
+  --tw-gradient-from: hsl(220 25% 10%);
+  --tw-gradient-to: hsl(220 22% 8%);
+}
+
+/* Premium accent gradients */
+.customer-portal .premium-gradient {
+  background: linear-gradient(135deg, 
+    hsl(220 25% 10%) 0%, 
+    hsl(173 30% 15%) 50%, 
+    hsl(220 25% 10%) 100%
+  );
+}
+
+/* =========================================
+   SKELETON LOADER DARK
+   ========================================= */
+
+.customer-portal .skeleton,
+.customer-portal [class*="Skeleton"] {
+  background: hsl(220 20% 15%);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* =========================================
+   DIALOG/MODAL DARK
+   ========================================= */
+
+.customer-portal [role="dialog"],
+.customer-portal [data-state="open"][role="dialog"] {
+  background: hsl(220 22% 9%);
+  border-color: hsl(220 18% 18%);
+}
+
+.customer-portal [data-radix-dialog-overlay] {
+  background: hsl(220 30% 5% / 0.8);
+}
+
+/* =========================================
+   DROPDOWN MENU DARK
+   ========================================= */
+
+.customer-portal [role="menu"] {
+  background: hsl(220 22% 10%);
+  border-color: hsl(220 18% 18%);
+}
+
+.customer-portal [role="menuitem"]:hover {
+  background: hsl(220 20% 15%);
+}
+
+/* =========================================
+   TABS DARK MODE
+   ========================================= */
+
+.customer-portal [role="tablist"] {
+  background: hsl(220 20% 10%);
+  border-color: hsl(220 18% 18%);
+}
+
+.customer-portal [role="tab"][data-state="active"] {
+  background: hsl(173 65% 40%);
+  color: hsl(0 0% 100%);
+}
+
+.customer-portal [role="tab"]:not([data-state="active"]) {
+  color: hsl(220 15% 60%);
+}
+
+.customer-portal [role="tab"]:not([data-state="active"]):hover {
+  color: hsl(0 0% 90%);
+  background: hsl(220 20% 15%);
+}
