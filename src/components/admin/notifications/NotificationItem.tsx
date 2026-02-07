@@ -42,20 +42,20 @@ const typeConfig: Record<NotificationType, {
   color: string; 
   bgColor: string;
 }> = {
-  info: { icon: Info, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
-  warning: { icon: AlertTriangle, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30' },
-  success: { icon: CheckCircle, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30' },
-  error: { icon: AlertCircle, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
-  system: { icon: Settings, color: 'text-purple-600', bgColor: 'bg-purple-100 dark:bg-purple-900/30' },
-  invoice_due: { icon: Receipt, color: 'text-orange-600', bgColor: 'bg-orange-100 dark:bg-orange-900/30' },
-  payment_failed: { icon: CreditCard, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
-  low_wallet_balance: { icon: Wallet, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30' },
-  order_status_changed: { icon: Package, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
-  order_delayed: { icon: Clock, color: 'text-amber-600', bgColor: 'bg-amber-100 dark:bg-amber-900/30' },
-  contract_pending_signature: { icon: FileSignature, color: 'text-indigo-600', bgColor: 'bg-indigo-100 dark:bg-indigo-900/30' },
-  contract_signed: { icon: FileCheck, color: 'text-green-600', bgColor: 'bg-green-100 dark:bg-green-900/30' },
-  contract_expired: { icon: FileX, color: 'text-red-600', bgColor: 'bg-red-100 dark:bg-red-900/30' },
-  admin_message: { icon: MessageSquare, color: 'text-blue-600', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
+  info: { icon: Info, color: 'text-primary', bgColor: 'bg-primary/10 dark:bg-primary/20' },
+  warning: { icon: AlertTriangle, color: 'text-secondary', bgColor: 'bg-secondary/10 dark:bg-secondary/20' },
+  success: { icon: CheckCircle, color: 'text-accent', bgColor: 'bg-accent/10 dark:bg-accent/20' },
+  error: { icon: AlertCircle, color: 'text-destructive', bgColor: 'bg-destructive/10 dark:bg-destructive/20' },
+  system: { icon: Settings, color: 'text-primary', bgColor: 'bg-primary/10 dark:bg-primary/20' },
+  invoice_due: { icon: Receipt, color: 'text-secondary', bgColor: 'bg-secondary/10 dark:bg-secondary/20' },
+  payment_failed: { icon: CreditCard, color: 'text-destructive', bgColor: 'bg-destructive/10 dark:bg-destructive/20' },
+  low_wallet_balance: { icon: Wallet, color: 'text-secondary', bgColor: 'bg-secondary/10 dark:bg-secondary/20' },
+  order_status_changed: { icon: Package, color: 'text-primary', bgColor: 'bg-primary/10 dark:bg-primary/20' },
+  order_delayed: { icon: Clock, color: 'text-secondary', bgColor: 'bg-secondary/10 dark:bg-secondary/20' },
+  contract_pending_signature: { icon: FileSignature, color: 'text-primary', bgColor: 'bg-primary/10 dark:bg-primary/20' },
+  contract_signed: { icon: FileCheck, color: 'text-accent', bgColor: 'bg-accent/10 dark:bg-accent/20' },
+  contract_expired: { icon: FileX, color: 'text-destructive', bgColor: 'bg-destructive/10 dark:bg-destructive/20' },
+  admin_message: { icon: MessageSquare, color: 'text-primary', bgColor: 'bg-primary/10 dark:bg-primary/20' },
 };
 
 interface NotificationItemProps {
@@ -148,7 +148,7 @@ export function NotificationItem({
                 </Badge>
               )}
               {notification.severity === 'warning' && (
-                <Badge variant="outline" className="text-xs px-1.5 py-0 text-amber-600 border-amber-600">
+                <Badge variant="outline" className="text-xs px-1.5 py-0 text-secondary border-secondary">
                   {language === 'ar' ? 'تحذير' : 'Warning'}
                 </Badge>
               )}

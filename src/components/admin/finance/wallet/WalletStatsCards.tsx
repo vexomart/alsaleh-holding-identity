@@ -54,9 +54,9 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
       value: formatCurrency(stats.totalBalance),
       subValue: `${stats.totalWallets} ${isRTL ? "محفظة" : "wallets"}`,
       icon: Banknote,
-      gradient: "from-emerald-500 to-teal-600",
-      iconBg: "bg-emerald-500/20",
-      textColor: "text-emerald-50",
+      gradient: "from-accent to-accent/70",
+      iconBg: "bg-accent/20",
+      textColor: "text-accent-foreground",
       trend: stats.monthlyGrowth,
     },
     {
@@ -65,9 +65,9 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
       value: stats.activeWallets.toString(),
       subValue: `${Math.round((stats.activeWallets / stats.totalWallets) * 100 || 0)}% ${isRTL ? "من الإجمالي" : "of total"}`,
       icon: Wallet,
-      gradient: "from-blue-500 to-indigo-600",
-      iconBg: "bg-blue-500/20",
-      textColor: "text-blue-50",
+      gradient: "from-primary to-primary/70",
+      iconBg: "bg-primary/20",
+      textColor: "text-primary-foreground",
     },
     {
       id: "avg-balance",
@@ -75,9 +75,9 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
       value: formatCurrency(stats.avgBalance),
       subValue: isRTL ? "لكل محفظة" : "per wallet",
       icon: TrendingUp,
-      gradient: "from-violet-500 to-purple-600",
-      iconBg: "bg-violet-500/20",
-      textColor: "text-violet-50",
+      gradient: "from-primary to-secondary",
+      iconBg: "bg-primary/20",
+      textColor: "text-primary-foreground",
     },
     {
       id: "pending",
@@ -85,9 +85,9 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
       value: stats.pendingTransfers.toString(),
       subValue: isRTL ? "بحاجة لمراجعة" : "need review",
       icon: Activity,
-      gradient: "from-amber-500 to-orange-600",
-      iconBg: "bg-amber-500/20",
-      textColor: "text-amber-50",
+      gradient: "from-secondary to-secondary/70",
+      iconBg: "bg-secondary/20",
+      textColor: "text-secondary-foreground",
       highlight: stats.pendingTransfers > 0,
     },
   ];
@@ -130,7 +130,7 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
             <Card
               className={cn(
                 "relative overflow-hidden border-0 shadow-lg",
-                card.highlight && "ring-2 ring-amber-500/50 ring-offset-2 ring-offset-background"
+                card.highlight && "ring-2 ring-secondary/50 ring-offset-2 ring-offset-background"
               )}
             >
               <div className={cn("absolute inset-0 bg-gradient-to-br", card.gradient)} />
@@ -151,7 +151,7 @@ export function WalletStatsCards({ stats, isLoading }: WalletStatsCardsProps) {
                       {card.trend !== undefined && (
                         <span className={cn(
                           "text-xs font-medium flex items-center gap-0.5 px-1.5 py-0.5 rounded-full",
-                          card.trend >= 0 ? "bg-white/20 text-white" : "bg-red-500/30 text-red-200"
+                          card.trend >= 0 ? "bg-white/20 text-white" : "bg-destructive/30 text-destructive-foreground"
                         )}>
                           {card.trend >= 0 ? (
                             <ArrowUpRight className="h-3 w-3" />

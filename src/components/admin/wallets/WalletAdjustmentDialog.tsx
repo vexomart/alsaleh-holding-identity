@@ -118,9 +118,9 @@ export const WalletAdjustmentDialog = memo(function WalletAdjustmentDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {adjustmentType === "add" ? (
-              <Plus className="h-5 w-5 text-emerald-600" />
+              <Plus className="h-5 w-5 text-accent" />
             ) : (
-              <Minus className="h-5 w-5 text-red-600" />
+              <Minus className="h-5 w-5 text-destructive" />
             )}
             {adjustmentType === "add"
               ? (isRTL ? "إضافة رصيد" : "Add Balance")
@@ -178,8 +178,8 @@ export const WalletAdjustmentDialog = memo(function WalletAdjustmentDialog({
             <div className={cn(
               "p-4 rounded-xl border",
               adjustmentType === "add" 
-                ? "bg-emerald-500/10 border-emerald-500/30" 
-                : "bg-red-500/10 border-red-500/30"
+                ? "bg-accent/10 border-accent/30" 
+                : "bg-destructive/10 border-destructive/30"
             )}>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">
@@ -187,16 +187,16 @@ export const WalletAdjustmentDialog = memo(function WalletAdjustmentDialog({
                 </span>
                 <span className={cn(
                   "font-bold text-lg",
-                  adjustmentType === "add" ? "text-emerald-600" : "text-red-600"
+                  adjustmentType === "add" ? "text-accent" : "text-destructive"
                 )} dir="ltr">
                   {formatCurrency(newBalance)}
                 </span>
               </div>
               <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                 {adjustmentType === "add" ? (
-                  <Plus className="h-3 w-3 text-emerald-600" />
+                  <Plus className="h-3 w-3 text-accent" />
                 ) : (
-                  <Minus className="h-3 w-3 text-red-600" />
+                  <Minus className="h-3 w-3 text-destructive" />
                 )}
                 <span dir="ltr">{formatCurrency(parsedAmount)}</span>
               </div>
@@ -221,8 +221,8 @@ export const WalletAdjustmentDialog = memo(function WalletAdjustmentDialog({
             disabled={isSubmitting || !parsedAmount || !reason.trim()}
             className={cn(
               adjustmentType === "add"
-                ? "bg-emerald-600 hover:bg-emerald-700"
-                : "bg-red-600 hover:bg-red-700"
+                ? "bg-accent hover:bg-accent/90"
+                : "bg-destructive hover:bg-destructive/90"
             )}
           >
             {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}

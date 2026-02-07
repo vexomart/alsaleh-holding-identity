@@ -17,8 +17,8 @@ const MARKETING_PROVIDERS = [
     descriptionAr: "مزامنة المنتجات مع Google Shopping",
     descriptionEn: "Sync products with Google Shopping",
     icon: ShoppingBag,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
     fields: [
       { key: "api_key", labelAr: "Merchant ID", labelEn: "Merchant ID", type: "text" as const },
       { key: "api_secret", labelAr: "API Key", labelEn: "API Key", type: "password" as const },
@@ -31,8 +31,8 @@ const MARKETING_PROVIDERS = [
     descriptionAr: "إدارة حملات Facebook و Instagram الإعلانية",
     descriptionEn: "Manage Facebook & Instagram ad campaigns",
     icon: Facebook,
-    color: "text-[#1877F2]",
-    bgColor: "bg-[#1877F2]/10",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
     fields: [
       { key: "api_key", labelAr: "App ID", labelEn: "App ID", type: "text" as const },
       { key: "api_secret", labelAr: "App Secret", labelEn: "App Secret", type: "password" as const },

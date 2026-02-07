@@ -140,15 +140,15 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
                   <div className="flex items-center gap-1 text-xs">
                     {card.showTrendIcon && (
                       card.trend >= 0 ? (
-                        <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+                        <TrendingUp className="h-3.5 w-3.5 text-accent" />
                       ) : (
-                        <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                        <TrendingDown className="h-3.5 w-3.5 text-destructive" />
                       )
                     )}
                     <span className={cn(
                       "font-medium",
                       card.showTrendIcon 
-                        ? card.trend >= 0 ? "text-emerald-600" : "text-red-600"
+                        ? card.trend >= 0 ? "text-accent" : "text-destructive"
                         : "text-muted-foreground"
                     )}>
                       {card.trend}%
@@ -183,7 +183,7 @@ export function UserStatsCards({ stats, language, isLoading }: UserStatsCardsPro
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               >
-                <Activity className="h-4 w-4 text-emerald-500/50" />
+                <Activity className="h-4 w-4 text-accent/50" />
               </motion.div>
             )}
           </motion.div>

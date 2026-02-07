@@ -432,7 +432,7 @@ export function BankTransfersManagement() {
                   </h4>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <span className="text-muted-foreground">{isRTL ? "المبلغ" : "Amount"}</span>
-                    <span className="font-bold text-green-600">
+                    <span className="font-bold text-accent">
                       {selectedTransfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                     </span>
                     
@@ -496,8 +496,8 @@ export function BankTransfersManagement() {
 
                 {/* Reviewer Notes */}
                 {selectedTransfer.reviewer_notes && (
-                  <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
-                    <h4 className="text-sm font-semibold text-blue-600 mb-2">
+                  <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
+                    <h4 className="text-sm font-semibold text-primary mb-2">
                       {isRTL ? "ملاحظات المراجع" : "Reviewer Notes"}
                     </h4>
                     <p className="text-sm">{selectedTransfer.reviewer_notes}</p>
@@ -544,7 +544,7 @@ export function BankTransfersManagement() {
         <DialogContent dir={isRTL ? "rtl" : "ltr"}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <CheckCircle2 className="h-5 w-5 text-accent" />
               {isRTL ? "اعتماد التحويل البنكي" : "Approve Bank Transfer"}
             </DialogTitle>
             <DialogDescription>
@@ -564,7 +564,7 @@ export function BankTransfersManagement() {
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{isRTL ? "المبلغ" : "Amount"}</span>
-                  <span className="font-bold text-green-600">
+                  <span className="font-bold text-accent">
                     {selectedTransfer.amount.toLocaleString('en-US')} {isRTL ? "ر.س" : "SAR"}
                   </span>
                 </div>

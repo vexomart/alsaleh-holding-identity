@@ -83,14 +83,14 @@ interface UserDialogsProps {
 }
 
 const roles = [
-  { value: "super_admin", labelAr: "مدير النظام", labelEn: "Super Admin", color: "text-amber-600" },
-  { value: "admin", labelAr: "مدير", labelEn: "Admin", color: "text-purple-600" },
-  { value: "manager", labelAr: "مشرف", labelEn: "Manager", color: "text-blue-600" },
-  { value: "support", labelAr: "دعم فني", labelEn: "Support", color: "text-cyan-600" },
-  { value: "finance", labelAr: "مالية", labelEn: "Finance", color: "text-emerald-600" },
-  { value: "content_editor", labelAr: "محرر محتوى", labelEn: "Content Editor", color: "text-pink-600" },
-  { value: "staff", labelAr: "موظف", labelEn: "Staff", color: "text-slate-600" },
-  { value: "customer", labelAr: "عميل", labelEn: "Customer", color: "text-gray-600" },
+  { value: "super_admin", labelAr: "مدير النظام", labelEn: "Super Admin", color: "text-secondary" },
+  { value: "admin", labelAr: "مدير", labelEn: "Admin", color: "text-primary" },
+  { value: "manager", labelAr: "مشرف", labelEn: "Manager", color: "text-primary" },
+  { value: "support", labelAr: "دعم فني", labelEn: "Support", color: "text-accent" },
+  { value: "finance", labelAr: "مالية", labelEn: "Finance", color: "text-accent" },
+  { value: "content_editor", labelAr: "محرر محتوى", labelEn: "Content Editor", color: "text-secondary" },
+  { value: "staff", labelAr: "موظف", labelEn: "Staff", color: "text-muted-foreground" },
+  { value: "customer", labelAr: "عميل", labelEn: "Customer", color: "text-muted-foreground" },
 ];
 
 export function UserDialogs({
@@ -174,8 +174,8 @@ export function UserDialogs({
               {/* Details Grid */}
               <div className="grid gap-4">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <div className="p-2 rounded-lg bg-blue-500/10">
-                    <Mail className="h-4 w-4 text-blue-600" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Mail className="h-4 w-4 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-muted-foreground">{language === "ar" ? "البريد الإلكتروني" : "Email"}</p>
@@ -184,8 +184,8 @@ export function UserDialogs({
                 </div>
 
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <div className="p-2 rounded-lg bg-emerald-500/10">
-                    <Phone className="h-4 w-4 text-emerald-600" />
+                  <div className="p-2 rounded-lg bg-accent/10">
+                    <Phone className="h-4 w-4 text-accent" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">{language === "ar" ? "الهاتف" : "Phone"}</p>
@@ -194,8 +194,8 @@ export function UserDialogs({
                 </div>
 
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <div className="p-2 rounded-lg bg-purple-500/10">
-                    <Globe className="h-4 w-4 text-purple-600" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Globe className="h-4 w-4 text-primary" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground">{language === "ar" ? "اللغة المفضلة" : "Preferred Language"}</p>
@@ -205,8 +205,8 @@ export function UserDialogs({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                    <div className="p-2 rounded-lg bg-amber-500/10">
-                      <Calendar className="h-4 w-4 text-amber-600" />
+                    <div className="p-2 rounded-lg bg-secondary/10">
+                      <Calendar className="h-4 w-4 text-secondary" />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs text-muted-foreground">{language === "ar" ? "تاريخ التسجيل" : "Joined"}</p>
@@ -215,8 +215,8 @@ export function UserDialogs({
                   </div>
 
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                    <div className="p-2 rounded-lg bg-cyan-500/10">
-                      <Clock className="h-4 w-4 text-cyan-600" />
+                    <div className="p-2 rounded-lg bg-accent/10">
+                      <Clock className="h-4 w-4 text-accent" />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs text-muted-foreground">{language === "ar" ? "آخر دخول" : "Last Login"}</p>
@@ -337,8 +337,8 @@ export function UserDialogs({
       <Dialog open={isDeleteDialogOpen} onOpenChange={onDeleteDialogChange}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
-              <div className="p-2 rounded-xl bg-red-500/10">
+            <DialogTitle className="flex items-center gap-2 text-destructive">
+              <div className="p-2 rounded-xl bg-destructive/10">
                 <AlertCircle className="h-5 w-5" />
               </div>
               {language === "ar" ? "تأكيد الحذف" : "Confirm Delete"}
