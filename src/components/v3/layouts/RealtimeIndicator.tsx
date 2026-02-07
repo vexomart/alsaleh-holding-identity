@@ -1,6 +1,6 @@
 /**
  * RealtimeIndicator - V3 Connection Status
- * Shows real-time sync status in sidebar footer
+ * Modern Design - Shows real-time sync status
  */
 
 import * as React from 'react';
@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Wifi, WifiOff, RefreshCw, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import '@/styles/v3/modern-theme.css';
 
 interface RealtimeIndicatorProps {
   isConnected: boolean;
@@ -29,29 +30,29 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
     connecting: {
       icon: RefreshCw,
       label: isRTL ? 'جاري الاتصال...' : 'Connecting...',
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-100',
+      color: 'hsl(var(--modern-warning))',
+      bgColor: 'hsl(var(--modern-warning-bg))',
       animate: true,
     },
     connected: {
       icon: Wifi,
       label: isRTL ? 'متصل' : 'Connected',
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-100',
+      color: 'hsl(var(--modern-success))',
+      bgColor: 'hsl(var(--modern-success-bg))',
       animate: false,
     },
     disconnected: {
       icon: WifiOff,
       label: isRTL ? 'غير متصل' : 'Disconnected',
-      color: 'text-slate-400',
-      bgColor: 'bg-slate-100',
+      color: 'hsl(var(--modern-text-muted))',
+      bgColor: 'hsl(var(--modern-bg-elevated))',
       animate: false,
     },
     error: {
       icon: AlertCircle,
       label: isRTL ? 'خطأ في الاتصال' : 'Connection Error',
-      color: 'text-red-500',
-      bgColor: 'bg-red-100',
+      color: 'hsl(var(--modern-error))',
+      bgColor: 'hsl(var(--modern-error-bg))',
       animate: false,
     },
   };
@@ -63,18 +64,26 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
     <div 
       className={cn(
         'flex items-center gap-2 px-3 py-2 rounded-lg transition-all',
-        config.bgColor,
         className
       )}
+      style={{
+        background: config.bgColor,
+      }}
     >
       <motion.div
         animate={config.animate ? { rotate: 360 } : {}}
         transition={config.animate ? { duration: 1, repeat: Infinity, ease: 'linear' } : {}}
       >
-        <Icon className={cn('w-4 h-4', config.color)} />
+        <Icon 
+          className="w-3.5 h-3.5"
+          style={{ color: config.color }}
+        />
       </motion.div>
       
-      <span className={cn('text-xs font-medium flex-1', config.color)}>
+      <span 
+        className="text-xs font-medium flex-1"
+        style={{ color: config.color }}
+      >
         {config.label}
       </span>
 
@@ -84,7 +93,8 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="text-[10px] font-bold bg-emerald-600 text-white px-1.5 py-0.5 rounded-full"
+            className="text-[10px] font-semibold text-white px-1.5 py-0.5 rounded-full"
+            style={{ background: 'hsl(var(--modern-success))' }}
           >
             {eventCount > 99 ? '99+' : eventCount}
           </motion.span>

@@ -1,14 +1,19 @@
 /**
  * V3 Layouts Export
- * Unified Light Theme System
+ * Modern Stripe/Notion Inspired Design System
  */
 
-// Unified Components
+// Modern Components (Primary)
+export { ModernSidebar } from './ModernSidebar';
+export type { SidebarNavItem, SidebarNavGroup, ModernSidebarProps } from './ModernSidebar';
+
+export { ModernHeader } from './ModernHeader';
+
+export { ModernAppShell } from './ModernAppShell';
+
+// Unified Components (Legacy - kept for compatibility)
 export { UnifiedSidebar } from './UnifiedSidebar';
-export type { SidebarNavItem, SidebarNavGroup, UnifiedSidebarProps } from './UnifiedSidebar';
-
 export { UnifiedHeader } from './UnifiedHeader';
-
 export { UnifiedAppShell } from './UnifiedAppShell';
 
 export { RealtimeIndicator } from './RealtimeIndicator';
