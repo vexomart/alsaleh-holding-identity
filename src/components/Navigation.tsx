@@ -1,12 +1,12 @@
 /**
- * Navigation - Re-exports MainHeaderV2
+ * Navigation - Re-exports NavigationDark
  * This file maintains backward compatibility with existing imports
  */
 
-import { MainHeaderV2 } from './MainHeaderV2';
+import { NavigationDark } from './homepage/NavigationDark';
 
 // Re-export as default for backward compatibility
-export default MainHeaderV2;
+export default NavigationDark;
 
 // Also export the component directly
-export { MainHeaderV2 as Navigation };
+export { NavigationDark as Navigation };
