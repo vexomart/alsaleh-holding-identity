@@ -1,8 +1,28 @@
 /**
- * Realtime Hooks Index
+ * Realtime Hooks Index - V3 Unified
  * Export all realtime-related hooks for easy imports
  */
 
+// ============================================
+// V3 Unified Realtime (NEW - Preferred)
+// ============================================
+export { 
+  useUnifiedRealtime,
+  broadcastSyncEvent,
+  broadcastForceRefresh,
+  type SyncEvent,
+  type SyncEventType,
+} from './useUnifiedRealtime';
+
+export {
+  useCrossDashboardSync,
+  useAdminDashboardSync,
+  useCustomerDashboardSync,
+} from './useCrossDashboardSync';
+
+// ============================================
+// Legacy Hooks (Maintained for compatibility)
+// ============================================
 export { useRealtime } from '../useRealtime';
 export type { RealtimeEvent, RealtimePayload } from '../useRealtime';
 

@@ -2,14 +2,16 @@
  * V3 Admin Dashboard Layout
  * Uses UnifiedAppShell with Light Theme
  * RTL-First Arabic Native
+ * V3 Unified Real-time Sync
  */
 
 import * as React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useAdminRealtime } from '@/hooks/useAdminRealtime';
+import { useAdminDashboardSync } from '@/hooks/realtime';
 import { AdminGuard } from '@/components/auth/RouteGuard';
 import { UnifiedAppShell } from './UnifiedAppShell';
 import { SidebarNavGroup } from './UnifiedSidebar';
+import { RealtimeIndicator } from './RealtimeIndicator';
 import { 
   LayoutDashboard, 
   Users, 
@@ -80,17 +82,25 @@ const adminNavGroups: SidebarNavGroup[] = [
 const V3AdminLayoutContent: React.FC<V3AdminLayoutProps> = ({ children }) => {
   const { user, profile } = useAuth();
 
-  // Real-time subscriptions for services and delivery confirmations
-  useAdminRealtime({
-    tenantId: profile?.tenant_id || undefined,
+  // V3 Unified Real-time sync with Customer dashboard
+  const { isConnected, connectionStatus, eventCount } = useAdminDashboardSync({
     enabled: !!user,
-    showDeliveryToasts: true,
   });
+
+  // Sidebar footer with realtime indicator
+  const sidebarFooter = React.useMemo(() => (
+    <RealtimeIndicator 
+      isConnected={isConnected}
+      connectionStatus={connectionStatus}
+      eventCount={eventCount}
+    />
+  ), [isConnected, connectionStatus, eventCount]);
 
   return (
     <UnifiedAppShell
       variant="admin"
       navGroups={adminNavGroups}
+      sidebarFooter={sidebarFooter}
     >
       {children}
     </UnifiedAppShell>

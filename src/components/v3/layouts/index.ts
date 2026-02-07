@@ -11,7 +11,9 @@ export { UnifiedHeader } from './UnifiedHeader';
 
 export { UnifiedAppShell } from './UnifiedAppShell';
 
-// Legacy exports for backwards compatibility
+export { RealtimeIndicator } from './RealtimeIndicator';
+
+// Layout Components
 export { V3AdminLayout } from './V3AdminLayout';
 export type { V3AdminLayoutProps } from './V3AdminLayout';
 
