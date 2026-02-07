@@ -126,6 +126,7 @@ interface Order {
     id: string;
     name: string | null;
     name_ar: string | null;
+    include_vat?: boolean | null;
   } | null;
 }
 
@@ -305,7 +306,7 @@ export default function OrderDetailsPage() {
       if (orderData.service_id) {
         const { data: serviceData } = await db
           .from('services')
-          .select('id, name, name_ar')
+          .select('id, name, name_ar, include_vat')
           .eq('id', orderData.service_id)
           .maybeSingle();
         service = serviceData;
@@ -1316,9 +1317,33 @@ export default function OrderDetailsPage() {
                 </h3>
 
                 <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
-                  <p className="font-semibold text-white">
-                    {isRTL ? order.service.name_ar || order.service.name : order.service.name}
-                  </p>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-semibold text-white">
+                      {isRTL ? order.service.name_ar || order.service.name : order.service.name}
+                    </p>
+                    {/* VAT Indicator */}
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        "text-xs font-medium",
+                        order.service.include_vat
+                          ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10"
+                          : "border-amber-500/50 text-amber-400 bg-amber-500/10"
+                      )}
+                    >
+                      {order.service.include_vat ? (
+                        <>
+                          <Receipt className="h-3 w-3 me-1" />
+                          {isRTL ? 'شامل الضريبة' : 'VAT Incl.'}
+                        </>
+                      ) : (
+                        <>
+                          <Receipt className="h-3 w-3 me-1" />
+                          {isRTL ? 'غير شامل' : 'VAT Excl.'}
+                        </>
+                      )}
+                    </Badge>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
