@@ -28,7 +28,7 @@
   
   background-color: hsl(var(--hp-bg));
   color: hsl(var(--hp-text));
-  min-height: 100vh;
+  /* min-height handled by UnifiedLayout */
 }
 
 /* Homepage Hero */

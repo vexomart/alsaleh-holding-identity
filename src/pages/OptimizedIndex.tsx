@@ -1,15 +1,14 @@
 /**
  * Optimized Index Page - Dark Theme Edition
  * MaxioCore-inspired design - Clean, professional, stable
+ * NOTE: Header/Footer provided by UnifiedLayout - DO NOT add here
  */
 
 import { lazy, Suspense, memo } from "react";
 import "@/styles/homepage-dark.css";
 
-// Import dark theme components
-import { NavigationDark } from "@/components/homepage/NavigationDark";
+// Import dark theme components (NO Navigation/Footer - handled by UnifiedLayout)
 import { HeroSectionDark } from "@/components/homepage/HeroSectionDark";
-import Footer from "@/components/Footer";
 
 // Lazy load non-critical sections
 const ServicesSectionDark = lazy(() => import("@/components/homepage/ServicesSectionDark"));
@@ -54,10 +53,7 @@ DarkSkeleton.displayName = "DarkSkeleton";
 const OptimizedIndex = () => {
   return (
     <div dir="rtl" className="homepage-dark">
-      {/* Navigation */}
-      <NavigationDark />
-      
-      {/* Main Content */}
+      {/* Main Content - Header/Footer provided by UnifiedLayout */}
       <main>
         {/* Hero Section - Critical, loads immediately */}
         <section id="home">
@@ -79,9 +75,6 @@ const OptimizedIndex = () => {
           <CTASectionDark />
         </LazySection>
       </main>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };
