@@ -1,12 +1,10 @@
 /**
- * useAuth Hook - Ultra-Fast Authentication
- * Optimized for instant loading with minimal re-renders
+ * useAuth Hook - INSTANT Authentication
  * 
- * KEY OPTIMIZATIONS:
- * 1. Single atomic state update after all data is fetched
- * 2. Session cached for immediate access
- * 3. Parallel data fetching for profile & roles
- * 4. Skip re-fetching on token refresh (same user)
+ * CRITICAL: Uses localStorage for INSTANT initial state
+ * - No async wait for getSession() on first render
+ * - Session is read synchronously from localStorage
+ * - isLoading is only true if we need to verify/refresh the session
  */
 
 import { createContext, useContext, useState, useEffect, useRef, useCallback, type ReactNode, type FC } from 'react';
@@ -15,7 +13,6 @@ import { User, Session } from '@supabase/supabase-js';
 
 type AppRole = 'super_admin' | 'admin' | 'manager' | 'staff' | 'support' | 'finance' | 'content_editor' | 'customer';
 
-// Admin roles that have access to /adminash dashboard
 const ADMIN_ROLES: AppRole[] = ['super_admin', 'admin', 'manager', 'staff', 'support', 'finance', 'content_editor'];
 
 interface UserProfile {
@@ -38,7 +35,7 @@ interface UserRole {
   tenant_id: string | null;
 }
 
-interface AuthState {
+interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: UserProfile | null;
@@ -46,9 +43,6 @@ interface AuthState {
   isLoading: boolean;
   isAdmin: boolean;
   isCustomer: boolean;
-}
-
-interface AuthContextType extends AuthState {
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -58,214 +52,229 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Compute admin/customer flags from roles
-function computeAccessFlags(roles: UserRole[]): { isAdmin: boolean; isCustomer: boolean } {
-  const isAdmin = roles.some((r) => ADMIN_ROLES.includes(r.role));
-  const isCustomer = !isAdmin && (roles.some((r) => r.role === 'customer') || roles.length === 0);
-  return { isAdmin, isCustomer };
+// Get session from localStorage SYNCHRONOUSLY for instant loading
+function getStoredSession(): { user: User | null; session: Session | null } {
+  try {
+    const storageKey = `sb-iuzzapnmiopbbjfravww-auth-token`;
+    const stored = localStorage.getItem(storageKey);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.access_token && parsed?.user) {
+        // Check if token is expired
+        const expiresAt = parsed.expires_at;
+        if (expiresAt && expiresAt * 1000 > Date.now()) {
+          return {
+            user: parsed.user as User,
+            session: {
+              access_token: parsed.access_token,
+              refresh_token: parsed.refresh_token,
+              expires_at: parsed.expires_at,
+              expires_in: parsed.expires_in,
+              token_type: parsed.token_type || 'bearer',
+              user: parsed.user,
+            } as Session
+          };
+        }
+      }
+    }
+  } catch {
+    // Silent fail
+  }
+  return { user: null, session: null };
+}
+
+// Get cached roles from localStorage
+function getCachedRoles(userId: string): UserRole[] {
+  try {
+    const cached = localStorage.getItem(`roles_${userId}`);
+    if (cached) return JSON.parse(cached);
+  } catch {}
+  return [];
+}
+
+// Cache roles to localStorage
+function cacheRoles(userId: string, roles: UserRole[]) {
+  try {
+    localStorage.setItem(`roles_${userId}`, JSON.stringify(roles));
+  } catch {}
 }
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  // Single state object to minimize re-renders
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    session: null,
-    profile: null,
-    roles: [],
-    isLoading: true,
-    isAdmin: false,
-    isCustomer: true,
-  });
+  // INSTANT initial state from localStorage
+  const initialState = getStoredSession();
+  const initialRoles = initialState.user ? getCachedRoles(initialState.user.id) : [];
+  
+  const [user, setUser] = useState<User | null>(initialState.user);
+  const [session, setSession] = useState<Session | null>(initialState.session);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [roles, setRoles] = useState<UserRole[]>(initialRoles);
+  // Start NOT loading if we have a cached session
+  const [isLoading, setIsLoading] = useState(!initialState.user);
   
   const isMountedRef = useRef(true);
-  const initialLoadCompleteRef = useRef(false);
-  const currentUserIdRef = useRef<string | null>(null);
+  const initialLoadDoneRef = useRef(false);
+  const currentUserIdRef = useRef<string | null>(initialState.user?.id || null);
 
-  // Fast profile fetch - no throw on error
-  const fetchProfile = useCallback(async (userId: string): Promise<UserProfile | null> => {
-    try {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-      return data as UserProfile | null;
-    } catch {
-      return null;
-    }
-  }, []);
+  // Compute flags
+  const isAdmin = roles.some((r) => ADMIN_ROLES.includes(r.role));
+  const isCustomer = !isAdmin && (roles.some((r) => r.role === 'customer') || roles.length === 0);
 
-  // Fast roles fetch - no throw on error
-  const fetchRoles = useCallback(async (userId: string): Promise<UserRole[]> => {
-    try {
-      const { data } = await supabase
-        .from('user_roles')
-        .select('role, tenant_id')
-        .eq('user_id', userId);
-      return (data || []) as UserRole[];
-    } catch {
-      return [];
-    }
-  }, []);
+  // Fetch functions
+  const fetchProfile = async (userId: string): Promise<UserProfile | null> => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle();
+    return data as UserProfile | null;
+  };
 
-  // Load all user data in parallel - single state update
-  const loadUserData = useCallback(async (user: User, session: Session) => {
-    const [profile, roles] = await Promise.all([
-      fetchProfile(user.id),
-      fetchRoles(user.id)
-    ]);
-
-    if (!isMountedRef.current) return;
-
-    const { isAdmin, isCustomer } = computeAccessFlags(roles);
-
-    // SINGLE atomic state update - minimizes re-renders
-    setAuthState({
-      user,
-      session,
-      profile,
-      roles,
-      isLoading: false,
-      isAdmin,
-      isCustomer,
-    });
-  }, [fetchProfile, fetchRoles]);
-
-  // Clear all data - single state update
-  const clearUserData = useCallback(() => {
-    if (!isMountedRef.current) return;
-    setAuthState({
-      user: null,
-      session: null,
-      profile: null,
-      roles: [],
-      isLoading: false,
-      isAdmin: false,
-      isCustomer: true,
-    });
-  }, []);
+  const fetchRoles = async (userId: string): Promise<UserRole[]> => {
+    const { data } = await supabase
+      .from('user_roles')
+      .select('role, tenant_id')
+      .eq('user_id', userId);
+    const roles = (data || []) as UserRole[];
+    cacheRoles(userId, roles); // Cache for next time
+    return roles;
+  };
 
   useEffect(() => {
     isMountedRef.current = true;
 
-    // INITIAL LOAD - Fast path
-    const initializeAuth = async () => {
+    // LISTENER - For ongoing changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (!isMountedRef.current) return;
+        if (!initialLoadDoneRef.current) return;
+
+        if (event === 'SIGNED_OUT' || !currentSession?.user) {
+          currentUserIdRef.current = null;
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setRoles([]);
+          return;
+        }
+
+        if (currentUserIdRef.current === currentSession.user.id) {
+          setSession(currentSession);
+          return;
+        }
+
+        currentUserIdRef.current = currentSession.user.id;
+        setSession(currentSession);
+        setUser(currentSession.user);
+        
+        // Load data in background
+        fetchProfile(currentSession.user.id).then(p => {
+          if (isMountedRef.current) setProfile(p);
+        });
+        fetchRoles(currentSession.user.id).then(r => {
+          if (isMountedRef.current) setRoles(r);
+        });
+      }
+    );
+
+    // BACKGROUND REFRESH - Don't block UI
+    const refreshData = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
         
         if (!isMountedRef.current) return;
 
-        if (session?.user) {
-          currentUserIdRef.current = session.user.id;
-          await loadUserData(session.user, session);
+        if (currentSession?.user) {
+          currentUserIdRef.current = currentSession.user.id;
+          setSession(currentSession);
+          setUser(currentSession.user);
+
+          // Fetch fresh data in parallel
+          const [profileData, rolesData] = await Promise.all([
+            fetchProfile(currentSession.user.id),
+            fetchRoles(currentSession.user.id)
+          ]);
+
+          if (isMountedRef.current) {
+            setProfile(profileData);
+            setRoles(rolesData);
+          }
         } else {
           currentUserIdRef.current = null;
-          clearUserData();
+          setSession(null);
+          setUser(null);
+          setProfile(null);
+          setRoles([]);
         }
       } catch {
-        clearUserData();
+        // Keep cached state on error
       } finally {
+        initialLoadDoneRef.current = true;
         if (isMountedRef.current) {
-          initialLoadCompleteRef.current = true;
+          setIsLoading(false);
         }
       }
     };
 
-    // ONGOING AUTH CHANGES - Does NOT flash loading after initial
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        if (!isMountedRef.current) return;
-
-        // Handle sign out immediately
-        if (event === 'SIGNED_OUT' || !currentSession?.user) {
-          currentUserIdRef.current = null;
-          clearUserData();
-          return;
-        }
-
-        // Skip if same user (token refresh) - NO re-fetch!
-        if (currentUserIdRef.current === currentSession.user.id && initialLoadCompleteRef.current) {
-          // Just update session silently if it changed
-          setAuthState(prev => ({
-            ...prev,
-            session: currentSession,
-            user: currentSession.user,
-          }));
-          return;
-        }
-
-        // New user signed in
-        currentUserIdRef.current = currentSession.user.id;
-        await loadUserData(currentSession.user, currentSession);
-      }
-    );
-
-    // Start initial load immediately
-    initializeAuth();
+    refreshData();
 
     return () => {
       isMountedRef.current = false;
       subscription.unsubscribe();
     };
-  }, [loadUserData, clearUserData]);
+  }, []);
 
-  // Auth actions
+  // Auth methods
   const signIn = useCallback(async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      return { error: error ? new Error(error.message) : null };
-    } catch (error) {
-      return { error: error as Error };
-    }
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error: error ? new Error(error.message) : null };
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: window.location.origin,
-          data: { full_name: fullName || email.split('@')[0] },
-        },
-      });
-      return { error: error ? new Error(error.message) : null };
-    } catch (error) {
-      return { error: error as Error };
-    }
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: { full_name: fullName || email.split('@')[0] },
+      },
+    });
+    return { error: error ? new Error(error.message) : null };
   }, []);
 
   const signOut = useCallback(async () => {
+    // Clear cached roles
+    if (currentUserIdRef.current) {
+      localStorage.removeItem(`roles_${currentUserIdRef.current}`);
+    }
     await supabase.auth.signOut();
-    clearUserData();
-  }, [clearUserData]);
+  }, []);
 
   const resetPassword = useCallback(async (email: string) => {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-      return { error: error ? new Error(error.message) : null };
-    } catch (error) {
-      return { error: error as Error };
-    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+    return { error: error ? new Error(error.message) : null };
   }, []);
 
   const hasRole = useCallback((role: AppRole): boolean => {
-    return authState.roles.some((r) => r.role === role);
-  }, [authState.roles]);
-
-  const value: AuthContextType = {
-    ...authState,
-    signIn,
-    signUp,
-    signOut,
-    resetPassword,
-    hasRole,
-  };
+    return roles.some((r) => r.role === role);
+  }, [roles]);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      user,
+      session,
+      profile,
+      roles,
+      isLoading,
+      isAdmin,
+      isCustomer,
+      signIn,
+      signUp,
+      signOut,
+      resetPassword,
+      hasRole,
+    }}>
       {children}
     </AuthContext.Provider>
   );

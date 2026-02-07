@@ -182,14 +182,16 @@ const EnhancedPaymentPage = lazy(() => import("./pages/EnhancedPaymentPage"));
 const SocialResponsibility = lazy(() => import("./pages/SocialResponsibility"));
 const IntegratedServicesPage = lazy(() => import("./pages/IntegratedServicesPage"));
 
-// NEW DASHBOARDS - Clean Architecture
-const AuthEntry = lazy(() => import("./pages/auth/Entry"));
-const AuthLogin = lazy(() => import("./pages/auth/Login"));
+// NEW DASHBOARDS - EAGER LOAD for instant access
+import AuthEntry from "./pages/auth/Entry";
+import AuthLogin from "./pages/auth/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+import CustomerDashboard from "./pages/app/Dashboard";
+
+// Lazy load less critical auth pages
 const AuthRegister = lazy(() => import("./pages/auth/Register"));
 const AuthForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const AuthResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
-const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
-const CustomerDashboard = lazy(() => import("./pages/app/Dashboard"));
 const CustomerOrderDetails = lazy(() => import("./pages/app/OrderDetails"));
 
 // Enhanced Loading component - minimal for fast First Paint
@@ -227,46 +229,34 @@ const DashboardLoader = () => (
 /**
  * RTL-Aware App Shell
  * Applies direction from language context to the root wrapper
- * This is the SINGLE SOURCE OF TRUTH for app-level direction
- * 
- * CRITICAL: This component ensures RTL is applied consistently
- * across the entire application regardless of component hierarchy
+ * OPTIMIZED: useLayoutEffect for instant DOM update, no console logs
  */
 const RTLAppShell = ({ children }: { children: React.ReactNode }) => {
   const { isRTL, language } = useLanguage();
   
-  // Sync document direction when language changes
-  useEffect(() => {
+  // Use layoutEffect for synchronous DOM update before paint
+  React.useLayoutEffect(() => {
     const dir = isRTL ? 'rtl' : 'ltr';
     
-    // Apply to html
+    // Apply to html & body
     document.documentElement.dir = dir;
     document.documentElement.lang = language;
-    document.documentElement.setAttribute('data-direction', dir);
-    
-    // Apply to body
     document.body.dir = dir;
-    document.body.setAttribute('data-lang', language);
     
     // Toggle classes
     document.documentElement.classList.toggle('rtl', isRTL);
     document.documentElement.classList.toggle('ltr', !isRTL);
-    document.body.classList.toggle('rtl', isRTL);
-    document.body.classList.toggle('ltr', !isRTL);
   }, [isRTL, language]);
   
   return (
     <div 
       dir={isRTL ? 'rtl' : 'ltr'}
       className={cn(
-        "min-h-screen bg-background mobile-text rtl-root",
+        "min-h-screen bg-background",
         isRTL ? "text-right" : "text-left"
       )}
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
     >
-      <div className="relative z-10 mobile-tap mobile-scroll">
-        {children}
-      </div>
+      {children}
     </div>
   );
 };
@@ -314,20 +304,20 @@ const App = () => {
                       {/* Public Website - Lazy loaded with optimized skeleton */}
                       <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
-                      {/* Auth Routes - Entry point with smart redirect */}
-                      <Route path="/entry" element={<Suspense fallback={<PageLoader />}><AuthEntry /></Suspense>} />
-                      <Route path="/auth" element={<Suspense fallback={<PageLoader />}><AuthEntry /></Suspense>} />
-                      <Route path="/auth/login" element={<Suspense fallback={<PageLoader />}><AuthLogin /></Suspense>} />
+                      {/* Auth Routes - INSTANT (no Suspense) */}
+                      <Route path="/entry" element={<AuthEntry />} />
+                      <Route path="/auth" element={<AuthEntry />} />
+                      <Route path="/auth/login" element={<AuthLogin />} />
                       <Route path="/auth/register" element={<Suspense fallback={<PageLoader />}><AuthRegister /></Suspense>} />
                       <Route path="/auth/forgot-password" element={<Suspense fallback={<PageLoader />}><AuthForgotPassword /></Suspense>} />
                       <Route path="/auth/reset-password" element={<Suspense fallback={<PageLoader />}><AuthResetPassword /></Suspense>} />
                       
-                      {/* Admin Dashboard - /adminash/* (Protected by AdminGuard in Layout) */}
-                      <Route path="/adminash/*" element={<Suspense fallback={<DashboardLoader />}><AdminDashboard /></Suspense>} />
+                      {/* Admin Dashboard - INSTANT (no Suspense) */}
+                      <Route path="/adminash/*" element={<AdminDashboard />} />
                       
-                      {/* Customer Dashboard - /dashboard/* (Protected by CustomerGuard in Layout) */}
+                      {/* Customer Dashboard - INSTANT (no Suspense) */}
                       <Route path="/dashboard/orders/:id" element={<Suspense fallback={<DashboardLoader />}><CustomerOrderDetails /></Suspense>} />
-                      <Route path="/dashboard/*" element={<Suspense fallback={<DashboardLoader />}><CustomerDashboard /></Suspense>} />
+                      <Route path="/dashboard/*" element={<CustomerDashboard />} />
                       
                       {/* Company Pages */}
                       <Route path="/company-profile" element={<Suspense fallback={<PageLoader />}><CompanyProfile /></Suspense>} />
