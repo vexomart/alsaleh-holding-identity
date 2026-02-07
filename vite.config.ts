@@ -1,7 +1,6 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // Shim paths
 const brotliShimPath = path.resolve(__dirname, "./src/shims/brotli.ts");
@@ -33,7 +32,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     brotliPlugin(),
     react(),
-    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {

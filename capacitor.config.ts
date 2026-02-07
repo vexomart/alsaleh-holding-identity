@@ -1,17 +1,17 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.c76d202873e145b9a970979a33912db9',
-  appName: 'كشخة للعبايات - Kashkha Abaya Store',
+  appId: 'sa.ash.holding',
+  appName: 'شركة علي صالح الشهري القابضة - ASH HOLDING',
   webDir: 'dist',
   server: {
-    url: "https://c76d2028-73e1-45b9-a970-979a33912db9.lovableproject.com?forceHideBadge=true",
+    url: "https://alialshehriholding.com",
     cleartext: true
   },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
-      backgroundColor: "#8B5CF6",
+      backgroundColor: "#1e293b",
       androidSplashResourceName: "splash",
       androidScaleType: "CENTER_CROP",
       showSpinner: false,
@@ -20,7 +20,7 @@ const config: CapacitorConfig = {
     },
     StatusBar: {
       style: 'light',
-      backgroundColor: '#8B5CF6'
+      backgroundColor: '#1e293b'
     }
   },
 };
