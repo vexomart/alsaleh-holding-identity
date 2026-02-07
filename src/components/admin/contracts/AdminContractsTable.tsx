@@ -226,41 +226,65 @@ export function AdminContractsTable({
   }
 
   return (
-    <div dir="rtl">
+    <div dir="rtl" className="w-full">
       {/* Desktop Table */}
       <div className="hidden lg:block rounded-2xl border border-slate-700/60 bg-slate-900/60 overflow-hidden">
         <ScrollArea className="h-[600px]">
-          <table className="w-full">
+          <table 
+            className="w-full border-collapse"
+            style={{ direction: 'rtl', textAlign: 'right' }}
+          >
             <thead className="bg-slate-800/80 sticky top-0 z-10">
               <tr className="border-b border-slate-700/60">
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[130px]">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 w-[130px]"
+                  style={{ textAlign: 'right' }}
+                >
                   الحالة
                 </th>
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[150px]">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 min-w-[150px]"
+                  style={{ textAlign: 'right' }}
+                >
                   رقم العقد
                 </th>
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[180px]">
-                  <div className="flex items-center gap-1.5">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 min-w-[180px]"
+                  style={{ textAlign: 'right' }}
+                >
+                  <div className="flex items-center gap-1.5 justify-start">
                     <User className="h-3.5 w-3.5 text-slate-400" />
-                    العميل
+                    <span>العميل</span>
                   </div>
                 </th>
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 min-w-[140px]">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 min-w-[140px]"
+                  style={{ textAlign: 'right' }}
+                >
                   الخدمة
                 </th>
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[120px]">
-                  <div className="flex items-center gap-1.5">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 w-[120px]"
+                  style={{ textAlign: 'right' }}
+                >
+                  <div className="flex items-center gap-1.5 justify-start">
                     <Banknote className="h-3.5 w-3.5 text-slate-400" />
-                    القيمة
+                    <span>القيمة</span>
                   </div>
                 </th>
-                <th className="py-3.5 px-4 text-right text-xs font-semibold text-slate-300 w-[130px]">
-                  <div className="flex items-center gap-1.5">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 w-[130px]"
+                  style={{ textAlign: 'right' }}
+                >
+                  <div className="flex items-center gap-1.5 justify-start">
                     <Calendar className="h-3.5 w-3.5 text-slate-400" />
-                    التاريخ
+                    <span>التاريخ</span>
                   </div>
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-semibold text-slate-300 w-[120px]">
+                <th 
+                  className="py-3.5 px-4 text-xs font-semibold text-slate-300 w-[120px]"
+                  style={{ textAlign: 'center' }}
+                >
                   الإجراءات
                 </th>
               </tr>
@@ -278,12 +302,13 @@ export function AdminContractsTable({
                     contract.status === 'pre_approved_by_customer' && 'bg-amber-950/15'
                   )}
                   onClick={() => onViewDetails(contract)}
+                  style={{ direction: 'rtl' }}
                 >
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4" style={{ textAlign: 'right' }}>
                     {getStatusBadge(contract.status)}
                   </td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
+                  <td className="py-3 px-4" style={{ textAlign: 'right' }}>
+                    <div className="flex items-center gap-2 justify-start">
                       <code className="px-2 py-1 bg-slate-700/60 rounded-md text-xs font-mono text-slate-200">
                         {contract.contract_number}
                       </code>
@@ -307,12 +332,12 @@ export function AdminContractsTable({
                       </TooltipProvider>
                     </div>
                   </td>
-                  <td className="py-3 px-4">
-                    <div className="flex flex-col gap-0.5">
+                  <td className="py-3 px-4" style={{ textAlign: 'right' }}>
+                    <div className="flex flex-col gap-0.5 items-start">
                       <span className="font-medium text-sm text-white truncate max-w-[160px]">
                         {contract.customer?.full_name_ar || contract.customer?.full_name || '-'}
                       </span>
-                      <span className="text-xs text-slate-400 truncate max-w-[160px]">
+                      <span className="text-xs text-slate-400 truncate max-w-[160px]" dir="ltr">
                         {contract.customer?.email}
                       </span>
                       {contract.customer?.customer_uid && (
@@ -322,14 +347,14 @@ export function AdminContractsTable({
                       )}
                     </div>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4" style={{ textAlign: 'right' }}>
                     <span className="text-sm text-slate-200 truncate block max-w-[130px]">
                       {contract.service?.name_ar || contract.service?.name || '-'}
                     </span>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4" style={{ textAlign: 'right' }}>
                     {contract.pricing_json ? (
-                      <div className="flex flex-col gap-0.5">
+                      <div className="flex flex-col gap-0.5 items-start">
                         <span className="font-semibold text-sm text-white">
                           {formatCurrency(contract.pricing_json.total, contract.pricing_json.currency)}
                         </span>
@@ -337,10 +362,10 @@ export function AdminContractsTable({
                       </div>
                     ) : '-'}
                   </td>
-                  <td className="py-3 px-4 text-sm text-slate-400">
+                  <td className="py-3 px-4 text-sm text-slate-400" style={{ textAlign: 'right' }}>
                     {formatDate(contract.created_at)}
                   </td>
-                  <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
+                  <td className="py-3 px-4" style={{ textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center justify-center gap-1">
                       <TooltipProvider delayDuration={300}>
                         <Tooltip>
