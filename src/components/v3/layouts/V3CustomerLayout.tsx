@@ -2,14 +2,16 @@
  * V3 Customer Dashboard Layout
  * Uses UnifiedAppShell with Light Theme
  * RTL-First Arabic Native
+ * V3 Unified Real-time Sync
  */
 
 import * as React from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useCustomerRealtime } from '@/hooks/useCustomerRealtime';
+import { useCustomerDashboardSync } from '@/hooks/realtime';
 import { CustomerGuard } from '@/components/auth/RouteGuard';
 import { UnifiedAppShell } from './UnifiedAppShell';
 import { SidebarNavGroup } from './UnifiedSidebar';
+import { RealtimeIndicator } from './RealtimeIndicator';
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -74,19 +76,27 @@ const customerNavGroups: SidebarNavGroup[] = [
 ];
 
 const V3CustomerLayoutContent: React.FC<V3CustomerLayoutProps> = ({ children }) => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
 
-  // Real-time subscriptions for services and invoices
-  useCustomerRealtime({
-    userId: user?.id,
-    tenantId: profile?.tenant_id || undefined,
+  // V3 Unified Real-time sync with Admin dashboard
+  const { isConnected, connectionStatus, eventCount } = useCustomerDashboardSync({
     enabled: !!user,
   });
+
+  // Sidebar footer with realtime indicator
+  const sidebarFooter = React.useMemo(() => (
+    <RealtimeIndicator 
+      isConnected={isConnected}
+      connectionStatus={connectionStatus}
+      eventCount={eventCount}
+    />
+  ), [isConnected, connectionStatus, eventCount]);
 
   return (
     <UnifiedAppShell
       variant="customer"
       navGroups={customerNavGroups}
+      sidebarFooter={sidebarFooter}
     >
       {children}
     </UnifiedAppShell>
