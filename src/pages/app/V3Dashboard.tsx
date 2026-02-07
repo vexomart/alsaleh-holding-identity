@@ -1,14 +1,13 @@
 /**
- * V3 Customer Dashboard - Banking Portal
- * 100% Custom - NO SHADCN
- * 
- * STATUS: V3 REBUILD
+ * V3 Customer Dashboard - Unified Light Theme
+ * Modern SaaS Style with Collapsible Sidebar
  */
 
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy, ReactNode } from 'react';
 import { V3CustomerLayout } from '@/components/v3/layouts/V3CustomerLayout';
 import { V3CustomerOverview } from '@/components/v3/pages/V3CustomerOverview';
+import '@/styles/v3/light-theme.css';
 
 // Keep existing page imports for functionality
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
@@ -38,7 +37,7 @@ const ApplicationDetailsPage = lazy(() => import('@/pages/app/finance/Applicatio
 // Referrals Page
 const CustomerReferralsPage = lazy(() => import('@/components/customer/referrals/CustomerReferralsPage'));
 
-// V3 Loader - Banking Style
+// V3 Loader - Light Theme Style
 const V3PageLoader = () => (
   <div 
     style={{
@@ -53,8 +52,8 @@ const V3PageLoader = () => (
         style={{
           width: '40px',
           height: '40px',
-          border: '3px solid hsl(222 60% 25% / 0.2)',
-          borderTopColor: 'hsl(222 60% 25%)',
+          border: '3px solid hsl(217 91% 60% / 0.2)',
+          borderTopColor: 'hsl(217 91% 60%)',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
         }}
@@ -65,41 +64,37 @@ const V3PageLoader = () => (
 );
 
 /**
- * Legacy Page Wrapper for Customer Dashboard
- * Banking Portal already has light theme, but we ensure consistency
+ * Page Wrapper - Light Theme Consistent
+ * Ensures all legacy pages inherit the light theme
  */
-const LegacyPageWrapper = ({ children }: { children: ReactNode }) => (
-  <div 
-    className="legacy-customer-page"
-    style={{
-      background: 'hsl(0 0% 100%)',
-      borderRadius: 'var(--v3-radius-xl)',
-      padding: 'var(--v3-space-5)',
-      minHeight: 'calc(100vh - 10rem)',
-      boxShadow: 'var(--bank-shadow-sm)',
-    }}
-  >
+const PageWrapper = ({ children }: { children: ReactNode }) => (
+  <div className="v3-page-wrapper">
+    {children}
     <style>{`
-      .legacy-customer-page {
-        --background: 0 0% 100%;
+      .v3-page-wrapper {
+        /* Force light theme overrides for legacy components */
+        --background: 0 0% 98%;
         --foreground: 222.2 84% 4.9%;
         --card: 0 0% 100%;
         --card-foreground: 222.2 84% 4.9%;
         --popover: 0 0% 100%;
         --popover-foreground: 222.2 84% 4.9%;
-        --primary: 222 47% 18%;
-        --primary-foreground: 210 40% 98%;
-        --secondary: 210 40% 96.1%;
+        --primary: 217 91% 60%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 220 14% 96%;
         --secondary-foreground: 222.2 47.4% 11.2%;
-        --muted: 210 40% 96.1%;
-        --muted-foreground: 215.4 16.3% 46.9%;
-        --accent: 210 40% 96.1%;
+        --muted: 220 14% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 220 14% 96%;
         --accent-foreground: 222.2 47.4% 11.2%;
-        --border: 214.3 31.8% 91.4%;
-        --input: 214.3 31.8% 91.4%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 13% 91%;
+        --input: 220 13% 91%;
+        --ring: 217 91% 60%;
+        color: hsl(222.2 84% 4.9%);
       }
     `}</style>
-    {children}
   </div>
 );
 
@@ -110,29 +105,29 @@ const V3CustomerDashboard = () => {
         {/* Main Routes - V3 Overview (Native V3) */}
         <Route index element={<V3CustomerOverview />} />
         
-        {/* Legacy pages wrapped for compatibility */}
-        <Route path="client-hub" element={<LegacyPageWrapper><ClientHubPage /></LegacyPageWrapper>} />
-        <Route path="orders" element={<LegacyPageWrapper><CustomerOrdersList /></LegacyPageWrapper>} />
-        <Route path="services" element={<LegacyPageWrapper><CustomerServices /></LegacyPageWrapper>} />
-        <Route path="services/:category" element={<LegacyPageWrapper><CustomerCategoryServices /></LegacyPageWrapper>} />
-        <Route path="service/:serviceId" element={<LegacyPageWrapper><CustomerServiceDetails /></LegacyPageWrapper>} />
-        <Route path="contracts" element={<LegacyPageWrapper><CustomerContractsCenter /></LegacyPageWrapper>} />
-        <Route path="contracts/:id" element={<LegacyPageWrapper><CustomerContractDetails /></LegacyPageWrapper>} />
-        <Route path="contracts/:id/sign" element={<LegacyPageWrapper><ContractSigningPage /></LegacyPageWrapper>} />
-        <Route path="invoices" element={<LegacyPageWrapper><CustomerInvoicesCenter /></LegacyPageWrapper>} />
-        <Route path="wallet" element={<LegacyPageWrapper><CustomerWallet /></LegacyPageWrapper>} />
-        <Route path="transactions" element={<LegacyPageWrapper><CustomerTransactions /></LegacyPageWrapper>} />
-        <Route path="referrals" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><CustomerReferralsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="finance" element={<LegacyPageWrapper><FinanceCenter /></LegacyPageWrapper>} />
-        <Route path="finance/apply" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><NewFinanceApplicationPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="finance/entities/new" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><NewEntityPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="finance/applications/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><ApplicationDetailsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="notifications" element={<LegacyPageWrapper><CustomerNotifications /></LegacyPageWrapper>} />
-        <Route path="profile" element={<LegacyPageWrapper><CustomerProfile /></LegacyPageWrapper>} />
-        <Route path="security" element={<LegacyPageWrapper><SecurityPage /></LegacyPageWrapper>} />
-        <Route path="support" element={<LegacyPageWrapper><CustomerSupport /></LegacyPageWrapper>} />
-        <Route path="settings" element={<LegacyPageWrapper><CustomerSettings /></LegacyPageWrapper>} />
-        <Route path="version" element={<LegacyPageWrapper><VersionPage /></LegacyPageWrapper>} />
+        {/* All pages wrapped for consistency */}
+        <Route path="client-hub" element={<PageWrapper><ClientHubPage /></PageWrapper>} />
+        <Route path="orders" element={<PageWrapper><CustomerOrdersList /></PageWrapper>} />
+        <Route path="services" element={<PageWrapper><CustomerServices /></PageWrapper>} />
+        <Route path="services/:category" element={<PageWrapper><CustomerCategoryServices /></PageWrapper>} />
+        <Route path="service/:serviceId" element={<PageWrapper><CustomerServiceDetails /></PageWrapper>} />
+        <Route path="contracts" element={<PageWrapper><CustomerContractsCenter /></PageWrapper>} />
+        <Route path="contracts/:id" element={<PageWrapper><CustomerContractDetails /></PageWrapper>} />
+        <Route path="contracts/:id/sign" element={<PageWrapper><ContractSigningPage /></PageWrapper>} />
+        <Route path="invoices" element={<PageWrapper><CustomerInvoicesCenter /></PageWrapper>} />
+        <Route path="wallet" element={<PageWrapper><CustomerWallet /></PageWrapper>} />
+        <Route path="transactions" element={<PageWrapper><CustomerTransactions /></PageWrapper>} />
+        <Route path="referrals" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><CustomerReferralsPage /></Suspense></PageWrapper>} />
+        <Route path="finance" element={<PageWrapper><FinanceCenter /></PageWrapper>} />
+        <Route path="finance/apply" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><NewFinanceApplicationPage /></Suspense></PageWrapper>} />
+        <Route path="finance/entities/new" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><NewEntityPage /></Suspense></PageWrapper>} />
+        <Route path="finance/applications/:id" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><ApplicationDetailsPage /></Suspense></PageWrapper>} />
+        <Route path="notifications" element={<PageWrapper><CustomerNotifications /></PageWrapper>} />
+        <Route path="profile" element={<PageWrapper><CustomerProfile /></PageWrapper>} />
+        <Route path="security" element={<PageWrapper><SecurityPage /></PageWrapper>} />
+        <Route path="support" element={<PageWrapper><CustomerSupport /></PageWrapper>} />
+        <Route path="settings" element={<PageWrapper><CustomerSettings /></PageWrapper>} />
+        <Route path="version" element={<PageWrapper><VersionPage /></PageWrapper>} />
       </Routes>
     </V3CustomerLayout>
   );

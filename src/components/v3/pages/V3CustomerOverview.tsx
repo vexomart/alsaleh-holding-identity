@@ -14,7 +14,7 @@ import { V3StatCard } from '../data/V3StatCard';
 import { V3Badge } from '../primitives/V3Badge';
 import { V3Button } from '../primitives/V3Button';
 import { V3Card, V3CardHeader, V3CardTitle, V3CardContent } from '../primitives/V3Card';
-import '@/styles/v3/tokens.css';
+import '@/styles/v3/light-theme.css';
 import './V3Pages.css';
 
 // Icons

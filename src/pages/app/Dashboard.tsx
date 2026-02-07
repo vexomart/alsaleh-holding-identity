@@ -1,11 +1,11 @@
 /**
- * Customer Dashboard - World-Class Client Hub
- * Uses CustomerLayout with unified Header/Footer
+ * Customer Dashboard - Unified V3 Light Theme
+ * Uses V3CustomerLayout with collapsible sidebar
  */
 
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { CustomerLayout } from '@/components/customer/CustomerLayout';
+import { V3CustomerLayout } from '@/components/v3/layouts';
 import { ClientHub } from '@/components/customer/ClientHub';
 import { CustomerOrdersList } from '@/components/customer/CustomerOrdersList';
 import { CustomerServices } from '@/components/customer/CustomerServices';
@@ -35,13 +35,13 @@ const CustomerReferralsPage = lazy(() => import('@/components/customer/referrals
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'hsl(var(--v3-brand-primary))' }} />
   </div>
 );
 
 const CustomerDashboard = () => {
   return (
-    <CustomerLayout>
+    <V3CustomerLayout>
       <Routes>
         {/* Main Routes */}
         <Route index element={<ClientHub />} />
@@ -71,7 +71,7 @@ const CustomerDashboard = () => {
         <Route path="security" element={<SecurityPage />} />
         <Route path="version" element={<VersionPage />} />
       </Routes>
-    </CustomerLayout>
+    </V3CustomerLayout>
   );
 };
 

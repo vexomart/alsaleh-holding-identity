@@ -1,11 +1,11 @@
 /**
- * Admin Dashboard - Enterprise Grade Design
- * Uses AdminLayout with unified Header/Footer
+ * Admin Dashboard - Unified V3 Light Theme
+ * Uses V3AdminLayout with collapsible sidebar
  */
 
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import { AdminLayout } from '@/components/admin';
+import { V3AdminLayout } from '@/components/v3/layouts';
 import { AdminOverview } from '@/components/admin/AdminOverview';
 import { UsersManagement } from '@/components/admin/users/UsersManagement';
 import { RolesPermissions } from '@/components/admin/roles/RolesPermissions';
@@ -30,13 +30,13 @@ const IntegrationsPage = lazy(() => import('@/components/admin/integrations/Inte
 // Page loader
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
-    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+    <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'hsl(var(--v3-brand-primary))' }} />
   </div>
 );
 
 const AdminDashboard = () => {
   return (
-    <AdminLayout>
+    <V3AdminLayout>
       <Routes>
         {/* Main Routes */}
         <Route index element={<AdminOverview />} />
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
         <Route path="audit" element={<AuditLogPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Routes>
-    </AdminLayout>
+    </V3AdminLayout>
   );
 };
 

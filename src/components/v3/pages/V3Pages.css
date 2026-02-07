@@ -1,11 +1,36 @@
 /**
- * V3 Pages CSS
- * Command Center & Banking Portal
+ * V3 Pages CSS - Light Theme
+ * Modern SaaS Design
  * 100% Custom - NO SHADCN
  */
 
 /* =========================================
-   COMMAND CENTER - OVERVIEW PAGE
+   SHARED PAGE STYLES - LIGHT THEME
+   ========================================= */
+
+/* Page Title */
+.v3-page-title {
+  font-size: var(--v3-text-2xl);
+  font-weight: 700;
+  color: hsl(var(--v3-text-primary));
+  margin: 0;
+}
+
+.v3-page-subtitle {
+  font-size: var(--v3-text-sm);
+  color: hsl(var(--v3-text-muted));
+  margin-top: var(--v3-space-1);
+}
+
+.v3-section-title {
+  font-size: var(--v3-text-lg);
+  font-weight: 600;
+  color: hsl(var(--v3-text-primary));
+  margin: 0 0 var(--v3-space-4) 0;
+}
+
+/* =========================================
+   ADMIN OVERVIEW - LIGHT THEME
    ========================================= */
 
 .cmd-overview {
@@ -25,13 +50,13 @@
 .cmd-overview__title {
   font-size: var(--v3-text-2xl);
   font-weight: 700;
-  color: hsl(var(--cmd-text-primary));
+  color: hsl(var(--v3-text-primary));
   margin: 0;
 }
 
 .cmd-overview__subtitle {
   font-size: var(--v3-text-sm);
-  color: hsl(var(--cmd-text-muted));
+  color: hsl(var(--v3-text-muted));
   margin-top: var(--v3-space-1);
 }
 
@@ -70,17 +95,7 @@
   }
 }
 
-.cmd-overview__main {
-  min-width: 0;
-}
-
-.cmd-overview__sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: var(--v3-space-4);
-}
-
-/* Alerts */
+/* Alerts - Light Theme */
 .cmd-alerts {
   display: flex;
   flex-direction: column;
@@ -92,57 +107,39 @@
   align-items: flex-start;
   gap: var(--v3-space-3);
   padding: var(--v3-space-3);
-  background: hsl(var(--cmd-bg-elevated));
+  background: hsl(var(--v3-bg-card));
   border-radius: var(--v3-radius-md);
   border-inline-start: 3px solid transparent;
+  box-shadow: var(--v3-shadow-xs);
 }
 
 .cmd-alert--warning {
-  border-color: hsl(var(--cmd-accent-amber));
+  border-color: hsl(var(--v3-warning));
+  background: hsl(var(--v3-warning-bg));
 }
 
 .cmd-alert--danger {
-  border-color: hsl(var(--cmd-accent-red));
+  border-color: hsl(var(--v3-error));
+  background: hsl(var(--v3-error-bg));
 }
 
 .cmd-alert--info {
-  border-color: hsl(var(--cmd-accent-cyan));
-}
-
-.cmd-alert__icon {
-  flex-shrink: 0;
-  color: inherit;
-}
-
-.cmd-alert--warning .cmd-alert__icon {
-  color: hsl(var(--cmd-accent-amber));
-}
-
-.cmd-alert--danger .cmd-alert__icon {
-  color: hsl(var(--cmd-accent-red));
-}
-
-.cmd-alert--info .cmd-alert__icon {
-  color: hsl(var(--cmd-accent-cyan));
-}
-
-.cmd-alert__content {
-  flex: 1;
-  min-width: 0;
+  border-color: hsl(var(--v3-info));
+  background: hsl(var(--v3-info-bg));
 }
 
 .cmd-alert__message {
   font-size: var(--v3-text-sm);
-  color: hsl(var(--cmd-text-primary));
+  color: hsl(var(--v3-text-primary));
   margin: 0;
 }
 
 .cmd-alert__time {
   font-size: var(--v3-text-xs);
-  color: hsl(var(--cmd-text-dim));
+  color: hsl(var(--v3-text-muted));
 }
 
-/* Quick Stats */
+/* Quick Stats - Light Theme */
 .cmd-quick-stats {
   display: flex;
   flex-direction: column;
@@ -154,7 +151,7 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: var(--v3-space-3);
-  border-bottom: 1px solid hsl(var(--cmd-border-subtle));
+  border-bottom: 1px solid hsl(var(--v3-border-light));
 }
 
 .cmd-quick-stat:last-child {
@@ -164,26 +161,26 @@
 
 .cmd-quick-stat__label {
   font-size: var(--v3-text-sm);
-  color: hsl(var(--cmd-text-muted));
+  color: hsl(var(--v3-text-muted));
 }
 
 .cmd-quick-stat__value {
   font-family: var(--v3-font-mono);
   font-size: var(--v3-text-lg);
   font-weight: 700;
-  color: hsl(var(--cmd-text-primary));
+  color: hsl(var(--v3-text-primary));
 }
 
 .cmd-quick-stat__value--success {
-  color: hsl(var(--cmd-accent-green));
+  color: hsl(var(--v3-success));
 }
 
 .cmd-quick-stat__value--info {
-  color: hsl(var(--cmd-accent-cyan));
+  color: hsl(var(--v3-info));
 }
 
 /* =========================================
-   BANKING PORTAL - OVERVIEW PAGE
+   CUSTOMER BANKING PORTAL - LIGHT THEME
    ========================================= */
 
 .bank-overview {
@@ -209,19 +206,19 @@
 
 .bank-overview__greeting-time {
   font-size: var(--v3-text-sm);
-  color: hsl(var(--bank-text-muted));
+  color: hsl(var(--v3-text-muted));
 }
 
 .bank-overview__greeting-name {
   font-size: var(--v3-text-2xl);
   font-weight: 700;
-  color: hsl(var(--bank-text-primary));
+  color: hsl(var(--v3-text-primary));
   margin: 0;
 }
 
 .bank-overview__date {
   font-size: var(--v3-text-sm);
-  color: hsl(var(--bank-text-muted));
+  color: hsl(var(--v3-text-muted));
 }
 
 /* Wallet Hero Card */
@@ -233,7 +230,7 @@
   position: relative;
   padding: var(--v3-space-6);
   border-radius: var(--v3-radius-2xl);
-  background: linear-gradient(135deg, hsl(var(--bank-brand-primary)), hsl(var(--bank-brand-secondary)));
+  background: linear-gradient(135deg, hsl(var(--v3-brand-primary)), hsl(var(--v3-brand-secondary)));
   color: white;
   overflow: hidden;
   min-height: 180px;
@@ -323,7 +320,7 @@
 .bank-section-title {
   font-size: var(--v3-text-lg);
   font-weight: 600;
-  color: hsl(var(--bank-text-primary));
+  color: hsl(var(--v3-text-primary));
   margin: 0;
 }
 
@@ -345,18 +342,18 @@
   align-items: center;
   gap: var(--v3-space-2);
   padding: var(--v3-space-4);
-  background: hsl(var(--bank-bg-card));
-  border: 1px solid hsl(var(--bank-border-light));
+  background: hsl(var(--v3-bg-card));
+  border: 1px solid hsl(var(--v3-border-light));
   border-radius: var(--v3-radius-xl);
   cursor: pointer;
   transition: all var(--v3-duration-normal) var(--v3-ease-out);
 }
 
 .bank-quick-action:hover {
-  background: hsl(var(--bank-bg-hover));
-  border-color: hsl(var(--bank-brand-primary) / 0.3);
+  background: hsl(var(--v3-bg-hover));
+  border-color: hsl(var(--v3-brand-primary) / 0.3);
   transform: translateY(-2px);
-  box-shadow: var(--bank-shadow-md);
+  box-shadow: var(--v3-shadow-md);
 }
 
 .bank-quick-action__icon {
@@ -365,15 +362,15 @@
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  background: hsl(var(--bank-bg-accent));
+  background: hsl(var(--v3-bg-elevated));
   border-radius: var(--v3-radius-lg);
-  color: hsl(var(--bank-brand-primary));
+  color: hsl(var(--v3-brand-primary));
 }
 
 .bank-quick-action__label {
   font-size: var(--v3-text-sm);
   font-weight: 500;
-  color: hsl(var(--bank-text-primary));
+  color: hsl(var(--v3-text-primary));
   text-align: center;
 }
 
@@ -418,7 +415,7 @@
   justify-content: center;
   padding: var(--v3-space-8) var(--v3-space-4);
   text-align: center;
-  color: hsl(var(--bank-text-muted));
+  color: hsl(var(--v3-text-muted));
   gap: var(--v3-space-4);
 }
 
@@ -432,7 +429,7 @@
   flex-direction: column;
   gap: var(--v3-space-2);
   padding: var(--v3-space-3);
-  background: hsl(var(--bank-bg-elevated));
+  background: hsl(var(--v3-bg-elevated));
   border-radius: var(--v3-radius-lg);
 }
 
@@ -445,42 +442,13 @@
 .bank-order-item__id {
   font-family: var(--v3-font-mono);
   font-size: var(--v3-text-xs);
-  color: hsl(var(--bank-text-muted));
+  color: hsl(var(--v3-text-muted));
 }
 
 .bank-order-item__service {
   font-size: var(--v3-text-sm);
   font-weight: 500;
-  color: hsl(var(--bank-text-primary));
-}
-
-.bank-order-item__progress {
-  display: flex;
-  align-items: center;
-  gap: var(--v3-space-3);
-}
-
-.bank-order-item__progress-bar {
-  flex: 1;
-  height: 6px;
-  background: hsl(var(--bank-border-light));
-  border-radius: var(--v3-radius-full);
-  overflow: hidden;
-}
-
-.bank-order-item__progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, hsl(var(--bank-brand-primary)), hsl(var(--bank-brand-secondary)));
-  border-radius: var(--v3-radius-full);
-  transition: width 0.3s ease;
-}
-
-.bank-order-item__progress-text {
-  font-family: var(--v3-font-mono);
-  font-size: var(--v3-text-xs);
-  color: hsl(var(--bank-text-muted));
-  min-width: 2.5rem;
-  text-align: end;
+  color: hsl(var(--v3-text-primary));
 }
 
 /* Transactions List */
@@ -500,7 +468,7 @@
 }
 
 .bank-transaction-item:hover {
-  background: hsl(var(--bank-bg-elevated));
+  background: hsl(var(--v3-bg-hover));
 }
 
 .bank-transaction-item__icon {
@@ -511,26 +479,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--v3-radius-full);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--v3-radius-lg);
   font-size: var(--v3-text-lg);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .bank-tx-icon--in {
-  background: hsl(var(--bank-success) / 0.1);
-  color: hsl(var(--bank-success));
+  background: hsl(var(--v3-success-bg));
+  color: hsl(var(--v3-success));
 }
 
 .bank-tx-icon--out {
-  background: hsl(var(--bank-error) / 0.1);
-  color: hsl(var(--bank-error));
+  background: hsl(var(--v3-error-bg));
+  color: hsl(var(--v3-error));
 }
 
 .bank-tx-icon--refund {
-  background: hsl(var(--bank-info) / 0.1);
-  color: hsl(var(--bank-info));
+  background: hsl(var(--v3-info-bg));
+  color: hsl(var(--v3-info));
 }
 
 .bank-transaction-item__info {
@@ -544,51 +512,28 @@
 .bank-transaction-item__desc {
   font-size: var(--v3-text-sm);
   font-weight: 500;
-  color: hsl(var(--bank-text-primary));
+  color: hsl(var(--v3-text-primary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bank-transaction-item__date {
   font-size: var(--v3-text-xs);
-  color: hsl(var(--bank-text-muted));
+  color: hsl(var(--v3-text-muted));
 }
 
 .bank-transaction-item__amount {
   font-family: var(--v3-font-mono);
   font-size: var(--v3-text-sm);
   font-weight: 600;
+  text-align: end;
 }
 
 .bank-transaction-item__amount--positive {
-  color: hsl(var(--bank-success));
+  color: hsl(var(--v3-success));
 }
 
 .bank-transaction-item__amount--negative {
-  color: hsl(var(--bank-text-primary));
-}
-
-/* =========================================
-   LOADING & EMPTY STATES
-   ========================================= */
-
-.cmd-loading,
-.cmd-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--v3-space-8);
-  color: hsl(var(--cmd-text-muted));
-  font-size: var(--v3-text-sm);
-}
-
-.cmd-empty-small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--v3-space-4);
-  color: hsl(var(--cmd-text-dim));
-  font-size: var(--v3-text-sm);
-}
-
-.cmd-quick-stat__value--warning {
-  color: hsl(var(--cmd-accent-amber));
+  color: hsl(var(--v3-text-primary));
 }
