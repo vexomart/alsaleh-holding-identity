@@ -150,17 +150,17 @@ export function AdminOverview() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+        return "bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent";
       case "processing":
       case "in_progress":
-        return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400";
+        return "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary";
       case "pending":
-        return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+        return "bg-secondary/10 text-secondary dark:bg-secondary/20 dark:text-secondary";
       case "cancelled":
       case "refunded":
-        return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
+        return "bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive";
       default:
-        return "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400";
+        return "bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground";
     }
   };
 

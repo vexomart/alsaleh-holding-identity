@@ -203,7 +203,7 @@ export function FinanceLedger() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-green-500/20">
+        <Card className="border-accent/20">
           <CardContent className="p-4">
             <div className={cn(
               "flex items-center justify-between",
@@ -213,11 +213,11 @@ export function FinanceLedger() {
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "القيود المرحّلة" : "Posted Entries"}
                 </span>
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-accent">
                   {postedEntries}
                 </div>
               </div>
-              <CheckCircle2 className="h-8 w-8 text-green-500/50" />
+              <CheckCircle2 className="h-8 w-8 text-accent/50" />
             </div>
           </CardContent>
         </Card>
@@ -294,8 +294,8 @@ export function FinanceLedger() {
                               variant="outline"
                               className={cn(
                                 entry.is_posted
-                                  ? "bg-green-500/10 text-green-600 border-green-500/30"
-                                  : "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                                  ? "bg-accent/10 text-accent border-accent/30"
+                                  : "bg-secondary/10 text-secondary border-secondary/30"
                               )}
                             >
                               {entry.is_posted
@@ -349,14 +349,14 @@ export function FinanceLedger() {
                                     </TableCell>
                                     <TableCell className={isRTL ? "text-right" : "text-left"}>
                                       {Number(line.debit) > 0 && (
-                                        <span className="font-semibold text-red-600" dir="ltr">
+                                        <span className="font-semibold text-destructive" dir="ltr">
                                           {formatCurrency(Number(line.debit), line.currency)}
                                         </span>
                                       )}
                                     </TableCell>
                                     <TableCell className={isRTL ? "text-right" : "text-left"}>
                                       {Number(line.credit) > 0 && (
-                                        <span className="font-semibold text-green-600" dir="ltr">
+                                        <span className="font-semibold text-accent" dir="ltr">
                                           {formatCurrency(Number(line.credit), line.currency)}
                                         </span>
                                       )}

@@ -89,7 +89,7 @@ export function IntegrationCard({
     }
     if (isConnected) {
       return (
-        <Badge className="gap-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
+        <Badge className="gap-1 bg-accent/10 text-accent border-accent/20">
           <CheckCircle2 className="h-3 w-3" />
           {language === "ar" ? "متصل" : "Connected"}
         </Badge>
@@ -106,13 +106,13 @@ export function IntegrationCard({
   return (
     <Card className={cn(
       "relative overflow-hidden transition-all hover:shadow-md",
-      isActive && isConnected && "ring-1 ring-emerald-500/30"
+      isActive && isConnected && "ring-1 ring-accent/30"
     )}>
       {/* Status indicator bar */}
       <div className={cn(
         "absolute top-0 left-0 right-0 h-1",
-        isConnected && isActive ? "bg-emerald-500" : 
-        hasCredentials ? "bg-amber-500" : "bg-muted"
+        isConnected && isActive ? "bg-accent" : 
+        hasCredentials ? "bg-secondary" : "bg-muted"
       )} />
 
       <CardHeader className="pb-2">

@@ -31,33 +31,33 @@ export function NotificationStats({ total, unread, info, warning, critical, lang
       label: language === 'ar' ? 'غير مقروء' : 'Unread', 
       value: unread, 
       icon: Mail, 
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      borderColor: 'border-blue-500/20'
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
+      borderColor: 'border-primary/20'
     },
     { 
       label: language === 'ar' ? 'معلومات' : 'Info', 
       value: info, 
       icon: Info, 
-      color: 'text-sky-500',
-      bgColor: 'bg-sky-500/10',
-      borderColor: 'border-sky-500/20'
+      color: 'text-accent',
+      bgColor: 'bg-accent/10',
+      borderColor: 'border-accent/20'
     },
     { 
       label: language === 'ar' ? 'تحذيرات' : 'Warnings', 
       value: warning, 
       icon: AlertTriangle, 
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500/10',
-      borderColor: 'border-amber-500/20'
+      color: 'text-secondary',
+      bgColor: 'bg-secondary/10',
+      borderColor: 'border-secondary/20'
     },
     { 
       label: language === 'ar' ? 'حرج' : 'Critical', 
       value: critical, 
       icon: AlertCircle, 
-      color: 'text-red-500',
-      bgColor: 'bg-red-500/10',
-      borderColor: 'border-red-500/20'
+      color: 'text-destructive',
+      bgColor: 'bg-destructive/10',
+      borderColor: 'border-destructive/20'
     },
   ];
 

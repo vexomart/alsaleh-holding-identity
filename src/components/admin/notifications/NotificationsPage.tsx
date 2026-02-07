@@ -217,9 +217,9 @@ export function NotificationsPage() {
             className={cn(
               "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium",
               isConnected 
-                ? "bg-green-500/10 text-green-600 dark:text-green-400" 
+                ? "bg-accent/10 text-accent dark:text-accent" 
                 : connectionStatus === 'connecting'
-                  ? "bg-amber-500/10 text-amber-600"
+                  ? "bg-secondary/10 text-secondary"
                   : "bg-muted text-muted-foreground"
             )}
           >

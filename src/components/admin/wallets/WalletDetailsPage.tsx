@@ -307,8 +307,8 @@ export function WalletDetailsPage() {
                   variant="secondary"
                   className={cn(
                     wallet.status === "active" 
-                      ? "bg-emerald-500/20 text-emerald-700" 
-                      : "bg-blue-500/20 text-blue-700"
+                      ? "bg-accent/20 text-accent" 
+                      : "bg-primary/20 text-primary"
                   )}
                 >
                   {wallet.status === "active" ? (isRTL ? "نشط" : "Active") : (isRTL ? "مجمد" : "Frozen")}
@@ -344,7 +344,7 @@ export function WalletDetailsPage() {
               animate={{ opacity: 1, scale: 1 }}
             >
               <Card className="overflow-hidden border-0 shadow-xl">
-                <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white">
+                <div className="bg-gradient-to-br from-accent to-accent/80 p-6 text-white">
                   <div className="flex items-start justify-between mb-6">
                     <div>
                       <p className="text-white/80 text-sm font-medium">
@@ -394,7 +394,7 @@ export function WalletDetailsPage() {
                 <CardContent className="p-4">
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center p-3 rounded-xl bg-muted/50">
-                      <TrendingUp className="h-5 w-5 mx-auto mb-1 text-emerald-500" />
+                      <TrendingUp className="h-5 w-5 mx-auto mb-1 text-accent" />
                       <p className="text-lg font-bold" dir="ltr">{formatCurrency(stats.totalDeposits)}</p>
                       <p className="text-xs text-muted-foreground">{isRTL ? "إجمالي الإيداعات" : "Total Deposits"}</p>
                     </div>
