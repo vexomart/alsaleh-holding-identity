@@ -17,10 +17,16 @@ type MessageType =
   // Contracts
   | "contract_created" | "contract_approved" | "contract_rejected" | "contract_pending_signature" 
   | "contract_signed" | "contract_active" | "contract_expired"
-  // Finance
-  | "finance_submitted" | "finance_approved" | "finance_rejected" | "finance_offer_ready"
-  | "finance_contract_ready" | "finance_disbursed" | "finance_payment_due" 
-  | "finance_payment_reminder" | "finance_payment_received" | "finance_payment_overdue"
+  // Finance - Eligibility
+  | "finance_eligibility_checking" | "finance_eligibility_approved" | "finance_eligibility_rejected"
+  | "finance_documents_required" | "finance_scoring_started" | "finance_scoring_complete"
+  // Finance - Application
+  | "finance_submitted" | "finance_under_review" | "finance_approved" | "finance_rejected" 
+  | "finance_offer_ready" | "finance_offer_selected" | "finance_offer_expired"
+  // Finance - Contract
+  | "finance_contract_ready" | "finance_contract_signed" | "finance_disbursed"
+  // Finance - Payments
+  | "finance_payment_due" | "finance_payment_reminder" | "finance_payment_received" | "finance_payment_overdue"
   // Payments
   | "payment_success" | "payment_failed" | "wallet_topup" | "wallet_withdrawal"
   // General
@@ -109,9 +115,48 @@ ASH HOLDING`,
 للتجديد تواصلوا معنا.
 ASH HOLDING`,
 
-  // ===== Finance =====
+  // ===== Finance - Eligibility =====
+  finance_eligibility_checking: `🔍 عميلنا العزيز {{name}}،
+جاري التحقق من أهليتك للتمويل.
+سيتم إعلامك بالنتيجة خلال دقائق.
+ASH HOLDING`,
+
+  finance_eligibility_approved: `✅ مبروك {{name}}!
+تم التحقق من أهليتك للتمويل بنجاح.
+الحد الائتماني المتاح: {{credit_limit}} ريال
+يمكنك الآن تقديم طلب التمويل.
+ASH HOLDING`,
+
+  finance_eligibility_rejected: `❌ عميلنا العزيز {{name}}،
+للأسف لم تتم الموافقة على أهليتك للتمويل حالياً.
+السبب: {{reason}}
+للاستفسار: info@ash-holding.sa
+ASH HOLDING`,
+
+  finance_documents_required: `📎 عميلنا العزيز،
+نحتاج مستندات إضافية لإتمام طلب التمويل {{application_number}}.
+المستندات المطلوبة: {{documents}}
+يرجى رفعها عبر حسابك.
+ASH HOLDING`,
+
+  finance_scoring_started: `📊 عميلنا العزيز،
+بدأنا تقييم ملفك الائتماني لطلب التمويل {{application_number}}.
+سيتم إعلامك بالنتيجة قريباً.
+ASH HOLDING`,
+
+  finance_scoring_complete: `✅ اكتمل التقييم الائتماني لطلبك {{application_number}}.
+مستوى المخاطر: {{risk_level}}
+سجّل دخولك لمراجعة التفاصيل.
+ASH HOLDING`,
+
+  // ===== Finance - Application =====
   finance_submitted: `📝 تم استلام طلب التمويل رقم {{application_number}}.
+المبلغ المطلوب: {{amount}} ريال
 سيتم مراجعته خلال 48 ساعة.
+ASH HOLDING`,
+
+  finance_under_review: `🔎 طلب التمويل {{application_number}} قيد المراجعة الآن.
+تابع حالة طلبك عبر حسابك.
 ASH HOLDING`,
 
   finance_approved: `🎉 مبروك! تمت الموافقة على طلب التمويل {{application_number}}.
@@ -120,35 +165,61 @@ ASH HOLDING`,
 ASH HOLDING`,
 
   finance_rejected: `❌ لم تتم الموافقة على طلب التمويل {{application_number}}.
+السبب: {{reason}}
 للمزيد: info@ash-holding.sa
 ASH HOLDING`,
 
-  finance_offer_ready: `💰 عروض التمويل جاهزة لطلبكم {{application_number}}.
+  finance_offer_ready: `💰 عروض التمويل جاهزة لطلبكم {{application_number}}!
+عدد العروض المتاحة: {{offers_count}}
 سجّل دخولك الآن لاختيار العرض المناسب.
 ASH HOLDING`,
 
+  finance_offer_selected: `✅ تم اختيار عرض التمويل بنجاح!
+الطلب: {{application_number}}
+المبلغ: {{amount}} ريال
+القسط الشهري: {{monthly}} ريال
+المدة: {{tenor}} شهر
+ASH HOLDING`,
+
+  finance_offer_expired: `⚠️ انتهت صلاحية عروض التمويل لطلبك {{application_number}}.
+يرجى تقديم طلب جديد.
+ASH HOLDING`,
+
+  // ===== Finance - Contract =====
   finance_contract_ready: `📄 عقد التمويل {{contract_number}} جاهز للتوقيع.
-سجّل دخولك لإتمام العملية.
+المبلغ: {{amount}} ريال
+سجّل دخولك لإتمام التوقيع الإلكتروني.
 ASH HOLDING`,
 
-  finance_disbursed: `💸 تم صرف مبلغ التمويل {{amount}} ريال في محفظتكم!
+  finance_contract_signed: `🖊️ تم توقيع عقد التمويل {{contract_number}} بنجاح!
+سيتم تفعيل العقد وصرف المبلغ قريباً.
 ASH HOLDING`,
 
+  finance_disbursed: `💸 تم صرف مبلغ التمويل!
+المبلغ: {{amount}} ريال
+تمت إضافته لمحفظتك بنجاح.
+العقد: {{contract_number}}
+ASH HOLDING`,
+
+  // ===== Finance - Payments =====
   finance_payment_due: `📅 تذكير: قسط التمويل رقم {{installment}} مستحق في {{due_date}}.
 المبلغ: {{amount}} ريال
+العقد: {{contract_number}}
 ASH HOLDING`,
 
-  finance_payment_reminder: `⏰ يحين موعد سداد قسط التمويل غداً.
+  finance_payment_reminder: `⏰ تنبيه! يحين موعد سداد قسط التمويل غداً.
 القسط رقم {{installment}}: {{amount}} ريال
+يرجى التأكد من توفر الرصيد.
 ASH HOLDING`,
 
   finance_payment_received: `✅ تم استلام سداد القسط رقم {{installment}} بنجاح.
-المتبقي: {{remaining}} قسط
+المبلغ: {{amount}} ريال
+الأقساط المتبقية: {{remaining}}
 ASH HOLDING`,
 
-  finance_payment_overdue: `🚨 تنبيه: قسط التمويل رقم {{installment}} متأخر!
+  finance_payment_overdue: `🚨 تنبيه عاجل: قسط التمويل رقم {{installment}} متأخر!
 المبلغ المستحق: {{amount}} ريال
-يرجى السداد فوراً.
+يرجى السداد فوراً لتجنب الغرامات.
 ASH HOLDING`,
 
   // ===== Payments =====
