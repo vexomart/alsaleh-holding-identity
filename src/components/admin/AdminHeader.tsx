@@ -156,7 +156,7 @@ export function AdminHeader({ className }: AdminHeaderProps) {
     <TooltipProvider>
       <header
         className={cn(
-          "sticky top-0 z-50 flex items-center gap-2 sm:gap-4 border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60",
+          "sticky top-0 z-50 flex items-center gap-2 sm:gap-4 border-b border-border/50 bg-gradient-to-l from-background via-background to-secondary/5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 shadow-sm",
           isMobile ? "h-14 px-3" : "h-16 px-4",
           className
         )}
@@ -391,11 +391,11 @@ export function AdminHeader({ className }: AdminHeaderProps) {
                 )}
               >
                 <Avatar className={cn(
-                  "ring-2 ring-primary/20 ring-offset-1 ring-offset-background",
+                  "ring-2 ring-secondary/40 ring-offset-1 ring-offset-background",
                   isMobile ? "h-8 w-8" : "h-8 w-8"
                 )}>
                   <AvatarImage src={profile?.avatar_url || undefined} />
-                  <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-xs font-medium">
+                  <AvatarFallback className="bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground text-xs font-medium">
                     {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>

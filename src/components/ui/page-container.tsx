@@ -21,10 +21,10 @@ export function PageContainer({
 }: PageContainerProps) {
   return (
     <div className={cn(
-      "min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900",
+      "min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5 dark:from-background dark:via-primary/5 dark:to-accent/5",
       className
     )}>
-      <div className="absolute inset-0 bg-grid-pattern opacity-20 dark:opacity-10"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.03]"></div>
       <div className="relative z-10">
         {showNavigation && <Navigation />}
         <main className="relative">

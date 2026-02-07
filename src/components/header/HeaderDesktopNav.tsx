@@ -115,10 +115,10 @@ function NavLink({
       to={href}
       className={cn(
         'relative px-4 py-2.5 text-sm font-bold rounded-xl',
-        'transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
+        'transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-accent/50',
         isActive 
-          ? 'text-primary bg-primary/10' 
-          : 'text-gray-700 hover:text-primary hover:bg-gray-100'
+          ? 'text-accent bg-accent/10' 
+          : 'text-foreground/80 hover:text-accent hover:bg-accent/5'
       )}
     >
       {children}
@@ -126,7 +126,7 @@ function NavLink({
       {/* Active Indicator Dot */}
       {isActive && (
         <span 
-          className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full"
+          className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-accent rounded-full"
           aria-hidden="true"
         />
       )}
