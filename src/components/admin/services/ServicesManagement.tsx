@@ -1,22 +1,18 @@
 /**
- * Services Management - Admin Dashboard
- * Full CRUD with animations, RTL support, and advanced features
+ * Services Management - Dark Theme Enterprise UI
+ * Modern services management with pagination
  */
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Package, 
-  Plus, 
-  Search, 
-  DollarSign,
-  Layers,
-  CheckCircle,
-  XCircle
+  Plus,
+  RefreshCw,
+  Sparkles
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -26,23 +22,18 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { updateServicesSortOrder } from '@/lib/api/services';
-import { AnimatedServiceList } from './AnimatedServiceList';
-import { useAdminRealtime } from '@/hooks/useAdminRealtime';
+
+import { ServiceCard } from './ServiceCard';
+import { ServicesPagination } from './ServicesPagination';
+import { ServicesStats } from './ServicesStats';
+import { ServicesFilters } from './ServicesFilters';
+import { ServiceFormDialog } from './ServiceFormDialog';
+
+// Types
 interface Service {
   id: string;
   name: string;
@@ -114,14 +105,26 @@ const categories = [
   { value: 'other', label: 'أخرى', labelEn: 'Other' },
 ];
 
+const ITEMS_PER_PAGE = 10;
+
 export function ServicesManagement() {
+  // State
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
+
+  // Filters
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  
-  // Dialog states
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [visibilityFilter, setVisibilityFilter] = useState('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Dialogs
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -130,20 +133,12 @@ export function ServicesManagement() {
   const [formData, setFormData] = useState<ServiceFormData>(initialFormData);
   const [saving, setSaving] = useState(false);
 
-  // Real-time sync with delivery confirmations
-  const {
-    isServicesConnected,
-    syncStatus,
-  } = useAdminRealtime({
-    tenantId: undefined, // TODO: Get from context
-    enabled: true,
-    showDeliveryToasts: true,
-  });
-
   // Fetch services
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    else setIsRefreshing(true);
+
     try {
-      setLoading(true);
       const { data, error } = await db
         .from('services')
         .select('*')
@@ -153,66 +148,76 @@ export function ServicesManagement() {
       setServices(data || []);
     } catch (err) {
       console.error('Error fetching services:', err);
-      toast({
-        title: 'خطأ في جلب الخدمات',
-        variant: 'destructive',
-      });
+      if (!silent) {
+        toast.error('خطأ في جلب الخدمات');
+      }
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchServices();
 
     // Real-time subscription
     const channel = supabase
-      .channel('services-changes')
+      .channel('services-realtime')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'services' },
         () => {
-          fetchServices();
+          fetchServices(true);
+          toast.info('🔄 تم تحديث الخدمات', { duration: 2000 });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
-
-  // Stats
-  const stats = {
-    total: services.length,
-    active: services.filter(s => s.is_active).length,
-    inactive: services.filter(s => !s.is_active).length,
-    categories: [...new Set(services.map(s => s.category).filter(Boolean))].length,
-  };
+  }, [fetchServices]);
 
   // Filter services
-  const filteredServices = services.filter(service => {
-    const matchesSearch = 
-      service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (service.name_ar && service.name_ar.includes(searchQuery)) ||
-      (service.description && service.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesStatus = statusFilter === 'all' || 
-      (statusFilter === 'active' && service.is_active) ||
-      (statusFilter === 'inactive' && !service.is_active);
-    
-    const matchesCategory = categoryFilter === 'all' || service.category === categoryFilter;
-    
-    return matchesSearch && matchesStatus && matchesCategory;
-  });
+  const filteredServices = useMemo(() => {
+    return services.filter(service => {
+      const matchesSearch = 
+        service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (service.name_ar && service.name_ar.includes(searchQuery)) ||
+        (service.description && service.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesStatus = statusFilter === 'all' || 
+        (statusFilter === 'active' && service.is_active) ||
+        (statusFilter === 'inactive' && !service.is_active);
+      
+      const matchesCategory = categoryFilter === 'all' || service.category === categoryFilter;
+      
+      const matchesVisibility = visibilityFilter === 'all' ||
+        (visibilityFilter === 'visible' && service.is_visible_to_customers) ||
+        (visibilityFilter === 'hidden' && !service.is_visible_to_customers);
+      
+      return matchesSearch && matchesStatus && matchesCategory && matchesVisibility;
+    });
+  }, [services, searchQuery, statusFilter, categoryFilter, visibilityFilter]);
 
-  // Handle form submit
+  // Pagination
+  const totalPages = Math.ceil(filteredServices.length / ITEMS_PER_PAGE);
+  const paginatedServices = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredServices.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredServices, currentPage]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, categoryFilter, visibilityFilter]);
+
+  // CRUD Operations
   const handleSubmit = async () => {
     if (!formData.name || !formData.name_ar) {
-      toast({
-        title: 'يرجى ملء الحقول المطلوبة',
-        variant: 'destructive',
-      });
+      toast.error('يرجى ملء الحقول المطلوبة');
       return;
     }
 
@@ -243,14 +248,14 @@ export function ServicesManagement() {
           .eq('id', selectedService.id);
 
         if (error) throw error;
-        toast({ title: 'تم تحديث الخدمة بنجاح' });
+        toast.success('✅ تم تحديث الخدمة بنجاح');
       } else {
         const { error } = await db
           .from('services')
           .insert(serviceData);
 
         if (error) throw error;
-        toast({ title: 'تم إضافة الخدمة بنجاح' });
+        toast.success('✅ تم إضافة الخدمة بنجاح');
       }
 
       setFormDialogOpen(false);
@@ -259,16 +264,12 @@ export function ServicesManagement() {
       setSelectedService(null);
     } catch (err) {
       console.error('Error saving service:', err);
-      toast({
-        title: isEditing ? 'خطأ في تحديث الخدمة' : 'خطأ في إضافة الخدمة',
-        variant: 'destructive',
-      });
+      toast.error(isEditing ? 'خطأ في تحديث الخدمة' : 'خطأ في إضافة الخدمة');
     } finally {
       setSaving(false);
     }
   };
 
-  // Handle delete
   const handleDelete = async () => {
     if (!selectedService) return;
 
@@ -280,19 +281,15 @@ export function ServicesManagement() {
 
       if (error) throw error;
       
-      toast({ title: 'تم حذف الخدمة بنجاح' });
+      toast.success('✅ تم حذف الخدمة بنجاح');
       setDeleteDialogOpen(false);
       setSelectedService(null);
     } catch (err) {
       console.error('Error deleting service:', err);
-      toast({
-        title: 'خطأ في حذف الخدمة',
-        variant: 'destructive',
-      });
+      toast.error('خطأ في حذف الخدمة');
     }
   };
 
-  // Handle toggle status
   const handleToggleStatus = async (service: Service) => {
     try {
       const { error } = await db
@@ -302,19 +299,13 @@ export function ServicesManagement() {
 
       if (error) throw error;
       
-      toast({ 
-        title: service.is_active ? 'تم إلغاء تفعيل الخدمة' : 'تم تفعيل الخدمة' 
-      });
+      toast.success(service.is_active ? 'تم إلغاء تفعيل الخدمة' : 'تم تفعيل الخدمة');
     } catch (err) {
-      console.error('Error toggling service status:', err);
-      toast({
-        title: 'خطأ في تغيير حالة الخدمة',
-        variant: 'destructive',
-      });
+      console.error('Error toggling status:', err);
+      toast.error('خطأ في تغيير حالة الخدمة');
     }
   };
 
-  // Handle toggle visibility
   const handleToggleVisibility = async (service: Service) => {
     try {
       const { error } = await db
@@ -324,65 +315,17 @@ export function ServicesManagement() {
 
       if (error) throw error;
       
-      toast({ 
-        title: service.is_visible_to_customers ? 'تم إخفاء الخدمة عن العملاء' : 'الخدمة مرئية للعملاء الآن' 
-      });
+      toast.success(
+        service.is_visible_to_customers 
+          ? 'تم إخفاء الخدمة عن العملاء' 
+          : 'الخدمة مرئية للعملاء الآن'
+      );
     } catch (err) {
       console.error('Error toggling visibility:', err);
-      toast({
-        title: 'خطأ في تغيير الظهور',
-        variant: 'destructive',
-      });
+      toast.error('خطأ في تغيير الظهور');
     }
   };
 
-  // Handle move up
-  const handleMoveUp = async (service: Service) => {
-    const currentIndex = filteredServices.findIndex(s => s.id === service.id);
-    if (currentIndex <= 0) return;
-
-    const newServices = [...filteredServices];
-    [newServices[currentIndex - 1], newServices[currentIndex]] = 
-      [newServices[currentIndex], newServices[currentIndex - 1]];
-    
-    const orders = newServices.map((s, index) => ({
-      id: s.id,
-      sort_order: index,
-    }));
-
-    try {
-      await updateServicesSortOrder(orders);
-      toast({ title: 'تم تحديث الترتيب' });
-    } catch (err) {
-      console.error('Error updating sort order:', err);
-      toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
-    }
-  };
-
-  // Handle move down
-  const handleMoveDown = async (service: Service) => {
-    const currentIndex = filteredServices.findIndex(s => s.id === service.id);
-    if (currentIndex < 0 || currentIndex >= filteredServices.length - 1) return;
-
-    const newServices = [...filteredServices];
-    [newServices[currentIndex], newServices[currentIndex + 1]] = 
-      [newServices[currentIndex + 1], newServices[currentIndex]];
-    
-    const orders = newServices.map((s, index) => ({
-      id: s.id,
-      sort_order: index,
-    }));
-
-    try {
-      await updateServicesSortOrder(orders);
-      toast({ title: 'تم تحديث الترتيب' });
-    } catch (err) {
-      console.error('Error updating sort order:', err);
-      toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
-    }
-  };
-
-  // Handle duplicate service
   const handleDuplicate = async (service: Service) => {
     try {
       const maxSortOrder = Math.max(...services.map(s => s.sort_order || 0), 0) + 1;
@@ -390,7 +333,7 @@ export function ServicesManagement() {
       const { error } = await db
         .from('services')
         .insert({
-          name: `${service.name} (نسخة)`,
+          name: `${service.name} (Copy)`,
           name_ar: service.name_ar ? `${service.name_ar} (نسخة)` : null,
           description: service.description,
           description_ar: service.description_ar,
@@ -406,14 +349,13 @@ export function ServicesManagement() {
         });
 
       if (error) throw error;
-      toast({ title: 'تم نسخ الخدمة بنجاح' });
+      toast.success('✅ تم نسخ الخدمة بنجاح');
     } catch (err) {
       console.error('Error duplicating service:', err);
-      toast({ title: 'خطأ في نسخ الخدمة', variant: 'destructive' });
+      toast.error('خطأ في نسخ الخدمة');
     }
   };
 
-  // Open edit dialog
   const openEditDialog = (service: Service) => {
     setSelectedService(service);
     setFormData({
@@ -437,7 +379,6 @@ export function ServicesManagement() {
     setFormDialogOpen(true);
   };
 
-  // Open add dialog
   const openAddDialog = () => {
     setSelectedService(null);
     setFormData(initialFormData);
@@ -451,221 +392,166 @@ export function ServicesManagement() {
   };
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="min-h-screen bg-[#0a0e1a] p-4 lg:p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-foreground">إدارة الخدمات</h1>
-            {/* Real-time sync status indicator */}
-            <span 
-              className={cn(
-                "w-2 h-2 rounded-full transition-colors duration-200",
-                isServicesConnected ? "bg-accent" : "bg-muted"
-              )}
-              title={isServicesConnected ? "متصل في الوقت الفعلي" : "غير متصل"}
-            />
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+              <Package className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white">
+                إدارة الخدمات
+              </h1>
+              <p className="text-sm text-slate-400">
+                إدارة وتنظيم الخدمات المتاحة للعملاء
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">
-            إدارة وتنظيم الخدمات المتاحة
-            {syncStatus.confirmedDeliveries > 0 && (
-              <span className="text-xs text-accent mr-2">
-                • {syncStatus.confirmedDeliveries} تسليم مؤكد
-              </span>
-            )}
-          </p>
         </div>
-        <Button onClick={openAddDialog} className="gap-2">
-          <Plus className="h-4 w-4" />
-          إضافة خدمة
-        </Button>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Package className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-primary">{stats.total}</p>
-                  <p className="text-xs text-muted-foreground">إجمالي الخدمات</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="flex items-center gap-3">
+          {/* Live Status */}
+          <div className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border",
+            isConnected 
+              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" 
+              : "bg-red-500/10 text-red-400 border-red-500/30"
+          )}>
+            <span className={cn(
+              "w-2 h-2 rounded-full",
+              isConnected ? "bg-emerald-500 animate-pulse" : "bg-red-500"
+            )} />
+            {isConnected ? "LIVE" : "غير متصل"}
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-accent/10">
-                  <CheckCircle className="h-5 w-5 text-accent" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-accent">{stats.active}</p>
-                  <p className="text-xs text-muted-foreground">خدمات نشطة</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          <Button
+            onClick={openAddDialog}
+            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">إضافة خدمة</span>
+          </Button>
+        </div>
+      </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="border-destructive/20 bg-gradient-to-br from-destructive/5 to-transparent">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-destructive/10">
-                  <XCircle className="h-5 w-5 text-destructive" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-destructive">{stats.inactive}</p>
-                  <p className="text-xs text-muted-foreground">خدمات متوقفة</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <Card className="border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-secondary/10">
-                  <Layers className="h-5 w-5 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-secondary">{stats.categories}</p>
-                  <p className="text-xs text-muted-foreground">التصنيفات</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+      {/* Stats */}
+      <ServicesStats services={services} />
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="relative flex-1">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="بحث عن خدمة..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pr-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="الحالة" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">جميع الحالات</SelectItem>
-                  <SelectItem value="active">نشط</SelectItem>
-                  <SelectItem value="inactive">متوقف</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="التصنيف" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">جميع التصنيفات</SelectItem>
-                  {categories.map(cat => (
-                    <SelectItem key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ServicesFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        statusFilter={statusFilter}
+        onStatusChange={setStatusFilter}
+        categoryFilter={categoryFilter}
+        onCategoryChange={setCategoryFilter}
+        visibilityFilter={visibilityFilter}
+        onVisibilityChange={setVisibilityFilter}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        categories={categories}
+        onRefresh={() => fetchServices(true)}
+        isRefreshing={isRefreshing}
+        totalFiltered={filteredServices.length}
+        totalServices={services.length}
+      />
 
-      {/* Services List */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Package className="h-5 w-5" />
-            قائمة الخدمات ({filteredServices.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      {/* Services Grid/List */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        {loading ? (
+          <div className={cn(
+            "grid gap-4",
+            viewMode === 'grid' 
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+              : "grid-cols-1"
+          )}>
+            {[...Array(10)].map((_, i) => (
+              <div 
+                key={i} 
+                className="h-64 rounded-2xl bg-slate-800 animate-pulse" 
+              />
+            ))}
+          </div>
+        ) : paginatedServices.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="p-4 rounded-full bg-slate-800 mb-4">
+              <Package className="h-12 w-12 text-slate-500" />
             </div>
-          ) : (
-            <AnimatedServiceList
-              services={filteredServices}
-              onReorder={async (reorderedServices) => {
-                const orders = reorderedServices.map((s, index) => ({
-                  id: s.id,
-                  sort_order: index,
-                }));
-                try {
-                  await updateServicesSortOrder(orders);
-                  toast({ title: 'تم تحديث الترتيب' });
-                } catch (err) {
-                  console.error('Error updating sort order:', err);
-                  toast({ title: 'خطأ في تحديث الترتيب', variant: 'destructive' });
-                }
-              }}
-              onView={(service) => {
-                setSelectedService(service);
-                setViewDialogOpen(true);
-              }}
-              onEdit={openEditDialog}
-              onDelete={(service) => {
-                setSelectedService(service);
-                setDeleteDialogOpen(true);
-              }}
-              onToggleStatus={handleToggleStatus}
-              onToggleVisibility={handleToggleVisibility}
-              onDuplicate={handleDuplicate}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
-              getCategoryLabel={getCategoryLabel}
-              isRTL={true}
-            />
-          )}
-        </CardContent>
-      </Card>
+            <h3 className="text-xl font-bold text-white mb-2">لا توجد خدمات</h3>
+            <p className="text-slate-400 mb-6 max-w-md">
+              {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all'
+                ? 'لم يتم العثور على خدمات تطابق معايير البحث'
+                : 'ابدأ بإضافة خدمتك الأولى'}
+            </p>
+            <Button onClick={openAddDialog} className="gap-2 bg-blue-600 hover:bg-blue-700">
+              <Sparkles className="h-4 w-4" />
+              إضافة خدمة جديدة
+            </Button>
+          </div>
+        ) : (
+          <div className={cn(
+            "grid gap-4",
+            viewMode === 'grid' 
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+              : "grid-cols-1"
+          )}>
+            <AnimatePresence mode="popLayout">
+              {paginatedServices.map((service, index) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  index={index}
+                  onView={(s) => {
+                    setSelectedService(s);
+                    setViewDialogOpen(true);
+                  }}
+                  onEdit={openEditDialog}
+                  onDelete={(s) => {
+                    setSelectedService(s);
+                    setDeleteDialogOpen(true);
+                  }}
+                  onToggleStatus={handleToggleStatus}
+                  onToggleVisibility={handleToggleVisibility}
+                  onDuplicate={handleDuplicate}
+                  getCategoryLabel={getCategoryLabel}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Pagination */}
+      {!loading && filteredServices.length > ITEMS_PER_PAGE && (
+        <ServicesPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredServices.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       {/* View Details Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg bg-[#0a0e1a] border-slate-800">
           <DialogHeader>
-            <DialogTitle>تفاصيل الخدمة</DialogTitle>
+            <DialogTitle className="text-white">تفاصيل الخدمة</DialogTitle>
           </DialogHeader>
           {selectedService && (
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center overflow-hidden">
+                <div className="w-16 h-16 rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden">
                   {selectedService.image_url ? (
                     <img 
                       src={selectedService.image_url} 
@@ -673,48 +559,58 @@ export function ServicesManagement() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Package className="h-8 w-8 text-primary" />
+                    <Package className="h-8 w-8 text-slate-400" />
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg">{selectedService.name_ar || selectedService.name}</h3>
-                  <p className="text-sm text-muted-foreground">{selectedService.name}</p>
+                  <h3 className="font-bold text-lg text-white">
+                    {selectedService.name_ar || selectedService.name}
+                  </h3>
+                  <p className="text-sm text-slate-400">{selectedService.name}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">الحالة:</span>
-                  <Badge variant={selectedService.is_active ? 'default' : 'secondary'} className="mr-2">
+                  <span className="text-slate-400">الحالة:</span>
+                  <Badge 
+                    variant={selectedService.is_active ? 'default' : 'secondary'} 
+                    className={cn(
+                      "mr-2",
+                      selectedService.is_active 
+                        ? "bg-emerald-500/20 text-emerald-400" 
+                        : "bg-slate-700 text-slate-400"
+                    )}
+                  >
                     {selectedService.is_active ? 'نشط' : 'متوقف'}
                   </Badge>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">التصنيف:</span>
-                  <span className="mr-2">{getCategoryLabel(selectedService.category)}</span>
+                  <span className="text-slate-400">التصنيف:</span>
+                  <span className="mr-2 text-white">{getCategoryLabel(selectedService.category)}</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">السعر:</span>
-                  <span className="mr-2 font-medium">
+                  <span className="text-slate-400">السعر:</span>
+                  <span className="mr-2 font-medium text-white">
                     {selectedService.price ? `${selectedService.price} ${selectedService.currency}` : 'غير محدد'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">الترتيب:</span>
-                  <span className="mr-2">{selectedService.sort_order}</span>
+                  <span className="text-slate-400">الترتيب:</span>
+                  <span className="mr-2 text-white">{selectedService.sort_order}</span>
                 </div>
               </div>
 
               {(selectedService.description || selectedService.description_ar) && (
                 <div>
-                  <span className="text-muted-foreground text-sm">الوصف:</span>
-                  <p className="mt-1 text-sm">
+                  <span className="text-slate-400 text-sm">الوصف:</span>
+                  <p className="mt-1 text-sm text-white">
                     {selectedService.description_ar || selectedService.description}
                   </p>
                 </div>
               )}
 
-              <div className="text-xs text-muted-foreground pt-2 border-t">
+              <div className="text-xs text-slate-500 pt-2 border-t border-slate-800">
                 <p>تاريخ الإنشاء: {selectedService.created_at ? new Date(selectedService.created_at).toLocaleDateString('ar-SA') : '-'}</p>
                 <p>آخر تحديث: {selectedService.updated_at ? new Date(selectedService.updated_at).toLocaleDateString('ar-SA') : '-'}</p>
               </div>
@@ -724,167 +620,41 @@ export function ServicesManagement() {
       </Dialog>
 
       {/* Add/Edit Form Dialog */}
-      <Dialog open={formDialogOpen} onOpenChange={setFormDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{isEditing ? 'تعديل الخدمة' : 'إضافة خدمة جديدة'}</DialogTitle>
-            <DialogDescription>
-              {isEditing ? 'قم بتعديل بيانات الخدمة' : 'أدخل بيانات الخدمة الجديدة'}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">الاسم (English) *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Service Name"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name_ar">الاسم (عربي) *</Label>
-                <Input
-                  id="name_ar"
-                  value={formData.name_ar}
-                  onChange={(e) => setFormData({ ...formData, name_ar: e.target.value })}
-                  placeholder="اسم الخدمة"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="description">الوصف (English)</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Service description"
-                  dir="ltr"
-                  rows={3}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description_ar">الوصف (عربي)</Label>
-                <Textarea
-                  id="description_ar"
-                  value={formData.description_ar}
-                  onChange={(e) => setFormData({ ...formData, description_ar: e.target.value })}
-                  placeholder="وصف الخدمة"
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="price">السعر</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="0.00"
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="currency">العملة</Label>
-                <Select value={formData.currency} onValueChange={(v) => setFormData({ ...formData, currency: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SAR">ريال سعودي</SelectItem>
-                    <SelectItem value="USD">دولار أمريكي</SelectItem>
-                    <SelectItem value="EUR">يورو</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">التصنيف</Label>
-                <Select value={formData.category} onValueChange={(v) => setFormData({ ...formData, category: v })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر التصنيف" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(cat => (
-                      <SelectItem key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="image_url">رابط الصورة</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://..."
-                  dir="ltr"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sort_order">ترتيب العرض</Label>
-                <Input
-                  id="sort_order"
-                  type="number"
-                  value={formData.sort_order}
-                  onChange={(e) => setFormData({ ...formData, sort_order: e.target.value })}
-                  placeholder="0"
-                  dir="ltr"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <Switch
-                id="is_active"
-                checked={formData.is_active}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-              />
-              <Label htmlFor="is_active" className="cursor-pointer">
-                الخدمة نشطة ومتاحة للعملاء
-              </Label>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setFormDialogOpen(false)}>
-              إلغاء
-            </Button>
-            <Button onClick={handleSubmit} disabled={saving}>
-              {saving ? 'جاري الحفظ...' : isEditing ? 'حفظ التغييرات' : 'إضافة الخدمة'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ServiceFormDialog
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        formData={formData}
+        onFormDataChange={setFormData}
+        onSubmit={handleSubmit}
+        isEditing={isEditing}
+        isSaving={saving}
+        categories={categories}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-[#0a0e1a] border-slate-800">
           <DialogHeader>
-            <DialogTitle>تأكيد الحذف</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-white">تأكيد الحذف</DialogTitle>
+            <DialogDescription className="text-slate-400">
               هل أنت متأكد من حذف الخدمة "{selectedService?.name_ar || selectedService?.name}"؟
               <br />
               لا يمكن التراجع عن هذا الإجراء.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteDialogOpen(false)}
+              className="bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800"
+            >
               إلغاء
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button 
+              variant="destructive" 
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700"
+            >
               حذف
             </Button>
           </DialogFooter>
