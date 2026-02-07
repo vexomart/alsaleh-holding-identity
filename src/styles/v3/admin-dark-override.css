@@ -16,269 +16,30 @@
   --popover: var(--cmd-bg-elevated);
   --popover-foreground: var(--cmd-text-primary);
   --primary: 185 75% 48%;
-  --primary-foreground: 0 0% 98%;
+  --primary-foreground: 220 25% 6%;
   --secondary: 38 95% 55%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary-foreground: 220 25% 6%;
   --muted: var(--cmd-bg-panel);
   --muted-foreground: var(--cmd-text-muted);
   --accent: 145 72% 45%;
-  --accent-foreground: 0 0% 98%;
+  --accent-foreground: 220 25% 6%;
   --destructive: 0 85% 58%;
   --destructive-foreground: 0 0% 98%;
   --border: var(--cmd-border-subtle);
   --input: var(--cmd-border-default);
   --ring: 185 75% 48%;
-}
-
-/* =========================================
-   CARDS
-   ========================================= */
-
-.cmd-center [class*="Card"],
-.cmd-center .card,
-.cmd-center [data-slot="card"] {
-  background: hsl(var(--cmd-bg-card)) !important;
-  border-color: hsl(var(--cmd-border-subtle)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="CardHeader"],
-.cmd-center .card-header {
-  background: transparent !important;
-}
-
-.cmd-center [class*="CardTitle"],
-.cmd-center .card-title {
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="CardDescription"],
-.cmd-center .card-description {
-  color: hsl(var(--cmd-text-muted)) !important;
-}
-
-.cmd-center [class*="CardContent"],
-.cmd-center .card-content {
+  
+  background: hsl(var(--cmd-bg-deep)) !important;
   color: hsl(var(--cmd-text-primary)) !important;
 }
 
 /* =========================================
-   GRADIENT HEADERS - Override to Dark
+   BASE TEXT COLORS
    ========================================= */
 
-.cmd-center .bg-gradient-to-br,
-.cmd-center .bg-gradient-to-r,
-.cmd-center [class*="from-primary"] {
-  --tw-gradient-from: hsl(var(--cmd-bg-elevated)) !important;
-  --tw-gradient-to: hsl(var(--cmd-bg-card)) !important;
-  background: linear-gradient(135deg, hsl(var(--cmd-bg-elevated)), hsl(var(--cmd-bg-card))) !important;
-  border: 1px solid hsl(var(--cmd-border-accent)) !important;
-}
-
-.cmd-center .bg-gradient-to-br.text-white,
-.cmd-center .bg-gradient-to-r.text-white {
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center .bg-gradient-to-br .text-white\/80 {
-  color: hsl(var(--cmd-text-secondary)) !important;
-}
-
-/* =========================================
-   TABLES
-   ========================================= */
-
-.cmd-center table,
-.cmd-center [class*="Table"] {
-  background: hsl(var(--cmd-bg-card)) !important;
-}
-
-.cmd-center thead,
-.cmd-center [class*="TableHeader"] {
-  background: hsl(var(--cmd-bg-panel)) !important;
-}
-
-.cmd-center th,
-.cmd-center [class*="TableHead"] {
-  background: hsl(var(--cmd-bg-panel)) !important;
-  color: hsl(var(--cmd-text-muted)) !important;
-  border-color: hsl(var(--cmd-border-subtle)) !important;
-}
-
-.cmd-center tr,
-.cmd-center [class*="TableRow"] {
-  border-color: hsl(var(--cmd-border-subtle)) !important;
-}
-
-.cmd-center tr:hover,
-.cmd-center [class*="TableRow"]:hover {
-  background: hsl(var(--cmd-bg-hover)) !important;
-}
-
-.cmd-center td,
-.cmd-center [class*="TableCell"] {
-  color: hsl(var(--cmd-text-primary)) !important;
-  border-color: hsl(var(--cmd-border-subtle)) !important;
-}
-
-/* =========================================
-   INPUTS & FORMS
-   ========================================= */
-
-.cmd-center input,
-.cmd-center textarea,
-.cmd-center select,
-.cmd-center [class*="Input"],
-.cmd-center [class*="Textarea"] {
-  background: hsl(var(--cmd-bg-panel)) !important;
-  border-color: hsl(var(--cmd-border-default)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center input::placeholder,
-.cmd-center textarea::placeholder {
-  color: hsl(var(--cmd-text-dim)) !important;
-}
-
-.cmd-center input:focus,
-.cmd-center textarea:focus,
-.cmd-center select:focus {
-  border-color: hsl(var(--cmd-accent-cyan)) !important;
-  box-shadow: 0 0 0 2px hsl(var(--cmd-accent-cyan) / 0.2) !important;
-}
-
-/* =========================================
-   BUTTONS
-   ========================================= */
-
-.cmd-center button:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]),
-.cmd-center [class*="Button"]:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]) {
-  background: hsl(var(--cmd-accent-cyan)) !important;
-  color: hsl(var(--cmd-bg-deep)) !important;
-}
-
-.cmd-center button:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]):hover {
-  background: hsl(185 75% 55%) !important;
-}
-
-.cmd-center [class*="ghost"],
-.cmd-center button[class*="ghost"] {
-  color: hsl(var(--cmd-text-secondary)) !important;
-}
-
-.cmd-center [class*="ghost"]:hover,
-.cmd-center button[class*="ghost"]:hover {
-  background: hsl(var(--cmd-bg-hover)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="outline"],
-.cmd-center button[class*="outline"] {
-  border-color: hsl(var(--cmd-border-default)) !important;
-  color: hsl(var(--cmd-text-secondary)) !important;
-  background: transparent !important;
-}
-
-.cmd-center [class*="outline"]:hover,
-.cmd-center button[class*="outline"]:hover {
-  background: hsl(var(--cmd-bg-hover)) !important;
-  border-color: hsl(var(--cmd-accent-cyan)) !important;
-}
-
-.cmd-center [class*="secondary"],
-.cmd-center button[class*="secondary"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-  border: 1px solid hsl(var(--cmd-border-default)) !important;
-}
-
-/* =========================================
-   BADGES
-   ========================================= */
-
-.cmd-center [class*="Badge"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-  border-color: hsl(var(--cmd-border-default)) !important;
-}
-
-/* =========================================
-   DIALOGS & MODALS
-   ========================================= */
-
-.cmd-center [class*="DialogContent"],
-.cmd-center [role="dialog"] {
-  background: hsl(var(--cmd-bg-card)) !important;
-  border-color: hsl(var(--cmd-border-default)) !important;
-}
-
-.cmd-center [class*="DialogHeader"] {
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="DialogTitle"] {
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="DialogDescription"] {
-  color: hsl(var(--cmd-text-muted)) !important;
-}
-
-/* =========================================
-   DROPDOWNS & SELECTS
-   ========================================= */
-
-.cmd-center [class*="SelectTrigger"],
-.cmd-center [class*="SelectContent"],
-.cmd-center [class*="DropdownMenuContent"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
-  border-color: hsl(var(--cmd-border-default)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center [class*="SelectItem"]:hover,
-.cmd-center [class*="DropdownMenuItem"]:hover {
-  background: hsl(var(--cmd-bg-hover)) !important;
-}
-
-.cmd-center [class*="SelectItem"][data-highlighted],
-.cmd-center [class*="DropdownMenuItem"][data-highlighted] {
-  background: hsl(var(--cmd-bg-hover)) !important;
-}
-
-/* =========================================
-   TABS
-   ========================================= */
-
-.cmd-center [class*="TabsList"] {
-  background: hsl(var(--cmd-bg-panel)) !important;
-  border: 1px solid hsl(var(--cmd-border-subtle)) !important;
-}
-
-.cmd-center [class*="TabsTrigger"] {
-  color: hsl(var(--cmd-text-muted)) !important;
-}
-
-.cmd-center [class*="TabsTrigger"][data-state="active"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-/* =========================================
-   LABELS & TEXT
-   ========================================= */
-
-.cmd-center label,
-.cmd-center [class*="Label"] {
-  color: hsl(var(--cmd-text-secondary)) !important;
-}
-
-.cmd-center .text-foreground {
-  color: hsl(var(--cmd-text-primary)) !important;
-}
-
-.cmd-center .text-muted-foreground {
-  color: hsl(var(--cmd-text-muted)) !important;
+.cmd-center,
+.cmd-center * {
+  color: inherit;
 }
 
 .cmd-center h1, 
@@ -287,15 +48,401 @@
 .cmd-center h4, 
 .cmd-center h5, 
 .cmd-center h6 {
-  color: hsl(var(--cmd-text-primary)) !important;
+  color: hsl(0 0% 98%) !important;
 }
 
-.cmd-center p {
-  color: hsl(var(--cmd-text-secondary)) !important;
+.cmd-center p,
+.cmd-center span:not([class*="text-"]) {
+  color: hsl(220 15% 75%) !important;
+}
+
+.cmd-center .text-foreground {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .text-muted-foreground {
+  color: hsl(220 15% 60%) !important;
+}
+
+.cmd-center label,
+.cmd-center [class*="Label"] {
+  color: hsl(220 15% 75%) !important;
 }
 
 /* =========================================
-   SCROLLBARS
+   CARDS - UNIFIED DARK
+   ========================================= */
+
+.cmd-center [class*="Card"],
+.cmd-center .card,
+.cmd-center [data-slot="card"],
+.cmd-center > div > div[class*="rounded"],
+.cmd-center .space-y-6 > div[class*="border"] {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center [class*="CardHeader"],
+.cmd-center .card-header {
+  background: transparent !important;
+  border-bottom: 1px solid hsl(220 20% 18%) !important;
+}
+
+.cmd-center [class*="CardTitle"],
+.cmd-center .card-title {
+  color: hsl(0 0% 98%) !important;
+  font-weight: 600 !important;
+}
+
+.cmd-center [class*="CardDescription"],
+.cmd-center .card-description {
+  color: hsl(220 15% 60%) !important;
+}
+
+.cmd-center [class*="CardContent"],
+.cmd-center .card-content {
+  color: hsl(220 15% 75%) !important;
+}
+
+/* =========================================
+   GRADIENT HEADERS - DARK VERSION
+   ========================================= */
+
+.cmd-center .bg-gradient-to-br,
+.cmd-center .bg-gradient-to-r,
+.cmd-center [class*="from-primary"],
+.cmd-center .relative.overflow-hidden.rounded-2xl {
+  background: linear-gradient(135deg, hsl(220 22% 14%), hsl(220 20% 10%)) !important;
+  border: 1px solid hsl(185 75% 48% / 0.3) !important;
+}
+
+.cmd-center .bg-gradient-to-br *,
+.cmd-center .bg-gradient-to-r *,
+.cmd-center [class*="from-primary"] *,
+.cmd-center .relative.overflow-hidden.rounded-2xl * {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .text-white {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .text-white\/80,
+.cmd-center [class*="text-white/80"] {
+  color: hsl(220 15% 70%) !important;
+}
+
+/* =========================================
+   TABLES - DARK THEME
+   ========================================= */
+
+.cmd-center table,
+.cmd-center [class*="Table"] {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center thead,
+.cmd-center [class*="TableHeader"] {
+  background: hsl(220 22% 9%) !important;
+}
+
+.cmd-center th,
+.cmd-center [class*="TableHead"] {
+  background: hsl(220 22% 9%) !important;
+  color: hsl(220 15% 60%) !important;
+  border-color: hsl(220 20% 18%) !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+.cmd-center tbody,
+.cmd-center [class*="TableBody"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+.cmd-center tr,
+.cmd-center [class*="TableRow"] {
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center tr:hover,
+.cmd-center [class*="TableRow"]:hover {
+  background: hsl(220 18% 15%) !important;
+}
+
+.cmd-center td,
+.cmd-center [class*="TableCell"] {
+  color: hsl(0 0% 95%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+/* =========================================
+   INPUTS & FORMS - DARK
+   ========================================= */
+
+.cmd-center input,
+.cmd-center textarea,
+.cmd-center select,
+.cmd-center [class*="Input"],
+.cmd-center [class*="Textarea"] {
+  background: hsl(220 22% 9%) !important;
+  border-color: hsl(220 20% 22%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center input::placeholder,
+.cmd-center textarea::placeholder {
+  color: hsl(220 12% 45%) !important;
+}
+
+.cmd-center input:focus,
+.cmd-center textarea:focus,
+.cmd-center select:focus {
+  border-color: hsl(185 75% 48%) !important;
+  box-shadow: 0 0 0 2px hsl(185 75% 48% / 0.2) !important;
+  outline: none !important;
+}
+
+/* =========================================
+   BUTTONS - COMMAND CENTER STYLE
+   ========================================= */
+
+/* Primary buttons - Cyan accent */
+.cmd-center button:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]):not([class*="destructive"]),
+.cmd-center [class*="Button"]:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]):not([class*="destructive"]) {
+  background: hsl(185 75% 48%) !important;
+  color: hsl(220 25% 6%) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+.cmd-center button:not([class*="ghost"]):not([class*="outline"]):not([class*="secondary"]):not([class*="destructive"]):hover {
+  background: hsl(185 75% 55%) !important;
+}
+
+/* Ghost buttons */
+.cmd-center [class*="ghost"],
+.cmd-center button[class*="ghost"] {
+  color: hsl(220 15% 70%) !important;
+  background: transparent !important;
+}
+
+.cmd-center [class*="ghost"]:hover,
+.cmd-center button[class*="ghost"]:hover {
+  background: hsl(220 18% 15%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+/* Outline buttons */
+.cmd-center [class*="outline"],
+.cmd-center button[class*="outline"] {
+  border: 1px solid hsl(220 20% 25%) !important;
+  color: hsl(220 15% 70%) !important;
+  background: transparent !important;
+}
+
+.cmd-center [class*="outline"]:hover,
+.cmd-center button[class*="outline"]:hover {
+  background: hsl(220 18% 15%) !important;
+  border-color: hsl(185 75% 48%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+/* Secondary buttons */
+.cmd-center [class*="secondary"],
+.cmd-center button[class*="secondary"] {
+  background: hsl(220 18% 15%) !important;
+  color: hsl(0 0% 95%) !important;
+  border: 1px solid hsl(220 20% 22%) !important;
+}
+
+.cmd-center [class*="secondary"]:hover,
+.cmd-center button[class*="secondary"]:hover {
+  background: hsl(220 18% 18%) !important;
+}
+
+/* Destructive buttons */
+.cmd-center [class*="destructive"],
+.cmd-center button[class*="destructive"] {
+  background: hsl(0 85% 58%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+/* =========================================
+   BADGES - DARK STYLE
+   ========================================= */
+
+.cmd-center [class*="Badge"] {
+  background: hsl(220 18% 15%) !important;
+  color: hsl(0 0% 95%) !important;
+  border: 1px solid hsl(220 20% 22%) !important;
+}
+
+/* Status badges */
+.cmd-center [class*="bg-accent"],
+.cmd-center .bg-accent\/10 {
+  background: hsl(145 72% 45% / 0.15) !important;
+  color: hsl(145 72% 55%) !important;
+  border-color: hsl(145 72% 45% / 0.3) !important;
+}
+
+.cmd-center [class*="bg-destructive"],
+.cmd-center .bg-destructive\/10 {
+  background: hsl(0 85% 58% / 0.15) !important;
+  color: hsl(0 85% 65%) !important;
+  border-color: hsl(0 85% 58% / 0.3) !important;
+}
+
+.cmd-center [class*="bg-secondary"],
+.cmd-center .bg-secondary\/10 {
+  background: hsl(38 95% 55% / 0.15) !important;
+  color: hsl(38 95% 60%) !important;
+  border-color: hsl(38 95% 55% / 0.3) !important;
+}
+
+.cmd-center [class*="bg-primary"],
+.cmd-center .bg-primary\/10 {
+  background: hsl(185 75% 48% / 0.15) !important;
+  color: hsl(185 75% 55%) !important;
+  border-color: hsl(185 75% 48% / 0.3) !important;
+}
+
+/* =========================================
+   DIALOGS & MODALS - DARK
+   ========================================= */
+
+.cmd-center [class*="DialogContent"],
+.cmd-center [role="dialog"],
+.cmd-center [class*="DialogOverlay"] + div {
+  background: hsl(220 20% 12%) !important;
+  border: 1px solid hsl(220 20% 22%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center [class*="DialogHeader"] {
+  border-bottom: 1px solid hsl(220 20% 18%) !important;
+}
+
+.cmd-center [class*="DialogTitle"] {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center [class*="DialogDescription"] {
+  color: hsl(220 15% 60%) !important;
+}
+
+.cmd-center [class*="DialogFooter"] {
+  border-top: 1px solid hsl(220 20% 18%) !important;
+}
+
+/* =========================================
+   DROPDOWNS & SELECTS - DARK
+   ========================================= */
+
+.cmd-center [class*="SelectTrigger"] {
+  background: hsl(220 22% 9%) !important;
+  border-color: hsl(220 20% 22%) !important;
+  color: hsl(0 0% 95%) !important;
+}
+
+.cmd-center [class*="SelectContent"],
+.cmd-center [class*="DropdownMenuContent"] {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 22%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center [class*="SelectItem"],
+.cmd-center [class*="DropdownMenuItem"] {
+  color: hsl(220 15% 75%) !important;
+}
+
+.cmd-center [class*="SelectItem"]:hover,
+.cmd-center [class*="DropdownMenuItem"]:hover,
+.cmd-center [class*="SelectItem"][data-highlighted],
+.cmd-center [class*="DropdownMenuItem"][data-highlighted] {
+  background: hsl(220 18% 15%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center [class*="SelectLabel"],
+.cmd-center [class*="DropdownMenuLabel"] {
+  color: hsl(220 15% 55%) !important;
+  font-weight: 600 !important;
+}
+
+.cmd-center [class*="SelectSeparator"],
+.cmd-center [class*="DropdownMenuSeparator"] {
+  background: hsl(220 20% 18%) !important;
+}
+
+/* =========================================
+   TABS - DARK STYLE
+   ========================================= */
+
+.cmd-center [class*="TabsList"] {
+  background: hsl(220 22% 9%) !important;
+  border: 1px solid hsl(220 20% 18%) !important;
+  padding: 4px !important;
+}
+
+.cmd-center [class*="TabsTrigger"] {
+  color: hsl(220 15% 55%) !important;
+  background: transparent !important;
+}
+
+.cmd-center [class*="TabsTrigger"]:hover {
+  color: hsl(220 15% 75%) !important;
+}
+
+.cmd-center [class*="TabsTrigger"][data-state="active"] {
+  background: hsl(220 18% 15%) !important;
+  color: hsl(0 0% 98%) !important;
+  box-shadow: none !important;
+}
+
+/* =========================================
+   STATS CARDS - COMMAND CENTER
+   ========================================= */
+
+.cmd-center .grid > [class*="Card"],
+.cmd-center .grid-cols-2 > div,
+.cmd-center .grid-cols-4 > div,
+.cmd-center [class*="md:grid-cols"] > div {
+  background: hsl(220 20% 12%) !important;
+  border: 1px solid hsl(220 20% 18%) !important;
+}
+
+/* Icon containers in stats */
+.cmd-center .p-2.rounded-lg,
+.cmd-center .p-2.rounded-xl,
+.cmd-center .p-3.rounded-2xl {
+  background: hsl(220 18% 15%) !important;
+}
+
+/* Accent text colors */
+.cmd-center .text-primary {
+  color: hsl(185 75% 55%) !important;
+}
+
+.cmd-center .text-secondary {
+  color: hsl(38 95% 60%) !important;
+}
+
+.cmd-center .text-accent {
+  color: hsl(145 72% 55%) !important;
+}
+
+.cmd-center .text-destructive {
+  color: hsl(0 85% 65%) !important;
+}
+
+/* =========================================
+   SCROLLBARS - DARK
    ========================================= */
 
 .cmd-center ::-webkit-scrollbar {
@@ -304,26 +451,31 @@
 }
 
 .cmd-center ::-webkit-scrollbar-track {
-  background: hsl(var(--cmd-bg-panel));
+  background: hsl(220 22% 9%);
 }
 
 .cmd-center ::-webkit-scrollbar-thumb {
-  background: hsl(var(--cmd-border-strong));
+  background: hsl(220 18% 25%);
   border-radius: 4px;
 }
 
 .cmd-center ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--cmd-text-dim));
+  background: hsl(220 18% 35%);
 }
 
 /* =========================================
-   SEPARATORS
+   SEPARATORS & BORDERS
    ========================================= */
 
 .cmd-center [class*="Separator"],
 .cmd-center hr {
-  background: hsl(var(--cmd-border-subtle)) !important;
-  border-color: hsl(var(--cmd-border-subtle)) !important;
+  background: hsl(220 20% 18%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center .border,
+.cmd-center [class*="border-"] {
+  border-color: hsl(220 20% 18%) !important;
 }
 
 /* =========================================
@@ -331,11 +483,21 @@
    ========================================= */
 
 .cmd-center [class*="Progress"] {
-  background: hsl(var(--cmd-bg-panel)) !important;
+  background: hsl(220 22% 9%) !important;
+}
+
+.cmd-center [class*="Progress"] > div {
+  background: hsl(185 75% 48%) !important;
 }
 
 .cmd-center [class*="Skeleton"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
+  background: hsl(220 18% 15%) !important;
+  animation: cmd-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes cmd-skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
 }
 
 /* =========================================
@@ -343,9 +505,9 @@
    ========================================= */
 
 .cmd-center [class*="TooltipContent"] {
-  background: hsl(var(--cmd-bg-elevated)) !important;
-  border-color: hsl(var(--cmd-border-default)) !important;
-  color: hsl(var(--cmd-text-primary)) !important;
+  background: hsl(220 18% 15%) !important;
+  border: 1px solid hsl(220 20% 22%) !important;
+  color: hsl(0 0% 98%) !important;
 }
 
 /* =========================================
@@ -357,76 +519,80 @@
 }
 
 /* =========================================
-   SPECIFIC ADMIN PAGE OVERRIDES
+   SWITCH & CHECKBOX
    ========================================= */
 
-/* Stats cards with gradient backgrounds */
-.cmd-center .border-primary\/20,
-.cmd-center .border-secondary\/20,
-.cmd-center .border-accent\/20,
-.cmd-center .border-destructive\/20 {
-  border-color: hsl(var(--cmd-border-subtle)) !important;
+.cmd-center [class*="Switch"] {
+  background: hsl(220 20% 22%) !important;
 }
 
-.cmd-center .bg-primary\/5,
-.cmd-center .bg-primary\/10,
-.cmd-center .bg-secondary\/5,
-.cmd-center .bg-secondary\/10,
-.cmd-center .bg-accent\/5,
-.cmd-center .bg-accent\/10,
-.cmd-center .bg-destructive\/5,
-.cmd-center .bg-destructive\/10 {
-  background: hsl(var(--cmd-bg-card)) !important;
+.cmd-center [class*="Switch"][data-state="checked"] {
+  background: hsl(185 75% 48%) !important;
 }
 
-/* Icon containers */
-.cmd-center .rounded-lg.bg-primary\/10,
-.cmd-center .rounded-lg.bg-secondary\/10,
-.cmd-center .rounded-lg.bg-accent\/10 {
-  background: hsl(var(--cmd-bg-elevated)) !important;
+.cmd-center [class*="Checkbox"] {
+  border-color: hsl(220 20% 30%) !important;
+  background: hsl(220 22% 9%) !important;
 }
 
-/* Text colors for stats */
-.cmd-center .text-primary {
-  color: hsl(var(--cmd-accent-cyan)) !important;
-}
-
-.cmd-center .text-secondary {
-  color: hsl(var(--cmd-accent-amber)) !important;
-}
-
-.cmd-center .text-accent {
-  color: hsl(var(--cmd-accent-green)) !important;
-}
-
-.cmd-center .text-destructive {
-  color: hsl(var(--cmd-accent-red)) !important;
-}
-
-/* =========================================
-   MOTION/FRAMER ANIMATIONS
-   ========================================= */
-
-.cmd-center [class*="motion"] {
-  color: inherit;
-}
-
-/* =========================================
-   EMPTY STATES
-   ========================================= */
-
-.cmd-center .text-center.text-muted-foreground {
-  color: hsl(var(--cmd-text-muted)) !important;
+.cmd-center [class*="Checkbox"][data-state="checked"] {
+  background: hsl(185 75% 48%) !important;
+  border-color: hsl(185 75% 48%) !important;
 }
 
 /* =========================================
    LINKS
    ========================================= */
 
-.cmd-center a {
-  color: hsl(var(--cmd-accent-cyan)) !important;
+.cmd-center a:not([class*="Button"]) {
+  color: hsl(185 75% 55%) !important;
 }
 
-.cmd-center a:hover {
-  color: hsl(185 75% 60%) !important;
+.cmd-center a:not([class*="Button"]):hover {
+  color: hsl(185 75% 65%) !important;
+}
+
+/* =========================================
+   EMPTY STATES & PLACEHOLDERS
+   ========================================= */
+
+.cmd-center .text-center {
+  color: hsl(220 15% 55%) !important;
+}
+
+/* =========================================
+   SPECIFIC COMPONENT FIXES
+   ========================================= */
+
+/* White backgrounds should be dark */
+.cmd-center .bg-white,
+.cmd-center .bg-background {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Muted backgrounds */
+.cmd-center .bg-muted,
+.cmd-center .bg-muted\/50 {
+  background: hsl(220 22% 9%) !important;
+}
+
+/* Card gradients */
+.cmd-center .from-muted\/50 {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Hero section icons */
+.cmd-center .bg-white\/20,
+.cmd-center .bg-white\/10 {
+  background: hsl(185 75% 48% / 0.15) !important;
+}
+
+/* Blur effects */
+.cmd-center .blur-3xl {
+  opacity: 0.3 !important;
+}
+
+/* Grid pattern */
+.cmd-center .bg-grid-pattern {
+  opacity: 0.05 !important;
 }
