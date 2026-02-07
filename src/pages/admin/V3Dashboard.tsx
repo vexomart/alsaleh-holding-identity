@@ -29,6 +29,7 @@ import { AdminClientHub } from '@/components/admin/clients';
 // Lazy load pages
 const AdminReferralsPage = lazy(() => import('@/components/admin/referrals/AdminReferralsPage'));
 const IntegrationsPage = lazy(() => import('@/components/admin/integrations/IntegrationsPage'));
+const OrderDetailsPage = lazy(() => import('@/pages/admin/OrderDetailsPage'));
 
 // V3 Loader - Command Center Style
 const V3PageLoader = () => (
@@ -79,6 +80,7 @@ const V3AdminDashboard = () => {
         <Route path="clients/:id" element={<LegacyPageWrapper><AdminClientHub /></LegacyPageWrapper>} />
         <Route path="services" element={<LegacyPageWrapper><ServicesManagement /></LegacyPageWrapper>} />
         <Route path="orders" element={<LegacyPageWrapper><OrdersManagement /></LegacyPageWrapper>} />
+        <Route path="orders/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><OrderDetailsPage /></Suspense></LegacyPageWrapper>} />
         <Route path="contracts" element={<LegacyPageWrapper><ContractsManagement /></LegacyPageWrapper>} />
         <Route path="wallets" element={<LegacyPageWrapper><WalletsManagement /></LegacyPageWrapper>} />
         <Route path="wallets/:id" element={<LegacyPageWrapper><WalletDetailsPage /></LegacyPageWrapper>} />
