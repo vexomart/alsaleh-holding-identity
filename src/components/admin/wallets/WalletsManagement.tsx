@@ -146,13 +146,13 @@ export function WalletsManagement() {
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/20">
-              <WalletCards className="h-7 w-7 text-emerald-600" />
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 border border-accent/20">
+              <WalletCards className="h-7 w-7 text-accent" />
             </div>
             <div>
               <h1 className="text-2xl font-bold flex items-center gap-2">
                 {isRTL ? "إدارة المحافظ" : "Wallet Management"}
-                <Sparkles className="h-5 w-5 text-amber-500" />
+                <Sparkles className="h-5 w-5 text-secondary" />
               </h1>
               <p className="text-sm text-muted-foreground">
                 {isRTL ? "اضغط على العميل لعرض تفاصيل المحفظة" : "Click on a customer to view wallet details"}
@@ -203,7 +203,7 @@ export function WalletsManagement() {
         <Card className="border-border/50 shadow-sm overflow-hidden">
           <CardHeader className="border-b bg-muted/30 py-4">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
-              <Users className="h-5 w-5 text-emerald-600" />
+              <Users className="h-5 w-5 text-accent" />
               {isRTL ? "قائمة العملاء" : "Customers List"}
               <span className="ms-2 text-sm font-normal text-muted-foreground">({filteredCustomers.length})</span>
             </CardTitle>

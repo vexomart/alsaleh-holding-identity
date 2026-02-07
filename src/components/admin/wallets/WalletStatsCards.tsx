@@ -59,7 +59,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
       value: formatCurrency(stats.totalBalance),
       subValue: `${stats.totalWallets} ${isRTL ? "محفظة" : "wallets"}`,
       icon: Banknote,
-      gradient: "from-emerald-500 to-teal-600",
+      gradient: "from-accent to-accent/80",
       iconBg: "bg-white/20",
       trend: stats.monthlyGrowth,
     },
@@ -69,7 +69,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
       value: stats.activeWallets.toString(),
       subValue: `${Math.round((stats.activeWallets / stats.totalWallets) * 100 || 0)}% ${isRTL ? "من الإجمالي" : "of total"}`,
       icon: Wallet,
-      gradient: "from-blue-500 to-indigo-600",
+      gradient: "from-primary to-primary/80",
       iconBg: "bg-white/20",
     },
     {
@@ -78,7 +78,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
       value: formatCurrency(avgBalance),
       subValue: isRTL ? "لكل محفظة" : "per wallet",
       icon: TrendingUp,
-      gradient: "from-violet-500 to-purple-600",
+      gradient: "from-primary to-accent",
       iconBg: "bg-white/20",
     },
     {
@@ -87,7 +87,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
       value: stats.pendingTransactions.toString(),
       subValue: isRTL ? "بحاجة لمراجعة" : "need review",
       icon: Activity,
-      gradient: "from-amber-500 to-orange-600",
+      gradient: "from-secondary to-secondary/80",
       iconBg: "bg-white/20",
       highlight: stats.pendingTransactions > 0,
     },
@@ -139,7 +139,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
             <Card
               className={cn(
                 "relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300",
-                card.highlight && "ring-2 ring-amber-500/50 ring-offset-2 ring-offset-background animate-pulse"
+                card.highlight && "ring-2 ring-secondary/50 ring-offset-2 ring-offset-background animate-pulse"
               )}
             >
               {/* Gradient Background */}
@@ -169,7 +169,7 @@ export const WalletStatsCards = memo(function WalletStatsCards({
                       {card.trend !== undefined && (
                         <span className={cn(
                           "text-xs font-medium flex items-center gap-0.5 px-1.5 py-0.5 rounded-full",
-                          card.trend >= 0 ? "bg-white/20 text-white" : "bg-red-500/30 text-red-200"
+                          card.trend >= 0 ? "bg-white/20 text-white" : "bg-destructive/30 text-destructive-foreground"
                         )}>
                           {card.trend >= 0 ? (
                             <ArrowUpRight className="h-3 w-3" />

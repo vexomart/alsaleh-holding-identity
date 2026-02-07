@@ -122,63 +122,63 @@ const statusConfig: Record<string, {
   pending: { 
     labelAr: "قيد الانتظار", 
     labelEn: "Pending", 
-    color: "text-amber-600 dark:text-amber-400", 
-    bgColor: "bg-amber-50 dark:bg-amber-950/50",
-    borderColor: "border-amber-200 dark:border-amber-800",
+    color: "text-secondary dark:text-secondary", 
+    bgColor: "bg-secondary/10 dark:bg-secondary/20",
+    borderColor: "border-secondary/30 dark:border-secondary/40",
     icon: Clock,
-    gradient: "from-amber-500 to-orange-500"
+    gradient: "from-secondary to-secondary/80"
   },
   processing: { 
     labelAr: "قيد المعالجة", 
     labelEn: "Processing", 
-    color: "text-blue-600 dark:text-blue-400", 
-    bgColor: "bg-blue-50 dark:bg-blue-950/50",
-    borderColor: "border-blue-200 dark:border-blue-800",
+    color: "text-primary dark:text-primary", 
+    bgColor: "bg-primary/10 dark:bg-primary/20",
+    borderColor: "border-primary/30 dark:border-primary/40",
     icon: Package,
-    gradient: "from-blue-500 to-cyan-500"
+    gradient: "from-primary to-primary/80"
   },
   in_progress: { 
     labelAr: "قيد التنفيذ", 
     labelEn: "In Progress", 
-    color: "text-indigo-600 dark:text-indigo-400", 
-    bgColor: "bg-indigo-50 dark:bg-indigo-950/50",
-    borderColor: "border-indigo-200 dark:border-indigo-800",
+    color: "text-accent dark:text-accent", 
+    bgColor: "bg-accent/10 dark:bg-accent/20",
+    borderColor: "border-accent/30 dark:border-accent/40",
     icon: Truck,
-    gradient: "from-indigo-500 to-purple-500"
+    gradient: "from-accent to-accent/80"
   },
   completed: { 
     labelAr: "مكتمل", 
     labelEn: "Completed", 
-    color: "text-emerald-600 dark:text-emerald-400", 
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/50",
-    borderColor: "border-emerald-200 dark:border-emerald-800",
+    color: "text-accent dark:text-accent", 
+    bgColor: "bg-accent/10 dark:bg-accent/20",
+    borderColor: "border-accent/30 dark:border-accent/40",
     icon: CheckCircle,
-    gradient: "from-emerald-500 to-green-500"
+    gradient: "from-accent to-accent/80"
   },
   cancelled: { 
     labelAr: "ملغي", 
     labelEn: "Cancelled", 
-    color: "text-red-600 dark:text-red-400", 
-    bgColor: "bg-red-50 dark:bg-red-950/50",
-    borderColor: "border-red-200 dark:border-red-800",
+    color: "text-destructive dark:text-destructive", 
+    bgColor: "bg-destructive/10 dark:bg-destructive/20",
+    borderColor: "border-destructive/30 dark:border-destructive/40",
     icon: XCircle,
-    gradient: "from-red-500 to-rose-500"
+    gradient: "from-destructive to-destructive/80"
   },
   refunded: { 
     labelAr: "مسترد", 
     labelEn: "Refunded", 
-    color: "text-purple-600 dark:text-purple-400", 
-    bgColor: "bg-purple-50 dark:bg-purple-950/50",
-    borderColor: "border-purple-200 dark:border-purple-800",
+    color: "text-muted-foreground dark:text-muted-foreground", 
+    bgColor: "bg-muted dark:bg-muted",
+    borderColor: "border-border dark:border-border",
     icon: CreditCard,
-    gradient: "from-purple-500 to-pink-500"
+    gradient: "from-muted-foreground to-muted-foreground/80"
   },
 };
 
 const priorityConfig: Record<number, { labelAr: string; labelEn: string; color: string }> = {
-  1: { labelAr: 'منخفضة', labelEn: 'Low', color: 'text-slate-500' },
-  2: { labelAr: 'متوسطة', labelEn: 'Medium', color: 'text-amber-500' },
-  3: { labelAr: 'عالية', labelEn: 'High', color: 'text-red-500' },
+  1: { labelAr: 'منخفضة', labelEn: 'Low', color: 'text-muted-foreground' },
+  2: { labelAr: 'متوسطة', labelEn: 'Medium', color: 'text-secondary' },
+  3: { labelAr: 'عالية', labelEn: 'High', color: 'text-destructive' },
 };
 
 export function OrdersManagement() {

@@ -461,7 +461,7 @@ export function ServicesManagement() {
             <span 
               className={cn(
                 "w-2 h-2 rounded-full transition-colors duration-200",
-                isServicesConnected ? "bg-green-500" : "bg-muted"
+                isServicesConnected ? "bg-accent" : "bg-muted"
               )}
               title={isServicesConnected ? "متصل في الوقت الفعلي" : "غير متصل"}
             />
@@ -469,7 +469,7 @@ export function ServicesManagement() {
           <p className="text-muted-foreground text-sm mt-1">
             إدارة وتنظيم الخدمات المتاحة
             {syncStatus.confirmedDeliveries > 0 && (
-              <span className="text-xs text-green-600 mr-2">
+              <span className="text-xs text-accent mr-2">
                 • {syncStatus.confirmedDeliveries} تسليم مؤكد
               </span>
             )}
@@ -508,14 +508,14 @@ export function ServicesManagement() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-green-500/20 bg-gradient-to-br from-green-500/5 to-transparent">
+          <Card className="border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-green-500/10">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                <div className="p-2 rounded-lg bg-accent/10">
+                  <CheckCircle className="h-5 w-5 text-accent" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-green-500">{stats.active}</p>
+                  <p className="text-2xl font-bold text-accent">{stats.active}</p>
                   <p className="text-xs text-muted-foreground">خدمات نشطة</p>
                 </div>
               </div>
@@ -528,14 +528,14 @@ export function ServicesManagement() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent">
+          <Card className="border-destructive/20 bg-gradient-to-br from-destructive/5 to-transparent">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-red-500/10">
-                  <XCircle className="h-5 w-5 text-red-500" />
+                <div className="p-2 rounded-lg bg-destructive/10">
+                  <XCircle className="h-5 w-5 text-destructive" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-red-500">{stats.inactive}</p>
+                  <p className="text-2xl font-bold text-destructive">{stats.inactive}</p>
                   <p className="text-xs text-muted-foreground">خدمات متوقفة</p>
                 </div>
               </div>
@@ -548,14 +548,14 @@ export function ServicesManagement() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent">
+          <Card className="border-secondary/20 bg-gradient-to-br from-secondary/5 to-transparent">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Layers className="h-5 w-5 text-purple-500" />
+                <div className="p-2 rounded-lg bg-secondary/10">
+                  <Layers className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-purple-500">{stats.categories}</p>
+                  <p className="text-2xl font-bold text-secondary">{stats.categories}</p>
                   <p className="text-xs text-muted-foreground">التصنيفات</p>
                 </div>
               </div>
