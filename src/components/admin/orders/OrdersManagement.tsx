@@ -1,9 +1,11 @@
 /**
  * Orders Management - Modern Enterprise Design
  * Full CRUD with workflow management and real-time updates
+ * Navigation-based order details (no popups)
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShoppingCart, 
@@ -35,7 +37,9 @@ import {
   ArrowLeft,
   ArrowRight,
   Hash,
-  Banknote
+  Banknote,
+  MessageSquare,
+  Send,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,14 +47,6 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,11 +75,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useSmsNotifications } from '@/hooks/useSmsNotifications';
 import { SELLER_INFO } from '@/lib/invoices/constants';
 import { type InvoiceData, downloadInvoicePdf } from '@/lib/invoices';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { OrderInvoiceSection } from '@/components/orders/OrderInvoiceSection';
 import { sendOrderStatusEmail } from '@/lib/api/email-notifications';
 
 interface Order {
@@ -184,6 +180,7 @@ const priorityConfig: Record<number, { labelAr: string; labelEn: string; color: 
 export function OrdersManagement() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -193,13 +190,17 @@ export function OrdersManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   
-  // Dialog states
-  const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  
   // Inline price editing
   const [editingPriceOrderId, setEditingPriceOrderId] = useState<string | null>(null);
   const [editingPriceValue, setEditingPriceValue] = useState<string>('');
+
+  // SMS Hook for status notifications
+  const {
+    notifyOrderStatus,
+    notifyOrderProcessing,
+    notifyOrderCompleted,
+    notifyOrderCancelled,
+  } = useSmsNotifications();
 
   // Fetch orders
   const fetchOrders = async () => {
@@ -297,7 +298,7 @@ export function OrdersManagement() {
     currentPage * itemsPerPage
   );
 
-  // Handle status change
+  // Handle status change with SMS notification
   const handleStatusChange = async (orderId: string, newStatus: string) => {
     // Find order to get customer info
     const order = orders.find(o => o.id === orderId);
@@ -315,7 +316,39 @@ export function OrdersManagement() {
         title: isRTL ? 'تم تحديث حالة الطلب' : 'Order status updated' 
       });
       
-      // Send email + SMS notification to customer
+      // Send SMS notification based on status
+      if (order?.customer?.phone) {
+        const phone = order.customer.phone;
+        const orderNumber = order.order_number;
+        
+        let smsResult;
+        
+        switch (newStatus) {
+          case 'processing':
+            smsResult = await notifyOrderProcessing(phone, orderNumber);
+            break;
+          case 'completed':
+            smsResult = await notifyOrderCompleted(phone, orderNumber);
+            break;
+          case 'cancelled':
+            smsResult = await notifyOrderCancelled(phone, orderNumber);
+            break;
+          default:
+            const statusLabel = isRTL 
+              ? statusConfig[newStatus]?.labelAr 
+              : statusConfig[newStatus]?.labelEn;
+            smsResult = await notifyOrderStatus(phone, orderNumber, statusLabel || newStatus);
+        }
+
+        if (smsResult?.success) {
+          toast({
+            title: isRTL ? 'تم إرسال رسالة SMS للعميل' : 'SMS sent to customer',
+            description: order.customer.phone,
+          });
+        }
+      }
+      
+      // Send email notification to customer
       if (order?.customer?.email && order.customer_id) {
         sendOrderStatusEmail({
           orderId: orderId,
@@ -329,7 +362,7 @@ export function OrdersManagement() {
           currency: order.currency || 'SAR',
           status: newStatus,
           previousStatus: previousStatus || undefined,
-        }).catch(err => console.error('Notification failed:', err));
+        }).catch(err => console.error('Email notification failed:', err));
       }
     } catch (err) {
       console.error('Error updating order:', err);
@@ -791,10 +824,7 @@ export function OrdersManagement() {
                               exit={{ opacity: 0, y: -10 }}
                               transition={{ delay: index * 0.03 }}
                               className="group hover:bg-muted/50 cursor-pointer border-b last:border-0"
-                              onClick={() => {
-                                setSelectedOrder(order);
-                                setViewDialogOpen(true);
-                              }}
+                              onClick={() => navigate(`/adminash/orders/${order.id}`)}
                             >
                               {/* رقم الطلب */}
                               <TableCell>
@@ -902,8 +932,7 @@ export function OrdersManagement() {
                                     </DropdownMenuLabel>
                                     <DropdownMenuItem onClick={(e) => {
                                       e.stopPropagation();
-                                      setSelectedOrder(order);
-                                      setViewDialogOpen(true);
+                                      navigate(`/adminash/orders/${order.id}`);
                                     }}>
                                       <Eye className="h-4 w-4 me-2" />
                                       {isRTL ? 'عرض التفاصيل' : 'View Details'}
@@ -1016,209 +1045,6 @@ export function OrdersManagement() {
         </motion.div>
       </div>
 
-      {/* View Order Dialog */}
-      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-2xl p-0 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
-          {selectedOrder && (
-            <>
-              {/* Dialog Header with gradient */}
-              <div className={cn(
-                "p-6 text-white",
-                `bg-gradient-to-r ${statusConfig[selectedOrder.status || 'pending'].gradient}`
-              )}>
-                <DialogHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2.5 bg-white/20 rounded-xl backdrop-blur-sm">
-                        <ShoppingCart className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <DialogTitle className="text-xl font-bold text-white">
-                          {isRTL ? 'تفاصيل الطلب' : 'Order Details'}
-                        </DialogTitle>
-                        <DialogDescription className="text-white/80 mt-0.5">
-                          {selectedOrder.order_number}
-                        </DialogDescription>
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyOrderNumber(selectedOrder.order_number)}
-                      className="text-white hover:bg-white/20"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </DialogHeader>
-              </div>
-
-              <div className="p-6 space-y-6">
-                {/* Status Timeline */}
-                <div className="p-4 bg-muted/30 rounded-xl">
-                  <p className="text-xs font-medium text-muted-foreground mb-4 uppercase tracking-wider">
-                    {isRTL ? 'مسار الطلب' : 'Order Progress'}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    {['pending', 'processing', 'in_progress', 'completed'].map((status, idx) => {
-                      const config = statusConfig[status];
-                      const Icon = config.icon;
-                      const statusOrder = ['pending', 'processing', 'in_progress', 'completed'];
-                      const currentStatusIndex = statusOrder.indexOf(selectedOrder.status || '');
-                      const thisStatusIndex = statusOrder.indexOf(status);
-                      const isActive = selectedOrder.status === status;
-                      const isPast = currentStatusIndex >= thisStatusIndex;
-                      
-                      return (
-                        <div key={status} className="flex items-center flex-1">
-                          <div className={cn(
-                            "flex flex-col items-center gap-2 relative z-10",
-                            isPast ? "opacity-100" : "opacity-40"
-                          )}>
-                            <div className={cn(
-                              "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300",
-                              isActive 
-                                ? `bg-gradient-to-br ${config.gradient} text-white shadow-lg`
-                                : isPast 
-                                  ? "bg-primary text-white" 
-                                  : "bg-muted text-muted-foreground"
-                            )}>
-                              <Icon className="h-5 w-5" />
-                            </div>
-                            <span className={cn(
-                              "text-xs font-medium text-center",
-                              isActive ? config.color : "text-muted-foreground"
-                            )}>
-                              {isRTL ? config.labelAr : config.labelEn}
-                            </span>
-                          </div>
-                          {idx < 3 && (
-                            <div className="flex-1 h-1 mx-2 rounded-full overflow-hidden bg-muted">
-                              <div 
-                                className={cn(
-                                  "h-full transition-all duration-500",
-                                  isPast ? "bg-primary w-full" : "w-0"
-                                )} 
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Order Details Grid */}
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div className="p-4 rounded-xl border bg-card">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                        <FileText className="h-4 w-4" />
-                        <span className="text-xs font-medium uppercase tracking-wider">
-                          {isRTL ? 'عنوان الطلب' : 'Order Title'}
-                        </span>
-                      </div>
-                      <p className="font-semibold">
-                        {isRTL ? selectedOrder.title_ar || selectedOrder.title : selectedOrder.title}
-                      </p>
-                    </div>
-                    <div className="p-4 rounded-xl border bg-card">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                        <Calendar className="h-4 w-4" />
-                        <span className="text-xs font-medium uppercase tracking-wider">
-                          {isRTL ? 'تاريخ الإنشاء' : 'Created Date'}
-                        </span>
-                      </div>
-                      <p className="font-semibold">{formatDate(selectedOrder.created_at)}</p>
-                      <p className="text-xs text-muted-foreground">{formatTime(selectedOrder.created_at)}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="p-4 rounded-xl border bg-card">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                        <CreditCard className="h-4 w-4" />
-                        <span className="text-xs font-medium uppercase tracking-wider">
-                          {isRTL ? 'المبلغ الإجمالي' : 'Total Amount'}
-                        </span>
-                      </div>
-                      <p className="text-2xl font-bold text-primary">
-                        {formatCurrency(selectedOrder.total_amount)}
-                      </p>
-                    </div>
-                    <div className="p-4 rounded-xl border bg-card">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                        <Calendar className="h-4 w-4" />
-                        <span className="text-xs font-medium uppercase tracking-wider">
-                          {isRTL ? 'تاريخ الاستحقاق' : 'Due Date'}
-                        </span>
-                      </div>
-                      <p className="font-semibold">
-                        {selectedOrder.due_date ? formatDate(selectedOrder.due_date) : (isRTL ? 'غير محدد' : 'Not set')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Description */}
-                {selectedOrder.description && (
-                  <div className="p-4 rounded-xl border bg-card">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <FileText className="h-4 w-4" />
-                      <span className="text-xs font-medium uppercase tracking-wider">
-                        {isRTL ? 'الوصف' : 'Description'}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {selectedOrder.description}
-                    </p>
-                  </div>
-                )}
-
-                {/* Invoice Section */}
-                <OrderInvoiceSection
-                  orderId={selectedOrder.id}
-                  orderNumber={selectedOrder.order_number}
-                  orderTitle={selectedOrder.title}
-                  orderTitleAr={selectedOrder.title_ar}
-                  orderDescription={selectedOrder.description}
-                  totalAmount={selectedOrder.total_amount || 0}
-                  currency={selectedOrder.currency || 'SAR'}
-                  customerId={selectedOrder.customer_id}
-                  tenantId={null}
-                  createdAt={selectedOrder.created_at}
-                  dueDate={selectedOrder.due_date}
-                  isAdmin={true}
-                />
-
-                {/* Actions */}
-                <div className="flex items-center gap-3 pt-2">
-                  <Select 
-                    value={selectedOrder.status || 'pending'} 
-                    onValueChange={(v) => handleStatusChange(selectedOrder.id, v)}
-                  >
-                    <SelectTrigger className="flex-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(statusConfig).map(([key, config]) => (
-                        <SelectItem key={key} value={key}>
-                          <div className="flex items-center gap-2">
-                            <config.icon className={cn("h-4 w-4", config.color)} />
-                            {isRTL ? config.labelAr : config.labelEn}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button variant="outline" onClick={() => setViewDialogOpen(false)}>
-                    {isRTL ? 'إغلاق' : 'Close'}
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
