@@ -318,6 +318,48 @@ serve(async (req) => {
           user_id: userId,
           role: 'customer',
         });
+
+        // Send welcome email to new user (async, don't block registration)
+        try {
+          // Get real email from profile if exists
+          const { data: profileData } = await supabase
+            .from("profiles")
+            .select("email")
+            .eq("id", userId)
+            .maybeSingle();
+          
+          const realEmail = profileData?.email && !profileData.email.endsWith('@ash.local') 
+            ? profileData.email 
+            : null;
+          
+          if (realEmail) {
+            console.log("Sending welcome email to:", realEmail);
+            await supabase.functions.invoke('wallet-email-notifications', {
+              body: {
+                type: 'welcome',
+                customer_email: realEmail,
+                customer_name: customerName,
+                data: {
+                  user_id: userId,
+                  welcome_message: 'مرحباً بك في شركة الصالح القابضة! تم إنشاء حسابك بنجاح.',
+                  initial_balance: 0,
+                  wallet_features: [
+                    'طلب الخدمات المتنوعة',
+                    'متابعة حالة الطلبات',
+                    'إدارة العقود والفواتير',
+                    'محفظة رقمية آمنة'
+                  ]
+                }
+              }
+            });
+            console.log("Welcome email sent successfully");
+          } else {
+            console.log("No real email found for user, skipping welcome email");
+          }
+        } catch (emailError) {
+          // Don't fail registration if email fails
+          console.error("Failed to send welcome email:", emailError);
+        }
       }
     }
 
