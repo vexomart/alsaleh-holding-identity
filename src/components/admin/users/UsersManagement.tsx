@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef, memo } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,7 +42,7 @@ interface UserStats {
   growthRate?: number;
 }
 
-export function UsersManagement() {
+function UsersManagementComponent() {
   const { language } = useLanguage();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -53,6 +53,9 @@ export function UsersManagement() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  
+  // Prevent duplicate fetches on mount (React 18 StrictMode)
+  const hasFetched = useRef(false);
   
   // Selection state
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
@@ -146,8 +149,11 @@ export function UsersManagement() {
   }, [language]);
 
   useEffect(() => {
+    // Prevent duplicate fetches on mount (React 18 StrictMode)
+    if (hasFetched.current && !isRefreshing) return;
+    hasFetched.current = true;
     fetchUsers();
-  }, [fetchUsers]);
+  }, [fetchUsers, isRefreshing]);
 
   // Filter users
   useEffect(() => {
@@ -506,3 +512,7 @@ export function UsersManagement() {
     </TooltipProvider>
   );
 }
+
+// Memoize to prevent re-renders from parent layout changes
+export const UsersManagement = memo(UsersManagementComponent);
+UsersManagement.displayName = 'UsersManagement';

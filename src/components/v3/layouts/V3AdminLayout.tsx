@@ -11,6 +11,12 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
 import '@/styles/v3/tokens.css';
 
+// Memoized content wrapper to prevent unnecessary re-renders
+const MemoizedContent = React.memo(({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+));
+MemoizedContent.displayName = 'MemoizedContent';
+
 // Icons as SVG components
 const DashboardIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -98,8 +104,15 @@ export interface V3AdminLayoutProps {
 
 export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
   const { language } = useLanguage();
-  const { profile, signOut } = useAuth();
+  const { profile } = useAuth();
   const [isRailExpanded, setIsRailExpanded] = React.useState(false);
+
+  // Memoize user info to prevent re-renders
+  const userInfo = React.useMemo(() => ({
+    name: profile?.full_name || profile?.email?.split('@')[0] || 'Admin',
+    email: profile?.email || '',
+    role: language === 'ar' ? 'مدير النظام' : 'System Admin',
+  }), [profile?.full_name, profile?.email, language]);
 
   const navGroups: RailNavGroup[] = [
     {
@@ -152,12 +165,8 @@ export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
 
         {/* Main Area */}
         <div className="cmd-main">
-          <V3CommandHeader
-            user={{
-              name: profile?.full_name || profile?.email?.split('@')[0] || 'Admin',
-              email: profile?.email || '',
-              role: language === 'ar' ? 'مدير النظام' : 'System Admin',
-            }}
+        <V3CommandHeader
+            user={userInfo}
             notifications={3}
             onSearch={() => console.log('Search')}
             onNotifications={() => console.log('Notifications')}
@@ -165,9 +174,9 @@ export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
             language={language}
           />
 
-          {/* Content */}
+          {/* Content - Memoized to prevent re-fetches */}
           <main className="cmd-content">
-            {children}
+            <MemoizedContent>{children}</MemoizedContent>
           </main>
         </div>
       </div>
