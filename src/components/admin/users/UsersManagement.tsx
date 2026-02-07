@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,6 +44,7 @@ interface UserStats {
 }
 
 function UsersManagementComponent() {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -426,6 +428,7 @@ function UsersManagementComponent() {
             roleFilter={roleFilter}
             onRoleChange={setRoleFilter}
             onRefresh={handleRefresh}
+            onAddUser={() => navigate('/adminash/users/new')}
             isRefreshing={isRefreshing}
             selectedCount={selectedUsers.size}
             onClearSelection={() => setSelectedUsers(new Set())}
@@ -514,11 +517,8 @@ function UsersManagementComponent() {
                     language={language}
                     isSelected={selectedUsers.has(user.id)}
                     onSelect={(selected) => handleSelectUser(user.id, selected)}
-                    onView={() => {
-                      setSelectedUser(user);
-                      setIsViewDialogOpen(true);
-                    }}
-                    onEdit={() => openEditDialog(user)}
+                    onView={() => navigate(`/adminash/users/${user.id}`)}
+                    onEdit={() => navigate(`/adminash/users/${user.id}/edit`)}
                     onChangeRole={() => openRoleDialog(user)}
                     onToggleStatus={() => handleToggleStatus(user)}
                     onDelete={() => {
