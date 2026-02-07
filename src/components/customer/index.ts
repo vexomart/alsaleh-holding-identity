@@ -17,3 +17,5 @@ export { CustomerNotifications } from './CustomerNotifications';
 export { CustomerProfile } from './CustomerProfile';
 export { CustomerWallet } from './CustomerWallet';
 export { CustomerTransactions } from './CustomerTransactions';
+export { CustomerSupport } from './CustomerSupport';
+export { CustomerSettings } from './CustomerSettings';
