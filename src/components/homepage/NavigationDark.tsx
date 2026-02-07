@@ -367,14 +367,14 @@ export function NavigationDark() {
           >
             <div className="container mx-auto px-4 py-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
               {/* Contact Info */}
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-[hsl(var(--hp-border)/0.5)]">
-                <a href="tel:0555812567" className="flex items-center gap-2 text-sm text-[hsl(var(--hp-text-muted))]">
+              <div className="flex flex-row-reverse items-center justify-between pb-4 mb-4 border-b border-[hsl(var(--hp-border)/0.5)]">
+                <a href="tel:0555812567" className="flex flex-row-reverse items-center gap-2 text-sm text-[hsl(var(--hp-text-muted))]">
                   <Phone className="w-4 h-4 text-[hsl(var(--hp-primary))]" />
                   <span className="ltr-token">0555812567</span>
                 </a>
                 <button 
                   onClick={openWhatsApp}
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-emerald-400 bg-emerald-500/10 rounded-lg"
+                  className="flex flex-row-reverse items-center gap-2 px-3 py-1.5 text-sm text-emerald-400 bg-emerald-500/10 rounded-lg"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>واتساب</span>
@@ -389,7 +389,7 @@ export function NavigationDark() {
                       <>
                         <button
                           onClick={() => setMobileExpandedMenu(mobileExpandedMenu === link.label ? null : link.label)}
-                          className={`w-full flex items-center justify-between px-4 py-3 text-base font-medium rounded-xl transition-colors ${
+                          className={`w-full flex flex-row-reverse items-center justify-between px-4 py-3 text-base font-medium rounded-xl transition-colors ${
                             mobileExpandedMenu === link.label
                               ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
                               : 'text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
@@ -407,16 +407,16 @@ export function NavigationDark() {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="mr-4 mt-1 space-y-1 pb-2">
+                              <div className="me-4 mt-1 space-y-1 pb-2">
                                 {link.submenu.map((item) => (
                                   <Link
                                     key={item.href}
                                     to={item.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))] rounded-lg transition-colors"
+                                    className="flex flex-row-reverse items-center justify-end gap-3 px-4 py-2.5 text-sm text-[hsl(var(--hp-text-muted))] hover:text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))] rounded-lg transition-colors"
                                   >
                                     {item.icon && <item.icon className="w-4 h-4 text-[hsl(var(--hp-primary))]" />}
-                                    <div className="flex flex-col">
+                                    <div className="flex flex-col text-end">
                                       <span>{item.label}</span>
                                       {item.desc && <span className="text-xs text-[hsl(var(--hp-text-subtle))]">{item.desc}</span>}
                                     </div>
@@ -431,7 +431,7 @@ export function NavigationDark() {
                       <Link
                         to={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className={`block px-4 py-3 text-base font-medium rounded-xl transition-colors ${
+                        className={`block px-4 py-3 text-base font-medium rounded-xl transition-colors text-end ${
                           location.pathname === link.href
                             ? 'text-[hsl(var(--hp-primary))] bg-[hsl(var(--hp-primary)/0.1)]'
                             : 'text-[hsl(var(--hp-text))] hover:bg-[hsl(var(--hp-bg-card))]'
