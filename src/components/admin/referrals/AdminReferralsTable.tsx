@@ -124,7 +124,7 @@ export function AdminReferralsTable({
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2, delay: index * 0.03 }}
                       className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${
-                        hasFraudFlags ? 'bg-red-50/50 dark:bg-red-900/10' : ''
+                        hasFraudFlags ? 'bg-destructive/5 dark:bg-destructive/10' : ''
                       }`}
                     >
                       <TableCell>
@@ -157,7 +157,7 @@ export function AdminReferralsTable({
                             {(referral.fraud_flags as string[]).length}
                           </Badge>
                         ) : (
-                          <span className="text-emerald-500 text-sm">✓ سليم</span>
+                          <span className="text-accent text-sm">✓ سليم</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -182,14 +182,14 @@ export function AdminReferralsTable({
                                   onClick={() => onUpdateStatus(referral.id, 'qualified')}
                                   className="gap-2"
                                 >
-                                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                  <CheckCircle2 className="h-4 w-4 text-accent" />
                                   تأهيل للمكافأة
                                 </DropdownMenuItem>
                               )}
                               {referral.status !== 'rejected' && (
                                 <DropdownMenuItem 
                                   onClick={() => onUpdateStatus(referral.id, 'rejected')}
-                                  className="gap-2 text-red-600"
+                                  className="gap-2 text-destructive"
                                 >
                                   <XCircle className="h-4 w-4" />
                                   رفض الإحالة

@@ -507,8 +507,8 @@ export function RolesPermissions() {
                                   className={cn(
                                     "flex items-center gap-1 px-2 py-1 rounded-full text-xs",
                                     modulePermsCount > 0
-                                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                      : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                                      ? "bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent"
+                                      : "bg-muted text-muted-foreground dark:bg-muted dark:text-muted-foreground"
                                   )}
                                 >
                                   <ModuleIcon className="h-3 w-3" />
@@ -703,7 +703,7 @@ export function RolesPermissions() {
                               >
                                 <div className="flex items-center gap-3">
                                   {hasPerm ? (
-                                    <Unlock className="h-4 w-4 text-emerald-500" />
+                                    <Unlock className="h-4 w-4 text-accent" />
                                   ) : (
                                     <Lock className="h-4 w-4 text-muted-foreground" />
                                   )}

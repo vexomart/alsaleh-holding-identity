@@ -17,8 +17,8 @@ const PAYMENT_PROVIDERS = [
     descriptionAr: "بوابة الدفع السعودية - بطاقات ومدى وApple Pay",
     descriptionEn: "Saudi payment gateway - Cards, Mada & Apple Pay",
     icon: CreditCard,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
     fields: [
       { key: "api_key", labelAr: "Vendor ID", labelEn: "Vendor ID", type: "text" as const },
       { key: "api_secret", labelAr: "Vendor Secret", labelEn: "Vendor Secret", type: "password" as const },
@@ -36,8 +36,8 @@ const PAYMENT_PROVIDERS = [
     descriptionAr: "بوابة دفع متكاملة للخليج - بطاقات و KNET و Apple Pay",
     descriptionEn: "GCC payment gateway - Cards, KNET & Apple Pay",
     icon: Wallet,
-    color: "text-blue-600",
-    bgColor: "bg-blue-600/10",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
     fields: [
       { key: "api_key", labelAr: "Public Key", labelEn: "Public Key", type: "text" as const },
       { key: "api_secret", labelAr: "Secret Key", labelEn: "Secret Key", type: "password" as const },
@@ -52,8 +52,8 @@ const PAYMENT_PROVIDERS = [
     descriptionAr: "بوابة دفع سعودية حديثة - دعم شامل لجميع طرق الدفع",
     descriptionEn: "Modern Saudi payment gateway - Full payment support",
     icon: Banknote,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
     fields: [
       { key: "api_key", labelAr: "Publishable Key", labelEn: "Publishable Key", type: "text" as const },
       { key: "api_secret", labelAr: "Secret Key", labelEn: "Secret Key", type: "password" as const },

@@ -511,8 +511,8 @@ export function OrdersManagement() {
       label: isRTL ? 'قيد الانتظار' : 'Pending', 
       value: stats.pending, 
       icon: Clock, 
-      gradient: 'from-amber-500 to-orange-500',
-      bgGradient: 'from-amber-500/10 to-orange-500/5',
+      gradient: 'from-secondary to-secondary/70',
+      bgGradient: 'from-secondary/10 to-secondary/5',
       change: '-3%'
     },
     { 
@@ -520,8 +520,8 @@ export function OrdersManagement() {
       label: isRTL ? 'قيد التنفيذ' : 'In Progress', 
       value: stats.inProgress, 
       icon: Truck, 
-      gradient: 'from-blue-500 to-cyan-500',
-      bgGradient: 'from-blue-500/10 to-cyan-500/5',
+      gradient: 'from-primary to-primary/70',
+      bgGradient: 'from-primary/10 to-primary/5',
       change: '+8%'
     },
     { 
@@ -529,8 +529,8 @@ export function OrdersManagement() {
       label: isRTL ? 'مكتمل' : 'Completed', 
       value: stats.completed, 
       icon: CheckCircle, 
-      gradient: 'from-emerald-500 to-green-500',
-      bgGradient: 'from-emerald-500/10 to-green-500/5',
+      gradient: 'from-accent to-accent/70',
+      bgGradient: 'from-accent/10 to-accent/5',
       change: '+24%'
     },
     { 
@@ -538,8 +538,8 @@ export function OrdersManagement() {
       label: isRTL ? 'الإيرادات' : 'Revenue', 
       value: formatCurrency(stats.totalRevenue), 
       icon: TrendingUp, 
-      gradient: 'from-purple-500 to-pink-500',
-      bgGradient: 'from-purple-500/10 to-pink-500/5',
+      gradient: 'from-primary to-secondary',
+      bgGradient: 'from-primary/10 to-secondary/5',
       change: '+18%',
       isRevenue: true
     },
@@ -639,7 +639,7 @@ export function OrdersManagement() {
                   <div className="mt-4 space-y-1">
                     <p className={cn(
                       "text-2xl font-bold",
-                      stat.isRevenue ? "text-purple-600 dark:text-purple-400" : "text-foreground"
+                      stat.isRevenue ? "text-secondary dark:text-secondary" : "text-foreground"
                     )}>
                       {stat.value}
                     </p>
@@ -672,19 +672,19 @@ export function OrdersManagement() {
                       </TabsTrigger>
                       <TabsTrigger value="pending" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
                         {isRTL ? 'انتظار' : 'Pending'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
+                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-secondary/10 dark:bg-secondary/20 text-secondary text-[10px] font-semibold">
                           {stats.pending}
                         </span>
                       </TabsTrigger>
                       <TabsTrigger value="active" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
                         {isRTL ? 'نشط' : 'Active'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-[10px] font-semibold">
+                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-primary/10 dark:bg-primary/20 text-primary text-[10px] font-semibold">
                           {stats.inProgress}
                         </span>
                       </TabsTrigger>
                       <TabsTrigger value="completed" className="gap-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
                         {isRTL ? 'مكتمل' : 'Done'}
-                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-[10px] font-semibold">
+                        <span className="hidden sm:inline px-1.5 py-0.5 rounded-md bg-accent/10 dark:bg-accent/20 text-accent text-[10px] font-semibold">
                           {stats.completed}
                         </span>
                       </TabsTrigger>
@@ -846,7 +846,7 @@ export function OrdersManagement() {
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                                      className="h-7 w-7 text-accent hover:text-accent hover:bg-accent/10"
                                       onClick={() => handlePriceUpdate(order.id)}
                                     >
                                       <CheckCircle className="h-4 w-4" />
@@ -854,7 +854,7 @@ export function OrdersManagement() {
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                      className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
                                       onClick={() => {
                                         setEditingPriceOrderId(null);
                                         setEditingPriceValue('');
@@ -869,7 +869,7 @@ export function OrdersManagement() {
                                     onClick={(e) => startEditingPrice(order, e)}
                                     title={isRTL ? 'انقر للتعديل' : 'Click to edit'}
                                   >
-                                    <Banknote className="h-4 w-4 text-emerald-600" />
+                                    <Banknote className="h-4 w-4 text-accent" />
                                     <span className="font-semibold text-foreground">
                                       {formatCurrency(order.total_amount)}
                                     </span>

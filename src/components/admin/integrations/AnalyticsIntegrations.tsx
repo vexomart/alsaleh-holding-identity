@@ -17,8 +17,8 @@ const ANALYTICS_PROVIDERS = [
     descriptionAr: "تحليلات شاملة للزوار والسلوك على الموقع",
     descriptionEn: "Comprehensive visitor and behavior analytics",
     icon: BarChart3,
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
     fields: [
       { key: "api_key", labelAr: "Measurement ID", labelEn: "Measurement ID", type: "text" as const, placeholder: "G-XXXXXXXXXX" },
       { key: "api_secret", labelAr: "API Secret", labelEn: "API Secret", type: "password" as const },
@@ -32,8 +32,8 @@ const ANALYTICS_PROVIDERS = [
     descriptionAr: "تحليلات متقدمة للأحداث وسلوك المستخدمين",
     descriptionEn: "Advanced event and user behavior analytics",
     icon: Activity,
-    color: "text-purple-500",
-    bgColor: "bg-purple-500/10",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
     fields: [
       { key: "api_key", labelAr: "Project Token", labelEn: "Project Token", type: "text" as const },
       { key: "api_secret", labelAr: "API Secret", labelEn: "API Secret", type: "password" as const },
@@ -46,8 +46,8 @@ const ANALYTICS_PROVIDERS = [
     descriptionAr: "خرائط حرارية وتسجيلات فيديو لسلوك المستخدمين",
     descriptionEn: "Heatmaps and session recordings for user behavior",
     icon: MousePointer2,
-    color: "text-red-400",
-    bgColor: "bg-red-400/10",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
     fields: [
       { key: "api_key", labelAr: "Site ID", labelEn: "Site ID", type: "text" as const },
       { key: "settings.hotjar_version", labelAr: "Hotjar Version", labelEn: "Hotjar Version", type: "text" as const, placeholder: "6" },
@@ -60,8 +60,8 @@ const ANALYTICS_PROVIDERS = [
     descriptionAr: "أداة مجانية لتحليل سلوك المستخدمين من Microsoft",
     descriptionEn: "Free user behavior analytics tool from Microsoft",
     icon: TrendingUp,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
     fields: [
       { key: "api_key", labelAr: "Project ID", labelEn: "Project ID", type: "text" as const },
     ],

@@ -119,27 +119,27 @@ export function FinanceInvoices() {
     const configs: Record<string, { icon: any; className: string; label: { ar: string; en: string } }> = {
       paid: {
         icon: CheckCircle2,
-        className: "bg-green-500/10 text-green-600 border-green-500/30",
+        className: "bg-accent/10 text-accent border-accent/30",
         label: { ar: "مدفوعة", en: "Paid" },
       },
       issued: {
         icon: Clock,
-        className: "bg-blue-500/10 text-blue-600 border-blue-500/30",
+        className: "bg-primary/10 text-primary border-primary/30",
         label: { ar: "صادرة", en: "Issued" },
       },
       overdue: {
         icon: AlertCircle,
-        className: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        className: "bg-secondary/10 text-secondary border-secondary/30",
         label: { ar: "متأخرة", en: "Overdue" },
       },
       cancelled: {
         icon: XCircle,
-        className: "bg-red-500/10 text-red-600 border-red-500/30",
+        className: "bg-destructive/10 text-destructive border-destructive/30",
         label: { ar: "ملغاة", en: "Cancelled" },
       },
       draft: {
         icon: FileText,
-        className: "bg-gray-500/10 text-gray-600 border-gray-500/30",
+        className: "bg-muted text-muted-foreground border-muted-foreground/30",
         label: { ar: "مسودة", en: "Draft" },
       },
     };
@@ -194,7 +194,7 @@ export function FinanceInvoices() {
     <div className={cn("space-y-6", isRTL ? "text-right" : "text-left")}>
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-green-500/20">
+        <Card className="border-accent/20">
           <CardContent className="p-4">
             <div className={cn(
               "flex items-center justify-between",
@@ -204,15 +204,15 @@ export function FinanceInvoices() {
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "الفواتير المدفوعة" : "Paid Invoices"}
                 </span>
-                <div className="text-2xl font-bold text-green-600" dir="ltr">
+                <div className="text-2xl font-bold text-accent" dir="ltr">
                   {formatCurrency(paidTotal)}
                 </div>
               </div>
-              <CheckCircle2 className="h-8 w-8 text-green-500/50" />
+              <CheckCircle2 className="h-8 w-8 text-accent/50" />
             </div>
           </CardContent>
         </Card>
-        <Card className="border-amber-500/20">
+        <Card className="border-secondary/20">
           <CardContent className="p-4">
             <div className={cn(
               "flex items-center justify-between",
@@ -222,11 +222,11 @@ export function FinanceInvoices() {
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "مستحقات غير مدفوعة" : "Unpaid Amount"}
                 </span>
-                <div className="text-2xl font-bold text-amber-600" dir="ltr">
+                <div className="text-2xl font-bold text-secondary" dir="ltr">
                   {formatCurrency(unpaidTotal)}
                 </div>
               </div>
-              <Clock className="h-8 w-8 text-amber-500/50" />
+              <Clock className="h-8 w-8 text-secondary/50" />
             </div>
           </CardContent>
         </Card>

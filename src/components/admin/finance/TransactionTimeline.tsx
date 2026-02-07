@@ -61,19 +61,19 @@ const eventIcons: Record<string, React.ElementType> = {
 };
 
 const eventColors: Record<string, string> = {
-  created: 'text-blue-500 bg-blue-500/10',
-  paylink_invoice_created: 'text-purple-500 bg-purple-500/10',
-  customer_redirected: 'text-indigo-500 bg-indigo-500/10',
-  webhook_received: 'text-cyan-500 bg-cyan-500/10',
-  verified: 'text-green-500 bg-green-500/10',
-  status_changed: 'text-amber-500 bg-amber-500/10',
-  manual_adjustment: 'text-orange-500 bg-orange-500/10',
-  refund_initiated: 'text-yellow-500 bg-yellow-500/10',
-  refund_completed: 'text-green-500 bg-green-500/10',
-  cancelled_by_user: 'text-gray-500 bg-gray-500/10',
-  cancelled_by_admin: 'text-red-500 bg-red-500/10',
-  payment_timeout: 'text-red-500 bg-red-500/10',
-  retry_initiated: 'text-blue-500 bg-blue-500/10',
+  created: 'text-primary bg-primary/10',
+  paylink_invoice_created: 'text-primary bg-primary/10',
+  customer_redirected: 'text-primary bg-primary/10',
+  webhook_received: 'text-accent bg-accent/10',
+  verified: 'text-accent bg-accent/10',
+  status_changed: 'text-secondary bg-secondary/10',
+  manual_adjustment: 'text-secondary bg-secondary/10',
+  refund_initiated: 'text-secondary bg-secondary/10',
+  refund_completed: 'text-accent bg-accent/10',
+  cancelled_by_user: 'text-muted-foreground bg-muted',
+  cancelled_by_admin: 'text-destructive bg-destructive/10',
+  payment_timeout: 'text-destructive bg-destructive/10',
+  retry_initiated: 'text-primary bg-primary/10',
 };
 
 export function TransactionTimeline({ transactionId, isOpen = false }: TransactionTimelineProps) {

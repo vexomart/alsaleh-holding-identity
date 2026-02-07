@@ -17,8 +17,8 @@ const SMS_PROVIDERS = [
     descriptionAr: "منصة اتصالات عالمية - SMS و WhatsApp و Voice",
     descriptionEn: "Global communication platform - SMS, WhatsApp & Voice",
     icon: MessageSquare,
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
     fields: [
       { key: "api_key", labelAr: "Account SID", labelEn: "Account SID", type: "text" as const },
       { key: "api_secret", labelAr: "Auth Token", labelEn: "Auth Token", type: "password" as const },
@@ -33,8 +33,8 @@ const SMS_PROVIDERS = [
     descriptionAr: "منصة سعودية للرسائل - دعم محلي ممتاز",
     descriptionEn: "Saudi messaging platform - Excellent local support",
     icon: Phone,
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
+    color: "text-secondary",
+    bgColor: "bg-secondary/10",
     fields: [
       { key: "api_key", labelAr: "App SID", labelEn: "App SID", type: "text" as const },
       { key: "api_secret", labelAr: "Secret Key", labelEn: "Secret Key", type: "password" as const },
@@ -48,8 +48,8 @@ const SMS_PROVIDERS = [
     descriptionAr: "منصة سعودية للرسائل النصية - أسعار تنافسية",
     descriptionEn: "Saudi SMS platform - Competitive pricing",
     icon: Send,
-    color: "text-green-500",
-    bgColor: "bg-green-500/10",
+    color: "text-accent",
+    bgColor: "bg-accent/10",
     fields: [
       { key: "api_key", labelAr: "App ID", labelEn: "App ID", type: "text" as const },
       { key: "api_secret", labelAr: "App Key", labelEn: "App Key", type: "password" as const },
