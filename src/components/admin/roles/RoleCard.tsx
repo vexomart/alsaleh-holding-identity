@@ -1,10 +1,9 @@
 /**
- * RoleCard Component - Modern Role Display
+ * RoleCard Component - Modern Role Display (Dark Theme)
  * Shows role information with permission stats
  */
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
   Crown, 
@@ -38,8 +37,8 @@ const roleConfigs: Record<string, {
   descriptionAr: string;
   icon: React.ElementType;
   gradient: string;
-  accentColor: string;
-  shadowColor: string;
+  iconBg: string;
+  borderColor: string;
 }> = {
   super_admin: {
     name: "Super Admin",
@@ -48,8 +47,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "صلاحيات كاملة للنظام",
     icon: Crown,
     gradient: "from-amber-500 via-orange-500 to-red-500",
-    accentColor: "text-amber-500",
-    shadowColor: "shadow-amber-500/20"
+    iconBg: "bg-amber-500/20",
+    borderColor: "border-amber-500/30"
   },
   admin: {
     name: "Admin",
@@ -58,8 +57,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "صلاحيات إدارية لإدارة النظام",
     icon: Shield,
     gradient: "from-blue-500 via-indigo-500 to-purple-500",
-    accentColor: "text-blue-500",
-    shadowColor: "shadow-blue-500/20"
+    iconBg: "bg-blue-500/20",
+    borderColor: "border-blue-500/30"
   },
   manager: {
     name: "Manager",
@@ -68,8 +67,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "إدارة الطلبات والخدمات والموظفين",
     icon: Briefcase,
     gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-    accentColor: "text-emerald-500",
-    shadowColor: "shadow-emerald-500/20"
+    iconBg: "bg-emerald-500/20",
+    borderColor: "border-emerald-500/30"
   },
   staff: {
     name: "Staff",
@@ -77,9 +76,9 @@ const roleConfigs: Record<string, {
     description: "Handle day-to-day operations",
     descriptionAr: "التعامل مع العمليات اليومية",
     icon: UserCog,
-    gradient: "from-slate-500 via-gray-500 to-zinc-500",
-    accentColor: "text-slate-500",
-    shadowColor: "shadow-slate-500/20"
+    gradient: "from-slate-400 via-slate-500 to-slate-600",
+    iconBg: "bg-slate-500/20",
+    borderColor: "border-slate-500/30"
   },
   customer: {
     name: "Customer",
@@ -88,8 +87,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "صلاحيات أساسية للعملاء",
     icon: User,
     gradient: "from-gray-400 via-gray-500 to-gray-600",
-    accentColor: "text-gray-500",
-    shadowColor: "shadow-gray-500/20"
+    iconBg: "bg-gray-500/20",
+    borderColor: "border-gray-500/30"
   },
   support: {
     name: "Support",
@@ -98,8 +97,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "التعامل مع تذاكر الدعم الفني",
     icon: Headphones,
     gradient: "from-pink-500 via-rose-500 to-red-400",
-    accentColor: "text-pink-500",
-    shadowColor: "shadow-pink-500/20"
+    iconBg: "bg-pink-500/20",
+    borderColor: "border-pink-500/30"
   },
   finance: {
     name: "Finance",
@@ -108,8 +107,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "الوصول للتقارير المالية والمعاملات",
     icon: DollarSign,
     gradient: "from-green-500 via-emerald-500 to-teal-500",
-    accentColor: "text-green-500",
-    shadowColor: "shadow-green-500/20"
+    iconBg: "bg-green-500/20",
+    borderColor: "border-green-500/30"
   },
   content_editor: {
     name: "Content Editor",
@@ -118,8 +117,8 @@ const roleConfigs: Record<string, {
     descriptionAr: "إدارة محتوى الموقع والصفحات",
     icon: PenTool,
     gradient: "from-violet-500 via-purple-500 to-fuchsia-500",
-    accentColor: "text-violet-500",
-    shadowColor: "shadow-violet-500/20"
+    iconBg: "bg-violet-500/20",
+    borderColor: "border-violet-500/30"
   }
 };
 
@@ -148,9 +147,9 @@ export function RoleCard({
       onClick={onClick}
       className={cn(
         "group relative cursor-pointer overflow-hidden rounded-2xl",
-        "bg-card border border-border/50",
-        "hover:border-primary/30 hover:shadow-xl transition-all duration-300",
-        config.shadowColor
+        "bg-[#0f1629] border",
+        config.borderColor,
+        "hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
       )}
     >
       {/* Gradient Top Bar */}
@@ -160,7 +159,7 @@ export function RoleCard({
       )} />
 
       {/* Decorative Background */}
-      <div className="absolute -top-24 -end-24 w-48 h-48 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+      <div className="absolute -top-24 -end-24 w-48 h-48 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity text-white/10">
         <Icon className="w-full h-full" />
       </div>
 
@@ -182,15 +181,15 @@ export function RoleCard({
               )}
             </motion.div>
             <div>
-              <h3 className="font-bold text-foreground">
+              <h3 className="font-bold text-white">
                 {isRTL ? config.nameAr : config.name}
               </h3>
-              <p className="text-xs text-muted-foreground line-clamp-1">
+              <p className="text-xs text-slate-400 line-clamp-1">
                 {isRTL ? config.descriptionAr : config.description}
               </p>
             </div>
           </div>
-          <ChevronIcon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+          <ChevronIcon className="h-5 w-5 text-slate-500 group-hover:text-primary transition-colors" />
         </div>
 
         {/* Stats */}
@@ -198,14 +197,14 @@ export function RoleCard({
           {/* Permissions Progress */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">
+              <span className="text-slate-400">
                 {isRTL ? "الصلاحيات" : "Permissions"}
               </span>
-              <span className="font-semibold tabular-nums">
+              <span className="font-semibold tabular-nums text-white">
                 {permissionsCount}/{totalPermissions}
               </span>
             </div>
-            <div className="relative h-2 rounded-full bg-muted overflow-hidden">
+            <div className="relative h-2 rounded-full bg-slate-800 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${percentage}%` }}
@@ -216,16 +215,16 @@ export function RoleCard({
           </div>
 
           {/* Footer Stats */}
-          <div className="flex items-center justify-between pt-2 border-t border-border/50">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
               <Users className="h-3.5 w-3.5" />
               <span>{usersCount} {isRTL ? "مستخدم" : "users"}</span>
             </div>
             <Badge 
-              variant={percentage === 100 ? "default" : percentage > 50 ? "secondary" : "outline"}
+              variant="outline"
               className={cn(
-                "text-xs font-medium",
-                percentage === 100 && "bg-gradient-to-r " + config.gradient + " text-white border-0"
+                "text-xs font-medium border-slate-600 text-slate-300",
+                percentage === 100 && "bg-gradient-to-r border-0 text-white " + config.gradient
               )}
             >
               {percentage}%
