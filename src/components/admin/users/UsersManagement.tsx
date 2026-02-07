@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +9,12 @@ import {
   LayoutGrid, 
   List,
   Users2,
-  Sparkles
+  Sparkles,
+  Radio,
+  Zap,
+  UserPlus,
+  UserMinus,
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,6 +48,12 @@ interface UserStats {
   growthRate?: number;
 }
 
+interface RealtimeEvent {
+  type: 'insert' | 'update' | 'delete';
+  table: string;
+  timestamp: number;
+}
+
 function UsersManagementComponent() {
   const navigate = useNavigate();
   const { language } = useLanguage();
@@ -55,6 +66,11 @@ function UsersManagementComponent() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  
+  // Real-time states
+  const [isConnected, setIsConnected] = useState(false);
+  const [lastRealtimeEvent, setLastRealtimeEvent] = useState<RealtimeEvent | null>(null);
+  const [recentlyUpdatedIds, setRecentlyUpdatedIds] = useState<Set<string>>(new Set());
   
   // Prevent duplicate fetches on mount (React 18 StrictMode)
   const hasFetched = useRef(false);
@@ -74,8 +90,10 @@ function UsersManagementComponent() {
   const [editingPhone, setEditingPhone] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = useCallback(async (silent = false) => {
     try {
+      if (!silent) setIsLoading(true);
+      
       // Fetch profiles
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
@@ -143,19 +161,122 @@ function UsersManagementComponent() {
       });
     } catch (error) {
       console.error("Error fetching users:", error);
-      toast.error(language === "ar" ? "خطأ في تحميل المستخدمين" : "Error loading users");
+      if (!silent) {
+        toast.error(language === "ar" ? "خطأ في تحميل المستخدمين" : "Error loading users");
+      }
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
   }, [language]);
 
+  // Initial fetch
   useEffect(() => {
-    // Prevent duplicate fetches on mount (React 18 StrictMode)
     if (hasFetched.current && !isRefreshing) return;
     hasFetched.current = true;
     fetchUsers();
   }, [fetchUsers, isRefreshing]);
+
+  // Real-time subscriptions
+  useEffect(() => {
+    // Subscribe to profiles changes
+    const profilesChannel = supabase
+      .channel('users-profiles-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles' },
+        (payload) => {
+          const event: RealtimeEvent = {
+            type: payload.eventType as 'insert' | 'update' | 'delete',
+            table: 'profiles',
+            timestamp: Date.now()
+          };
+          setLastRealtimeEvent(event);
+
+          // Highlight the affected user
+          const userId = (payload.new as any)?.id || (payload.old as any)?.id;
+          if (userId) {
+            setRecentlyUpdatedIds(prev => new Set(prev).add(userId));
+            setTimeout(() => {
+              setRecentlyUpdatedIds(prev => {
+                const next = new Set(prev);
+                next.delete(userId);
+                return next;
+              });
+            }, 3000);
+          }
+
+          // Show toast notification
+          if (payload.eventType === 'INSERT') {
+            const newUser = payload.new as any;
+            toast.success(
+              language === "ar" 
+                ? `🆕 مستخدم جديد: ${newUser.full_name || newUser.email}`
+                : `🆕 New user: ${newUser.full_name || newUser.email}`,
+              { icon: <UserPlus className="h-4 w-4" /> }
+            );
+          } else if (payload.eventType === 'UPDATE') {
+            toast.info(
+              language === "ar" ? "🔄 تم تحديث بيانات مستخدم" : "🔄 User data updated",
+              { icon: <RefreshCw className="h-4 w-4" /> }
+            );
+          } else if (payload.eventType === 'DELETE') {
+            toast.warning(
+              language === "ar" ? "🗑️ تم حذف مستخدم" : "🗑️ User deleted",
+              { icon: <UserMinus className="h-4 w-4" /> }
+            );
+          }
+
+          // Refresh data silently
+          fetchUsers(true);
+        }
+      )
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
+
+    // Subscribe to user_roles changes
+    const rolesChannel = supabase
+      .channel('users-roles-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'user_roles' },
+        (payload) => {
+          const event: RealtimeEvent = {
+            type: payload.eventType as 'insert' | 'update' | 'delete',
+            table: 'user_roles',
+            timestamp: Date.now()
+          };
+          setLastRealtimeEvent(event);
+
+          // Highlight the affected user
+          const userId = (payload.new as any)?.user_id || (payload.old as any)?.user_id;
+          if (userId) {
+            setRecentlyUpdatedIds(prev => new Set(prev).add(userId));
+            setTimeout(() => {
+              setRecentlyUpdatedIds(prev => {
+                const next = new Set(prev);
+                next.delete(userId);
+                return next;
+              });
+            }, 3000);
+          }
+
+          toast.info(
+            language === "ar" ? "🔐 تم تحديث صلاحيات مستخدم" : "🔐 User role updated"
+          );
+
+          // Refresh data silently
+          fetchUsers(true);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(profilesChannel);
+      supabase.removeChannel(rolesChannel);
+    };
+  }, [fetchUsers, language]);
 
   // Filter users
   useEffect(() => {
@@ -339,13 +460,33 @@ function UsersManagementComponent() {
         >
           <div className="flex items-center gap-3">
             <div 
-              className="p-3 rounded-xl"
+              className="p-3 rounded-xl relative"
               style={{
                 background: 'linear-gradient(135deg, hsl(var(--cmd-accent-cyan) / 0.2), hsl(var(--cmd-accent-blue) / 0.1))',
                 border: '1px solid hsl(var(--cmd-accent-cyan) / 0.3)',
               }}
             >
               <Users2 className="h-7 w-7" style={{ color: 'hsl(var(--cmd-accent-cyan))' }} />
+              {/* Realtime indicator */}
+              <AnimatePresence>
+                {isConnected && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-1 -end-1 h-4 w-4 rounded-full flex items-center justify-center"
+                    style={{ background: 'hsl(var(--cmd-accent-green))' }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 rounded-full"
+                      style={{ background: 'hsl(var(--cmd-accent-green))' }}
+                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                    />
+                    <Radio className="h-2.5 w-2.5 text-white relative z-10" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             <div>
               <h1 
@@ -355,18 +496,39 @@ function UsersManagementComponent() {
                 {language === "ar" ? "إدارة المستخدمين" : "User Management"}
                 <Sparkles className="h-5 w-5" style={{ color: 'hsl(var(--cmd-accent-amber))' }} />
               </h1>
-              <p 
-                className="text-sm flex items-center gap-2"
-                style={{ color: 'hsl(var(--cmd-text-muted))' }}
-              >
-                <span 
-                  className="w-2 h-2 rounded-full animate-pulse"
-                  style={{ background: 'hsl(var(--cmd-accent-green))' }}
-                />
-                {language === "ar" 
-                  ? "إدارة وتتبع جميع المستخدمين في النظام"
-                  : "Manage and track all users in the system"}
-              </p>
+              <div className="flex items-center gap-3">
+                <p 
+                  className="text-sm flex items-center gap-2"
+                  style={{ color: 'hsl(var(--cmd-text-muted))' }}
+                >
+                  <span 
+                    className={cn("w-2 h-2 rounded-full", isConnected && "animate-pulse")}
+                    style={{ background: isConnected ? 'hsl(var(--cmd-accent-green))' : 'hsl(var(--cmd-text-dim))' }}
+                  />
+                  {language === "ar" 
+                    ? "إدارة وتتبع جميع المستخدمين في النظام"
+                    : "Manage and track all users in the system"}
+                </p>
+                {/* Live Badge */}
+                <AnimatePresence>
+                  {isConnected && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase"
+                      style={{
+                        background: 'hsl(var(--cmd-accent-green) / 0.15)',
+                        color: 'hsl(var(--cmd-accent-green))',
+                        border: '1px solid hsl(var(--cmd-accent-green) / 0.3)',
+                      }}
+                    >
+                      <Zap className="h-3 w-3" />
+                      LIVE
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
@@ -516,6 +678,7 @@ function UsersManagementComponent() {
                     user={user}
                     language={language}
                     isSelected={selectedUsers.has(user.id)}
+                    isHighlighted={recentlyUpdatedIds.has(user.id)}
                     onSelect={(selected) => handleSelectUser(user.id, selected)}
                     onView={() => navigate(`/adminash/users/${user.id}`)}
                     onEdit={() => navigate(`/adminash/users/${user.id}/edit`)}

@@ -1,9 +1,9 @@
 /**
  * User Card - Command Center Dark Theme
- * Premium Bloomberg-style design
+ * Premium Bloomberg-style design with Real-time updates
  */
 
-import { memo } from "react";
+import React, { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { 
   MoreVertical, 
@@ -41,6 +41,7 @@ interface UserCardProps {
   user: User;
   language: string;
   isSelected?: boolean;
+  isHighlighted?: boolean;
   onSelect?: (selected: boolean) => void;
   onView: () => void;
   onEdit: () => void;
@@ -65,6 +66,7 @@ export const UserCard = memo(function UserCard({
   user,
   language,
   isSelected,
+  isHighlighted,
   onSelect,
   onView,
   onEdit,
@@ -81,25 +83,56 @@ export const UserCard = memo(function UserCard({
   const isOnline = user.last_login_at && 
     (new Date().getTime() - new Date(user.last_login_at).getTime()) < 5 * 60 * 1000;
 
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ 
+        opacity: 1, 
+        y: 0,
+        scale: isHighlighted ? [1, 1.02, 1] : 1,
+      }}
       transition={{ duration: 0.2 }}
       whileHover={{ y: -2 }}
       className={cn(
         "group relative p-4 rounded-xl transition-all duration-200",
-        isSelected && "ring-2 ring-[hsl(var(--cmd-accent-cyan))]"
+        isSelected && "ring-2 ring-[hsl(var(--cmd-accent-cyan))]",
+        isHighlighted && "ring-2 ring-[hsl(var(--cmd-accent-green))]"
       )}
       style={{
-        background: isSelected 
-          ? 'hsl(var(--cmd-accent-cyan) / 0.1)' 
-          : 'hsl(var(--cmd-bg-card))',
-        border: '1px solid hsl(var(--cmd-border-subtle))',
+        background: isHighlighted
+          ? 'hsl(var(--cmd-accent-green) / 0.1)'
+          : isSelected 
+            ? 'hsl(var(--cmd-accent-cyan) / 0.1)' 
+            : 'hsl(var(--cmd-bg-card))',
+        border: isHighlighted 
+          ? '1px solid hsl(var(--cmd-accent-green) / 0.5)'
+          : '1px solid hsl(var(--cmd-border-subtle))',
       }}
     >
+      {/* Highlight indicator */}
+      {isHighlighted && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute top-2 end-2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase"
+          style={{
+            background: 'hsl(var(--cmd-accent-green))',
+            color: 'white',
+          }}
+        >
+          <motion.span
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 1 }}
+          >
+            •
+          </motion.span>
+          {language === 'ar' ? 'تم التحديث' : 'Updated'}
+        </motion.div>
+      )}
+      
       {/* Selection Checkbox */}
       {onSelect && (
         <div className="absolute top-3 start-3 z-10">
@@ -325,6 +358,3 @@ const MenuItem: React.FC<{
     {label}
   </button>
 );
-
-// Add React import at top
-import React from "react";
