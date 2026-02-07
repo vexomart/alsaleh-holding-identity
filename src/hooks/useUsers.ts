@@ -34,12 +34,10 @@ export const useUsers = (options: UseUsersOptions = {}) => {
     try {
       setLoading(true);
       
+      // Build profile query
       let query = db
         .from('profiles')
-        .select(`
-          *,
-          roles:user_roles(role)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (options.tenantId) {
@@ -54,10 +52,31 @@ export const useUsers = (options: UseUsersOptions = {}) => {
         query = query.limit(options.limit);
       }
 
-      const { data, error: queryError } = await query;
+      const { data: profilesData, error: profilesError } = await query;
 
-      if (queryError) throw queryError;
-      setUsers(data || []);
+      if (profilesError) throw profilesError;
+
+      // Fetch all user roles
+      const userIds = profilesData?.map(p => p.id) || [];
+      
+      let usersWithRoles: UserProfile[] = profilesData || [];
+      
+      if (userIds.length > 0) {
+        const { data: rolesData } = await db
+          .from('user_roles')
+          .select('user_id, role')
+          .in('user_id', userIds);
+
+        // Map roles to users
+        usersWithRoles = (profilesData || []).map(profile => ({
+          ...profile,
+          roles: (rolesData || [])
+            .filter(r => r.user_id === profile.id)
+            .map(r => ({ role: r.role }))
+        }));
+      }
+
+      setUsers(usersWithRoles);
     } catch (err) {
       console.error('Error fetching users:', err);
       setError(err as Error);
