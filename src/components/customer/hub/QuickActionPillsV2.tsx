@@ -38,7 +38,7 @@ const actions: QuickAction[] = [
     descAr: "ابدأ طلبك الآن",
     descEn: "Start your order",
     icon: Plus,
-    path: "/app/services",
+    path: "/dashboard/services",
     variant: "primary",
     gradient: "from-primary via-emerald-500 to-cyan-500",
   },
@@ -48,7 +48,7 @@ const actions: QuickAction[] = [
     descAr: "تتبع طلباتك",
     descEn: "Track your orders",
     icon: Package,
-    path: "/app/orders",
+    path: "/dashboard/orders",
     variant: "secondary",
   },
   {
@@ -57,7 +57,7 @@ const actions: QuickAction[] = [
     descAr: "إدارة العقود",
     descEn: "Manage contracts",
     icon: FileSignature,
-    path: "/app/contracts",
+    path: "/dashboard/contracts",
     variant: "secondary",
   },
   {
@@ -66,7 +66,7 @@ const actions: QuickAction[] = [
     descAr: "سجل الفواتير",
     descEn: "Invoice history",
     icon: Receipt,
-    path: "/app/invoices",
+    path: "/dashboard/invoices",
     variant: "secondary",
   },
   {
@@ -75,7 +75,7 @@ const actions: QuickAction[] = [
     descAr: "رصيدك المتاح",
     descEn: "Your balance",
     icon: Wallet,
-    path: "/app/wallet",
+    path: "/dashboard/wallet",
     variant: "secondary",
   },
   {
@@ -84,7 +84,7 @@ const actions: QuickAction[] = [
     descAr: "حلول التمويل",
     descEn: "Finance solutions",
     icon: Briefcase,
-    path: "/app/finance",
+    path: "/dashboard/finance",
     variant: "accent",
     gradient: "from-amber-500 via-orange-500 to-rose-500",
   },

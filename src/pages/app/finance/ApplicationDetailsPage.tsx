@@ -251,7 +251,7 @@ export default function ApplicationDetailsPage() {
         <XCircle className="h-12 w-12 text-destructive mb-4" />
         <h3 className="text-lg font-semibold mb-2">خطأ في تحميل البيانات</h3>
         <p className="text-muted-foreground mb-4">لم نتمكن من العثور على طلب التمويل</p>
-        <Button onClick={() => navigate("/app/finance")}>
+        <Button onClick={() => navigate("/dashboard/finance")}>
           <ArrowRight className="h-4 w-4 ml-2" />
           العودة للتمويل
         </Button>
@@ -276,7 +276,7 @@ export default function ApplicationDetailsPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/app/finance")}
+              onClick={() => navigate("/dashboard/finance")}
               className="gap-2"
             >
               <ArrowRight className="h-4 w-4" />

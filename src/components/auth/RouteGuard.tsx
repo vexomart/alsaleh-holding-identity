@@ -1,6 +1,6 @@
 /**
- * RouteGuard - Simplified Authentication Guard
- * Immediate render when auth ready - no extra state management
+ * RouteGuard - Instant Authentication Guard
+ * Zero-delay render when auth ready
  */
 
 import { type ReactNode } from 'react';
@@ -30,23 +30,18 @@ export function RouteGuard({
   const { isRTL } = useLanguage();
   const location = useLocation();
 
-  // Simple loading - NO extra state
+  // Quick loading state
   if (isLoading) {
     return (
       <div dir={isRTL ? 'rtl' : 'ltr'} className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">
-            {isRTL ? "جاري التحميل..." : "Loading..."}
-          </span>
-        </div>
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   // Guest-only: redirect authenticated users
   if (guestOnly && user) {
-    const redirect = authenticatedRedirect || (isAdmin ? '/admin' : '/app');
+    const redirect = authenticatedRedirect || (isAdmin ? '/adminash' : '/dashboard');
     return <Navigate to={redirect} replace />;
   }
 
@@ -62,7 +57,7 @@ export function RouteGuard({
     const hasRequiredRole = requireRoles.some(role => userRoleNames.includes(role as any));
     
     if (!hasRequiredRole) {
-      return <Navigate to={isAdmin ? '/admin' : '/app'} replace />;
+      return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
     }
   }
 
@@ -70,7 +65,7 @@ export function RouteGuard({
 }
 
 /**
- * Pre-configured guards
+ * Pre-configured guards - Instant render
  */
 
 export function CustomerGuard({ children }: { children: ReactNode }) {
@@ -95,9 +90,9 @@ export function AdminGuard({ children }: { children: ReactNode }) {
     return <Navigate to="/auth/login" replace />;
   }
   
-  // Redirect non-admin users
+  // Redirect non-admin users to dashboard
   if (!isAdmin) {
-    return <Navigate to="/app" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   
   return <>{children}</>;

@@ -1,6 +1,6 @@
 /**
- * Entry Point - Smart Routing Based on Auth State
- * Redirects users to appropriate dashboard or login
+ * Entry Point - Instant Smart Routing
+ * Ultra-fast redirect based on auth state
  */
 
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 export default function Entry() {
-  const { user, roles, isLoading, isAdmin } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth();
   const { isRTL } = useLanguage();
   const navigate = useNavigate();
 
@@ -20,18 +20,18 @@ export default function Entry() {
     if (isLoading) return;
 
     if (!user) {
-      // Not authenticated - go to login
+      // Not authenticated - go to login immediately
       navigate('/auth/login', { replace: true });
       return;
     }
 
-    // Authenticated - redirect based on role
+    // Authenticated - instant redirect based on role
     if (isAdmin) {
-      navigate('/admin', { replace: true });
+      navigate('/adminash', { replace: true });
     } else {
-      navigate('/app', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, roles, isLoading, isAdmin, navigate]);
+  }, [user, isLoading, isAdmin, navigate]);
 
   return (
     <div 
@@ -42,47 +42,35 @@ export default function Entry() {
         className="flex flex-col items-center gap-6 text-center p-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.3 }}
       >
         {/* Logo Animation */}
         <motion.div 
           className="relative"
-          animate={{ 
-            scale: [1, 1.05, 1],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
         >
           <div className={cn(
-            "w-20 h-20 rounded-2xl flex items-center justify-center",
+            "w-16 h-16 rounded-2xl flex items-center justify-center",
             "bg-gradient-to-br from-primary to-primary/80",
             "shadow-xl shadow-primary/25"
           )}>
-            <Shield className="w-10 h-10 text-primary-foreground" />
+            <Shield className="w-8 h-8 text-primary-foreground" />
           </div>
           <motion.div 
             className="absolute -top-1 -right-1"
             animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <Sparkles className="w-5 h-5 text-primary" />
+            <Sparkles className="w-4 h-4 text-primary" />
           </motion.div>
         </motion.div>
-        
-        {/* Text */}
-        <div className="space-y-2">
-          <h1 className="text-xl font-bold text-foreground">
-            {isRTL ? "مرحباً بك" : "Welcome"}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {isRTL ? "جاري توجيهك..." : "Redirecting you..."}
-          </p>
-        </div>
         
         {/* Loader */}
         <div className="flex items-center gap-2">
           <Loader2 className="w-5 h-5 animate-spin text-primary" />
-          <span className="text-xs text-muted-foreground">
-            {isRTL ? "يرجى الانتظار" : "Please wait"}
+          <span className="text-sm text-muted-foreground">
+            {isRTL ? "جاري التحويل..." : "Redirecting..."}
           </span>
         </div>
       </motion.div>

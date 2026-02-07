@@ -69,63 +69,63 @@ export function CustomerSidebar() {
       titleAr: "نظرة عامة",
       titleEn: "Overview",
       icon: LayoutDashboard,
-      href: "/app",
+      href: "/dashboard",
       section: "main",
     },
     {
       titleAr: "طلباتي",
       titleEn: "My Orders",
       icon: ShoppingCart,
-      href: "/app/orders",
+      href: "/dashboard/orders",
       section: "main",
     },
     {
       titleAr: "الخدمات",
       titleEn: "Services",
       icon: Package,
-      href: "/app/services",
+      href: "/dashboard/services",
       section: "main",
     },
     {
       titleAr: "عقودي",
       titleEn: "My Contracts",
       icon: FileSignature,
-      href: "/app/contracts",
+      href: "/dashboard/contracts",
       section: "main",
     },
     {
       titleAr: "فواتيري",
       titleEn: "My Invoices",
       icon: Receipt,
-      href: "/app/invoices",
+      href: "/dashboard/invoices",
       section: "main",
     },
     {
       titleAr: "المحفظة",
       titleEn: "Wallet",
       icon: Wallet,
-      href: "/app/wallet",
+      href: "/dashboard/wallet",
       section: "finance",
     },
     {
       titleAr: "التمويل",
       titleEn: "Finance",
       icon: Landmark,
-      href: "/app/finance",
+      href: "/dashboard/finance",
       section: "finance",
     },
     {
       titleAr: "الإحالات",
       titleEn: "Referrals",
       icon: User,
-      href: "/app/referrals",
+      href: "/dashboard/referrals",
       section: "account",
     },
     {
       titleAr: "الإشعارات",
       titleEn: "Notifications",
       icon: Bell,
-      href: "/app/notifications",
+      href: "/dashboard/notifications",
       badge: unreadCount,
       section: "account",
     },
@@ -133,14 +133,14 @@ export function CustomerSidebar() {
       titleAr: "الأمان",
       titleEn: "Security",
       icon: Shield,
-      href: "/app/security",
+      href: "/dashboard/security",
       section: "account",
     },
     {
       titleAr: "الملف الشخصي",
       titleEn: "Profile",
       icon: User,
-      href: "/app/profile",
+      href: "/dashboard/profile",
       section: "account",
     },
   ];
@@ -150,8 +150,8 @@ export function CustomerSidebar() {
   const accountItems = navItems.filter(item => item.section === "account");
 
   const isActive = (href: string) => {
-    if (href === "/app") {
-      return location.pathname === "/app";
+    if (href === "/dashboard") {
+      return location.pathname === "/dashboard";
     }
     return location.pathname.startsWith(href);
   };

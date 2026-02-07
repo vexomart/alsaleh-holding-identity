@@ -70,7 +70,7 @@ export function OrdersEmptyState({ hasFilters, onClearFilters }: OrdersEmptyStat
                 {isRTL ? 'مسح الفلاتر' : 'Clear Filters'}
               </Button>
             ) : (
-              <Button onClick={() => navigate('/app/services')} className="gap-2">
+              <Button onClick={() => navigate('/dashboard/services')} className="gap-2">
                 <Plus className="h-4 w-4" />
                 {isRTL ? 'طلب خدمة جديدة' : 'Request a Service'}
               </Button>

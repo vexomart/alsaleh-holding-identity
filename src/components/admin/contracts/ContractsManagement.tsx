@@ -341,7 +341,7 @@ export function ContractsManagement() {
           totalAmount: selectedContract.pricing_json?.total || 0,
           currency: selectedContract.pricing_json?.currency || 'SAR',
           eventType: 'admin_approved',
-          signingUrl: `/app/contracts/${selectedContract.id}/sign`,
+          signingUrl: `/dashboard/contracts/${selectedContract.id}/sign`,
         }).catch(err => console.error('Notification failed:', err));
       }
       

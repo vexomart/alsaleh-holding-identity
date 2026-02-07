@@ -1,5 +1,7 @@
 /**
- * Routes Constants - Phase 0.5
+ * Routes Constants - Restructured
+ * /adminash - لوحة الإدارة
+ * /dashboard - لوحة العملاء
  */
 
 export const ROUTES = {
@@ -16,46 +18,49 @@ export const ROUTES = {
     RESET_PASSWORD: '/auth/reset-password',
   },
   
-  // Admin Dashboard
+  // Admin Dashboard - /adminash
   ADMIN: {
-    ROOT: '/admin',
-    OVERVIEW: '/admin',
-    USERS: '/admin/users',
-    ROLES: '/admin/roles',
-    CLIENT_HUB: (id: string) => `/admin/clients/${id}`,
-    SERVICES: '/admin/services',
-    ORDERS: '/admin/orders',
-    CONTRACTS: '/admin/contracts',
-    WALLETS: '/admin/wallets',
-    FINANCE: '/admin/finance',
-    REFERRALS: '/admin/referrals',
-    INTEGRATIONS: '/admin/integrations',
+    ROOT: '/adminash',
+    OVERVIEW: '/adminash',
+    USERS: '/adminash/users',
+    ROLES: '/adminash/roles',
+    CLIENT_HUB: (id: string) => `/adminash/clients/${id}`,
+    SERVICES: '/adminash/services',
+    ORDERS: '/adminash/orders',
+    CONTRACTS: '/adminash/contracts',
+    WALLETS: '/adminash/wallets',
+    FINANCE: '/adminash/finance',
+    REFERRALS: '/adminash/referrals',
+    INTEGRATIONS: '/adminash/integrations',
     CMS: {
-      ROOT: '/admin/cms',
-      PAGES: '/admin/cms/pages',
-      MENUS: '/admin/cms/menus',
-      MEDIA: '/admin/cms/media',
+      ROOT: '/adminash/cms',
+      PAGES: '/adminash/cms/pages',
+      MENUS: '/adminash/cms/menus',
+      MEDIA: '/adminash/cms/media',
     },
-    REPORTS: '/admin/reports',
-    AUDIT: '/admin/audit',
-    NOTIFICATIONS: '/admin/notifications',
-    SETTINGS: '/admin/settings',
+    REPORTS: '/adminash/reports',
+    AUDIT: '/adminash/audit',
+    NOTIFICATIONS: '/adminash/notifications',
+    SETTINGS: '/adminash/settings',
   },
   
-  // Customer App
-  APP: {
-    ROOT: '/app',
-    OVERVIEW: '/app',
-    CLIENT_HUB: '/app/client-hub',
-    ORDERS: '/app/orders',
-    ORDER_DETAIL: (id: string) => `/app/orders/${id}`,
-    SERVICES: '/app/services',
-    WALLET: '/app/wallet',
-    REFERRALS: '/app/referrals',
-    PROFILE: '/app/profile',
-    SECURITY: '/app/security',
-    NOTIFICATIONS: '/app/notifications',
-    SUPPORT: '/app/support',
+  // Customer Dashboard - /dashboard
+  DASHBOARD: {
+    ROOT: '/dashboard',
+    OVERVIEW: '/dashboard',
+    CLIENT_HUB: '/dashboard/client-hub',
+    ORDERS: '/dashboard/orders',
+    ORDER_DETAIL: (id: string) => `/dashboard/orders/${id}`,
+    SERVICES: '/dashboard/services',
+    WALLET: '/dashboard/wallet',
+    REFERRALS: '/dashboard/referrals',
+    PROFILE: '/dashboard/profile',
+    SECURITY: '/dashboard/security',
+    NOTIFICATIONS: '/dashboard/notifications',
+    SUPPORT: '/dashboard/support',
+    CONTRACTS: '/dashboard/contracts',
+    INVOICES: '/dashboard/invoices',
+    FINANCE: '/dashboard/finance',
   },
 } as const;
 
@@ -80,6 +85,6 @@ export const ROUTE_GUARDS = {
   // Admin routes - require admin/super_admin role
   ADMIN: [ROUTES.ADMIN.ROOT],
   
-  // App routes - require any authenticated user
-  APP: [ROUTES.APP.ROOT],
+  // Dashboard routes - require any authenticated user
+  DASHBOARD: [ROUTES.DASHBOARD.ROOT],
 } as const;

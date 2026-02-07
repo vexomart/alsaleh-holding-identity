@@ -30,26 +30,26 @@ export function QuickActions({ className }: QuickActionsProps) {
       id: 'new-service',
       icon: Plus,
       label: isRTL ? 'طلب خدمة جديدة' : 'Request New Service',
-      onClick: () => navigate('/app/services'),
+      onClick: () => navigate('/dashboard/services'),
       primary: true,
     },
     {
       id: 'invoices',
       icon: Receipt,
       label: isRTL ? 'عرض الفواتير' : 'View Invoices',
-      onClick: () => navigate('/app/invoices'),
+      onClick: () => navigate('/dashboard/invoices'),
     },
     {
       id: 'contracts',
       icon: FileSignature,
       label: isRTL ? 'عرض العقود' : 'View Contracts',
-      onClick: () => navigate('/app/contracts'),
+      onClick: () => navigate('/dashboard/contracts'),
     },
     {
       id: 'support',
       icon: MessageSquare,
       label: isRTL ? 'الدعم الفني' : 'Contact Support',
-      onClick: () => navigate('/app/support'),
+      onClick: () => navigate('/dashboard/support'),
     },
   ];
 

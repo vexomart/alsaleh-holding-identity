@@ -100,7 +100,7 @@ function Login() {
   // User status states
   const [userNotFound, setUserNotFound] = React.useState(false);
 
-  // Helper: Check user roles and navigate accordingly
+  // Helper: Check user roles and navigate accordingly - Instant
   const navigateBasedOnRole = React.useCallback(async (userId: string) => {
     try {
       const { data: userRoles } = await supabase
@@ -112,20 +112,19 @@ function Login() {
         ['super_admin', 'admin', 'manager', 'support', 'finance', 'content_editor', 'staff'].includes(r.role)
       );
       
-      navigate(hasAdminRole ? '/admin' : '/app');
+      navigate(hasAdminRole ? '/adminash' : '/dashboard');
     } catch {
-      navigate('/app');
+      navigate('/dashboard');
     }
   }, [navigate]);
   
-  // Redirect if already logged in
+  // Redirect if already logged in - Instant
   React.useEffect(() => {
     if (user) {
-      // Check role and redirect accordingly
       if (isAdmin) {
-        navigate('/admin');
+        navigate('/adminash');
       } else {
-        navigate('/app');
+        navigate('/dashboard');
       }
     }
   }, [user, isAdmin, navigate]);
@@ -228,7 +227,7 @@ function Login() {
       if (refreshData?.session?.user) {
         await navigateBasedOnRole(refreshData.session.user.id);
       } else {
-        navigate('/app');
+        navigate('/dashboard');
       }
     } else {
       toast.error(response.error || 'رمز التحقق غير صحيح');
@@ -298,7 +297,7 @@ function Login() {
       if (sessionData?.session?.user) {
         await navigateBasedOnRole(sessionData.session.user.id);
       } else {
-        navigate('/app');
+        navigate('/dashboard');
       }
     } catch (error) {
       toast.error('حدث خطأ، يرجى المحاولة مرة أخرى');
