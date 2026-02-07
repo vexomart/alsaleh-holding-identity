@@ -120,7 +120,6 @@ interface Order {
     phone: string | null;
     email: string | null;
     national_id?: string | null;
-    city?: string | null;
     avatar_url?: string | null;
   } | null;
   service?: {
@@ -277,7 +276,7 @@ export default function OrderDetailsPage() {
       if (orderData.customer_id) {
         const { data: profileData } = await db
           .from('profiles')
-          .select('id, full_name, phone, email, national_id, city, avatar_url')
+          .select('id, full_name, phone, email, national_id, avatar_url')
           .eq('id', orderData.customer_id)
           .maybeSingle();
         customer = profileData;
@@ -1201,10 +1200,10 @@ export default function OrderDetailsPage() {
                       <p className="font-semibold text-white text-lg">
                         {order.customer.full_name || (isRTL ? 'عميل' : 'Customer')}
                       </p>
-                      {order.customer.city && (
+                      {order.customer.email && (
                         <p className="text-sm text-slate-400 flex items-center gap-1 mt-1">
-                          <MapPin className="h-3 w-3" />
-                          {order.customer.city}
+                          <Mail className="h-3 w-3" />
+                          {order.customer.email}
                         </p>
                       )}
                     </div>
