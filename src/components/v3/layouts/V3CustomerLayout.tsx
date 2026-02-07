@@ -62,6 +62,18 @@ const SettingsIcon = () => (
   </svg>
 );
 
+const LandmarkIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/>
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+
 const CUSTOMER_BASE = '/portal';
 
 export interface V3CustomerLayoutProps {
@@ -122,6 +134,15 @@ export const V3CustomerLayout: React.FC<V3CustomerLayoutProps> = ({ children }) 
         { id: 'home', labelAr: 'الرئيسية', labelEn: 'Home', icon: <HomeIcon />, href: CUSTOMER_BASE },
         { id: 'orders', labelAr: 'طلباتي', labelEn: 'My Orders', icon: <ShoppingCartIcon />, href: `${CUSTOMER_BASE}/orders` },
         { id: 'wallet', labelAr: 'المحفظة', labelEn: 'Wallet', icon: <WalletIcon />, href: `${CUSTOMER_BASE}/wallet` },
+      ],
+    },
+    {
+      id: 'finance',
+      labelAr: 'المالية',
+      labelEn: 'Finance',
+      items: [
+        { id: 'finance', labelAr: 'التمويل', labelEn: 'Finance', icon: <LandmarkIcon />, href: `${CUSTOMER_BASE}/finance` },
+        { id: 'referrals', labelAr: 'الإحالات', labelEn: 'Referrals', icon: <UsersIcon />, href: `${CUSTOMER_BASE}/referrals` },
       ],
     },
     {

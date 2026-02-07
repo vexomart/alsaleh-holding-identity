@@ -67,6 +67,12 @@ const LandmarkIcon = () => (
   </svg>
 );
 
+const CreditCardIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+  </svg>
+);
+
 const BarChartIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>
@@ -135,7 +141,9 @@ export const V3AdminLayout: React.FC<V3AdminLayoutProps> = ({ children }) => {
         { id: 'orders', labelAr: 'الطلبات', labelEn: 'Orders', icon: <ShoppingCartIcon />, href: `${ADMIN_BASE}/orders`, badge: 5, badgeVariant: 'warning' },
         { id: 'contracts', labelAr: 'العقود', labelEn: 'Contracts', icon: <FileTextIcon />, href: `${ADMIN_BASE}/contracts` },
         { id: 'wallets', labelAr: 'المحافظ', labelEn: 'Wallets', icon: <WalletIcon />, href: `${ADMIN_BASE}/wallets` },
-        { id: 'finance', labelAr: 'المالية', labelEn: 'Finance', icon: <LandmarkIcon />, href: `${ADMIN_BASE}/finance` },
+        { id: 'referrals', labelAr: 'الإحالات', labelEn: 'Referrals', icon: <UsersIcon />, href: `${ADMIN_BASE}/referrals` },
+        { id: 'finance', labelAr: 'المركز المالي', labelEn: 'Finance Center', icon: <LandmarkIcon />, href: `${ADMIN_BASE}/finance` },
+        { id: 'finance-internal', labelAr: 'التمويل الداخلي', labelEn: 'Internal Finance', icon: <CreditCardIcon />, href: `${ADMIN_BASE}/finance-internal` },
       ],
     },
     {
