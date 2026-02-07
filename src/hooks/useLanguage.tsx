@@ -174,32 +174,14 @@ export const LanguageProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const applyDirection = (lang: Language) => {
     const dir = lang === 'ar' ? 'rtl' : 'ltr';
     
-    // Primary: document root
+    // Apply to document
     document.documentElement.dir = dir;
     document.documentElement.lang = lang;
-    document.documentElement.setAttribute('data-direction', dir);
-    
-    // Secondary: body for full coverage
     document.body.dir = dir;
-    document.body.setAttribute('data-lang', lang);
     
-    // Add/remove RTL class for CSS targeting
-    if (lang === 'ar') {
-      document.documentElement.classList.add('rtl');
-      document.documentElement.classList.remove('ltr');
-      document.body.classList.add('rtl');
-      document.body.classList.remove('ltr');
-    } else {
-      document.documentElement.classList.add('ltr');
-      document.documentElement.classList.remove('rtl');
-      document.body.classList.add('ltr');
-      document.body.classList.remove('rtl');
-    }
-    
-    // Debug log in development
-    if (import.meta.env.DEV) {
-      console.log(`[RTL] Direction applied: ${dir}, Language: ${lang}`);
-    }
+    // Toggle RTL class
+    document.documentElement.classList.toggle('rtl', lang === 'ar');
+    document.documentElement.classList.toggle('ltr', lang !== 'ar');
   };
 
   const setLanguage = (lang: Language) => {
