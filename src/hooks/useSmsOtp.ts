@@ -34,36 +34,38 @@ interface VerifyOtpResult {
    /**
     * Send OTP to a phone number
     */
-   const sendOtp = useCallback(async (
-     phone: string,
-     purpose: string = "login"
-   ): Promise<SendOtpResult> => {
-     setIsLoading(true);
-     setError(null);
- 
-     try {
-       const { data, error: fnError } = await supabase.functions.invoke("sms-send-otp", {
-         body: { phone, purpose },
-       });
- 
-       if (fnError) {
-         throw new Error(fnError.message);
-       }
- 
-       if (!data.success) {
-         setError(data.error);
-         return data;
-       }
- 
-       return data;
-     } catch (err: any) {
-       const errorMsg = err.message || "فشل في إرسال رمز التحقق";
-       setError(errorMsg);
-       return { success: false, error: errorMsg };
-     } finally {
-       setIsLoading(false);
-     }
-   }, []);
+  const sendOtp = useCallback(async (
+    phone: string,
+    purpose: string = "login"
+  ): Promise<SendOtpResult> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("sms-send-otp", {
+        body: { phone, purpose },
+      });
+
+      if (fnError) {
+        const errorMsg = fnError.message || "فشل في إرسال رمز التحقق";
+        setError(errorMsg);
+        return { success: false, error: errorMsg };
+      }
+
+      if (!data.success) {
+        setError(data.error);
+        return data;
+      }
+
+      return data;
+    } catch (err: any) {
+      const errorMsg = err.message || "فشل في إرسال رمز التحقق";
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
  
   /**
    * Verify OTP code
@@ -83,7 +85,9 @@ interface VerifyOtpResult {
       });
 
       if (fnError) {
-        throw new Error(fnError.message);
+        const errorMsg = fnError.message || "فشل في التحقق من الرمز";
+        setError(errorMsg);
+        return { success: false, error: errorMsg };
       }
 
       if (!data.success) {

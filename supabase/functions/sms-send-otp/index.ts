@@ -200,14 +200,16 @@
           const { data: existingUser } = await supabase.auth.admin.listUsers();
           const userByEmail = existingUser?.users?.find(u => u.email === syntheticEmail);
           
-          if (!userByEmail) {
+        if (!userByEmail) {
+            console.log("User not found for phone:", formattedPhone);
             return new Response(
               JSON.stringify({
                 success: false,
                 error: "لا يوجد حساب مرتبط بهذا الرقم. يرجى إنشاء حساب جديد.",
                 error_en: "No account found with this phone. Please register first.",
+                user_not_found: true,
               }),
-              { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+              { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
           }
         }
