@@ -137,7 +137,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate("/dashboard/services")}
+              onClick={() => navigate("/portal/services")}
               className="mt-2 min-h-[44px]"
             >
               {isRTL ? "تصفح الخدمات" : "Browse Services"}
@@ -159,7 +159,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/dashboard/orders")}
+            onClick={() => navigate("/portal/orders")}
             className="gap-1 text-xs h-9 min-h-[44px] px-3"
           >
             {isRTL ? "عرض الكل" : "View All"}
@@ -183,7 +183,7 @@ export function ActivityFeed({ orders, isLoading, isRTL }: ActivityFeedProps) {
               <motion.div
                 key={order.id}
                 variants={item}
-                onClick={() => navigate("/dashboard/orders")}
+                onClick={() => navigate("/portal/orders")}
                 className={cn(
                   "group flex items-center gap-3 p-3 rounded-xl min-h-[56px]",
                   "hover:bg-muted/50 cursor-pointer transition-colors"

@@ -303,7 +303,7 @@ export function ServiceJourneyTimeline({ orders, isRTL }: ServiceJourneyTimeline
                             size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate("/dashboard/orders");
+                              navigate("/portal/orders");
                             }}
                             className={cn("gap-1.5", rtlRow)}
                           >

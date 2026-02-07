@@ -74,7 +74,7 @@ export function NotificationBell({
   tenantId,
   roleTarget = 'customer',
   isRTL = true,
-  notificationsPageUrl = '/dashboard/notifications',
+  notificationsPageUrl = '/portal/notifications',
   maxItems = 5,
 }: NotificationBellProps) {
   const navigate = useNavigate();

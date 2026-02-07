@@ -189,7 +189,7 @@ export function CustomerServiceDetails() {
           title: isRTL ? "خطأ في تحميل الخدمة" : "Error loading service",
           variant: "destructive",
         });
-        navigate("/dashboard/services");
+        navigate("/portal/services");
       } finally {
         setIsLoading(false);
       }
@@ -292,7 +292,7 @@ export function CustomerServiceDetails() {
         });
       }
 
-      navigate("/dashboard/orders");
+      navigate("/portal/orders");
     } catch (error) {
       console.error("Error submitting order:", error);
       toast({
@@ -346,7 +346,7 @@ export function CustomerServiceDetails() {
         <h3 className="text-xl font-semibold mb-4">
           {isRTL ? "الخدمة غير موجودة" : "Service not found"}
         </h3>
-        <Button onClick={() => navigate("/dashboard/services")} size="lg">
+        <Button onClick={() => navigate("/portal/services")} size="lg">
           {isRTL ? "العودة للخدمات" : "Back to Services"}
         </Button>
       </motion.div>

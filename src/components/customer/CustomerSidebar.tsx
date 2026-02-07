@@ -69,63 +69,63 @@ export function CustomerSidebar() {
       titleAr: "نظرة عامة",
       titleEn: "Overview",
       icon: LayoutDashboard,
-      href: "/dashboard",
+      href: "/portal",
       section: "main",
     },
     {
       titleAr: "طلباتي",
       titleEn: "My Orders",
       icon: ShoppingCart,
-      href: "/dashboard/orders",
+      href: "/portal/orders",
       section: "main",
     },
     {
       titleAr: "الخدمات",
       titleEn: "Services",
       icon: Package,
-      href: "/dashboard/services",
+      href: "/portal/services",
       section: "main",
     },
     {
       titleAr: "عقودي",
       titleEn: "My Contracts",
       icon: FileSignature,
-      href: "/dashboard/contracts",
+      href: "/portal/contracts",
       section: "main",
     },
     {
       titleAr: "فواتيري",
       titleEn: "My Invoices",
       icon: Receipt,
-      href: "/dashboard/invoices",
+      href: "/portal/invoices",
       section: "main",
     },
     {
       titleAr: "المحفظة",
       titleEn: "Wallet",
       icon: Wallet,
-      href: "/dashboard/wallet",
+      href: "/portal/wallet",
       section: "finance",
     },
     {
       titleAr: "التمويل",
       titleEn: "Finance",
       icon: Landmark,
-      href: "/dashboard/finance",
+      href: "/portal/finance",
       section: "finance",
     },
     {
       titleAr: "الإحالات",
       titleEn: "Referrals",
       icon: User,
-      href: "/dashboard/referrals",
+      href: "/portal/referrals",
       section: "account",
     },
     {
       titleAr: "الإشعارات",
       titleEn: "Notifications",
       icon: Bell,
-      href: "/dashboard/notifications",
+      href: "/portal/notifications",
       badge: unreadCount,
       section: "account",
     },
@@ -133,14 +133,14 @@ export function CustomerSidebar() {
       titleAr: "الأمان",
       titleEn: "Security",
       icon: Shield,
-      href: "/dashboard/security",
+      href: "/portal/security",
       section: "account",
     },
     {
       titleAr: "الملف الشخصي",
       titleEn: "Profile",
       icon: User,
-      href: "/dashboard/profile",
+      href: "/portal/profile",
       section: "account",
     },
   ];
@@ -150,8 +150,8 @@ export function CustomerSidebar() {
   const accountItems = navItems.filter(item => item.section === "account");
 
   const isActive = (href: string) => {
-    if (href === "/dashboard") {
-      return location.pathname === "/dashboard";
+    if (href === "/portal") {
+      return location.pathname === "/portal";
     }
     return location.pathname.startsWith(href);
   };

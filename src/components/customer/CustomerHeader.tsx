@@ -121,7 +121,7 @@ export function CustomerHeader() {
           userId={user?.id}
           roleTarget="customer"
           isRTL={isRTL}
-          notificationsPageUrl="/dashboard/notifications"
+          notificationsPageUrl="/portal/notifications"
           maxItems={5}
         />
 
@@ -158,21 +158,21 @@ export function CustomerHeader() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              onClick={() => navigate("/dashboard/orders")}
+              onClick={() => navigate("/portal/orders")}
               className="gap-2 cursor-pointer"
             >
               <ShoppingCart className="h-4 w-4" />
               {isRTL ? "طلباتي" : "My Orders"}
             </DropdownMenuItem>
             <DropdownMenuItem 
-              onClick={() => navigate("/dashboard/profile")}
+              onClick={() => navigate("/portal/profile")}
               className="gap-2 cursor-pointer"
             >
               <User className="h-4 w-4" />
               {isRTL ? "الملف الشخصي" : "Profile"}
             </DropdownMenuItem>
             <DropdownMenuItem 
-              onClick={() => navigate("/dashboard/notifications")}
+              onClick={() => navigate("/portal/notifications")}
               className="gap-2 cursor-pointer"
             >
               <Bell className="h-4 w-4" />

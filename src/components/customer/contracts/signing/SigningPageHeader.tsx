@@ -54,7 +54,7 @@ export function SigningPageHeader({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/dashboard/contracts')}
+            onClick={() => navigate('/portal/contracts')}
             className="text-white/80 hover:text-white hover:bg-white/10 gap-2"
           >
             <ArrowRight className={cn("h-4 w-4", !isRTL && "rotate-180")} />

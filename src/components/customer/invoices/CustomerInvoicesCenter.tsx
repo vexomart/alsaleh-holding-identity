@@ -202,7 +202,7 @@ export function CustomerInvoicesCenter() {
 
             {/* Browse Services CTA */}
             <Button 
-              onClick={() => navigate('/dashboard/services')}
+              onClick={() => navigate('/portal/services')}
               className="gap-2"
             >
               <ShoppingBag className="h-4 w-4" />

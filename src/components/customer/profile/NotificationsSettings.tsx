@@ -98,7 +98,7 @@ export function NotificationsSettings({ userId }: NotificationsSettingsProps) {
               variant="outline"
               size="sm"
               className="gap-2"
-              onClick={() => navigate("/dashboard/notifications")}
+              onClick={() => navigate("/portal/notifications")}
             >
               {isRTL ? "عرض الكل" : "View All"}
               <ExternalLink className="h-4 w-4" />

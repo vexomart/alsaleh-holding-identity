@@ -43,7 +43,7 @@ export function ClientQuickStats({ data, isRTL, formatCurrency }: ClientQuickSta
       icon: Package,
       color: "text-blue-600",
       bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      onClick: () => navigate("/dashboard/orders"),
+      onClick: () => navigate("/portal/orders"),
     },
     {
       titleAr: "عقود معلقة",
@@ -52,7 +52,7 @@ export function ClientQuickStats({ data, isRTL, formatCurrency }: ClientQuickSta
       icon: FileSignature,
       color: "text-emerald-600",
       bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
-      onClick: () => navigate("/dashboard/contracts"),
+      onClick: () => navigate("/portal/contracts"),
     },
     {
       titleAr: "فواتير غير مدفوعة",
@@ -62,7 +62,7 @@ export function ClientQuickStats({ data, isRTL, formatCurrency }: ClientQuickSta
       color: "text-amber-600",
       bgColor: "bg-amber-100 dark:bg-amber-900/30",
       highlight: (data?.pendingInvoices || 0) > 0,
-      onClick: () => navigate("/dashboard/orders"),
+      onClick: () => navigate("/portal/orders"),
     },
     {
       titleAr: "رصيد المحفظة",
@@ -72,7 +72,7 @@ export function ClientQuickStats({ data, isRTL, formatCurrency }: ClientQuickSta
       color: "text-purple-600",
       bgColor: "bg-purple-100 dark:bg-purple-900/30",
       isAmount: true,
-      onClick: () => navigate("/dashboard/wallet"),
+      onClick: () => navigate("/portal/wallet"),
     },
   ];
 

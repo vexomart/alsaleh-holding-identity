@@ -42,7 +42,7 @@ export function RouteGuard({
 
   // Guest-only: redirect authenticated users immediately
   if (guestOnly && user) {
-    const redirect = authenticatedRedirect || (isAdmin ? '/adminash' : '/dashboard');
+    const redirect = authenticatedRedirect || (isAdmin ? '/adminash' : '/portal');
     return <Navigate to={redirect} replace />;
   }
 
@@ -58,7 +58,7 @@ export function RouteGuard({
     const hasRequiredRole = requireRoles.some(role => userRoleNames.includes(role as any));
     
     if (!hasRequiredRole) {
-      return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
+      return <Navigate to={isAdmin ? '/adminash' : '/portal'} replace />;
     }
   }
 
@@ -66,7 +66,7 @@ export function RouteGuard({
 }
 
 /**
- * CustomerGuard - For /dashboard/* routes
+ * CustomerGuard - For /portal/* routes
  * Requires authentication, redirects non-auth to login
  */
 export function CustomerGuard({ children }: { children: ReactNode }) {
@@ -91,8 +91,8 @@ export function AdminGuard({ children }: { children: ReactNode }) {
   // Not logged in - redirect to login
   if (!user) return <Navigate to="/auth/login" replace />;
   
-  // Not admin - redirect to customer dashboard
-  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+  // Not admin - redirect to customer portal
+  if (!isAdmin) return <Navigate to="/portal" replace />;
   
   return <>{children}</>;
 }
@@ -108,7 +108,7 @@ export function GuestGuard({ children }: { children: ReactNode }) {
   
   // Already logged in - redirect to appropriate dashboard
   if (user) {
-    return <Navigate to={isAdmin ? '/adminash' : '/dashboard'} replace />;
+    return <Navigate to={isAdmin ? '/adminash' : '/portal'} replace />;
   }
   
   return <>{children}</>;

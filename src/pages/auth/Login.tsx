@@ -116,9 +116,9 @@ function Login() {
         ['super_admin', 'admin', 'manager', 'support', 'finance', 'content_editor', 'staff'].includes(r.role)
       );
       
-      navigate(hasAdminRole ? '/adminash' : '/dashboard');
+      navigate(hasAdminRole ? '/adminash' : '/portal');
     } catch {
-      navigate('/dashboard');
+      navigate('/portal');
     }
   }, [navigate]);
   
@@ -128,7 +128,7 @@ function Login() {
       if (isAdmin) {
         navigate('/adminash');
       } else {
-        navigate('/dashboard');
+        navigate('/portal');
       }
     }
   }, [user, isAdmin, navigate]);
@@ -236,7 +236,7 @@ function Login() {
       if (refreshData?.session?.user) {
         await navigateBasedOnRole(refreshData.session.user.id);
       } else {
-        navigate('/dashboard');
+        navigate('/portal');
       }
     } else {
       toast.error(response.error || 'رمز التحقق غير صحيح');
@@ -307,7 +307,7 @@ function Login() {
       if (sessionData?.session?.user) {
         await navigateBasedOnRole(sessionData.session.user.id);
       } else {
-        navigate('/dashboard');
+        navigate('/portal');
       }
     } catch (error) {
       toast.error('حدث خطأ، يرجى المحاولة مرة أخرى');

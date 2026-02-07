@@ -79,11 +79,11 @@ export function CustomerContractsCenter() {
   };
 
   const handleSign = (contract: CustomerContract) => {
-    navigate(`/dashboard/contracts/${contract.id}/sign`);
+    navigate(`/portal/contracts/${contract.id}/sign`);
   };
 
   const handleViewOrder = (orderId: string) => {
-    navigate(`/dashboard/orders/${orderId}`);
+    navigate(`/portal/orders/${orderId}`);
   };
 
   const handleFilterByStatus = (status: string) => {
