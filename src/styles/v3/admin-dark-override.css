@@ -596,3 +596,243 @@
 .cmd-center .bg-grid-pattern {
   opacity: 0.05 !important;
 }
+
+/* =========================================
+   USER CARDS - DARK OVERRIDE
+   ========================================= */
+
+/* User card backgrounds */
+.cmd-center .bg-card,
+.cmd-center .bg-card\/50,
+.cmd-center [class*="bg-card"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+.cmd-center .hover\:bg-card:hover {
+  background: hsl(220 18% 15%) !important;
+}
+
+/* User card container */
+.cmd-center .group.relative.p-4.rounded-2xl,
+.cmd-center [class*="rounded-2xl"][class*="border"][class*="bg-card"] {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center .group.relative.p-4.rounded-2xl:hover {
+  background: hsl(220 18% 15%) !important;
+  border-color: hsl(220 18% 22%) !important;
+}
+
+/* Avatar fallback */
+.cmd-center [class*="AvatarFallback"],
+.cmd-center .bg-gradient-to-br.from-primary\/80 {
+  background: linear-gradient(135deg, hsl(185 75% 48%), hsl(185 75% 38%)) !important;
+  color: hsl(220 25% 6%) !important;
+}
+
+/* Avatar ring */
+.cmd-center .ring-background {
+  --tw-ring-color: hsl(220 20% 12%) !important;
+}
+
+/* Role badges for dark mode */
+.cmd-center .text-blue-700,
+.cmd-center .text-cyan-700,
+.cmd-center .text-emerald-700,
+.cmd-center .text-pink-700,
+.cmd-center .text-slate-700,
+.cmd-center .text-gray-700,
+.cmd-center .text-gray-600 {
+  color: hsl(220 15% 85%) !important;
+}
+
+.cmd-center .bg-blue-500\/20,
+.cmd-center .bg-cyan-500\/20,
+.cmd-center .bg-emerald-500\/20,
+.cmd-center .bg-pink-500\/20,
+.cmd-center .bg-slate-500\/20,
+.cmd-center .bg-gray-500\/20 {
+  background: hsl(220 18% 18%) !important;
+}
+
+.cmd-center .border-blue-500\/30,
+.cmd-center .border-cyan-500\/30,
+.cmd-center .border-emerald-500\/30,
+.cmd-center .border-pink-500\/30,
+.cmd-center .border-slate-500\/30,
+.cmd-center .border-gray-500\/30 {
+  border-color: hsl(220 18% 25%) !important;
+}
+
+/* Status badges */
+.cmd-center .bg-emerald-500\/20 {
+  background: hsl(145 72% 45% / 0.2) !important;
+}
+
+.cmd-center .text-emerald-700 {
+  color: hsl(145 72% 60%) !important;
+}
+
+.cmd-center .border-emerald-500\/30 {
+  border-color: hsl(145 72% 45% / 0.4) !important;
+}
+
+/* Card header muted background */
+.cmd-center .bg-muted\/30 {
+  background: hsl(220 22% 10%) !important;
+}
+
+/* =========================================
+   MOTION DIV CARDS
+   ========================================= */
+
+.cmd-center [class*="motion"] {
+  --tw-bg-opacity: 1;
+}
+
+.cmd-center motion > div,
+.cmd-center [style*="opacity"] {
+  color: inherit;
+}
+
+/* Grid items */
+.cmd-center .grid > div {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center .grid > div:hover {
+  background: hsl(220 18% 15%) !important;
+}
+
+/* =========================================
+   SPECIFIC TEXT OVERRIDES
+   ========================================= */
+
+.cmd-center .text-foreground {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .text-muted-foreground {
+  color: hsl(220 15% 60%) !important;
+}
+
+.cmd-center .font-semibold,
+.cmd-center .font-bold {
+  color: hsl(0 0% 98%) !important;
+}
+
+/* Contact info in cards */
+.cmd-center .text-sm.text-muted-foreground {
+  color: hsl(220 15% 60%) !important;
+}
+
+/* =========================================
+   FILTER CARDS & INPUTS
+   ========================================= */
+
+.cmd-center .border-border\/50 {
+  border-color: hsl(220 20% 18%) !important;
+}
+
+.cmd-center .shadow-sm {
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.3) !important;
+}
+
+.cmd-center .shadow-lg {
+  box-shadow: 0 8px 24px hsl(0 0% 0% / 0.4) !important;
+}
+
+/* =========================================
+   GRADIENT BACKGROUNDS FIX
+   ========================================= */
+
+.cmd-center [class*="from-primary/20"],
+.cmd-center [class*="from-primary\/20"] {
+  background: hsl(185 75% 48% / 0.1) !important;
+}
+
+.cmd-center [class*="from-primary/5"],
+.cmd-center [class*="from-primary\/5"] {
+  background: hsl(185 75% 48% / 0.05) !important;
+}
+
+.cmd-center [class*="from-accent/10"],
+.cmd-center [class*="from-accent\/10"] {
+  background: hsl(145 72% 45% / 0.1) !important;
+}
+
+.cmd-center [class*="from-destructive/10"],
+.cmd-center [class*="from-destructive\/10"] {
+  background: hsl(0 85% 58% / 0.1) !important;
+}
+
+.cmd-center [class*="from-secondary/10"],
+.cmd-center [class*="from-secondary\/10"] {
+  background: hsl(38 95% 55% / 0.1) !important;
+}
+
+/* =========================================
+   BACKDROP BLUR ELEMENTS
+   ========================================= */
+
+.cmd-center .backdrop-blur-sm {
+  background: hsl(220 20% 12% / 0.9) !important;
+}
+
+/* =========================================
+   HOVER EFFECTS
+   ========================================= */
+
+.cmd-center .hover\:shadow-lg:hover {
+  box-shadow: 0 8px 24px hsl(0 0% 0% / 0.4) !important;
+}
+
+.cmd-center .hover\:shadow-primary\/5:hover {
+  box-shadow: 0 8px 24px hsl(185 75% 48% / 0.15) !important;
+}
+
+/* =========================================
+   RING EFFECTS
+   ========================================= */
+
+.cmd-center .ring-2.ring-primary {
+  --tw-ring-color: hsl(185 75% 48%) !important;
+}
+
+.cmd-center .border-primary\/50 {
+  border-color: hsl(185 75% 48% / 0.5) !important;
+}
+
+.cmd-center .bg-primary\/5 {
+  background: hsl(185 75% 48% / 0.1) !important;
+}
+
+/* =========================================
+   ANIMATION ELEMENTS
+   ========================================= */
+
+.cmd-center .animate-pulse {
+  background: hsl(220 18% 15%) !important;
+}
+
+/* =========================================
+   EMPTY STATE
+   ========================================= */
+
+.cmd-center .p-4.rounded-full.bg-muted\/50 {
+  background: hsl(220 18% 15%) !important;
+}
+
+/* =========================================
+   DELETE BUTTON RED TEXT
+   ========================================= */
+
+.cmd-center .text-red-600 {
+  color: hsl(0 85% 65%) !important;
+}
+
+.cmd-center .focus\:text-red-600:focus {
+  color: hsl(0 85% 65%) !important;
+}
