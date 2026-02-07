@@ -9,7 +9,7 @@ import "@/styles/homepage-dark.css";
 // Import dark theme components
 import { NavigationDark } from "@/components/homepage/NavigationDark";
 import { HeroSectionDark } from "@/components/homepage/HeroSectionDark";
-import { FooterDark } from "@/components/homepage/FooterDark";
+import Footer from "@/components/Footer";
 
 // Lazy load non-critical sections
 const ServicesSectionDark = lazy(() => import("@/components/homepage/ServicesSectionDark"));
@@ -81,7 +81,7 @@ const OptimizedIndex = () => {
       </main>
 
       {/* Footer */}
-      <FooterDark />
+      <Footer />
     </div>
   );
 };
