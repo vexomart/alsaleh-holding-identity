@@ -82,9 +82,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Full system access with all permissions",
     descriptionAr: "صلاحيات كاملة للنظام",
     icon: Crown,
-    color: "text-red-600",
-    bgColor: "bg-red-100 dark:bg-red-900/30",
-    gradient: "from-red-500 to-red-600"
+    color: "text-destructive",
+    bgColor: "bg-destructive/10 dark:bg-destructive/20",
+    gradient: "from-destructive to-destructive/80"
   },
   admin: {
     name: "Admin",
@@ -92,9 +92,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Administrative access to manage the system",
     descriptionAr: "صلاحيات إدارية لإدارة النظام",
     icon: Shield,
-    color: "text-violet-600",
-    bgColor: "bg-violet-100 dark:bg-violet-900/30",
-    gradient: "from-violet-500 to-violet-600"
+    color: "text-primary",
+    bgColor: "bg-primary/10 dark:bg-primary/20",
+    gradient: "from-primary to-primary/80"
   },
   manager: {
     name: "Manager",
@@ -102,9 +102,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Manage orders, services and staff",
     descriptionAr: "إدارة الطلبات والخدمات والموظفين",
     icon: Briefcase,
-    color: "text-blue-600",
-    bgColor: "bg-blue-100 dark:bg-blue-900/30",
-    gradient: "from-blue-500 to-blue-600"
+    color: "text-primary",
+    bgColor: "bg-primary/10 dark:bg-primary/20",
+    gradient: "from-primary to-primary/80"
   },
   staff: {
     name: "Staff",
@@ -112,9 +112,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Handle day-to-day operations",
     descriptionAr: "التعامل مع العمليات اليومية",
     icon: UserCog,
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
-    gradient: "from-emerald-500 to-emerald-600"
+    color: "text-accent",
+    bgColor: "bg-accent/10 dark:bg-accent/20",
+    gradient: "from-accent to-accent/80"
   },
   customer: {
     name: "Customer",
@@ -122,9 +122,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Basic access for customers",
     descriptionAr: "صلاحيات أساسية للعملاء",
     icon: User,
-    color: "text-gray-600",
-    bgColor: "bg-gray-100 dark:bg-gray-800",
-    gradient: "from-gray-500 to-gray-600"
+    color: "text-muted-foreground",
+    bgColor: "bg-muted dark:bg-muted/50",
+    gradient: "from-muted-foreground to-muted-foreground/80"
   },
   support: {
     name: "Support",
@@ -132,9 +132,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Handle customer support tickets",
     descriptionAr: "التعامل مع تذاكر الدعم الفني",
     icon: Headphones,
-    color: "text-amber-600",
-    bgColor: "bg-amber-100 dark:bg-amber-900/30",
-    gradient: "from-amber-500 to-amber-600"
+    color: "text-secondary",
+    bgColor: "bg-secondary/10 dark:bg-secondary/20",
+    gradient: "from-secondary to-secondary/80"
   },
   finance: {
     name: "Finance",
@@ -142,9 +142,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Access to financial reports and transactions",
     descriptionAr: "الوصول للتقارير المالية والمعاملات",
     icon: DollarSign,
-    color: "text-cyan-600",
-    bgColor: "bg-cyan-100 dark:bg-cyan-900/30",
-    gradient: "from-cyan-500 to-cyan-600"
+    color: "text-accent",
+    bgColor: "bg-accent/10 dark:bg-accent/20",
+    gradient: "from-accent to-accent/80"
   },
   content_editor: {
     name: "Content Editor",
@@ -152,9 +152,9 @@ const roleConfigs: Record<string, RoleConfig> = {
     description: "Manage website content and pages",
     descriptionAr: "إدارة محتوى الموقع والصفحات",
     icon: PenTool,
-    color: "text-pink-600",
-    bgColor: "bg-pink-100 dark:bg-pink-900/30",
-    gradient: "from-pink-500 to-pink-600"
+    color: "text-secondary",
+    bgColor: "bg-secondary/10 dark:bg-secondary/20",
+    gradient: "from-secondary to-secondary/80"
   }
 };
 
@@ -328,36 +328,36 @@ export function RolesPermissions() {
       titleEn: "Roles",
       value: roles.length,
       icon: Shield,
-      color: "text-violet-600",
-      bgColor: "bg-violet-100 dark:bg-violet-900/30",
-      gradient: "from-violet-500 to-violet-600"
+      color: "text-primary",
+      bgColor: "bg-primary/10 dark:bg-primary/20",
+      gradient: "from-primary to-primary/80"
     },
     {
       titleAr: "الصلاحيات",
       titleEn: "Permissions",
       value: permissions.length,
       icon: Key,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100 dark:bg-blue-900/30",
-      gradient: "from-blue-500 to-blue-600"
+      color: "text-primary",
+      bgColor: "bg-primary/10 dark:bg-primary/20",
+      gradient: "from-primary to-primary/80"
     },
     {
       titleAr: "الوحدات",
       titleEn: "Modules",
       value: Object.keys(modulePermissions).length,
       icon: Settings,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
-      gradient: "from-emerald-500 to-emerald-600"
+      color: "text-accent",
+      bgColor: "bg-accent/10 dark:bg-accent/20",
+      gradient: "from-accent to-accent/80"
     },
     {
       titleAr: "صلاحيات مُعينة",
       titleEn: "Assigned",
       value: rolePermissions.length,
       icon: CheckCircle2,
-      color: "text-amber-600",
-      bgColor: "bg-amber-100 dark:bg-amber-900/30",
-      gradient: "from-amber-500 to-amber-600"
+      color: "text-secondary",
+      bgColor: "bg-secondary/10 dark:bg-secondary/20",
+      gradient: "from-secondary to-secondary/80"
     }
   ];
 

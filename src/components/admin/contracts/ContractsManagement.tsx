@@ -149,49 +149,49 @@ const statusConfig: Record<ContractStatus, {
   draft: {
     labelAr: 'مسودة',
     labelEn: 'Draft',
-    color: 'text-slate-600',
-    bgColor: 'bg-slate-100',
-    borderColor: 'border-slate-200',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
+    borderColor: 'border-muted',
     icon: FileText,
   },
   pre_approved_by_customer: {
     labelAr: 'موافقة مبدئية',
     labelEn: 'Pre-approved',
-    color: 'text-amber-700',
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-200',
+    color: 'text-secondary',
+    bgColor: 'bg-secondary/10',
+    borderColor: 'border-secondary/30',
     icon: Clock,
   },
   pending_admin_approval: {
     labelAr: 'بانتظار موافقة الإدارة',
     labelEn: 'Pending Admin',
-    color: 'text-orange-700',
-    bgColor: 'bg-orange-50',
-    borderColor: 'border-orange-200',
+    color: 'text-secondary',
+    bgColor: 'bg-secondary/10',
+    borderColor: 'border-secondary/30',
     icon: AlertTriangle,
   },
   pending_signature: {
     labelAr: 'بانتظار التوقيع',
     labelEn: 'Pending Signature',
-    color: 'text-blue-700',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-200',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    borderColor: 'border-primary/30',
     icon: FileSignature,
   },
   signed: {
     labelAr: 'موقّع',
     labelEn: 'Signed',
-    color: 'text-emerald-700',
-    bgColor: 'bg-emerald-50',
-    borderColor: 'border-emerald-200',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
+    borderColor: 'border-accent/30',
     icon: CheckCircle,
   },
   cancelled: {
     labelAr: 'ملغي',
     labelEn: 'Cancelled',
-    color: 'text-red-700',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-200',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
+    borderColor: 'border-destructive/30',
     icon: XCircle,
   },
 };
@@ -467,11 +467,11 @@ export function ContractsManagement() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-slate-50 to-white">
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-muted/50 to-background">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-slate-100">
-                  <FileText className="h-5 w-5 text-slate-600" />
+                <div className="p-2 rounded-xl bg-muted">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.total}</p>
@@ -481,21 +481,21 @@ export function ContractsManagement() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-amber-50 to-white border-amber-200">
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-secondary/10 to-background border-secondary/20">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-amber-100">
-                  <Clock className="h-5 w-5 text-amber-600" />
+                <div className="p-2 rounded-xl bg-secondary/10">
+                  <Clock className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-amber-700">{stats.preApproved}</p>
-                  <p className="text-xs text-amber-600">{isRTL ? 'بانتظار الموافقة' : 'Pending Approval'}</p>
+                  <p className="text-2xl font-bold text-secondary">{stats.preApproved}</p>
+                  <p className="text-xs text-secondary/70">{isRTL ? 'بانتظار الموافقة' : 'Pending Approval'}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-white">
+          <Card className="border-0 shadow-sm bg-gradient-to-br from-primary/10 to-background">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-blue-100">

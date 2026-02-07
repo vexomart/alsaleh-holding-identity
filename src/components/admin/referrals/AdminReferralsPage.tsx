@@ -97,17 +97,17 @@ export function AdminReferralsPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-900/20">
+          <Card className="border-destructive/30 bg-destructive/5 dark:border-destructive/50 dark:bg-destructive/10">
             <CardContent className="py-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full bg-red-100 dark:bg-red-900/50">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                <div className="p-2 rounded-full bg-destructive/10 dark:bg-destructive/20">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
                 </div>
                 <div>
-                  <p className="font-semibold text-red-800 dark:text-red-300">
+                  <p className="font-semibold text-destructive dark:text-destructive">
                     تنبيه: {stats.fraudFlags} إحالات تحتوي على علامات احتيال محتملة
                   </p>
-                  <p className="text-sm text-red-600 dark:text-red-400">
+                  <p className="text-sm text-destructive/70 dark:text-destructive/80">
                     يرجى مراجعة هذه الإحالات قبل الموافقة على المكافآت
                   </p>
                 </div>
@@ -131,7 +131,7 @@ export function AdminReferralsPage() {
             <Gift className="h-4 w-4" />
             <span className="hidden sm:inline">المكافآت</span>
             {stats.pendingRewards > 0 && (
-              <span className="bg-amber-500/10 text-amber-600 text-xs px-2 py-0.5 rounded-full">
+              <span className="bg-secondary/10 text-secondary text-xs px-2 py-0.5 rounded-full">
                 {stats.pendingRewards}
               </span>
             )}
@@ -199,7 +199,7 @@ export function AdminReferralsPage() {
                   </div>
                   <div className="p-4 rounded-lg bg-muted/50">
                     <p className="text-sm text-muted-foreground">إحالات مرفوضة</p>
-                    <p className="text-2xl font-bold text-red-600">
+                    <p className="text-2xl font-bold text-destructive">
                       {referrals?.filter(r => r.status === 'rejected').length || 0}
                     </p>
                   </div>

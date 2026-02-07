@@ -130,25 +130,25 @@ export function ReportsPage() {
       title: language === 'ar' ? 'إجمالي الإيرادات' : 'Total Revenue',
       value: formatCurrency(analytics.totalRevenue),
       icon: DollarSign,
-      color: 'emerald',
+      color: 'accent',
     },
     {
       title: language === 'ar' ? 'إجمالي الطلبات' : 'Total Orders',
       value: analytics.totalOrders.toLocaleString('en-US'),
       icon: ShoppingCart,
-      color: 'blue',
+      color: 'primary',
     },
     {
       title: language === 'ar' ? 'إجمالي العملاء' : 'Total Customers',
       value: analytics.totalUsers.toLocaleString('en-US'),
       icon: Users,
-      color: 'violet',
+      color: 'primary',
     },
     {
       title: language === 'ar' ? 'متوسط قيمة الطلب' : 'Avg Order Value',
       value: formatCurrency(avgOrderValue),
       icon: Activity,
-      color: 'amber',
+      color: 'secondary',
     },
   ];
 
@@ -200,19 +200,17 @@ export function ReportsPage() {
             <Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div className={cn(
                 "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
-                kpi.color === 'emerald' && "from-emerald-500 to-emerald-600",
-                kpi.color === 'blue' && "from-blue-500 to-blue-600",
-                kpi.color === 'violet' && "from-violet-500 to-violet-600",
-                kpi.color === 'amber' && "from-amber-500 to-amber-600"
+                kpi.color === 'accent' && "from-accent to-accent/80",
+                kpi.color === 'primary' && "from-primary to-primary/80",
+                kpi.color === 'secondary' && "from-secondary to-secondary/80"
               )} />
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div className={cn(
                     "p-2.5 rounded-xl",
-                    kpi.color === 'emerald' && "bg-emerald-500/10 text-emerald-600",
-                    kpi.color === 'blue' && "bg-blue-500/10 text-blue-600",
-                    kpi.color === 'violet' && "bg-violet-500/10 text-violet-600",
-                    kpi.color === 'amber' && "bg-amber-500/10 text-amber-600"
+                    kpi.color === 'accent' && "bg-accent/10 text-accent",
+                    kpi.color === 'primary' && "bg-primary/10 text-primary",
+                    kpi.color === 'secondary' && "bg-secondary/10 text-secondary"
                   )}>
                     <kpi.icon className="h-5 w-5" />
                   </div>

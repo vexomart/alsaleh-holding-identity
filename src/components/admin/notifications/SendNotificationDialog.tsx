@@ -65,9 +65,9 @@ const notificationTypes: { value: NotificationType; labelAr: string; labelEn: st
 ];
 
 const severityOptions: { value: NotificationSeverity; labelAr: string; labelEn: string; color: string }[] = [
-  { value: 'info', labelAr: 'عادي', labelEn: 'Normal', color: 'text-blue-500' },
-  { value: 'warning', labelAr: 'تحذير', labelEn: 'Warning', color: 'text-amber-500' },
-  { value: 'critical', labelAr: 'حرج', labelEn: 'Critical', color: 'text-red-500' },
+  { value: 'info', labelAr: 'عادي', labelEn: 'Normal', color: 'text-primary' },
+  { value: 'warning', labelAr: 'تحذير', labelEn: 'Warning', color: 'text-secondary' },
+  { value: 'critical', labelAr: 'حرج', labelEn: 'Critical', color: 'text-destructive' },
 ];
 
 export function SendNotificationDialog({ open, onOpenChange, onSend, language }: SendNotificationDialogProps) {
@@ -197,8 +197,8 @@ export function SendNotificationDialog({ open, onOpenChange, onSend, language }:
                   onClick={() => setFormData(prev => ({ ...prev, severity: option.value }))}
                   className={cn(
                     "flex-1",
-                    formData.severity === option.value && option.value === 'warning' && "bg-amber-500 hover:bg-amber-600",
-                    formData.severity === option.value && option.value === 'critical' && "bg-red-500 hover:bg-red-600"
+                    formData.severity === option.value && option.value === 'warning' && "bg-secondary hover:bg-secondary/90",
+                    formData.severity === option.value && option.value === 'critical' && "bg-destructive hover:bg-destructive/90"
                   )}
                 >
                   {language === 'ar' ? option.labelAr : option.labelEn}

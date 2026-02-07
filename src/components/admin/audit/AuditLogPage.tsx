@@ -35,13 +35,13 @@ import { ar, enUS } from "date-fns/locale";
 type AuditAction = "create" | "read" | "update" | "delete" | "login" | "logout" | "export";
 
 const actionConfig: Record<AuditAction, { icon: React.ElementType; colorClass: string; labelAr: string; labelEn: string }> = {
-  create: { icon: Plus, colorClass: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400", labelAr: "إنشاء", labelEn: "Create" },
-  read: { icon: Eye, colorClass: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400", labelAr: "قراءة", labelEn: "Read" },
-  update: { icon: FileEdit, colorClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400", labelAr: "تعديل", labelEn: "Update" },
-  delete: { icon: Trash2, colorClass: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400", labelAr: "حذف", labelEn: "Delete" },
-  login: { icon: LogIn, colorClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", labelAr: "تسجيل دخول", labelEn: "Login" },
-  logout: { icon: LogOut, colorClass: "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-400", labelAr: "تسجيل خروج", labelEn: "Logout" },
-  export: { icon: Download, colorClass: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400", labelAr: "تصدير", labelEn: "Export" },
+  create: { icon: Plus, colorClass: "bg-accent/10 text-accent dark:bg-accent/20", labelAr: "إنشاء", labelEn: "Create" },
+  read: { icon: Eye, colorClass: "bg-primary/10 text-primary dark:bg-primary/20", labelAr: "قراءة", labelEn: "Read" },
+  update: { icon: FileEdit, colorClass: "bg-secondary/10 text-secondary dark:bg-secondary/20", labelAr: "تعديل", labelEn: "Update" },
+  delete: { icon: Trash2, colorClass: "bg-destructive/10 text-destructive dark:bg-destructive/20", labelAr: "حذف", labelEn: "Delete" },
+  login: { icon: LogIn, colorClass: "bg-accent/10 text-accent dark:bg-accent/20", labelAr: "تسجيل دخول", labelEn: "Login" },
+  logout: { icon: LogOut, colorClass: "bg-muted text-muted-foreground", labelAr: "تسجيل خروج", labelEn: "Logout" },
+  export: { icon: Download, colorClass: "bg-primary/10 text-primary dark:bg-primary/20", labelAr: "تصدير", labelEn: "Export" },
 };
 
 const tableNameTranslations: Record<string, { ar: string; en: string }> = {
