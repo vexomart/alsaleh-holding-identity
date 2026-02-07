@@ -78,23 +78,33 @@ export default function UserEditPage() {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const { data, error } = await db
+      
+      // Fetch profile data
+      const { data: profileData, error: profileError } = await db
         .from('profiles')
-        .select(`*, roles:user_roles(role)`)
+        .select('*')
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (profileError) throw profileError;
 
-      setEmail(data.email);
-      setCurrentRoles(data.roles?.map((r: { role: string }) => r.role) || []);
-      setSelectedRole(data.roles?.[0]?.role || 'customer');
+      // Fetch user roles separately
+      const { data: rolesData } = await db
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', id);
+
+      const roles = rolesData?.map((r: { role: string }) => r.role) || [];
+      
+      setEmail(profileData.email);
+      setCurrentRoles(roles);
+      setSelectedRole(roles[0] || 'customer');
       setFormData({
-        full_name: data.full_name || '',
-        full_name_ar: data.full_name_ar || '',
-        phone: data.phone || '',
-        preferred_language: data.preferred_language || 'ar',
-        is_active: data.is_active ?? true,
+        full_name: profileData.full_name || '',
+        full_name_ar: profileData.full_name_ar || '',
+        phone: profileData.phone || '',
+        preferred_language: profileData.preferred_language || 'ar',
+        is_active: profileData.is_active ?? true,
       });
     } catch (err) {
       console.error('Error fetching user:', err);

@@ -85,14 +85,26 @@ export default function UserDetailsPage() {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const { data, error } = await db
+      
+      // Fetch profile data
+      const { data: profileData, error: profileError } = await db
         .from('profiles')
-        .select(`*, roles:user_roles(role)`)
+        .select('*')
         .eq('id', id)
         .single();
 
-      if (error) throw error;
-      setUser(data);
+      if (profileError) throw profileError;
+
+      // Fetch user roles separately
+      const { data: rolesData } = await db
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', id);
+
+      setUser({
+        ...profileData,
+        roles: rolesData || []
+      });
     } catch (err) {
       console.error('Error fetching user:', err);
       toast({
