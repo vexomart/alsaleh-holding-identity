@@ -22,11 +22,11 @@ export function PageHeader({
   return (
     <div className={cn(
       "relative py-16 px-6 text-center animate-fade-in",
-      "bg-gradient-to-br from-primary/5 via-blue-50 to-indigo-50 dark:from-primary/10 dark:via-slate-800 dark:to-slate-900",
-      "border-b border-white/20 dark:border-slate-700/50",
+      "bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5 dark:from-primary/10 dark:via-accent/10 dark:to-secondary/10",
+      "border-b border-border/50",
       className
     )}>
-      <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
       
       {/* Back Button */}
       {showBackButton && (
@@ -36,7 +36,7 @@ export function PageHeader({
       )}
       
       <div className="relative max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4 animate-scale-in">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-4 animate-scale-in">
           {title}
         </h1>
         {description && (

@@ -62,7 +62,7 @@ export function QuickActions({ className }: QuickActionsProps) {
     >
       {/* Section Header */}
       <div className="flex items-center gap-2">
-        <div className="w-1 h-5 bg-slate-900 dark:bg-slate-400 rounded-full" />
+        <div className="w-1 h-5 bg-gradient-to-b from-accent to-primary rounded-full" />
         <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
           {isRTL ? 'الإجراءات السريعة' : 'Quick Actions'}
         </h2>
@@ -82,8 +82,9 @@ export function QuickActions({ className }: QuickActionsProps) {
               <Button
                 variant={action.primary ? 'default' : 'outline'}
                 className={cn(
-                  'w-full h-auto flex-col gap-2 py-4',
-                  action.primary && 'bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600'
+                  'w-full h-auto flex-col gap-2 py-4 transition-all duration-200',
+                  action.primary && 'bg-gradient-to-br from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg shadow-primary/20',
+                  !action.primary && 'hover:border-accent/50 hover:bg-accent/5'
                 )}
                 onClick={action.onClick}
               >

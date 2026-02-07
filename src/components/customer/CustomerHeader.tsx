@@ -50,7 +50,7 @@ export function CustomerHeader() {
 
   return (
     <header 
-      className="sticky top-0 z-40 flex h-14 md:h-16 items-center border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-3 md:px-4 lg:px-6"
+      className="sticky top-0 z-40 flex h-14 md:h-16 items-center border-b border-border/50 bg-gradient-to-l from-background via-background to-accent/5 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80 px-3 md:px-4 lg:px-6 shadow-sm"
     >
       {/* Start Section: Sidebar Trigger - dir handles order */}
       <div className="flex items-center gap-2 md:gap-3">
@@ -134,9 +134,9 @@ export function CustomerHeader() {
               variant="ghost" 
               className="relative h-9 gap-2 px-2 rounded-full hover:bg-muted"
             >
-              <Avatar className="h-7 w-7">
+              <Avatar className="h-7 w-7 ring-2 ring-accent/30 ring-offset-1 ring-offset-background">
                 <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                <AvatarFallback className="bg-gradient-to-br from-accent to-primary text-accent-foreground text-xs font-bold">
                   {userInitial}
                 </AvatarFallback>
               </Avatar>
