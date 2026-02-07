@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -253,8 +255,11 @@ const CareersPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white overflow-hidden">
+      {/* Navigation Header */}
+      <Navigation />
+      
       {/* خلفية متحركة */}
-      <div className="fixed inset-0 overflow-hidden">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* شبكة متحركة */}
         <div 
           className="absolute inset-0 opacity-20"

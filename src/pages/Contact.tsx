@@ -155,7 +155,7 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="pt-[48px] lg:pt-[112px]">
+      <div>
         <div className="container mx-auto px-4">
           <BackButton />
           

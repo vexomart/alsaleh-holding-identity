@@ -453,9 +453,6 @@ const DigitalMarketing = () => {
     <PageContainer showNavigation showFooter>
       <SEO title={title} description={description} canonicalUrl={canonical} jsonLd={jsonLd} />
 
-      {/* Offset for fixed header */}
-      <div className="pt-[48px] lg:pt-[112px]" />
-
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-rose-600 to-red-600 opacity-90" />
