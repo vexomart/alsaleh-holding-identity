@@ -309,10 +309,10 @@ export function WalletAnalyticsCharts({ className }: WalletAnalyticsProps) {
         transition={{ delay: 0.2 }}
       >
          <Card className="border-border/50 bg-gradient-to-br from-card to-card/80">
-          <CardHeader className="pb-2">
+           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
-              <div className="h-9 w-9 rounded-lg bg-green-500/10 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-green-500" />
+              <div className="h-9 w-9 rounded-lg bg-accent/10 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-accent" />
               </div>
               {isRTL ? "المعاملات الشهرية" : "Monthly Transactions"}
             </CardTitle>

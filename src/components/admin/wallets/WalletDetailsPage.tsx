@@ -208,11 +208,11 @@ export function WalletDetailsPage() {
 
   const getTransactionIcon = (type: string) => {
     switch (type) {
-      case "topup": return <ArrowDownLeft className="h-4 w-4 text-emerald-500" />;
-      case "invoice_payment": return <Receipt className="h-4 w-4 text-blue-500" />;
-      case "refund": return <RefreshCw className="h-4 w-4 text-amber-500" />;
-      case "withdrawal": return <ArrowUpRight className="h-4 w-4 text-red-500" />;
-      case "adjustment": return <Banknote className="h-4 w-4 text-purple-500" />;
+      case "topup": return <ArrowDownLeft className="h-4 w-4 text-accent" />;
+      case "invoice_payment": return <Receipt className="h-4 w-4 text-primary" />;
+      case "refund": return <RefreshCw className="h-4 w-4 text-secondary" />;
+      case "withdrawal": return <ArrowUpRight className="h-4 w-4 text-destructive" />;
+      case "adjustment": return <Banknote className="h-4 w-4 text-primary" />;
       default: return <CreditCard className="h-4 w-4 text-muted-foreground" />;
     }
   };
@@ -286,7 +286,7 @@ export function WalletDetailsPage() {
           </Button>
           
           <Avatar className="h-14 w-14 ring-2 ring-background shadow-xl">
-            <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-xl font-bold">
+            <AvatarFallback className="bg-gradient-to-br from-accent to-accent/80 text-white text-xl font-bold">
               {displayName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -294,7 +294,7 @@ export function WalletDetailsPage() {
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
               {displayName}
-              <Sparkles className="h-5 w-5 text-amber-500" />
+              <Sparkles className="h-5 w-5 text-secondary" />
             </h1>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
               {profile.customer_uid && (
@@ -399,12 +399,12 @@ export function WalletDetailsPage() {
                       <p className="text-xs text-muted-foreground">{isRTL ? "إجمالي الإيداعات" : "Total Deposits"}</p>
                     </div>
                     <div className="text-center p-3 rounded-xl bg-muted/50">
-                      <TrendingDown className="h-5 w-5 mx-auto mb-1 text-red-500" />
+                      <TrendingDown className="h-5 w-5 mx-auto mb-1 text-destructive" />
                       <p className="text-lg font-bold" dir="ltr">{formatCurrency(stats.totalSpent)}</p>
                       <p className="text-xs text-muted-foreground">{isRTL ? "إجمالي المصروفات" : "Total Spent"}</p>
                     </div>
                     <div className="text-center p-3 rounded-xl bg-muted/50">
-                      <Activity className="h-5 w-5 mx-auto mb-1 text-blue-500" />
+                      <Activity className="h-5 w-5 mx-auto mb-1 text-primary" />
                       <p className="text-lg font-bold">{stats.transactionCount}</p>
                       <p className="text-xs text-muted-foreground">{isRTL ? "عدد المعاملات" : "Transactions"}</p>
                     </div>
@@ -474,7 +474,7 @@ export function WalletDetailsPage() {
 
               {/* Summary Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <div className="p-3 rounded-xl bg-accent/10 border border-accent/20">
                   <div className="flex items-center gap-2 mb-1">
                     <ArrowDownLeft className="h-4 w-4 text-emerald-600" />
                     <span className="text-xs text-emerald-700 font-medium">{isRTL ? "الداخل" : "Income"}</span>

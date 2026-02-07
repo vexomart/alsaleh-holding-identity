@@ -176,27 +176,27 @@ export function TransactionDetailDialog({
     const configs: Record<string, { icon: React.ElementType; className: string }> = {
       succeeded: {
         icon: CheckCircle2,
-        className: 'bg-green-500/10 text-green-600 border-green-500/30',
+        className: 'bg-accent/10 text-accent border-accent/30',
       },
       pending: {
         icon: Clock,
-        className: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
+        className: 'bg-secondary/10 text-secondary border-secondary/30',
       },
       processing: {
         icon: Loader2,
-        className: 'bg-blue-500/10 text-blue-600 border-blue-500/30',
+        className: 'bg-primary/10 text-primary border-primary/30',
       },
       failed: {
         icon: XCircle,
-        className: 'bg-red-500/10 text-red-600 border-red-500/30',
+        className: 'bg-destructive/10 text-destructive border-destructive/30',
       },
       cancelled: {
         icon: XCircle,
-        className: 'bg-gray-500/10 text-gray-600 border-gray-500/30',
+        className: 'bg-muted text-muted-foreground border-muted',
       },
       refunded: {
         icon: RefreshCw,
-        className: 'bg-purple-500/10 text-purple-600 border-purple-500/30',
+        className: 'bg-primary/10 text-primary border-primary/30',
       },
     };
 

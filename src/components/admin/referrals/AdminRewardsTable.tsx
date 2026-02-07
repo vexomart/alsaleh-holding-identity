@@ -37,11 +37,11 @@ interface AdminRewardsTableProps {
 }
 
 const statusColors: Record<PayoutStatus, string> = {
-  pending: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  approved: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  paid: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  failed: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-  cancelled: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+  pending: 'bg-secondary/10 text-secondary dark:bg-secondary/20',
+  approved: 'bg-primary/10 text-primary dark:bg-primary/20',
+  paid: 'bg-accent/10 text-accent dark:bg-accent/20',
+  failed: 'bg-destructive/10 text-destructive dark:bg-destructive/20',
+  cancelled: 'bg-muted text-muted-foreground',
 };
 
 export function AdminRewardsTable({ rewards, isLoading, onProcessReward }: AdminRewardsTableProps) {
@@ -79,11 +79,11 @@ export function AdminRewardsTable({ rewards, isLoading, onProcessReward }: Admin
           
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-amber-500" />
+              <Clock className="h-4 w-4 text-secondary" />
               <span>معلقة: {formatReferralCurrency(totalPending)}</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <CheckCircle2 className="h-4 w-4 text-accent" />
               <span>مصروفة: {formatReferralCurrency(totalPaid)}</span>
             </div>
           </div>
@@ -124,7 +124,7 @@ export function AdminRewardsTable({ rewards, isLoading, onProcessReward }: Admin
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className="font-bold text-emerald-600">
+                      <span className="font-bold text-accent">
                         {formatReferralCurrency(reward.amount)}
                       </span>
                     </TableCell>
@@ -148,7 +148,7 @@ export function AdminRewardsTable({ rewards, isLoading, onProcessReward }: Admin
                             <Button
                               size="sm"
                               variant="outline"
-                              className="gap-1 text-blue-600"
+                              className="gap-1 text-primary"
                               onClick={() => onProcessReward(reward.id, 'approve')}
                             >
                               <CheckCircle2 className="h-3 w-3" />
@@ -157,7 +157,7 @@ export function AdminRewardsTable({ rewards, isLoading, onProcessReward }: Admin
                             <Button
                               size="sm"
                               variant="outline"
-                              className="gap-1 text-red-600"
+                              className="gap-1 text-destructive"
                               onClick={() => onProcessReward(reward.id, 'reject')}
                             >
                               <XCircle className="h-3 w-3" />

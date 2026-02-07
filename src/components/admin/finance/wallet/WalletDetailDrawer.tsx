@@ -270,11 +270,11 @@ export function WalletDetailDrawer({
 
   const getTransactionIcon = (type: string) => {
     const icons: Record<string, React.ReactNode> = {
-      topup: <ArrowDownLeft className="h-4 w-4 text-emerald-500" />,
-      invoice_payment: <Receipt className="h-4 w-4 text-blue-500" />,
-      refund: <RefreshCw className="h-4 w-4 text-amber-500" />,
-      withdrawal: <ArrowUpRight className="h-4 w-4 text-red-500" />,
-      adjustment: <TrendingUp className="h-4 w-4 text-violet-500" />,
+      topup: <ArrowDownLeft className="h-4 w-4 text-accent" />,
+      invoice_payment: <Receipt className="h-4 w-4 text-primary" />,
+      refund: <RefreshCw className="h-4 w-4 text-secondary" />,
+      withdrawal: <ArrowUpRight className="h-4 w-4 text-destructive" />,
+      adjustment: <TrendingUp className="h-4 w-4 text-primary" />,
     };
     return icons[type] || <Banknote className="h-4 w-4 text-muted-foreground" />;
   };
@@ -295,17 +295,17 @@ export function WalletDetailDrawer({
       succeeded: {
         icon: <CheckCircle2 className="h-3 w-3" />,
         label: { ar: "مكتمل", en: "Completed" },
-        className: "bg-emerald-500/10 text-emerald-600 border-emerald-500/30",
+        className: "bg-accent/10 text-accent border-accent/30",
       },
       pending: {
         icon: <Clock className="h-3 w-3" />,
         label: { ar: "قيد الانتظار", en: "Pending" },
-        className: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        className: "bg-secondary/10 text-secondary border-secondary/30",
       },
       failed: {
         icon: <XCircle className="h-3 w-3" />,
         label: { ar: "فشل", en: "Failed" },
-        className: "bg-red-500/10 text-red-600 border-red-500/30",
+        className: "bg-destructive/10 text-destructive border-destructive/30",
       },
     };
     const config = configs[status] || { icon: null, label: { ar: status, en: status }, className: "" };
@@ -349,7 +349,7 @@ export function WalletDetailDrawer({
                       >
                         <span className="font-mono">{customer.customer_uid}</span>
                         {copiedUid ? (
-                          <Check className="h-3 w-3 text-emerald-400" />
+                          <Check className="h-3 w-3 text-accent" />
                         ) : (
                           <Copy className="h-3 w-3" />
                         )}
@@ -377,8 +377,8 @@ export function WalletDetailDrawer({
                         className={cn(
                           "border-white/30",
                           customer.wallet.status === "active"
-                            ? "bg-emerald-500/20 text-emerald-300"
-                            : "bg-amber-500/20 text-amber-300"
+                            ? "bg-accent/20 text-accent"
+                            : "bg-secondary/20 text-secondary"
                         )}
                       >
                         {customer.wallet.status === "active"
@@ -467,7 +467,7 @@ export function WalletDetailDrawer({
                                       "text-sm font-bold whitespace-nowrap",
                                       tx.transaction_type === "topup" ||
                                         tx.transaction_type === "refund"
-                                        ? "text-emerald-600"
+                                        ? "text-accent"
                                         : "text-foreground"
                                     )}
                                     dir="ltr"
@@ -501,14 +501,14 @@ export function WalletDetailDrawer({
                       <div className="grid grid-cols-2 gap-3">
                         <Button
                           variant="outline"
-                          className="h-auto py-4 flex flex-col items-center gap-2 border-emerald-500/30 hover:bg-emerald-500/10 hover:border-emerald-500/50"
+                          className="h-auto py-4 flex flex-col items-center gap-2 border-accent/30 hover:bg-accent/10 hover:border-accent/50"
                           onClick={() => {
                             setAdjustType("add");
                             setShowAdjustDialog(true);
                           }}
                         >
-                          <div className="h-10 w-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                            <Plus className="h-5 w-5 text-emerald-500" />
+                          <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center">
+                            <Plus className="h-5 w-5 text-accent" />
                           </div>
                           <span className="text-sm font-medium">
                             {isRTL ? "إضافة رصيد" : "Add Balance"}
@@ -516,14 +516,14 @@ export function WalletDetailDrawer({
                         </Button>
                         <Button
                           variant="outline"
-                          className="h-auto py-4 flex flex-col items-center gap-2 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
+                          className="h-auto py-4 flex flex-col items-center gap-2 border-destructive/30 hover:bg-destructive/10 hover:border-destructive/50"
                           onClick={() => {
                             setAdjustType("deduct");
                             setShowAdjustDialog(true);
                           }}
                         >
-                          <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center">
-                            <Minus className="h-5 w-5 text-red-500" />
+                          <div className="h-10 w-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                            <Minus className="h-5 w-5 text-destructive" />
                           </div>
                           <span className="text-sm font-medium">
                             {isRTL ? "خصم رصيد" : "Deduct Balance"}
@@ -542,7 +542,7 @@ export function WalletDetailDrawer({
                           className="w-full justify-start gap-3 h-12"
                           disabled={customer.wallet?.status === "frozen"}
                         >
-                          <Lock className="h-4 w-4 text-amber-500" />
+                          <Lock className="h-4 w-4 text-secondary" />
                           <span>{isRTL ? "تجميد المحفظة" : "Freeze Wallet"}</span>
                         </Button>
                         <Button
@@ -550,7 +550,7 @@ export function WalletDetailDrawer({
                           className="w-full justify-start gap-3 h-12"
                           disabled={customer.wallet?.status === "active"}
                         >
-                          <Unlock className="h-4 w-4 text-emerald-500" />
+                          <Unlock className="h-4 w-4 text-accent" />
                           <span>{isRTL ? "إلغاء التجميد" : "Unfreeze Wallet"}</span>
                         </Button>
                       </div>
@@ -569,9 +569,9 @@ export function WalletDetailDrawer({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {adjustType === "add" ? (
-                <Plus className="h-5 w-5 text-emerald-500" />
+                <Plus className="h-5 w-5 text-accent" />
               ) : (
-                <Minus className="h-5 w-5 text-red-500" />
+                <Minus className="h-5 w-5 text-destructive" />
               )}
               {isRTL
                 ? adjustType === "add" ? "إضافة رصيد" : "خصم رصيد"
@@ -617,15 +617,15 @@ export function WalletDetailDrawer({
               <div className={cn(
                 "rounded-lg p-4 border",
                 adjustType === "add"
-                  ? "bg-emerald-500/10 border-emerald-500/30"
-                  : "bg-red-500/10 border-red-500/30"
+                  ? "bg-accent/10 border-accent/30"
+                  : "bg-destructive/10 border-destructive/30"
               )}>
                 <span className="text-sm text-muted-foreground">
                   {isRTL ? "الرصيد الجديد" : "New Balance"}
                 </span>
                 <p className={cn(
                   "text-xl font-bold mt-1",
-                  adjustType === "add" ? "text-emerald-600" : "text-red-600"
+                  adjustType === "add" ? "text-accent" : "text-destructive"
                 )} dir="ltr">
                   {formatCurrency(
                     adjustType === "add"
@@ -643,7 +643,7 @@ export function WalletDetailDrawer({
             <Button
               onClick={handleAdjustment}
               disabled={isAdjusting || !adjustAmount || !adjustReason}
-              className={adjustType === "add" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700"}
+              className={adjustType === "add" ? "bg-accent hover:bg-accent/90" : "bg-destructive hover:bg-destructive/90"}
             >
               {isAdjusting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
               {isRTL

@@ -111,7 +111,7 @@ const businessNavItems: NavItem[] = [
     href: ROUTES.ADMIN.ORDERS,
     permission: "orders.view",
     badge: 5,
-    badgeColor: "bg-blue-500",
+    badgeColor: "bg-primary",
   },
   {
     titleKey: "contracts",
@@ -178,7 +178,7 @@ const systemNavItems: NavItem[] = [
     href: ROUTES.ADMIN.NOTIFICATIONS,
     permission: "notifications.view",
     badge: 12,
-    badgeColor: "bg-red-500",
+    badgeColor: "bg-destructive",
   },
   {
     titleKey: "audit",
@@ -292,7 +292,7 @@ export function AdminSidebar() {
                 className={cn(
                   "rounded-full text-white font-bold shadow-sm shrink-0",
                   isMobile ? "h-6 min-w-6 px-2 text-xs" : "h-5 min-w-5 px-1.5 text-[10px]",
-                  item.badgeColor || "bg-amber-500"
+                  item.badgeColor || "bg-secondary"
                 )}
               >
                 {item.badge > 99 ? "99+" : item.badge}
@@ -391,7 +391,7 @@ export function AdminSidebar() {
                 "text-slate-400 flex items-center gap-1.5 mt-0.5",
                 isMobile ? "text-sm" : "text-xs"
               )}>
-                <Sparkles className="h-3 w-3 text-amber-400 shrink-0" />
+                <Sparkles className="h-3 w-3 text-secondary shrink-0" />
                 <span className="truncate">
                   {language === "ar" ? "لوحة الإدارة" : "Admin Console"}
                 </span>
@@ -513,15 +513,15 @@ export function AdminSidebar() {
             )}>
               <div className="relative shrink-0">
                 <Avatar className={cn(
-                  "ring-2 ring-amber-400/30 ring-offset-2 ring-offset-slate-900 shadow-lg",
+                  "ring-2 ring-secondary/30 ring-offset-2 ring-offset-slate-900 shadow-lg",
                   isMobile ? "h-12 w-12" : "h-10 w-10"
                 )}>
                   <AvatarImage src={profile?.avatar_url || undefined} />
-                  <AvatarFallback className="bg-gradient-to-br from-amber-500 to-amber-600 text-slate-900 font-bold text-sm">
+                  <AvatarFallback className="bg-gradient-to-br from-secondary to-secondary/80 text-slate-900 font-bold text-sm">
                     {profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-lg shadow-emerald-500/40" />
+                <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-accent border-2 border-slate-900 shadow-lg shadow-accent/40" />
               </div>
               
               {(isMobile || !isCollapsed) && (
@@ -554,13 +554,13 @@ export function AdminSidebar() {
                     onClick={handleSignOut}
                     className={cn(
                       "flex items-center gap-3 rounded-xl cursor-pointer transition-all duration-200",
-                      "text-red-400/80 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20",
+                      "text-destructive/80 hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20",
                       isMobile ? "px-4 py-3.5 min-h-[52px]" : "px-3 py-2.5",
                       isCollapsed && !isMobile && "justify-center px-2"
                     )}
                   >
                     <div className={cn(
-                      "flex items-center justify-center rounded-xl bg-red-500/10 shrink-0",
+                      "flex items-center justify-center rounded-xl bg-destructive/10 shrink-0",
                       isMobile ? "w-10 h-10" : "w-9 h-9"
                     )}>
                       <LogOut className={cn(isMobile ? "h-5 w-5" : "h-[18px] w-[18px]")} />
