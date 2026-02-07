@@ -12,10 +12,12 @@ const MSEGAT_API_URL = "https://www.msegat.com/gw/sendsms.php";
 type MessageType = 
   // Welcome & Registration
   | "welcome" | "registration_complete" | "otp_sent"
+  // Security & Login
+  | "login_alert" | "new_device_login" | "suspicious_login"
   // Orders
   | "order_created" | "order_confirmed" | "order_processing" | "order_completed" | "order_cancelled"
   // Contracts
-  | "contract_created" | "contract_approved" | "contract_rejected" | "contract_pending_signature" 
+  | "contract_created" | "contract_approved" | "contract_rejected" | "contract_pending_signature" | "contract_pending_approval"
   | "contract_signed" | "contract_active" | "contract_expired"
   // Finance - Eligibility
   | "finance_eligibility_checking" | "finance_eligibility_approved" | "finance_eligibility_rejected"
@@ -56,6 +58,40 @@ ASH HOLDING`,
   otp_sent: `🔐 رمز التحقق الخاص بك: {{otp}}
 صالح لمدة 5 دقائق.
 لا تشاركه مع أحد.
+ASH HOLDING`,
+
+  // ===== Security & Login =====
+  login_alert: `🔐 تنبيه أمني - ASH HOLDING
+
+تم تسجيل دخول على حسابك الآن.
+
+📅 التاريخ: {{date}}
+⏰ الوقت: {{time}}
+📍 الموقع: {{location}}
+📱 الجهاز: {{device}}
+
+إذا لم تكن أنت، قم بتغيير كلمة المرور فوراً.
+للدعم: info@ash-holding.sa`,
+
+  new_device_login: `🔔 تسجيل دخول من جهاز جديد!
+
+تم الدخول على حسابك من جهاز غير معروف.
+
+📅 التاريخ: {{date}}
+⏰ الوقت: {{time}}
+
+إذا لم تكن أنت، تواصل معنا فوراً.
+ASH HOLDING`,
+
+  suspicious_login: `⚠️ تحذير أمني!
+
+محاولة دخول مشبوهة على حسابك.
+
+📅 التاريخ: {{date}}
+⏰ الوقت: {{time}}
+📍 الموقع: {{location}}
+
+قم بتغيير كلمة المرور فوراً.
 ASH HOLDING`,
 
   // ===== Orders =====

@@ -99,6 +99,52 @@ function cacheRoles(userId: string, roles: UserRole[]) {
   } catch {}
 }
 
+// Send SMS alert on login
+async function sendLoginSmsAlert(userId: string) {
+  try {
+    // Fetch user phone
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('phone, full_name, full_name_ar')
+      .eq('id', userId)
+      .single();
+
+    if (!profile?.phone) return;
+
+    // Get current date/time in Saudi Arabia timezone
+    const now = new Date();
+    const saudiDate = now.toLocaleDateString('ar-SA', { 
+      timeZone: 'Asia/Riyadh',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const saudiTime = now.toLocaleTimeString('ar-SA', { 
+      timeZone: 'Asia/Riyadh',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    // Send SMS via edge function (fire and forget)
+    supabase.functions.invoke('sms-send-notification', {
+      body: {
+        phone: profile.phone,
+        message_type: 'login_alert',
+        template_data: {
+          name: profile.full_name_ar || profile.full_name || 'عميلنا',
+          date: saudiDate,
+          time: saudiTime,
+          location: 'المملكة العربية السعودية',
+          device: navigator.userAgent?.includes('Mobile') ? 'جوال' : 'كمبيوتر'
+        }
+      }
+    }).catch(err => console.warn('Login SMS alert failed:', err));
+  } catch (err) {
+    console.warn('Failed to send login alert:', err);
+  }
+}
+
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // INSTANT initial state from localStorage
   const initialState = getStoredSession();
@@ -155,6 +201,11 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
           setProfile(null);
           setRoles([]);
           return;
+        }
+
+        // Send login SMS alert on new sign-in
+        if (event === 'SIGNED_IN' && currentUserIdRef.current !== currentSession.user.id) {
+          sendLoginSmsAlert(currentSession.user.id);
         }
 
         if (currentUserIdRef.current === currentSession.user.id) {
