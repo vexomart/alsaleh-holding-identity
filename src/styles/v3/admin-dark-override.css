@@ -77,15 +77,31 @@
 .cmd-center .card,
 .cmd-center [data-slot="card"],
 .cmd-center > div > div[class*="rounded"],
-.cmd-center .space-y-6 > div[class*="border"] {
+.cmd-center .space-y-6 > div[class*="border"],
+.cmd-center [data-radix-collection-item] {
   background: hsl(220 20% 12%) !important;
   border-color: hsl(220 20% 18%) !important;
   color: hsl(0 0% 98%) !important;
 }
 
+/* Card backgrounds - Force dark */
+.cmd-center .border-border\/50,
+.cmd-center [class*="border-border"],
+.cmd-center .shadow-sm,
+.cmd-center .overflow-hidden {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+/* Card header muted */
+.cmd-center .bg-muted\/30,
+.cmd-center [class*="bg-muted"] {
+  background: hsl(220 22% 9%) !important;
+}
+
 .cmd-center [class*="CardHeader"],
 .cmd-center .card-header {
-  background: transparent !important;
+  background: hsl(220 22% 9%) !important;
   border-bottom: 1px solid hsl(220 20% 18%) !important;
 }
 
@@ -102,7 +118,15 @@
 
 .cmd-center [class*="CardContent"],
 .cmd-center .card-content {
+  background: hsl(220 20% 12%) !important;
   color: hsl(220 15% 75%) !important;
+}
+
+/* User cards - motion divs */
+.cmd-center .bg-card\/50,
+.cmd-center [class*="bg-card"],
+.cmd-center .backdrop-blur-sm {
+  background: hsl(220 20% 12%) !important;
 }
 
 /* =========================================
@@ -835,4 +859,174 @@
 
 .cmd-center .focus\:text-red-600:focus {
   color: hsl(0 85% 65%) !important;
+}
+
+/* =========================================
+   LEGACY ADMIN PAGE - COMPLETE DARK OVERRIDE
+   ========================================= */
+
+.cmd-center .legacy-admin-page,
+.cmd-center .legacy-admin-page * {
+  --background: 220 20% 12%;
+  --foreground: 0 0% 98%;
+  --card: 220 20% 12%;
+  --card-foreground: 0 0% 98%;
+  --popover: 220 20% 12%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 185 75% 48%;
+  --primary-foreground: 220 25% 6%;
+  --secondary: 220 18% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 220 22% 9%;
+  --muted-foreground: 220 15% 60%;
+  --accent: 145 72% 45%;
+  --accent-foreground: 220 25% 6%;
+  --destructive: 0 85% 58%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 20% 18%;
+  --input: 220 20% 18%;
+  --ring: 185 75% 48%;
+}
+
+.cmd-center .legacy-admin-page {
+  background: hsl(220 25% 6%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+/* Force all divs to be dark */
+.cmd-center .legacy-admin-page > div,
+.cmd-center .legacy-admin-page > div > div,
+.cmd-center .legacy-admin-page [class*="space-y"] > div,
+.cmd-center .legacy-admin-page .flex > div {
+  background-color: transparent !important;
+}
+
+/* Specific container cards */
+.cmd-center .legacy-admin-page .rounded-2xl,
+.cmd-center .legacy-admin-page .rounded-xl,
+.cmd-center .legacy-admin-page .rounded-lg,
+.cmd-center .legacy-admin-page [class*="rounded"][class*="border"] {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+/* Filter sections */
+.cmd-center .legacy-admin-page .border.rounded-xl,
+.cmd-center .legacy-admin-page .border.rounded-2xl,
+.cmd-center .legacy-admin-page .p-4.border,
+.cmd-center .legacy-admin-page .p-6.border {
+  background: hsl(220 20% 12%) !important;
+  border-color: hsl(220 20% 18%) !important;
+}
+
+/* Space-y containers */
+.cmd-center .legacy-admin-page .space-y-4,
+.cmd-center .legacy-admin-page .space-y-6,
+.cmd-center .legacy-admin-page .space-y-8 {
+  background: transparent !important;
+}
+
+/* Card backgrounds */
+.cmd-center .legacy-admin-page .bg-card,
+.cmd-center .legacy-admin-page .bg-white,
+.cmd-center .legacy-admin-page .bg-background,
+.cmd-center .legacy-admin-page .bg-muted,
+.cmd-center .legacy-admin-page [style*="background: white"],
+.cmd-center .legacy-admin-page [style*="background-color: white"],
+.cmd-center .legacy-admin-page [style*="background: hsl(0 0% 100%)"],
+.cmd-center .legacy-admin-page [style*="background: rgb(255"],
+.cmd-center .legacy-admin-page [style*="background:#fff"],
+.cmd-center .legacy-admin-page [style*="background-color:#fff"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Text colors */
+.cmd-center .legacy-admin-page h1,
+.cmd-center .legacy-admin-page h2,
+.cmd-center .legacy-admin-page h3,
+.cmd-center .legacy-admin-page h4 {
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .legacy-admin-page p,
+.cmd-center .legacy-admin-page span,
+.cmd-center .legacy-admin-page label {
+  color: hsl(220 15% 75%) !important;
+}
+
+.cmd-center .legacy-admin-page .text-muted-foreground {
+  color: hsl(220 15% 60%) !important;
+}
+
+/* Input fields */
+.cmd-center .legacy-admin-page input,
+.cmd-center .legacy-admin-page select,
+.cmd-center .legacy-admin-page textarea {
+  background: hsl(220 22% 9%) !important;
+  border-color: hsl(220 20% 22%) !important;
+  color: hsl(0 0% 98%) !important;
+}
+
+.cmd-center .legacy-admin-page input::placeholder {
+  color: hsl(220 12% 45%) !important;
+}
+
+/* =========================================
+   NUCLEAR OVERRIDE - ALL WHITE BACKGROUNDS
+   ========================================= */
+
+/* Force ALL white backgrounds dark in cmd-center */
+.cmd-center [style*="background: white"],
+.cmd-center [style*="background-color: white"],
+.cmd-center [style*="background: rgb(255, 255, 255)"],
+.cmd-center [style*="background-color: rgb(255, 255, 255)"],
+.cmd-center [style*="background:#fff"],
+.cmd-center [style*="background-color:#fff"],
+.cmd-center [style*="background: #fff"],
+.cmd-center [style*="background-color: #fff"],
+.cmd-center [style*="background: hsl(0 0% 100%)"],
+.cmd-center [style*="background-color: hsl(0 0% 100%)"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* All bg-white overrides */
+.cmd-center [class*="bg-white"],
+.cmd-center [class*="bg-slate-50"],
+.cmd-center [class*="bg-gray-50"],
+.cmd-center [class*="bg-zinc-50"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Deep nested containers */
+.cmd-center div[class*="rounded"] > div[class*="bg-"],
+.cmd-center div[class*="border"] > div[class*="bg-"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Shadow card containers - usually these have white bg */
+.cmd-center [class*="shadow-sm"],
+.cmd-center [class*="shadow-md"],
+.cmd-center [class*="shadow-lg"] {
+  background: hsl(220 20% 12%) !important;
+}
+
+/* Page containers */
+.cmd-center .min-h-screen,
+.cmd-center .min-h-full,
+.cmd-center [class*="min-h-"] {
+  background: transparent !important;
+}
+
+/* Ensure text visibility */
+.cmd-center * {
+  --tw-text-opacity: 1;
+}
+
+/* Table rows alternate */
+.cmd-center tr:nth-child(even) {
+  background: hsl(220 22% 10%) !important;
+}
+
+.cmd-center tr:nth-child(odd) {
+  background: hsl(220 20% 12%) !important;
 }
