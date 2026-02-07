@@ -1,7 +1,7 @@
 /**
  * UnifiedHeader - V3 Dashboard Header
  * Light Theme - Modern SaaS Style
- * RTL-First Arabic Native
+ * RTL-First Arabic Native - STRICT RTL
  */
 
 import * as React from 'react';
@@ -100,8 +100,16 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
   };
 
   return (
-    <header className="v3-header">
-      {/* Left: Menu + Title */}
+    <header 
+      className="v3-header"
+      dir="rtl"
+      style={{ 
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+    >
+      {/* RIGHT SIDE: Menu + Title (RTL: starts from right) */}
       <div className="flex items-center gap-4">
         <button
           className="v3-btn-ghost h-10 w-10 p-0"
@@ -110,12 +118,15 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
           <Menu size={20} />
         </button>
 
-        <h1 className="font-semibold text-lg hidden sm:block" style={{ color: 'hsl(var(--v3-text-primary))' }}>
+        <h1 
+          className="font-semibold text-lg hidden sm:block" 
+          style={{ color: 'hsl(var(--v3-text-primary))' }}
+        >
           {getPageTitle()}
         </h1>
       </div>
 
-      {/* Center: Search (Desktop) */}
+      {/* CENTER: Search (Desktop) */}
       {!isMobile && (
         <div className="flex-1 max-w-md mx-8">
           <div className="relative">
@@ -127,8 +138,9 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
             <input
               type="text"
               placeholder={isRTL ? 'بحث...' : 'Search...'}
+              dir="rtl"
               className={cn(
-                'w-full h-10 ps-10 pe-4 rounded-lg text-sm',
+                'w-full h-10 ps-10 pe-4 rounded-lg text-sm text-right',
                 'border transition-all duration-200'
               )}
               style={{
@@ -141,7 +153,7 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
         </div>
       )}
 
-      {/* Right: Actions */}
+      {/* LEFT SIDE: Actions (RTL: ends on left) */}
       <div className="flex items-center gap-2">
         {/* Notifications */}
         <button
@@ -150,7 +162,7 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
         >
           <Bell size={20} />
           <span 
-            className="absolute top-1 end-1 w-2 h-2 rounded-full"
+            className="absolute top-1 start-1 w-2 h-2 rounded-full"
             style={{ background: 'hsl(var(--v3-error))' }}
           />
         </button>
@@ -198,14 +210,15 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
           {/* Dropdown Menu */}
           {showUserMenu && (
             <div 
-              className="absolute end-0 top-full mt-2 w-56 rounded-xl overflow-hidden shadow-lg z-50"
+              className="absolute start-0 top-full mt-2 w-56 rounded-xl overflow-hidden shadow-lg z-50"
+              dir="rtl"
               style={{
                 background: 'hsl(var(--v3-bg-card))',
                 border: '1px solid hsl(var(--v3-border-light))',
               }}
             >
               <div 
-                className="px-4 py-3 border-b"
+                className="px-4 py-3 border-b text-right"
                 style={{ borderColor: 'hsl(var(--v3-border-light))' }}
               >
                 <p 
@@ -224,7 +237,7 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
               
               <div className="py-1">
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors text-right"
                   style={{ color: 'hsl(var(--v3-text-secondary))' }}
                   onClick={() => {
                     navigate(variant === 'admin' ? '/adminash/settings' : '/portal/profile');
@@ -234,18 +247,18 @@ export const UnifiedHeader: React.FC<UnifiedHeaderProps> = ({
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 >
                   <Settings size={18} />
-                  {isRTL ? 'الإعدادات' : 'Settings'}
+                  <span>{isRTL ? 'الإعدادات' : 'Settings'}</span>
                 </button>
                 
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors text-right"
                   style={{ color: 'hsl(var(--v3-error))' }}
                   onClick={handleLogout}
                   onMouseEnter={(e) => e.currentTarget.style.background = 'hsl(var(--v3-error-bg))'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                 >
                   <LogOut size={18} />
-                  {isRTL ? 'تسجيل الخروج' : 'Logout'}
+                  <span>{isRTL ? 'تسجيل الخروج' : 'Logout'}</span>
                 </button>
               </div>
             </div>

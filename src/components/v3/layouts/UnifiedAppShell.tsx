@@ -57,11 +57,17 @@ export const UnifiedAppShell: React.FC<UnifiedAppShellProps> = ({
 
   return (
     <div 
-      dir={isRTL ? 'rtl' : 'ltr'}
+      dir="rtl"
       className="v3-app v3-shell"
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      style={{ 
+        direction: 'rtl',
+        display: 'flex',
+        flexDirection: 'row',
+        maxWidth: '100%',
+        overflowX: 'hidden',
+      }}
     >
-      {/* Sidebar */}
+      {/* Sidebar - On RIGHT side for RTL */}
       <UnifiedSidebar
         groups={navGroups}
         logo={logo}
@@ -72,23 +78,24 @@ export const UnifiedAppShell: React.FC<UnifiedAppShellProps> = ({
         onMobileClose={() => setMobileSidebarOpen(false)}
       />
 
-      {/* Main Area */}
-      <div className="v3-main">
+      {/* Main Area - Takes remaining space */}
+      <div className="v3-main" style={{ flex: 1 }}>
         {/* Header */}
         <UnifiedHeader 
           onMenuClick={handleMenuClick}
           variant={variant}
         />
 
-        {/* Content */}
-        <main className="v3-content">
+        {/* Content - RTL aligned */}
+        <main className="v3-content" dir="rtl" style={{ textAlign: 'right' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
+              style={{ direction: 'rtl' }}
             >
               {children}
             </motion.div>

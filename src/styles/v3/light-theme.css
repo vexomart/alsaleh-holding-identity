@@ -118,7 +118,7 @@
 }
 
 /* =========================================
-   BASE STYLES
+   BASE STYLES - STRICT RTL
    ========================================= */
 
 .v3-app {
@@ -127,30 +127,44 @@
   color: hsl(var(--v3-text-primary));
   min-height: 100dvh;
   direction: rtl;
+  text-align: right;
   font-size: var(--v3-text-base);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Force RTL on all elements */
+.v3-app *,
+.v3-app *::before,
+.v3-app *::after {
+  box-sizing: border-box;
 }
 
 /* =========================================
-   APP SHELL STRUCTURE
+   APP SHELL STRUCTURE - RTL NATIVE
    ========================================= */
 
 .v3-shell {
   display: flex;
+  flex-direction: row;
   min-height: 100dvh;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-/* Sidebar */
+/* Sidebar - Positioned on RIGHT for RTL */
 .v3-sidebar {
   position: sticky;
   top: 0;
   height: 100dvh;
   width: var(--v3-sidebar-collapsed);
   background: hsl(var(--v3-bg-card));
-  border-inline-end: 1px solid hsl(var(--v3-border-light));
+  border-inline-start: 1px solid hsl(var(--v3-border-light)); /* Border on LEFT (inner side) in RTL */
   display: flex;
   flex-direction: column;
   transition: var(--v3-sidebar-transition);
@@ -163,7 +177,7 @@
   width: var(--v3-sidebar-expanded);
 }
 
-/* Main Area */
+/* Main Area - Positioned on LEFT for RTL */
 .v3-main {
   flex: 1;
   display: flex;
@@ -172,13 +186,15 @@
   overflow-x: hidden;
 }
 
-/* Header */
+/* Header - RTL Native */
 .v3-header {
   height: var(--v3-header-height);
   background: hsl(var(--v3-bg-card));
   border-bottom: 1px solid hsl(var(--v3-border-light));
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   padding: 0 var(--v3-space-6);
   position: sticky;
   top: 0;
@@ -457,3 +473,108 @@
 .v3-me-4 { margin-inline-end: var(--v3-space-4); }
 .v3-ms-auto { margin-inline-start: auto; }
 .v3-me-auto { margin-inline-end: auto; }
+
+/* =========================================
+   STRICT RTL ENFORCEMENT
+   ========================================= */
+
+/* Force RTL direction on all containers */
+.v3-rtl-strict {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* Tables RTL */
+.v3-table {
+  direction: rtl;
+  text-align: right;
+  width: 100%;
+}
+
+.v3-table th,
+.v3-table td {
+  text-align: right;
+  padding: var(--v3-space-3) var(--v3-space-4);
+}
+
+.v3-table th:first-child,
+.v3-table td:first-child {
+  padding-inline-end: var(--v3-space-4);
+}
+
+.v3-table th:last-child,
+.v3-table td:last-child {
+  padding-inline-start: var(--v3-space-4);
+}
+
+/* Cards RTL */
+.v3-card {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Stats RTL */
+.v3-stat {
+  direction: rtl;
+  text-align: right;
+}
+
+.v3-stat-icon {
+  margin-inline-start: var(--v3-space-3);
+  margin-inline-end: 0;
+}
+
+/* Forms RTL */
+.v3-form-group {
+  direction: rtl;
+  text-align: right;
+}
+
+.v3-input,
+.v3-select,
+.v3-textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Flex RTL Helpers */
+.v3-flex-rtl {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.v3-flex-col-rtl {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Icon positioning - Icon BEFORE text (on RIGHT) */
+.v3-icon-start {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--v3-space-2);
+}
+
+.v3-icon-start svg,
+.v3-icon-start .icon {
+  order: -1; /* Icon first in RTL */
+}
+
+/* LTR Isolation for numbers/codes */
+.v3-ltr-isolate {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* Prevent layout shift */
+.v3-no-shift {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Scrollbar stability */
+.v3-stable-scroll {
+  scrollbar-gutter: stable;
+}
