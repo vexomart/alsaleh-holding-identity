@@ -1,14 +1,13 @@
 /**
- * V3 Admin Dashboard - Command Center
- * 100% Custom - NO SHADCN
- * 
- * STATUS: V3 REBUILD
+ * V3 Admin Dashboard - Unified Light Theme
+ * Modern SaaS Style with Collapsible Sidebar
  */
 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy, ReactNode } from 'react';
 import { V3AdminLayout } from '@/components/v3/layouts/V3AdminLayout';
 import { V3AdminOverview } from '@/components/v3/pages/V3AdminOverview';
+import '@/styles/v3/light-theme.css';
 
 // Keep existing page imports for functionality
 import { UsersManagement } from '@/components/admin/users/UsersManagement';
@@ -37,7 +36,7 @@ const UserDetailsPage = lazy(() => import('@/pages/admin/users/UserDetailsPage')
 const UserEditPage = lazy(() => import('@/pages/admin/users/UserEditPage'));
 const AddUserPage = lazy(() => import('@/pages/admin/users/AddUserPage'));
 
-// V3 Loader - Command Center Style
+// V3 Loader - Light Theme Style
 const V3PageLoader = () => (
   <div 
     style={{
@@ -52,8 +51,8 @@ const V3PageLoader = () => (
         style={{
           width: '40px',
           height: '40px',
-          border: '3px solid hsl(185 75% 48% / 0.3)',
-          borderTopColor: 'hsl(185 75% 48%)',
+          border: '3px solid hsl(217 91% 60% / 0.2)',
+          borderTopColor: 'hsl(217 91% 60%)',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
         }}
@@ -64,12 +63,37 @@ const V3PageLoader = () => (
 );
 
 /**
- * Legacy Page Wrapper - Dark Command Center Style
- * Inherits dark theme from parent layout
+ * Page Wrapper - Light Theme Consistent
+ * Ensures all legacy pages inherit the light theme
  */
-const LegacyPageWrapper = ({ children }: { children: ReactNode }) => (
-  <div className="legacy-admin-page">
+const PageWrapper = ({ children }: { children: ReactNode }) => (
+  <div className="v3-page-wrapper">
     {children}
+    <style>{`
+      .v3-page-wrapper {
+        /* Force light theme overrides for legacy components */
+        --background: 0 0% 98%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 217 91% 60%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 220 14% 96%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 220 14% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 220 14% 96%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 13% 91%;
+        --input: 220 13% 91%;
+        --ring: 217 91% 60%;
+        color: hsl(222.2 84% 4.9%);
+      }
+    `}</style>
   </div>
 );
 
@@ -81,29 +105,29 @@ const V3AdminDashboard = () => {
         <Route index element={<V3AdminOverview />} />
         
         {/* User Management Routes */}
-        <Route path="users" element={<LegacyPageWrapper><UsersManagement /></LegacyPageWrapper>} />
-        <Route path="users/new" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><AddUserPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="users/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><UserDetailsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="users/:id/edit" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><UserEditPage /></Suspense></LegacyPageWrapper>} />
+        <Route path="users" element={<PageWrapper><UsersManagement /></PageWrapper>} />
+        <Route path="users/new" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><AddUserPage /></Suspense></PageWrapper>} />
+        <Route path="users/:id" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><UserDetailsPage /></Suspense></PageWrapper>} />
+        <Route path="users/:id/edit" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><UserEditPage /></Suspense></PageWrapper>} />
         
-        {/* Legacy pages wrapped for compatibility */}
-        <Route path="roles" element={<LegacyPageWrapper><RolesPermissions /></LegacyPageWrapper>} />
-        <Route path="clients/:id" element={<LegacyPageWrapper><AdminClientHub /></LegacyPageWrapper>} />
-        <Route path="services" element={<LegacyPageWrapper><ServicesManagement /></LegacyPageWrapper>} />
-        <Route path="orders" element={<LegacyPageWrapper><OrdersManagement /></LegacyPageWrapper>} />
-        <Route path="orders/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><OrderDetailsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="contracts" element={<LegacyPageWrapper><ContractsManagement /></LegacyPageWrapper>} />
-        <Route path="contracts/:id" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><ContractDetailsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="wallets" element={<LegacyPageWrapper><WalletsManagement /></LegacyPageWrapper>} />
-        <Route path="wallets/:id" element={<LegacyPageWrapper><WalletDetailsPage /></LegacyPageWrapper>} />
-        <Route path="finance" element={<LegacyPageWrapper><FinanceCenter /></LegacyPageWrapper>} />
-        <Route path="finance-internal" element={<LegacyPageWrapper><FinanceManagement /></LegacyPageWrapper>} />
-        <Route path="referrals" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><AdminReferralsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="integrations" element={<LegacyPageWrapper><Suspense fallback={<V3PageLoader />}><IntegrationsPage /></Suspense></LegacyPageWrapper>} />
-        <Route path="reports" element={<LegacyPageWrapper><ReportsPage /></LegacyPageWrapper>} />
-        <Route path="notifications" element={<LegacyPageWrapper><NotificationsPage /></LegacyPageWrapper>} />
-        <Route path="audit" element={<LegacyPageWrapper><AuditLogPage /></LegacyPageWrapper>} />
-        <Route path="settings" element={<LegacyPageWrapper><SettingsPage /></LegacyPageWrapper>} />
+        {/* Other pages wrapped for consistency */}
+        <Route path="roles" element={<PageWrapper><RolesPermissions /></PageWrapper>} />
+        <Route path="clients/:id" element={<PageWrapper><AdminClientHub /></PageWrapper>} />
+        <Route path="services" element={<PageWrapper><ServicesManagement /></PageWrapper>} />
+        <Route path="orders" element={<PageWrapper><OrdersManagement /></PageWrapper>} />
+        <Route path="orders/:id" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><OrderDetailsPage /></Suspense></PageWrapper>} />
+        <Route path="contracts" element={<PageWrapper><ContractsManagement /></PageWrapper>} />
+        <Route path="contracts/:id" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><ContractDetailsPage /></Suspense></PageWrapper>} />
+        <Route path="wallets" element={<PageWrapper><WalletsManagement /></PageWrapper>} />
+        <Route path="wallets/:id" element={<PageWrapper><WalletDetailsPage /></PageWrapper>} />
+        <Route path="finance" element={<PageWrapper><FinanceCenter /></PageWrapper>} />
+        <Route path="finance-internal" element={<PageWrapper><FinanceManagement /></PageWrapper>} />
+        <Route path="referrals" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><AdminReferralsPage /></Suspense></PageWrapper>} />
+        <Route path="integrations" element={<PageWrapper><Suspense fallback={<V3PageLoader />}><IntegrationsPage /></Suspense></PageWrapper>} />
+        <Route path="reports" element={<PageWrapper><ReportsPage /></PageWrapper>} />
+        <Route path="notifications" element={<PageWrapper><NotificationsPage /></PageWrapper>} />
+        <Route path="audit" element={<PageWrapper><AuditLogPage /></PageWrapper>} />
+        <Route path="settings" element={<PageWrapper><SettingsPage /></PageWrapper>} />
       </Routes>
     </V3AdminLayout>
   );

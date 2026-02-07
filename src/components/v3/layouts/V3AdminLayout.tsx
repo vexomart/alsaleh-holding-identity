@@ -1,15 +1,15 @@
 /**
- * V3 Admin Layout - Command Center with Sidebar
- * Includes V3RailNav sidebar navigation
- * Simplified for UnifiedLayout integration
+ * V3 Admin Dashboard Layout
+ * Uses UnifiedAppShell with Light Theme
+ * RTL-First Arabic Native
  */
 
 import * as React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useAuth } from '@/hooks/useAuth';
+import { useAdminRealtime } from '@/hooks/useAdminRealtime';
 import { AdminGuard } from '@/components/auth/RouteGuard';
-import { V3RailNav, RailNavGroup } from '@/components/v3/navigation/V3RailNav';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
+import { UnifiedAppShell } from './UnifiedAppShell';
+import { SidebarNavGroup } from './UnifiedSidebar';
 import { 
   LayoutDashboard, 
   Users, 
@@ -24,17 +24,15 @@ import {
   BarChart3, 
   Bell, 
   Settings,
-  Menu,
-  X
+  History
 } from 'lucide-react';
-import '@/styles/v3/tokens.css';
 
 export interface V3AdminLayoutProps {
   children: React.ReactNode;
 }
 
 // Admin Navigation Groups
-const adminNavGroups: RailNavGroup[] = [
+const adminNavGroups: SidebarNavGroup[] = [
   {
     id: 'main',
     labelAr: 'الرئيسية',
@@ -73,92 +71,29 @@ const adminNavGroups: RailNavGroup[] = [
       { id: 'integrations', labelAr: 'التكاملات', labelEn: 'Integrations', icon: <Link2 size={20} />, href: '/adminash/integrations' },
       { id: 'reports', labelAr: 'التقارير', labelEn: 'Reports', icon: <BarChart3 size={20} />, href: '/adminash/reports' },
       { id: 'notifications', labelAr: 'الإشعارات', labelEn: 'Notifications', icon: <Bell size={20} />, href: '/adminash/notifications' },
+      { id: 'audit', labelAr: 'سجل المراجعة', labelEn: 'Audit Log', icon: <History size={20} />, href: '/adminash/audit' },
       { id: 'settings', labelAr: 'الإعدادات', labelEn: 'Settings', icon: <Settings size={20} />, href: '/adminash/settings' },
     ],
   },
 ];
 
 const V3AdminLayoutContent: React.FC<V3AdminLayoutProps> = ({ children }) => {
-  const { isRTL, language } = useLanguage();
-  const isMobile = useIsMobile();
-  const [sidebarExpanded, setSidebarExpanded] = React.useState(!isMobile);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = React.useState(false);
+  const { user, profile } = useAuth();
 
-  // Close mobile sidebar on route change
-  React.useEffect(() => {
-    setMobileSidebarOpen(false);
-  }, []);
-
-  // Update sidebar state on mobile change
-  React.useEffect(() => {
-    setSidebarExpanded(!isMobile);
-  }, [isMobile]);
+  // Real-time subscriptions for services and delivery confirmations
+  useAdminRealtime({
+    tenantId: profile?.tenant_id || undefined,
+    enabled: !!user,
+    showDeliveryToasts: true,
+  });
 
   return (
-    <div 
-      dir={isRTL ? 'rtl' : 'ltr'}
-      className="min-h-full flex"
-      style={{ 
-        direction: isRTL ? 'rtl' : 'ltr',
-        background: 'hsl(var(--cmd-bg-deep))',
-      }}
+    <UnifiedAppShell
+      variant="admin"
+      navGroups={adminNavGroups}
     >
-      {/* Mobile Sidebar Toggle */}
-      {isMobile && (
-        <button
-          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className={cn(
-            "fixed top-20 z-50 p-2 rounded-lg shadow-lg",
-            isRTL ? "right-4" : "left-4"
-          )}
-          style={{
-            background: 'hsl(var(--cmd-accent-cyan))',
-            color: 'hsl(var(--cmd-bg-deep))',
-          }}
-        >
-          {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      )}
-
-      {/* Sidebar - Desktop: Always visible, Mobile: Overlay */}
-      <div className={cn(
-        "shrink-0",
-        isMobile && "fixed inset-y-0 z-40 transition-transform duration-300",
-        isMobile && isRTL && (mobileSidebarOpen ? "translate-x-0 right-0" : "translate-x-full right-0"),
-        isMobile && !isRTL && (mobileSidebarOpen ? "translate-x-0 left-0" : "-translate-x-full left-0"),
-        !isMobile && "relative"
-      )}>
-        <V3RailNav
-          context="command"
-          groups={adminNavGroups}
-          isExpanded={isMobile ? true : sidebarExpanded}
-          onToggle={() => isMobile ? setMobileSidebarOpen(false) : setSidebarExpanded(!sidebarExpanded)}
-          language={language as 'ar' | 'en'}
-        />
-      </div>
-
-      {/* Mobile Overlay */}
-      {isMobile && mobileSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-30"
-          onClick={() => setMobileSidebarOpen(false)}
-        />
-      )}
-
-      {/* Content Area */}
-      <main 
-        className={cn(
-          "flex-1 min-w-0 overflow-x-hidden",
-          isMobile ? "px-3 py-4 pt-16" : "px-4 py-6 lg:px-8 lg:py-8"
-        )}
-        style={{
-          background: 'hsl(var(--cmd-bg-deep))',
-          color: 'hsl(var(--cmd-text-primary))',
-        }}
-      >
-        {children}
-      </main>
-    </div>
+      {children}
+    </UnifiedAppShell>
   );
 };
 

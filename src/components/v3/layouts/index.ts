@@ -1,8 +1,17 @@
 /**
- * V3 Layouts
- * 100% Custom - NO SHADCN
+ * V3 Layouts Export
+ * Unified Light Theme System
  */
 
+// Unified Components
+export { UnifiedSidebar } from './UnifiedSidebar';
+export type { SidebarNavItem, SidebarNavGroup, UnifiedSidebarProps } from './UnifiedSidebar';
+
+export { UnifiedHeader } from './UnifiedHeader';
+
+export { UnifiedAppShell } from './UnifiedAppShell';
+
+// Legacy exports for backwards compatibility
 export { V3AdminLayout } from './V3AdminLayout';
 export type { V3AdminLayoutProps } from './V3AdminLayout';
 

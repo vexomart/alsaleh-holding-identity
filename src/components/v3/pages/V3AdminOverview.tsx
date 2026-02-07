@@ -41,7 +41,7 @@ import {
   Sparkles,
   Eye
 } from 'lucide-react';
-import '@/styles/v3/tokens.css';
+import '@/styles/v3/light-theme.css';
 
 // ============= TYPES =============
 interface StatCardData {
