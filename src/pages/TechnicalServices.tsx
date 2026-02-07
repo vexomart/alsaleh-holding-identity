@@ -136,9 +136,6 @@ export default function TechnicalServices() {
         }}
       />
 
-      {/* Offset for fixed header */}
-      <div className="pt-[48px] lg:pt-[112px]" />
-
       <section className="py-20 md:py-28 relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         {/* Advanced Background Elements */}
         <div className="absolute inset-0">

@@ -122,7 +122,7 @@ const ContentWriting = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px]">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       {/* Hero Section */}

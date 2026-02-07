@@ -148,7 +148,7 @@ const Sitemap = () => {
   ];
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background pt-14 lg:pt-[104px]">
+    <div dir="rtl" className="min-h-screen bg-background">
       <Navigation />
       
       <main className="py-16 lg:py-24">

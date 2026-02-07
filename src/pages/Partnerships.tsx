@@ -124,7 +124,7 @@ const Partnerships = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-[48px] lg:pt-[112px] overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navigation />
       
       {/* Hero Section */}
