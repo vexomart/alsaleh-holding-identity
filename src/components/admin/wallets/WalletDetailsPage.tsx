@@ -163,76 +163,62 @@ export function WalletDetailsPage() {
 
     if (txError) throw txError;
 
-    // ⚡⚡⚡ PRIORITY: Send SMS FIRST before anything else ⚡⚡⚡
+    // ⚡⚡⚡ INSTANT SMS - MUST RUN IMMEDIATELY ⚡⚡⚡
     const customerPhone = customerData.profile?.phone;
     const customerEmail = customerData.profile?.email;
     const customerName = customerData.profile?.full_name || "عميلنا الكريم";
 
-    if (customerPhone) {
-      // Format date and time for banking SMS - REAL TIME
-      const now = new Date();
-      const dateStr = now.toLocaleDateString("ar-SA", { 
-        year: "numeric", 
-        month: "2-digit", 
-        day: "2-digit" 
-      });
-      const timeStr = now.toLocaleTimeString("ar-SA", { 
-        hour: "2-digit", 
-        minute: "2-digit",
-        hour12: true 
-      });
-      const operationType = adjustmentType === "add" 
-        ? "إيداع نقدي - تعديل إداري" 
-        : "خصم إداري";
+    // Format date and time for banking SMS
+    const now = new Date();
+    const dateStr = now.toLocaleDateString("ar-SA", { 
+      year: "numeric", 
+      month: "2-digit", 
+      day: "2-digit" 
+    });
+    const timeStr = now.toLocaleTimeString("ar-SA", { 
+      hour: "2-digit", 
+      minute: "2-digit",
+      hour12: true 
+    });
+    const operationType = adjustmentType === "add" 
+      ? "إيداع نقدي - تعديل إداري" 
+      : "خصم إداري";
 
+    console.log("🔔 Starting SMS dispatch...", { customerPhone, adjustmentType, amount, newBalance });
+
+    if (customerPhone) {
       const messageType = adjustmentType === "add" ? "wallet_topup" : "wallet_withdrawal";
       
-      console.log("⚡ INSTANT SMS DISPATCH to:", customerPhone, "at", new Date().toISOString());
+      console.log("📤 SENDING SMS NOW to:", customerPhone);
       
-      // Use direct fetch for maximum speed (bypasses SDK overhead)
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      
-      try {
-        const startTime = performance.now();
-        
-        const response = await fetch(`${supabaseUrl}/functions/v1/sms-send-notification`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${supabaseKey}`,
-            "apikey": supabaseKey,
+      // Use Supabase SDK - guaranteed to work
+      const { data: smsData, error: smsError } = await supabase.functions.invoke("sms-send-notification", {
+        body: {
+          phone: customerPhone,
+          message_type: messageType,
+          template_data: {
+            amount: amount.toLocaleString("ar-SA"),
+            balance: newBalance.toLocaleString("ar-SA"),
+            date: dateStr,
+            time: timeStr,
+            operation_type: operationType,
           },
-          body: JSON.stringify({
-            phone: customerPhone,
-            message_type: messageType,
-            template_data: {
-              amount: amount.toLocaleString("ar-SA"),
-              balance: newBalance.toLocaleString("ar-SA"),
-              date: dateStr,
-              time: timeStr,
-              operation_type: operationType,
-            },
-          }),
-        });
-        
-        const smsResult = await response.json();
-        const endTime = performance.now();
-        
-        console.log(`✅ SMS sent in ${Math.round(endTime - startTime)}ms:`, smsResult);
-        
-        if (smsResult.success) {
-          toast.success(isRTL ? "📱 تم إرسال إشعار SMS للعميل فوراً" : "📱 SMS sent instantly");
-        } else {
-          console.error("SMS response error:", smsResult);
-          toast.error(isRTL ? "فشل إرسال SMS" : "SMS failed");
-        }
-      } catch (smsErr) {
-        console.error("❌ SMS dispatch failed:", smsErr);
+        },
+      });
+      
+      console.log("📱 SMS Result:", { smsData, smsError });
+      
+      if (smsError) {
+        console.error("❌ SMS Error:", smsError);
         toast.error(isRTL ? "فشل إرسال SMS" : "SMS failed");
+      } else if (smsData?.success) {
+        console.log("✅ SMS SENT SUCCESSFULLY!");
+        toast.success(isRTL ? "📱 تم إرسال إشعار SMS للعميل" : "📱 SMS sent");
+      } else {
+        console.warn("⚠️ SMS response:", smsData);
       }
     } else {
-      console.warn("⚠️ No phone number for customer, SMS skipped");
+      console.warn("⚠️ No phone number - SMS skipped");
     }
 
     // Email Notification - send in background (less critical)
