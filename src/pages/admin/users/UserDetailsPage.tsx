@@ -1,11 +1,12 @@
 /**
  * User Details Page - Command Center Dark Theme
  * Full profile view with all user information
+ * Real-time login tracking with IP address
  */
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight,
   User,
@@ -29,13 +30,16 @@ import {
   FileText,
   Wallet,
   ShoppingCart,
-  Building
+  Building,
+  Wifi,
+  MapPin
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { db } from '@/integrations/supabase/db';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { ROUTES } from '@/constants/routes';
 
@@ -67,6 +71,13 @@ interface UserData {
   roles: { role: string }[];
 }
 
+interface LoginActivity {
+  timestamp: string;
+  ip_address: string | null;
+  location: string | null;
+  device: string | null;
+}
+
 export default function UserDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -74,13 +85,83 @@ export default function UserDetailsPage() {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ orders: 0, contracts: 0, walletBalance: 0 });
+  const [lastLogin, setLastLogin] = useState<LoginActivity | null>(null);
+  const [loginJustNow, setLoginJustNow] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchUser();
       fetchStats();
+      fetchLastLogin();
     }
   }, [id]);
+
+  // Real-time subscription for login activity
+  useEffect(() => {
+    if (!id) return;
+
+    const channel = supabase
+      .channel(`user-activity-${id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'account_activity_log',
+          filter: `user_id=eq.${id}`,
+        },
+        (payload) => {
+          if (payload.new.activity_type === 'login') {
+            const newLogin: LoginActivity = {
+              timestamp: payload.new.created_at,
+              ip_address: payload.new.ip_address,
+              location: payload.new.location,
+              device: payload.new.user_agent,
+            };
+            setLastLogin(newLogin);
+            setLoginJustNow(true);
+            
+            // Show toast notification
+            toast({
+              title: language === 'ar' ? '🟢 تسجيل دخول جديد!' : '🟢 New Login!',
+              description: `IP: ${newLogin.ip_address || 'N/A'}`,
+            });
+
+            // Reset the "just now" indicator after 10 seconds
+            setTimeout(() => setLoginJustNow(false), 10000);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id, language]);
+
+  const fetchLastLogin = async () => {
+    try {
+      const { data } = await db
+        .from('account_activity_log')
+        .select('created_at, ip_address, location, user_agent')
+        .eq('user_id', id)
+        .eq('activity_type', 'login')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        setLastLogin({
+          timestamp: data.created_at,
+          ip_address: data.ip_address as string | null,
+          location: data.location,
+          device: data.user_agent,
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching last login:', err);
+    }
+  };
 
   const fetchUser = async () => {
     try {
@@ -423,11 +504,13 @@ export default function UserDetailsPage() {
             value={formatDate(user.updated_at)}
             color="var(--cmd-accent-blue)"
           />
-          <DetailCard
-            icon={History}
-            title={language === 'ar' ? 'آخر تسجيل دخول' : 'Last Login'}
-            value={formatDateTime(user.last_login_at)}
-            color="var(--cmd-accent-green)"
+          
+          {/* Last Login with Real-time & IP */}
+          <LoginDetailCard
+            lastLogin={lastLogin}
+            fallbackTime={user.last_login_at}
+            language={language}
+            isLive={loginJustNow}
           />
         </div>
       </motion.div>
@@ -532,6 +615,133 @@ const DetailCard = ({
     </div>
   </div>
 );
+
+// Login Detail Card with Real-time updates and IP
+const LoginDetailCard = ({ 
+  lastLogin, 
+  fallbackTime, 
+  language,
+  isLive
+}: { 
+  lastLogin: LoginActivity | null;
+  fallbackTime: string | null;
+  language: string;
+  isLive: boolean;
+}) => {
+  const timestamp = lastLogin?.timestamp || fallbackTime;
+  const ipAddress = lastLogin?.ip_address;
+  const location = lastLogin?.location;
+
+  const formatTime = (date: string | null) => {
+    if (!date) return language === 'ar' ? 'لم يسجل دخول' : 'Never logged in';
+    return format(new Date(date), 'PPpp', { locale: language === 'ar' ? ar : enUS });
+  };
+
+  const getRelativeTime = (date: string | null) => {
+    if (!date) return null;
+    return formatDistanceToNow(new Date(date), { 
+      addSuffix: true, 
+      locale: language === 'ar' ? ar : enUS 
+    });
+  };
+
+  return (
+    <motion.div 
+      className="relative p-4 rounded-xl overflow-hidden"
+      style={{ background: 'hsl(var(--cmd-bg-elevated))' }}
+      animate={isLive ? { scale: [1, 1.02, 1] } : {}}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Live indicator glow */}
+      <AnimatePresence>
+        {isLive && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 rounded-xl"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--cmd-accent-green) / 0.2), transparent)',
+              border: '2px solid hsl(var(--cmd-accent-green) / 0.5)',
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="relative z-10 flex items-start gap-3">
+        <div 
+          className="p-2.5 rounded-lg relative"
+          style={{ background: 'hsl(var(--cmd-accent-green) / 0.15)' }}
+        >
+          <History className="h-5 w-5" style={{ color: 'hsl(var(--cmd-accent-green))' }} />
+          {isLive && (
+            <motion.div
+              className="absolute -top-1 -end-1 h-3 w-3 rounded-full"
+              style={{ background: 'hsl(var(--cmd-accent-green))' }}
+              animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            />
+          )}
+        </div>
+        
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm" style={{ color: 'hsl(var(--cmd-text-muted))' }}>
+              {language === 'ar' ? 'آخر تسجيل دخول' : 'Last Login'}
+            </p>
+            {isLive && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase"
+                style={{ 
+                  background: 'hsl(var(--cmd-accent-green))',
+                  color: 'white'
+                }}
+              >
+                LIVE
+              </motion.span>
+            )}
+          </div>
+          
+          <p className="font-semibold mt-0.5 truncate" style={{ color: 'hsl(var(--cmd-text-primary))' }}>
+            {timestamp ? getRelativeTime(timestamp) : (language === 'ar' ? 'لم يسجل دخول' : 'Never')}
+          </p>
+          
+          {timestamp && (
+            <p className="text-xs mt-0.5" style={{ color: 'hsl(var(--cmd-text-dim))' }}>
+              {formatTime(timestamp)}
+            </p>
+          )}
+
+          {/* IP Address */}
+          {ipAddress && (
+            <div className="flex items-center gap-2 mt-2 pt-2" style={{ borderTop: '1px solid hsl(var(--cmd-border-subtle))' }}>
+              <div className="flex items-center gap-1.5">
+                <Wifi className="h-3.5 w-3.5" style={{ color: 'hsl(var(--cmd-accent-cyan))' }} />
+                <span 
+                  className="text-xs font-mono"
+                  style={{ color: 'hsl(var(--cmd-text-secondary))' }}
+                  dir="ltr"
+                >
+                  {ipAddress}
+                </span>
+              </div>
+              {location && (
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3" style={{ color: 'hsl(var(--cmd-text-dim))' }} />
+                  <span className="text-xs" style={{ color: 'hsl(var(--cmd-text-dim))' }}>
+                    {location}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 // Stat Card Component
 const StatCard = ({ 
