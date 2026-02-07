@@ -1,7 +1,7 @@
 /**
  * UnifiedLayout - Single Layout for Entire Application
  * Header (sticky) + Main Content + Footer
- * Used for ALL pages without exception
+ * iOS-like smooth behavior with no horizontal overflow
  */
 
 import { ReactNode } from "react";
@@ -26,7 +26,13 @@ export function UnifiedLayout({
     <div 
       dir="rtl"
       className="min-h-screen flex flex-col bg-background"
-      style={{ direction: 'rtl' }}
+      style={{ 
+        direction: 'rtl',
+        width: '100%',
+        maxWidth: '100%',
+        overflowX: 'hidden',
+        position: 'relative',
+      }}
     >
       {/* Sticky Header - Always visible */}
       <NavigationDark />
@@ -37,6 +43,11 @@ export function UnifiedLayout({
           "flex-1 w-full",
           contentClassName
         )}
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          overflowX: 'hidden',
+        }}
       >
         {children}
       </main>

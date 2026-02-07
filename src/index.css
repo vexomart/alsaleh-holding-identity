@@ -13,6 +13,10 @@
 html {
   direction: rtl;
   text-align: right;
+  /* Prevent horizontal overflow globally */
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 html[dir="ltr"] {
@@ -23,6 +27,36 @@ html[dir="ltr"] {
 body {
   direction: inherit;
   text-align: inherit;
+  /* iOS-like smooth scrolling */
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* ===========================================
+   iOS-LIKE STICKY HEADER BEHAVIOR
+   Smooth, stable, no jitter
+   =========================================== */
+.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+}
+
+/* Prevent layout shift from scrollbar */
+html, body {
+  scrollbar-gutter: stable;
+}
+
+/* Hardware acceleration for smooth animations */
+.gpu-accelerate {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
 }
 
 /* ===========================================
