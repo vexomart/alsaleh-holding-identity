@@ -110,10 +110,11 @@ export const ModernSidebar: React.FC<ModernSidebarProps> = ({
                   <Layers size={18} />
                 </div>
                 <span 
-                  className="font-semibold text-sm"
+                  className="font-bold text-sm tracking-wide"
                   style={{ color: 'hsl(var(--modern-text-primary))' }}
+                  dir="ltr"
                 >
-                  الصالح
+                  ASH HOLDING
                 </span>
               </div>
             )}
