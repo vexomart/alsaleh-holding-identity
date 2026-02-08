@@ -9,3 +9,13 @@ export { V3CustomerOverview } from './V3CustomerOverview';
 // Modern Enhanced Pages
 export { ModernAdminOverview } from './ModernAdminOverview';
 export { ModernCustomerOverview } from './ModernCustomerOverview';
+
+// Unified Dashboard Component
+export { UnifiedDashboardOverview } from './UnifiedDashboardOverview';
+export type { 
+  DashboardStat,
+  QuickAction,
+  ActivityItem,
+  SectionLink,
+  UnifiedDashboardOverviewProps 
+} from './UnifiedDashboardOverview';
