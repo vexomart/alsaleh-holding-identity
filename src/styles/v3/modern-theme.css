@@ -1772,3 +1772,127 @@ html, body {
     max-width: 100%;
   }
 }
+
+/* =========================================
+   V3 PAGE LOADER - Modern Minimal
+   ========================================= */
+
+.modern-page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  width: 100%;
+}
+
+.modern-loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid hsl(var(--modern-border));
+  border-top-color: hsl(var(--modern-accent));
+  border-radius: var(--modern-radius-full);
+  animation: modern-spin 0.8s linear infinite;
+}
+
+@keyframes modern-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   V3 LEGACY OVERRIDE - Forces Modern Theme
+   Ensures all nested components inherit V3 tokens
+   ========================================= */
+
+.modern-content {
+  /* V3 Design Tokens Override for Legacy Components */
+  --background: var(--modern-bg-page);
+  --foreground: var(--modern-text-primary);
+  --card: var(--modern-bg-card);
+  --card-foreground: var(--modern-text-primary);
+  --popover: var(--modern-bg-elevated);
+  --popover-foreground: var(--modern-text-primary);
+  --primary: var(--modern-accent);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--modern-bg-subtle);
+  --secondary-foreground: var(--modern-text-secondary);
+  --muted: var(--modern-bg-subtle);
+  --muted-foreground: var(--modern-text-muted);
+  --accent: var(--modern-accent);
+  --accent-foreground: 0 0% 100%;
+  --destructive: var(--modern-danger);
+  --destructive-foreground: 0 0% 100%;
+  --border: var(--modern-border);
+  --input: var(--modern-border);
+  --ring: var(--modern-accent);
+  --radius: 0.75rem;
+}
+
+/* Force cards within modern-content to use V3 styling */
+.modern-content .card,
+.modern-content [class*="Card"] {
+  background: hsl(var(--modern-bg-card));
+  border: 1px solid hsl(var(--modern-border));
+  border-radius: var(--modern-radius-xl);
+  box-shadow: var(--modern-shadow-sm);
+}
+
+/* Force buttons to use V3 styling */
+.modern-content button[class*="primary"],
+.modern-content .btn-primary {
+  background: linear-gradient(135deg, hsl(var(--modern-accent)), hsl(var(--modern-accent-hover)));
+  color: white;
+  border-radius: var(--modern-radius-lg);
+}
+
+/* Force inputs to use V3 styling */
+.modern-content input,
+.modern-content select,
+.modern-content textarea {
+  border-color: hsl(var(--modern-border));
+  border-radius: var(--modern-radius-lg);
+  background: hsl(var(--modern-bg-card));
+}
+
+.modern-content input:focus,
+.modern-content select:focus,
+.modern-content textarea:focus {
+  border-color: hsl(var(--modern-accent));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--modern-accent) / 0.1);
+}
+
+/* Force tables to use V3 styling */
+.modern-content table {
+  border-radius: var(--modern-radius-xl);
+  overflow: hidden;
+}
+
+.modern-content thead {
+  background: hsl(var(--modern-bg-subtle));
+}
+
+.modern-content th {
+  font-weight: var(--modern-font-semibold);
+  color: hsl(var(--modern-text-secondary));
+  padding: var(--modern-space-4);
+  text-align: start;
+}
+
+.modern-content td {
+  padding: var(--modern-space-4);
+  border-bottom: 1px solid hsl(var(--modern-border));
+}
+
+.modern-content tbody tr:hover {
+  background: hsl(var(--modern-bg-hover));
+}
+
+/* Badge overrides */
+.modern-content [class*="badge"],
+.modern-content [class*="Badge"] {
+  border-radius: var(--modern-radius-full);
+  font-weight: var(--modern-font-medium);
+  padding: var(--modern-space-1) var(--modern-space-3);
+}
