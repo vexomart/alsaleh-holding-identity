@@ -11,6 +11,9 @@
 /* Import Design System Enforcement (maps old tokens to new) */
 @import './design-system-enforcement.css';
 
+/* Import Unified Dashboard Styles */
+@import './unified-dashboard.css';
+
 /* Import animations */
 @import './animations.css';
 
