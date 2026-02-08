@@ -1,6 +1,6 @@
 /**
- * Services Management - Dark Theme Enterprise UI
- * Modern services management with pagination
+ * Services Management - Modern Unified Design
+ * Premium services management with SaaS aesthetics
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
@@ -9,7 +9,8 @@ import {
   Package, 
   Plus,
   RefreshCw,
-  Sparkles
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ import { db } from '@/integrations/supabase/db';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/hooks/useLanguage';
 
 import { ServiceCard } from './ServiceCard';
 import { ServicesPagination } from './ServicesPagination';
@@ -108,6 +110,9 @@ const categories = [
 const ITEMS_PER_PAGE = 10;
 
 export function ServicesManagement() {
+  const { language } = useLanguage();
+  const isRTL = language === 'ar';
+  
   // State
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
@@ -149,18 +154,17 @@ export function ServicesManagement() {
     } catch (err) {
       console.error('Error fetching services:', err);
       if (!silent) {
-        toast.error('خطأ في جلب الخدمات');
+        toast.error(isRTL ? 'خطأ في جلب الخدمات' : 'Error fetching services');
       }
     } finally {
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [isRTL]);
 
   useEffect(() => {
     fetchServices();
 
-    // Real-time subscription
     const channel = supabase
       .channel('services-realtime')
       .on(
@@ -168,7 +172,7 @@ export function ServicesManagement() {
         { event: '*', schema: 'public', table: 'services' },
         () => {
           fetchServices(true);
-          toast.info('🔄 تم تحديث الخدمات', { duration: 2000 });
+          toast.info(isRTL ? '🔄 تم تحديث الخدمات' : '🔄 Services updated', { duration: 2000 });
         }
       )
       .subscribe((status) => {
@@ -178,7 +182,7 @@ export function ServicesManagement() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [fetchServices]);
+  }, [fetchServices, isRTL]);
 
   // Filter services
   const filteredServices = useMemo(() => {
@@ -217,7 +221,7 @@ export function ServicesManagement() {
   // CRUD Operations
   const handleSubmit = async () => {
     if (!formData.name || !formData.name_ar) {
-      toast.error('يرجى ملء الحقول المطلوبة');
+      toast.error(isRTL ? 'يرجى ملء الحقول المطلوبة' : 'Please fill required fields');
       return;
     }
 
@@ -248,14 +252,14 @@ export function ServicesManagement() {
           .eq('id', selectedService.id);
 
         if (error) throw error;
-        toast.success('✅ تم تحديث الخدمة بنجاح');
+        toast.success(isRTL ? '✅ تم تحديث الخدمة بنجاح' : '✅ Service updated');
       } else {
         const { error } = await db
           .from('services')
           .insert(serviceData);
 
         if (error) throw error;
-        toast.success('✅ تم إضافة الخدمة بنجاح');
+        toast.success(isRTL ? '✅ تم إضافة الخدمة بنجاح' : '✅ Service added');
       }
 
       setFormDialogOpen(false);
@@ -264,7 +268,7 @@ export function ServicesManagement() {
       setSelectedService(null);
     } catch (err) {
       console.error('Error saving service:', err);
-      toast.error(isEditing ? 'خطأ في تحديث الخدمة' : 'خطأ في إضافة الخدمة');
+      toast.error(isRTL ? 'خطأ في حفظ الخدمة' : 'Error saving service');
     } finally {
       setSaving(false);
     }
@@ -281,12 +285,12 @@ export function ServicesManagement() {
 
       if (error) throw error;
       
-      toast.success('✅ تم حذف الخدمة بنجاح');
+      toast.success(isRTL ? '✅ تم حذف الخدمة بنجاح' : '✅ Service deleted');
       setDeleteDialogOpen(false);
       setSelectedService(null);
     } catch (err) {
       console.error('Error deleting service:', err);
-      toast.error('خطأ في حذف الخدمة');
+      toast.error(isRTL ? 'خطأ في حذف الخدمة' : 'Error deleting service');
     }
   };
 
@@ -299,10 +303,14 @@ export function ServicesManagement() {
 
       if (error) throw error;
       
-      toast.success(service.is_active ? 'تم إلغاء تفعيل الخدمة' : 'تم تفعيل الخدمة');
+      toast.success(
+        service.is_active 
+          ? (isRTL ? 'تم إلغاء تفعيل الخدمة' : 'Service deactivated')
+          : (isRTL ? 'تم تفعيل الخدمة' : 'Service activated')
+      );
     } catch (err) {
       console.error('Error toggling status:', err);
-      toast.error('خطأ في تغيير حالة الخدمة');
+      toast.error(isRTL ? 'خطأ في تغيير الحالة' : 'Error toggling status');
     }
   };
 
@@ -317,12 +325,12 @@ export function ServicesManagement() {
       
       toast.success(
         service.is_visible_to_customers 
-          ? 'تم إخفاء الخدمة عن العملاء' 
-          : 'الخدمة مرئية للعملاء الآن'
+          ? (isRTL ? 'تم إخفاء الخدمة' : 'Service hidden')
+          : (isRTL ? 'الخدمة مرئية الآن' : 'Service visible now')
       );
     } catch (err) {
       console.error('Error toggling visibility:', err);
-      toast.error('خطأ في تغيير الظهور');
+      toast.error(isRTL ? 'خطأ في تغيير الظهور' : 'Error toggling visibility');
     }
   };
 
@@ -349,10 +357,10 @@ export function ServicesManagement() {
         });
 
       if (error) throw error;
-      toast.success('✅ تم نسخ الخدمة بنجاح');
+      toast.success(isRTL ? '✅ تم نسخ الخدمة بنجاح' : '✅ Service duplicated');
     } catch (err) {
       console.error('Error duplicating service:', err);
-      toast.error('خطأ في نسخ الخدمة');
+      toast.error(isRTL ? 'خطأ في نسخ الخدمة' : 'Error duplicating service');
     }
   };
 
@@ -388,54 +396,73 @@ export function ServicesManagement() {
 
   const getCategoryLabel = (category: string | null) => {
     const found = categories.find(c => c.value === category);
-    return found?.label || category || 'غير محدد';
+    if (found) {
+      return isRTL ? found.label : found.labelEn;
+    }
+    return category || (isRTL ? 'غير محدد' : 'Unspecified');
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] p-4 lg:p-6 space-y-6">
-      {/* Header */}
+    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Premium Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
       >
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
-              <Package className="h-6 w-6 text-white" />
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl blur-xl" />
+            <div className="relative p-3.5 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
+              <Package className="h-7 w-7 text-primary" />
             </div>
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white">
-                إدارة الخدمات
+          </div>
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-foreground">
+                {isRTL ? 'إدارة الخدمات' : 'Services Management'}
               </h1>
-              <p className="text-sm text-slate-400">
-                إدارة وتنظيم الخدمات المتاحة للعملاء
-              </p>
+              <Badge variant="secondary" className="gap-1 text-xs">
+                <Sparkles className="h-3 w-3" />
+                {services.length}
+              </Badge>
             </div>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {isRTL ? 'إدارة وتنظيم الخدمات المتاحة للعملاء' : 'Manage services available to customers'}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Live Status */}
-          <div className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border",
-            isConnected 
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" 
-              : "bg-red-500/10 text-red-400 border-red-500/30"
-          )}>
-            <span className={cn(
-              "w-2 h-2 rounded-full",
-              isConnected ? "bg-emerald-500 animate-pulse" : "bg-red-500"
-            )} />
-            {isConnected ? "LIVE" : "غير متصل"}
-          </div>
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "gap-1.5 px-3 py-1.5",
+              isConnected 
+                ? "bg-accent/10 text-accent border-accent/30" 
+                : "bg-destructive/10 text-destructive border-destructive/30"
+            )}
+          >
+            {isConnected ? (
+              <>
+                <Zap className="h-3.5 w-3.5" />
+                {isRTL ? 'متصل' : 'LIVE'}
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 rounded-full bg-destructive" />
+                {isRTL ? 'غير متصل' : 'Offline'}
+              </>
+            )}
+          </Badge>
 
           <Button
             onClick={openAddDialog}
-            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+            className="gap-2"
           >
             <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">إضافة خدمة</span>
+            <span className="hidden sm:inline">{isRTL ? 'إضافة خدمة' : 'Add Service'}</span>
           </Button>
         </div>
       </motion.div>
@@ -478,26 +505,30 @@ export function ServicesManagement() {
             {[...Array(10)].map((_, i) => (
               <div 
                 key={i} 
-                className="h-64 rounded-2xl bg-slate-800 animate-pulse" 
+                className="h-64 rounded-2xl bg-muted animate-pulse" 
               />
             ))}
           </div>
         ) : paginatedServices.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="p-4 rounded-full bg-slate-800 mb-4">
-              <Package className="h-12 w-12 text-slate-500" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">لا توجد خدمات</h3>
-            <p className="text-slate-400 mb-6 max-w-md">
-              {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all'
-                ? 'لم يتم العثور على خدمات تطابق معايير البحث'
-                : 'ابدأ بإضافة خدمتك الأولى'}
-            </p>
-            <Button onClick={openAddDialog} className="gap-2 bg-blue-600 hover:bg-blue-700">
-              <Sparkles className="h-4 w-4" />
-              إضافة خدمة جديدة
-            </Button>
-          </div>
+          <Card className="border-border/50 shadow-sm">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="p-4 rounded-full bg-muted/50 mb-4">
+                <Package className="h-12 w-12 text-muted-foreground/50" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2">
+                {isRTL ? 'لا توجد خدمات' : 'No services found'}
+              </h3>
+              <p className="text-muted-foreground mb-6 max-w-md">
+                {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all'
+                  ? (isRTL ? 'لم يتم العثور على خدمات تطابق معايير البحث' : 'No services match your filters')
+                  : (isRTL ? 'ابدأ بإضافة خدمتك الأولى' : 'Start by adding your first service')}
+              </p>
+              <Button onClick={openAddDialog} className="gap-2">
+                <Sparkles className="h-4 w-4" />
+                {isRTL ? 'إضافة خدمة جديدة' : 'Add new service'}
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <div className={cn(
             "grid gap-4",
@@ -544,14 +575,14 @@ export function ServicesManagement() {
 
       {/* View Details Dialog */}
       <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="max-w-lg bg-[#0a0e1a] border-slate-800">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-white">تفاصيل الخدمة</DialogTitle>
+            <DialogTitle>{isRTL ? 'تفاصيل الخدمة' : 'Service Details'}</DialogTitle>
           </DialogHeader>
           {selectedService && (
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden">
+                <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center overflow-hidden">
                   {selectedService.image_url ? (
                     <img 
                       src={selectedService.image_url} 
@@ -559,60 +590,64 @@ export function ServicesManagement() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <Package className="h-8 w-8 text-slate-400" />
+                    <Package className="h-8 w-8 text-muted-foreground" />
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-white">
-                    {selectedService.name_ar || selectedService.name}
+                  <h3 className="font-bold text-lg text-foreground">
+                    {isRTL ? (selectedService.name_ar || selectedService.name) : selectedService.name}
                   </h3>
-                  <p className="text-sm text-slate-400">{selectedService.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {isRTL ? selectedService.name : selectedService.name_ar}
+                  </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-slate-400">الحالة:</span>
+                  <span className="text-muted-foreground">{isRTL ? 'الحالة:' : 'Status:'}</span>
                   <Badge 
                     variant={selectedService.is_active ? 'default' : 'secondary'} 
                     className={cn(
-                      "mr-2",
+                      "ms-2",
                       selectedService.is_active 
-                        ? "bg-emerald-500/20 text-emerald-400" 
-                        : "bg-slate-700 text-slate-400"
+                        ? "bg-accent/10 text-accent" 
+                        : ""
                     )}
                   >
-                    {selectedService.is_active ? 'نشط' : 'متوقف'}
+                    {selectedService.is_active 
+                      ? (isRTL ? 'نشط' : 'Active') 
+                      : (isRTL ? 'متوقف' : 'Inactive')}
                   </Badge>
                 </div>
                 <div>
-                  <span className="text-slate-400">التصنيف:</span>
-                  <span className="mr-2 text-white">{getCategoryLabel(selectedService.category)}</span>
+                  <span className="text-muted-foreground">{isRTL ? 'التصنيف:' : 'Category:'}</span>
+                  <span className="ms-2 text-foreground">{getCategoryLabel(selectedService.category)}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400">السعر:</span>
-                  <span className="mr-2 font-medium text-white">
-                    {selectedService.price ? `${selectedService.price} ${selectedService.currency}` : 'غير محدد'}
+                  <span className="text-muted-foreground">{isRTL ? 'السعر:' : 'Price:'}</span>
+                  <span className="ms-2 font-medium text-foreground">
+                    {selectedService.price ? `${selectedService.price} ${selectedService.currency}` : (isRTL ? 'غير محدد' : 'Not set')}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-400">الترتيب:</span>
-                  <span className="mr-2 text-white">{selectedService.sort_order}</span>
+                  <span className="text-muted-foreground">{isRTL ? 'الترتيب:' : 'Order:'}</span>
+                  <span className="ms-2 text-foreground">{selectedService.sort_order}</span>
                 </div>
               </div>
 
               {(selectedService.description || selectedService.description_ar) && (
                 <div>
-                  <span className="text-slate-400 text-sm">الوصف:</span>
-                  <p className="mt-1 text-sm text-white">
-                    {selectedService.description_ar || selectedService.description}
+                  <span className="text-muted-foreground text-sm">{isRTL ? 'الوصف:' : 'Description:'}</span>
+                  <p className="mt-1 text-sm text-foreground">
+                    {isRTL ? (selectedService.description_ar || selectedService.description) : selectedService.description}
                   </p>
                 </div>
               )}
 
-              <div className="text-xs text-slate-500 pt-2 border-t border-slate-800">
-                <p>تاريخ الإنشاء: {selectedService.created_at ? new Date(selectedService.created_at).toLocaleDateString('ar-SA') : '-'}</p>
-                <p>آخر تحديث: {selectedService.updated_at ? new Date(selectedService.updated_at).toLocaleDateString('ar-SA') : '-'}</p>
+              <div className="text-xs text-muted-foreground pt-2 border-t">
+                <p>{isRTL ? 'تاريخ الإنشاء:' : 'Created:'} {selectedService.created_at ? new Date(selectedService.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US') : '-'}</p>
+                <p>{isRTL ? 'آخر تحديث:' : 'Updated:'} {selectedService.updated_at ? new Date(selectedService.updated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US') : '-'}</p>
               </div>
             </div>
           )}
@@ -633,29 +668,29 @@ export function ServicesManagement() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="bg-[#0a0e1a] border-slate-800">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-white">تأكيد الحذف</DialogTitle>
-            <DialogDescription className="text-slate-400">
-              هل أنت متأكد من حذف الخدمة "{selectedService?.name_ar || selectedService?.name}"؟
+            <DialogTitle>{isRTL ? 'تأكيد الحذف' : 'Confirm Delete'}</DialogTitle>
+            <DialogDescription>
+              {isRTL 
+                ? `هل أنت متأكد من حذف الخدمة "${selectedService?.name_ar || selectedService?.name}"؟`
+                : `Are you sure you want to delete "${selectedService?.name}"?`}
               <br />
-              لا يمكن التراجع عن هذا الإجراء.
+              {isRTL ? 'لا يمكن التراجع عن هذا الإجراء.' : 'This action cannot be undone.'}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button 
               variant="outline" 
               onClick={() => setDeleteDialogOpen(false)}
-              className="bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800"
             >
-              إلغاء
+              {isRTL ? 'إلغاء' : 'Cancel'}
             </Button>
             <Button 
               variant="destructive" 
               onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700"
             >
-              حذف
+              {isRTL ? 'حذف' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

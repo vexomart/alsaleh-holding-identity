@@ -1,5 +1,5 @@
 /**
- * ServicesStats - Dark Theme Stats Cards
+ * ServicesStats - Modern Unified Design
  * Premium statistics display for services
  */
 
@@ -9,11 +9,11 @@ import {
   CheckCircle, 
   XCircle, 
   Layers,
-  DollarSign,
-  TrendingUp,
   Eye,
   EyeOff
 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
 
 interface Service {
@@ -29,6 +29,9 @@ interface ServicesStatsProps {
 }
 
 export function ServicesStats({ services }: ServicesStatsProps) {
+  const { language } = useLanguage();
+  const isRTL = language === 'ar';
+
   const stats = {
     total: services.length,
     active: services.filter(s => s.is_active).length,
@@ -36,60 +39,50 @@ export function ServicesStats({ services }: ServicesStatsProps) {
     visible: services.filter(s => s.is_visible_to_customers).length,
     hidden: services.filter(s => !s.is_visible_to_customers).length,
     categories: [...new Set(services.map(s => s.category).filter(Boolean))].length,
-    totalRevenue: services.reduce((acc, s) => acc + (s.price || 0), 0),
-    avgPrice: services.length > 0 
-      ? services.reduce((acc, s) => acc + (s.price || 0), 0) / services.filter(s => s.price).length 
-      : 0,
   };
 
   const statCards = [
     {
-      label: 'إجمالي الخدمات',
+      label: isRTL ? 'إجمالي الخدمات' : 'Total Services',
       value: stats.total,
       icon: Package,
-      gradient: 'from-blue-500 to-indigo-600',
-      iconColor: 'text-blue-400',
-      bgColor: 'bg-blue-500/10',
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
     },
     {
-      label: 'خدمات نشطة',
+      label: isRTL ? 'خدمات نشطة' : 'Active',
       value: stats.active,
       icon: CheckCircle,
-      gradient: 'from-emerald-500 to-teal-600',
-      iconColor: 'text-emerald-400',
-      bgColor: 'bg-emerald-500/10',
+      color: 'text-accent',
+      bgColor: 'bg-accent/10',
     },
     {
-      label: 'خدمات متوقفة',
+      label: isRTL ? 'خدمات متوقفة' : 'Inactive',
       value: stats.inactive,
       icon: XCircle,
-      gradient: 'from-red-500 to-rose-600',
-      iconColor: 'text-red-400',
-      bgColor: 'bg-red-500/10',
+      color: 'text-destructive',
+      bgColor: 'bg-destructive/10',
     },
     {
-      label: 'التصنيفات',
+      label: isRTL ? 'التصنيفات' : 'Categories',
       value: stats.categories,
       icon: Layers,
-      gradient: 'from-purple-500 to-violet-600',
-      iconColor: 'text-purple-400',
-      bgColor: 'bg-purple-500/10',
+      color: 'text-secondary',
+      bgColor: 'bg-secondary/10',
     },
     {
-      label: 'مرئية للعملاء',
+      label: isRTL ? 'مرئية للعملاء' : 'Visible',
       value: stats.visible,
       icon: Eye,
-      gradient: 'from-cyan-500 to-blue-600',
-      iconColor: 'text-cyan-400',
-      bgColor: 'bg-cyan-500/10',
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
     },
     {
-      label: 'مخفية',
+      label: isRTL ? 'مخفية' : 'Hidden',
       value: stats.hidden,
       icon: EyeOff,
-      gradient: 'from-orange-500 to-amber-600',
-      iconColor: 'text-orange-400',
-      bgColor: 'bg-orange-500/10',
+      color: 'text-muted-foreground',
+      bgColor: 'bg-muted',
     },
   ];
 
@@ -102,24 +95,13 @@ export function ServicesStats({ services }: ServicesStatsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.05 }}
         >
-          <div className={cn(
-            "relative overflow-hidden rounded-xl",
-            "bg-[#0f1629] border border-slate-800",
-            "hover:border-slate-700 transition-all duration-300",
-            "group"
-          )}>
-            {/* Top Gradient Bar */}
-            <div className={cn(
-              "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
-              stat.gradient
-            )} />
-
-            <div className="p-4">
+          <Card className="border-border/50 shadow-sm overflow-hidden hover:shadow-md transition-all duration-300">
+            <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-slate-400 mb-1">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
                   <motion.p 
-                    className="text-2xl font-bold text-white"
+                    className="text-2xl font-bold text-foreground"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.05 + 0.2 }}
@@ -127,15 +109,12 @@ export function ServicesStats({ services }: ServicesStatsProps) {
                     {stat.value}
                   </motion.p>
                 </div>
-                <div className={cn(
-                  "p-2.5 rounded-xl transition-transform group-hover:scale-110",
-                  stat.bgColor
-                )}>
-                  <stat.icon className={cn("h-5 w-5", stat.iconColor)} />
+                <div className={cn("p-2.5 rounded-xl", stat.bgColor)}>
+                  <stat.icon className={cn("h-5 w-5", stat.color)} />
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </motion.div>
       ))}
     </div>

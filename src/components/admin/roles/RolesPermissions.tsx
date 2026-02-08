@@ -1,13 +1,14 @@
 /**
- * RolesPermissions Page - Dark Theme Enterprise UI
- * Modern roles and permissions management interface
+ * RolesPermissions Page - Modern Unified Design
+ * Premium roles and permissions management with SaaS aesthetics
  */
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -18,7 +19,9 @@ import {
   RefreshCw,
   CheckCircle2,
   Grid3X3,
-  LayoutGrid
+  LayoutGrid,
+  Sparkles,
+  Zap
 } from "lucide-react";
 
 import { RoleCard, roleConfigs } from "./RoleCard";
@@ -54,7 +57,6 @@ export function RolesPermissions() {
 
   const roles = Object.keys(roleConfigs);
 
-  // Fetch all data
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setIsLoading(true);
     
@@ -71,7 +73,6 @@ export function RolesPermissions() {
       setPermissions(permissionsRes.data || []);
       setRolePermissions(rolePermissionsRes.data || []);
 
-      // Count users per role
       if (userRolesRes.data) {
         const counts: Record<string, number> = {};
         userRolesRes.data.forEach(ur => {
@@ -94,7 +95,6 @@ export function RolesPermissions() {
     fetchData();
   }, [fetchData]);
 
-  // Real-time subscription
   useEffect(() => {
     const channel = supabase
       .channel('role-permissions-realtime')
@@ -166,85 +166,100 @@ export function RolesPermissions() {
     return rolePermissions.filter(rp => rp.role === role).length;
   };
 
-  // Stats
   const stats = useMemo(() => [
     {
       label: isRTL ? "الأدوار" : "Roles",
       value: roles.length,
       icon: Shield,
-      gradient: "from-blue-500 to-indigo-500",
-      iconColor: "text-blue-400"
+      color: "text-primary",
+      bgColor: "bg-primary/10"
     },
     {
       label: isRTL ? "الصلاحيات" : "Permissions",
       value: permissions.length,
       icon: Key,
-      gradient: "from-emerald-500 to-teal-500",
-      iconColor: "text-emerald-400"
+      color: "text-accent",
+      bgColor: "bg-accent/10"
     },
     {
       label: isRTL ? "صلاحيات مُعينة" : "Assigned",
       value: rolePermissions.length,
       icon: CheckCircle2,
-      gradient: "from-amber-500 to-orange-500",
-      iconColor: "text-amber-400"
+      color: "text-secondary",
+      bgColor: "bg-secondary/10"
     },
     {
       label: isRTL ? "المستخدمين" : "Users",
       value: Object.values(userCounts).reduce((a, b) => a + b, 0),
       icon: Users,
-      gradient: "from-purple-500 to-pink-500",
-      iconColor: "text-purple-400"
+      color: "text-muted-foreground",
+      bgColor: "bg-muted"
     }
   ], [isRTL, roles.length, permissions.length, rolePermissions.length, userCounts]);
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] p-4 lg:p-6 space-y-6">
-      {/* Header */}
+    <div className="space-y-6" dir={isRTL ? "rtl" : "ltr"}>
+      {/* Premium Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
       >
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
-              <Shield className="h-6 w-6 text-white" />
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-2xl blur-xl" />
+            <div className="relative p-3.5 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
+              <Shield className="h-7 w-7 text-primary" />
             </div>
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-white">
+          </div>
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-foreground">
                 {isRTL ? "الأدوار والصلاحيات" : "Roles & Permissions"}
               </h1>
-              <p className="text-sm text-slate-400">
-                {isRTL 
-                  ? "إدارة أدوار المستخدمين وصلاحياتهم في النظام"
-                  : "Manage user roles and their permissions in the system"}
-              </p>
+              <Badge variant="secondary" className="gap-1 text-xs">
+                <Sparkles className="h-3 w-3" />
+                {isRTL ? "متقدم" : "Advanced"}
+              </Badge>
             </div>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {isRTL 
+                ? "إدارة أدوار المستخدمين وصلاحياتهم في النظام"
+                : "Manage user roles and their permissions"}
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Live Status */}
-          <div className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border",
-            isConnected 
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" 
-              : "bg-red-500/10 text-red-400 border-red-500/30"
-          )}>
-            <span className={cn(
-              "w-2 h-2 rounded-full",
-              isConnected ? "bg-emerald-500 animate-pulse" : "bg-red-500"
-            )} />
-            {isConnected ? (isRTL ? "مُتصل" : "LIVE") : (isRTL ? "غير متصل" : "Offline")}
-          </div>
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "gap-1.5 px-3 py-1.5",
+              isConnected 
+                ? "bg-accent/10 text-accent border-accent/30" 
+                : "bg-destructive/10 text-destructive border-destructive/30"
+            )}
+          >
+            {isConnected ? (
+              <>
+                <Zap className="h-3.5 w-3.5" />
+                {isRTL ? "متصل" : "LIVE"}
+              </>
+            ) : (
+              <>
+                <span className="w-2 h-2 rounded-full bg-destructive" />
+                {isRTL ? "غير متصل" : "Offline"}
+              </>
+            )}
+          </Badge>
 
           <Button
             variant="outline"
             size="sm"
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="gap-2 bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white"
+            className="gap-2"
           >
             <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
             <span className="hidden sm:inline">{isRTL ? "تحديث" : "Refresh"}</span>
@@ -253,60 +268,54 @@ export function RolesPermissions() {
       </motion.div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="grid gap-4 grid-cols-2 lg:grid-cols-4"
+      >
         {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card className="relative overflow-hidden bg-[#0f1629] border-slate-800 hover:border-slate-700 transition-all group">
-              <div className={cn(
-                "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
-                stat.gradient
-              )} />
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-slate-400">{stat.label}</p>
-                    <motion.p 
-                      className="text-2xl lg:text-3xl font-bold mt-1 text-white"
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.1 + 0.2 }}
-                    >
-                      {stat.value}
-                    </motion.p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-800/50 transition-transform group-hover:scale-110">
-                    <stat.icon className={cn("h-5 w-5", stat.iconColor)} />
-                  </div>
+          <Card key={stat.label} className="border-border/50 shadow-sm overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <motion.p 
+                    className="text-2xl font-bold mt-1 text-foreground"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 + 0.2 }}
+                  >
+                    {stat.value}
+                  </motion.p>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                <div className={cn("p-2.5 rounded-xl", stat.bgColor)}>
+                  <stat.icon className={cn("h-5 w-5", stat.color)} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         ))}
-      </div>
+      </motion.div>
 
       {/* Main Content */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
       >
-        <Tabs defaultValue="roles" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md bg-slate-800/50 p-1 rounded-xl border border-slate-700">
+        <Tabs defaultValue="roles" className="space-y-6" dir={isRTL ? "rtl" : "ltr"}>
+          <TabsList className="bg-muted/50 p-1 h-auto">
             <TabsTrigger 
               value="roles" 
-              className="gap-2 rounded-lg text-slate-400 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+              className="gap-2 px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
             >
               <LayoutGrid className="h-4 w-4" />
               {isRTL ? "الأدوار" : "Roles"}
             </TabsTrigger>
             <TabsTrigger 
               value="matrix" 
-              className="gap-2 rounded-lg text-slate-400 data-[state=active]:bg-slate-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+              className="gap-2 px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
             >
               <Grid3X3 className="h-4 w-4" />
               {isRTL ? "مصفوفة الصلاحيات" : "Permission Matrix"}
@@ -318,7 +327,7 @@ export function RolesPermissions() {
             {isLoading ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="h-48 rounded-2xl bg-slate-800 animate-pulse" />
+                  <div key={i} className="h-48 rounded-2xl bg-muted animate-pulse" />
                 ))}
               </div>
             ) : (
@@ -344,7 +353,17 @@ export function RolesPermissions() {
 
           {/* Permission Matrix */}
           <TabsContent value="matrix" className="mt-6">
-            <Card className="bg-[#0f1629] border-slate-800">
+            <Card className="border-border/50 shadow-sm overflow-hidden">
+              <CardHeader className="border-b bg-muted/30 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Grid3X3 className="h-4 w-4 text-primary" />
+                  </div>
+                  <CardTitle className="text-base font-semibold">
+                    {isRTL ? "مصفوفة الصلاحيات" : "Permission Matrix"}
+                  </CardTitle>
+                </div>
+              </CardHeader>
               <CardContent className="p-4 lg:p-6">
                 <PermissionMatrix
                   permissions={permissions}
