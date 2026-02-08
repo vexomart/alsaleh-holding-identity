@@ -1,7 +1,7 @@
 /**
- * V3 Customer Banking Portal Overview
- * Premium Smart Dashboard - Enterprise Grade
- * Real-time Data + Intelligent Insights
+ * V3 Customer Portal Overview
+ * Enterprise SaaS Dashboard - Premium Design
+ * Balanced Layout with Smart Space Utilization
  */
 
 import * as React from 'react';
@@ -24,25 +24,31 @@ import {
   Bell,
   ChevronLeft,
   Plus,
-  Eye
+  Eye,
+  Receipt,
+  Gift,
+  Headphones,
+  Settings,
+  Calendar,
+  Activity
 } from 'lucide-react';
 import '@/styles/v3/modern-theme.css';
 
-// Animation variants with proper typing
-const containerVariants = {
+// Animation config
+const stagger = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.08 }
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 }
   }
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { type: 'spring' as const, stiffness: 300, damping: 24 }
+    transition: { type: 'spring' as const, stiffness: 400, damping: 30 }
   }
 };
 
@@ -51,7 +57,6 @@ interface WalletData {
   balance: number;
   wallet_number: string;
   currency: string;
-  reserved_balance?: number;
 }
 
 interface OrderData {
@@ -78,6 +83,7 @@ interface DashboardStats {
   activeContracts: number;
   totalServices: number;
   pendingInvoices: number;
+  walletBalance: number;
 }
 
 export const V3CustomerOverview: React.FC = () => {
@@ -86,7 +92,6 @@ export const V3CustomerOverview: React.FC = () => {
   const navigate = useNavigate();
   const isAr = language === 'ar';
 
-  // Real data state
   const [wallet, setWallet] = React.useState<WalletData | null>(null);
   const [recentOrders, setRecentOrders] = React.useState<OrderData[]>([]);
   const [recentTransactions, setRecentTransactions] = React.useState<TransactionData[]>([]);
@@ -95,30 +100,28 @@ export const V3CustomerOverview: React.FC = () => {
     activeContracts: 0,
     totalServices: 0,
     pendingInvoices: 0,
+    walletBalance: 0,
   });
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentTime, setCurrentTime] = React.useState(new Date());
 
-  // Update time every minute
   React.useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch real data from database
   React.useEffect(() => {
     if (!user?.id) {
       setIsLoading(false);
       return;
     }
 
-    const fetchDashboardData = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
 
-        // Parallel fetches for performance
         const [walletRes, ordersRes, contractsRes, servicesRes, invoicesRes, transactionsRes] = await Promise.all([
-          supabase.from('customer_wallets').select('id, balance, wallet_number, currency, reserved_balance').eq('customer_user_id', user.id).maybeSingle(),
+          supabase.from('customer_wallets').select('id, balance, wallet_number, currency').eq('customer_user_id', user.id).maybeSingle(),
           supabase.from('orders').select('id, order_number, title, status, created_at, total_amount').eq('customer_id', user.id).order('created_at', { ascending: false }).limit(5),
           supabase.from('contracts').select('*', { count: 'exact', head: true }).eq('customer_user_id', user.id).in('status', ['signed', 'pending_signature', 'pre_approved_by_customer']),
           supabase.from('services').select('*', { count: 'exact', head: true }).eq('is_active', true).eq('is_visible_to_customers', true),
@@ -139,6 +142,7 @@ export const V3CustomerOverview: React.FC = () => {
           activeContracts: contractsRes.count || 0,
           totalServices: servicesRes.count || 0,
           pendingInvoices: invoicesRes.count || 0,
+          walletBalance: walletRes.data?.balance || 0,
         });
 
       } catch (error) {
@@ -148,11 +152,11 @@ export const V3CustomerOverview: React.FC = () => {
       }
     };
 
-    fetchDashboardData();
+    fetchData();
   }, [user?.id]);
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('ar-SA', {
+    return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(Math.abs(amount));
@@ -172,14 +176,11 @@ export const V3CustomerOverview: React.FC = () => {
     const diffDays = Math.floor(diffMs / 86400000);
 
     if (diffMins < 1) return isAr ? 'الآن' : 'Just now';
-    if (diffMins < 60) return isAr ? `منذ ${diffMins} دقيقة` : `${diffMins}m ago`;
-    if (diffHours < 24) return isAr ? `منذ ${diffHours} ساعة` : `${diffHours}h ago`;
-    if (diffDays < 7) return isAr ? `منذ ${diffDays} يوم` : `${diffDays}d ago`;
+    if (diffMins < 60) return isAr ? `${diffMins} د` : `${diffMins}m`;
+    if (diffHours < 24) return isAr ? `${diffHours} س` : `${diffHours}h`;
+    if (diffDays < 7) return isAr ? `${diffDays} ي` : `${diffDays}d`;
     
-    return date.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
   const getGreeting = () => {
@@ -191,35 +192,37 @@ export const V3CustomerOverview: React.FC = () => {
 
   const getStatusConfig = (status: string) => {
     const configs: Record<string, { label: string; labelEn: string; color: string; bg: string }> = {
-      pending: { label: 'قيد الانتظار', labelEn: 'Pending', color: 'hsl(var(--modern-warning))', bg: 'hsl(var(--modern-warning) / 0.1)' },
-      processing: { label: 'قيد المعالجة', labelEn: 'Processing', color: 'hsl(var(--modern-info))', bg: 'hsl(var(--modern-info) / 0.1)' },
-      in_progress: { label: 'قيد التنفيذ', labelEn: 'In Progress', color: 'hsl(var(--modern-brand-primary))', bg: 'hsl(var(--modern-brand-primary) / 0.1)' },
-      completed: { label: 'مكتمل', labelEn: 'Completed', color: 'hsl(var(--modern-success))', bg: 'hsl(var(--modern-success) / 0.1)' },
-      cancelled: { label: 'ملغي', labelEn: 'Cancelled', color: 'hsl(var(--modern-error))', bg: 'hsl(var(--modern-error) / 0.1)' },
+      pending: { label: 'قيد الانتظار', labelEn: 'Pending', color: 'var(--modern-warning)', bg: 'var(--modern-warning)' },
+      processing: { label: 'قيد المعالجة', labelEn: 'Processing', color: 'var(--modern-info)', bg: 'var(--modern-info)' },
+      in_progress: { label: 'قيد التنفيذ', labelEn: 'In Progress', color: 'var(--modern-brand-primary)', bg: 'var(--modern-brand-primary)' },
+      completed: { label: 'مكتمل', labelEn: 'Completed', color: 'var(--modern-success)', bg: 'var(--modern-success)' },
+      cancelled: { label: 'ملغي', labelEn: 'Cancelled', color: 'var(--modern-error)', bg: 'var(--modern-error)' },
     };
-    return configs[status] || { label: status, labelEn: status, color: 'hsl(var(--modern-text-muted))', bg: 'hsl(var(--modern-bg-elevated))' };
+    return configs[status] || { label: status, labelEn: status, color: 'var(--modern-text-muted)', bg: 'var(--modern-bg-elevated)' };
   };
 
+  // Quick Actions - 6 items for balanced grid
   const quickActions = [
-    { id: 'order', label: 'طلب جديد', labelEn: 'New Order', icon: Plus, path: '/portal/services', color: 'var(--modern-brand-primary)' },
-    { id: 'wallet', label: 'المحفظة', labelEn: 'Wallet', icon: Wallet, path: '/portal/wallet', color: 'var(--modern-success)' },
-    { id: 'orders', label: 'طلباتي', labelEn: 'My Orders', icon: ShoppingCart, path: '/portal/orders', color: 'var(--modern-info)' },
+    { id: 'new-order', label: 'طلب جديد', labelEn: 'New Order', icon: Plus, path: '/portal/services', color: 'var(--modern-brand-primary)' },
+    { id: 'my-orders', label: 'طلباتي', labelEn: 'My Orders', icon: ShoppingCart, path: '/portal/orders', color: 'var(--modern-info)' },
+    { id: 'invoices', label: 'الفواتير', labelEn: 'Invoices', icon: Receipt, path: '/portal/invoices', color: 'var(--modern-success)' },
     { id: 'contracts', label: 'العقود', labelEn: 'Contracts', icon: FileSignature, path: '/portal/contracts', color: 'var(--modern-warning)' },
+    { id: 'referrals', label: 'الإحالات', labelEn: 'Referrals', icon: Gift, path: '/portal/referrals', color: 'var(--modern-error)' },
+    { id: 'support', label: 'الدعم', labelEn: 'Support', icon: Headphones, path: '/portal/support', color: 'var(--modern-text-secondary)' },
   ];
 
-  // Loading skeleton
+  // Loading state
   if (isLoading) {
     return (
-      <div className="smart-overview">
-        <div className="smart-overview__loading">
+      <div className="enterprise-dash">
+        <div className="enterprise-dash__loading">
           <motion.div 
-            className="smart-loading-pulse"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           >
-            <Sparkles size={32} />
-            <span>{isAr ? 'جاري تحميل بياناتك...' : 'Loading your data...'}</span>
+            <Activity size={32} />
           </motion.div>
+          <span>{isAr ? 'جاري تحميل لوحة التحكم...' : 'Loading dashboard...'}</span>
         </div>
       </div>
     );
@@ -227,205 +230,220 @@ export const V3CustomerOverview: React.FC = () => {
 
   return (
     <motion.div 
-      className="smart-overview"
-      variants={containerVariants}
+      className="enterprise-dash"
+      variants={stagger}
       initial="hidden"
       animate="visible"
     >
-      {/* Welcome Header */}
-      <motion.header className="smart-overview__header" variants={itemVariants}>
-        <div className="smart-overview__greeting">
-          <div className="smart-overview__greeting-row">
-            <span className="smart-overview__greeting-emoji">👋</span>
-            <span className="smart-overview__greeting-text">{getGreeting()}</span>
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 1: WELCOME HEADER
+          ═══════════════════════════════════════════════════════════ */}
+      <motion.header className="enterprise-welcome" variants={fadeUp}>
+        <div className="enterprise-welcome__content">
+          <div className="enterprise-welcome__text">
+            <span className="enterprise-welcome__greeting">
+              {getGreeting()} 👋
+            </span>
+            <h1 className="enterprise-welcome__name">
+              {profile?.full_name || (isAr ? 'عميلنا العزيز' : 'Dear Customer')}
+            </h1>
+            <p className="enterprise-welcome__subtitle">
+              {isAr ? 'إليك ملخص حسابك اليوم' : "Here's your account summary for today"}
+            </p>
           </div>
-          <h1 className="smart-overview__name">
-            {profile?.full_name || (isAr ? 'عميلنا العزيز' : 'Dear Customer')}
-          </h1>
-        </div>
-        <div className="smart-overview__datetime">
-          <Clock size={14} />
-          <span>
-            {currentTime.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'short',
-            })}
-          </span>
+          <div className="enterprise-welcome__meta">
+            <div className="enterprise-welcome__date">
+              <Calendar size={14} />
+              <span>
+                {currentTime.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                })}
+              </span>
+            </div>
+          </div>
         </div>
       </motion.header>
 
-      {/* Premium Wallet Card */}
-      <motion.div className="smart-wallet" variants={itemVariants}>
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 2: KPI CARDS ROW
+          ═══════════════════════════════════════════════════════════ */}
+      <motion.div className="enterprise-kpis" variants={fadeUp}>
         <motion.div 
-          className="smart-wallet__card"
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
+          className="enterprise-kpi"
+          whileHover={{ y: -2 }}
+          onClick={() => navigate('/portal/orders')}
+        >
+          <div className="enterprise-kpi__icon enterprise-kpi__icon--blue">
+            <ShoppingCart size={20} />
+          </div>
+          <div className="enterprise-kpi__data">
+            <span className="enterprise-kpi__value">{stats.activeOrders}</span>
+            <span className="enterprise-kpi__label">{isAr ? 'طلبات نشطة' : 'Active Orders'}</span>
+          </div>
+          {stats.activeOrders > 0 && <div className="enterprise-kpi__pulse enterprise-kpi__pulse--blue" />}
+        </motion.div>
+
+        <motion.div 
+          className="enterprise-kpi"
+          whileHover={{ y: -2 }}
+          onClick={() => navigate('/portal/contracts')}
+        >
+          <div className="enterprise-kpi__icon enterprise-kpi__icon--green">
+            <FileSignature size={20} />
+          </div>
+          <div className="enterprise-kpi__data">
+            <span className="enterprise-kpi__value">{stats.activeContracts}</span>
+            <span className="enterprise-kpi__label">{isAr ? 'عقود سارية' : 'Active Contracts'}</span>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="enterprise-kpi"
+          whileHover={{ y: -2 }}
+          onClick={() => navigate('/portal/invoices')}
+        >
+          <div className="enterprise-kpi__icon enterprise-kpi__icon--orange">
+            <Receipt size={20} />
+          </div>
+          <div className="enterprise-kpi__data">
+            <span className="enterprise-kpi__value">{stats.pendingInvoices}</span>
+            <span className="enterprise-kpi__label">{isAr ? 'فواتير معلقة' : 'Pending Invoices'}</span>
+          </div>
+          {stats.pendingInvoices > 0 && <div className="enterprise-kpi__pulse enterprise-kpi__pulse--orange" />}
+        </motion.div>
+
+        <motion.div 
+          className="enterprise-kpi"
+          whileHover={{ y: -2 }}
+          onClick={() => navigate('/portal/services')}
+        >
+          <div className="enterprise-kpi__icon enterprise-kpi__icon--purple">
+            <Briefcase size={20} />
+          </div>
+          <div className="enterprise-kpi__data">
+            <span className="enterprise-kpi__value">{stats.totalServices}</span>
+            <span className="enterprise-kpi__label">{isAr ? 'خدمات متاحة' : 'Services'}</span>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 3: WALLET CARD (HERO)
+          ═══════════════════════════════════════════════════════════ */}
+      <motion.div className="enterprise-wallet-section" variants={fadeUp}>
+        <motion.div 
+          className="enterprise-wallet"
+          whileHover={{ scale: 1.005 }}
           onClick={() => navigate('/portal/wallet')}
         >
-          {/* Decorative Elements */}
-          <div className="smart-wallet__decor">
-            <div className="smart-wallet__decor-circle smart-wallet__decor-circle--1" />
-            <div className="smart-wallet__decor-circle smart-wallet__decor-circle--2" />
-            <div className="smart-wallet__decor-pattern" />
+          {/* Background Art */}
+          <div className="enterprise-wallet__bg">
+            <div className="enterprise-wallet__orb enterprise-wallet__orb--1" />
+            <div className="enterprise-wallet__orb enterprise-wallet__orb--2" />
+            <div className="enterprise-wallet__grid" />
           </div>
 
-          <div className="smart-wallet__content">
-            <div className="smart-wallet__top">
-              <div className="smart-wallet__label">
-                <CreditCard size={16} />
+          {/* Content */}
+          <div className="enterprise-wallet__content">
+            <div className="enterprise-wallet__header">
+              <div className="enterprise-wallet__label">
+                <CreditCard size={18} />
                 <span>{isAr ? 'المحفظة الرقمية' : 'Digital Wallet'}</span>
               </div>
-              <div className="smart-wallet__chip" />
+              <div className="enterprise-wallet__chip" />
             </div>
 
-            <div className="smart-wallet__balance">
-              <span className="smart-wallet__balance-label">
+            <div className="enterprise-wallet__balance">
+              <span className="enterprise-wallet__balance-label">
                 {isAr ? 'الرصيد المتاح' : 'Available Balance'}
               </span>
-              <div className="smart-wallet__balance-amount">
-                <span className="smart-wallet__balance-value" dir="ltr">
+              <div className="enterprise-wallet__balance-row">
+                <span className="enterprise-wallet__balance-value" dir="ltr">
                   {formatCurrency(wallet?.balance || 0)}
                 </span>
-                <span className="smart-wallet__balance-currency">SAR</span>
+                <span className="enterprise-wallet__balance-currency">SAR</span>
               </div>
             </div>
 
-            <div className="smart-wallet__bottom">
-              <div className="smart-wallet__number" dir="ltr">
+            <div className="enterprise-wallet__footer">
+              <div className="enterprise-wallet__number" dir="ltr">
                 {formatWalletNumber(wallet?.wallet_number)}
               </div>
-              <div className="smart-wallet__brand">
+              <div className="enterprise-wallet__brand" dir="ltr">
                 ASH WALLET
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Quick Wallet Actions */}
-        <div className="smart-wallet__actions">
+        {/* Wallet Quick Actions */}
+        <div className="enterprise-wallet-actions">
           <motion.button 
-            className="smart-wallet__action"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="enterprise-wallet-action"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/portal/wallet')}
           >
-            <ArrowDownLeft size={18} />
+            <ArrowDownLeft size={20} />
             <span>{isAr ? 'إيداع' : 'Deposit'}</span>
           </motion.button>
           <motion.button 
-            className="smart-wallet__action"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="enterprise-wallet-action"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/portal/wallet')}
           >
-            <ArrowUpRight size={18} />
+            <ArrowUpRight size={20} />
             <span>{isAr ? 'تحويل' : 'Transfer'}</span>
           </motion.button>
           <motion.button 
-            className="smart-wallet__action"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="enterprise-wallet-action"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/portal/wallet')}
           >
-            <Eye size={18} />
-            <span>{isAr ? 'التفاصيل' : 'Details'}</span>
+            <TrendingUp size={20} />
+            <span>{isAr ? 'السجل' : 'History'}</span>
           </motion.button>
         </div>
       </motion.div>
 
-      {/* Smart Stats Grid */}
-      <motion.div className="smart-stats" variants={itemVariants}>
-        <motion.div 
-          className="smart-stat"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/portal/orders')}
-        >
-          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-info) / 0.1)', color: 'hsl(var(--modern-info))' }}>
-            <ShoppingCart size={20} />
-          </div>
-          <div className="smart-stat__content">
-            <span className="smart-stat__value">{stats.activeOrders}</span>
-            <span className="smart-stat__label">{isAr ? 'طلبات نشطة' : 'Active Orders'}</span>
-          </div>
-          {stats.activeOrders > 0 && (
-            <div className="smart-stat__indicator smart-stat__indicator--active" />
-          )}
-        </motion.div>
-
-        <motion.div 
-          className="smart-stat"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/portal/contracts')}
-        >
-          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-success) / 0.1)', color: 'hsl(var(--modern-success))' }}>
-            <FileSignature size={20} />
-          </div>
-          <div className="smart-stat__content">
-            <span className="smart-stat__value">{stats.activeContracts}</span>
-            <span className="smart-stat__label">{isAr ? 'عقود سارية' : 'Active Contracts'}</span>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          className="smart-stat"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/portal/services')}
-        >
-          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-brand-primary) / 0.1)', color: 'hsl(var(--modern-brand-primary))' }}>
-            <Briefcase size={20} />
-          </div>
-          <div className="smart-stat__content">
-            <span className="smart-stat__value">{stats.totalServices}</span>
-            <span className="smart-stat__label">{isAr ? 'خدمات متاحة' : 'Services'}</span>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          className="smart-stat"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => navigate('/portal/invoices')}
-        >
-          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-warning) / 0.1)', color: 'hsl(var(--modern-warning))' }}>
-            <Bell size={20} />
-          </div>
-          <div className="smart-stat__content">
-            <span className="smart-stat__value">{stats.pendingInvoices}</span>
-            <span className="smart-stat__label">{isAr ? 'فواتير معلقة' : 'Pending Invoices'}</span>
-          </div>
-          {stats.pendingInvoices > 0 && (
-            <div className="smart-stat__indicator smart-stat__indicator--warning" />
-          )}
-        </motion.div>
-      </motion.div>
-
-      {/* Quick Actions */}
-      <motion.section className="smart-actions" variants={itemVariants}>
-        <h2 className="smart-section-title">
-          <Sparkles size={16} />
-          {isAr ? 'إجراءات سريعة' : 'Quick Actions'}
-        </h2>
-        <div className="smart-actions__grid">
-          {quickActions.map((action, index) => {
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 4: QUICK ACTIONS GRID
+          ═══════════════════════════════════════════════════════════ */}
+      <motion.section className="enterprise-actions" variants={fadeUp}>
+        <div className="enterprise-section-header">
+          <h2 className="enterprise-section-title">
+            <Sparkles size={18} />
+            {isAr ? 'الوصول السريع' : 'Quick Access'}
+          </h2>
+        </div>
+        <div className="enterprise-actions__grid">
+          {quickActions.map((action, i) => {
             const Icon = action.icon;
             return (
               <motion.button
                 key={action.id}
-                className="smart-action"
+                className="enterprise-action"
                 onClick={() => navigate(action.path)}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                initial={{ opacity: 0, y: 20 }}
+                whileHover={{ y: -3, boxShadow: '0 8px 24px -8px rgba(0,0,0,0.15)' }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: i * 0.04 }}
               >
                 <div 
-                  className="smart-action__icon"
-                  style={{ background: `hsl(${action.color} / 0.1)`, color: `hsl(${action.color})` }}
+                  className="enterprise-action__icon"
+                  style={{ 
+                    background: `hsl(${action.color} / 0.1)`, 
+                    color: `hsl(${action.color})` 
+                  }}
                 >
-                  <Icon size={22} />
+                  <Icon size={24} />
                 </div>
-                <span className="smart-action__label">
+                <span className="enterprise-action__label">
                   {isAr ? action.label : action.labelEn}
                 </span>
               </motion.button>
@@ -434,144 +452,173 @@ export const V3CustomerOverview: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* Content Grid */}
-      <div className="smart-grid">
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 5: RECENT ACTIVITY (2-COLUMN GRID)
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="enterprise-recent">
         {/* Recent Orders */}
-        <motion.section className="smart-card" variants={itemVariants}>
-          <div className="smart-card__header">
-            <h3 className="smart-card__title">
+        <motion.section className="enterprise-card" variants={fadeUp}>
+          <div className="enterprise-card__header">
+            <h3 className="enterprise-card__title">
               <ShoppingCart size={18} />
               {isAr ? 'آخر الطلبات' : 'Recent Orders'}
             </h3>
             <button 
-              className="smart-card__link"
+              className="enterprise-card__link"
               onClick={() => navigate('/portal/orders')}
             >
               {isAr ? 'عرض الكل' : 'View All'}
               <ChevronLeft size={16} />
             </button>
           </div>
-          <div className="smart-card__content">
+          <div className="enterprise-card__body">
             {recentOrders.length === 0 ? (
-              <div className="smart-empty">
-                <ShoppingCart size={40} strokeWidth={1} />
-                <p>{isAr ? 'لا توجد طلبات بعد' : 'No orders yet'}</p>
+              <div className="enterprise-empty">
+                <ShoppingCart size={36} strokeWidth={1.5} />
+                <p>{isAr ? 'لا توجد طلبات حتى الآن' : 'No orders yet'}</p>
                 <button 
-                  className="smart-empty__action"
+                  className="enterprise-empty__btn"
                   onClick={() => navigate('/portal/services')}
                 >
-                  {isAr ? 'اطلب خدمة الآن' : 'Request a Service'}
+                  <Plus size={16} />
+                  {isAr ? 'اطلب خدمة' : 'Request Service'}
                 </button>
               </div>
             ) : (
-              <div className="smart-orders">
-                <AnimatePresence>
-                  {recentOrders.slice(0, 4).map((order, index) => {
-                    const statusConfig = getStatusConfig(order.status);
-                    return (
-                      <motion.div 
-                        key={order.id} 
-                        className="smart-order"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <div className="smart-order__main">
-                          <span className="smart-order__title">
-                            {order.title || (isAr ? 'طلب خدمة' : 'Service Order')}
-                          </span>
-                          <span className="smart-order__number" dir="ltr">
-                            #{order.order_number}
-                          </span>
-                        </div>
-                        <div className="smart-order__meta">
-                          <span 
-                            className="smart-order__status"
-                            style={{ background: statusConfig.bg, color: statusConfig.color }}
-                          >
-                            {isAr ? statusConfig.label : statusConfig.labelEn}
-                          </span>
-                          <span className="smart-order__time">
-                            {formatDate(order.created_at)}
-                          </span>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+              <div className="enterprise-orders">
+                {recentOrders.slice(0, 4).map((order, i) => {
+                  const status = getStatusConfig(order.status);
+                  return (
+                    <motion.div 
+                      key={order.id} 
+                      className="enterprise-order"
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <div className="enterprise-order__info">
+                        <span className="enterprise-order__title">
+                          {order.title || (isAr ? 'طلب خدمة' : 'Service Order')}
+                        </span>
+                        <span className="enterprise-order__id" dir="ltr">
+                          #{order.order_number}
+                        </span>
+                      </div>
+                      <div className="enterprise-order__meta">
+                        <span 
+                          className="enterprise-order__status"
+                          style={{ 
+                            background: `hsl(${status.bg} / 0.12)`, 
+                            color: `hsl(${status.color})` 
+                          }}
+                        >
+                          {isAr ? status.label : status.labelEn}
+                        </span>
+                        <span className="enterprise-order__time">
+                          {formatDate(order.created_at)}
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </div>
         </motion.section>
 
         {/* Recent Transactions */}
-        <motion.section className="smart-card" variants={itemVariants}>
-          <div className="smart-card__header">
-            <h3 className="smart-card__title">
-              <TrendingUp size={18} />
+        <motion.section className="enterprise-card" variants={fadeUp}>
+          <div className="enterprise-card__header">
+            <h3 className="enterprise-card__title">
+              <Activity size={18} />
               {isAr ? 'آخر المعاملات' : 'Recent Transactions'}
             </h3>
             <button 
-              className="smart-card__link"
+              className="enterprise-card__link"
               onClick={() => navigate('/portal/wallet')}
             >
               {isAr ? 'عرض الكل' : 'View All'}
               <ChevronLeft size={16} />
             </button>
           </div>
-          <div className="smart-card__content">
+          <div className="enterprise-card__body">
             {recentTransactions.length === 0 ? (
-              <div className="smart-empty">
-                <Wallet size={40} strokeWidth={1} />
-                <p>{isAr ? 'لا توجد معاملات بعد' : 'No transactions yet'}</p>
+              <div className="enterprise-empty">
+                <Wallet size={36} strokeWidth={1.5} />
+                <p>{isAr ? 'لا توجد معاملات مالية' : 'No transactions yet'}</p>
               </div>
             ) : (
-              <div className="smart-transactions">
-                <AnimatePresence>
-                  {recentTransactions.map((tx, index) => {
-                    const isCredit = ['topup', 'deposit', 'refund'].includes(tx.transaction_type);
-                    return (
-                      <motion.div 
-                        key={tx.id} 
-                        className="smart-transaction"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
+              <div className="enterprise-transactions">
+                {recentTransactions.map((tx, i) => {
+                  const isCredit = ['topup', 'deposit', 'refund'].includes(tx.transaction_type);
+                  return (
+                    <motion.div 
+                      key={tx.id} 
+                      className="enterprise-tx"
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <div 
+                        className="enterprise-tx__icon"
+                        style={{ 
+                          background: isCredit ? 'hsl(var(--modern-success) / 0.1)' : 'hsl(var(--modern-error) / 0.1)',
+                          color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-error))'
+                        }}
                       >
-                        <div 
-                          className="smart-transaction__icon"
-                          style={{ 
-                            background: isCredit ? 'hsl(var(--modern-success) / 0.1)' : 'hsl(var(--modern-error) / 0.1)',
-                            color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-error))'
-                          }}
-                        >
-                          {isCredit ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
-                        </div>
-                        <div className="smart-transaction__info">
-                          <span className="smart-transaction__desc">
-                            {isAr ? (tx.description_ar || tx.description || tx.transaction_type) : (tx.description || tx.transaction_type)}
-                          </span>
-                          <span className="smart-transaction__time">
-                            {formatDate(tx.created_at)}
-                          </span>
-                        </div>
-                        <div 
-                          className="smart-transaction__amount"
-                          style={{ color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-text-primary))' }}
-                          dir="ltr"
-                        >
-                          {isCredit ? '+' : '-'}{formatCurrency(tx.amount)}
-                          <span className="smart-transaction__currency">SAR</span>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+                        {isCredit ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
+                      </div>
+                      <div className="enterprise-tx__info">
+                        <span className="enterprise-tx__desc">
+                          {isAr ? (tx.description_ar || tx.description || tx.transaction_type) : (tx.description || tx.transaction_type)}
+                        </span>
+                        <span className="enterprise-tx__time">
+                          {formatDate(tx.created_at)}
+                        </span>
+                      </div>
+                      <div 
+                        className="enterprise-tx__amount"
+                        style={{ color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-text-primary))' }}
+                        dir="ltr"
+                      >
+                        {isCredit ? '+' : '-'}{formatCurrency(tx.amount)}
+                        <span className="enterprise-tx__currency">SAR</span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </div>
         </motion.section>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          SECTION 6: FOOTER QUICK LINKS
+          ═══════════════════════════════════════════════════════════ */}
+      <motion.footer className="enterprise-footer" variants={fadeUp}>
+        <button 
+          className="enterprise-footer__link"
+          onClick={() => navigate('/portal/profile')}
+        >
+          <Settings size={16} />
+          {isAr ? 'إعدادات الحساب' : 'Account Settings'}
+        </button>
+        <button 
+          className="enterprise-footer__link"
+          onClick={() => navigate('/portal/support')}
+        >
+          <Headphones size={16} />
+          {isAr ? 'مركز الدعم' : 'Support Center'}
+        </button>
+        <button 
+          className="enterprise-footer__link"
+          onClick={() => navigate('/portal/notifications')}
+        >
+          <Bell size={16} />
+          {isAr ? 'الإشعارات' : 'Notifications'}
+        </button>
+      </motion.footer>
     </motion.div>
   );
 };
