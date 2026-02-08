@@ -38,6 +38,7 @@ import {
   Shield,
   MessageSquare
 } from 'lucide-react';
+import '@/styles/v3/modern-theme.css';
 import './CustomerOverview.css';
 
 // Animation config
