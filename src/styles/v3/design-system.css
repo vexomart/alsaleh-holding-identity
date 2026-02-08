@@ -1,0 +1,622 @@
+/**
+ * ===================================================================
+ * UNIFIED DESIGN SYSTEM - Enterprise SaaS Standard
+ * ===================================================================
+ * 
+ * STRICT SPECIFICATIONS - NO EXCEPTIONS
+ * Inspired by: Stripe, Linear, Notion, Vercel
+ * 
+ * This file defines the SINGLE SOURCE OF TRUTH for all design tokens.
+ * All components MUST use these tokens - no custom values allowed.
+ * 
+ * RTL-FIRST | Arabic Native | Enterprise Grade
+ */
+
+:root {
+  /* =========================================
+     COLOR PALETTE - Enterprise SaaS
+     ========================================= */
+  
+  /* === Background Hierarchy === */
+  --ds-bg-page: 0 0% 99%;              /* Main page background */
+  --ds-bg-surface: 0 0% 100%;          /* Cards, panels */
+  --ds-bg-elevated: 220 14% 96%;       /* Elevated surfaces */
+  --ds-bg-hover: 220 14% 94%;          /* Hover state */
+  --ds-bg-active: 220 14% 91%;         /* Active/pressed state */
+  --ds-bg-muted: 220 14% 97%;          /* Muted/subtle background */
+  --ds-bg-overlay: 0 0% 0%;            /* Overlay (with opacity) */
+  
+  /* === Text Hierarchy === */
+  --ds-text-primary: 220 12% 10%;      /* Headings, important text */
+  --ds-text-secondary: 220 9% 46%;     /* Body text, descriptions */
+  --ds-text-muted: 220 9% 60%;         /* Subtle text, labels */
+  --ds-text-disabled: 220 8% 75%;      /* Disabled state */
+  --ds-text-inverse: 0 0% 100%;        /* Text on dark backgrounds */
+  
+  /* === Brand Colors === */
+  --ds-brand-primary: 217 91% 60%;     /* Primary actions */
+  --ds-brand-primary-hover: 217 91% 55%;
+  --ds-brand-primary-active: 217 91% 50%;
+  --ds-brand-secondary: 165 82% 51%;   /* Secondary accents */
+  --ds-brand-accent: 262 83% 58%;      /* Highlights */
+  
+  /* === Semantic Colors === */
+  --ds-success: 152 69% 41%;
+  --ds-success-bg: 152 69% 96%;
+  --ds-warning: 38 92% 50%;
+  --ds-warning-bg: 38 92% 96%;
+  --ds-error: 0 72% 51%;
+  --ds-error-bg: 0 72% 97%;
+  --ds-info: 199 89% 48%;
+  --ds-info-bg: 199 89% 96%;
+  
+  /* === Borders === */
+  --ds-border-light: 220 13% 93%;
+  --ds-border-default: 220 13% 89%;
+  --ds-border-strong: 220 13% 80%;
+  --ds-border-focus: 217 91% 60%;
+  
+  /* =========================================
+     TYPOGRAPHY - STRICT SCALE
+     ========================================= */
+  
+  /* === Font Family - NEVER CHANGE === */
+  --ds-font-sans: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --ds-font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace;
+  
+  /* === Type Scale - FIXED VALUES === */
+  --ds-text-xs: 0.6875rem;     /* 11px - Tiny labels */
+  --ds-text-sm: 0.8125rem;     /* 13px - Small text */
+  --ds-text-base: 0.875rem;    /* 14px - Body text */
+  --ds-text-md: 0.9375rem;     /* 15px - Medium text */
+  --ds-text-lg: 1rem;          /* 16px - Large body */
+  --ds-text-xl: 1.125rem;      /* 18px - Subheadings */
+  --ds-text-2xl: 1.375rem;     /* 22px - Section titles */
+  --ds-text-3xl: 1.75rem;      /* 28px - Page titles */
+  --ds-text-4xl: 2.25rem;      /* 36px - Hero text */
+  
+  /* === Font Weights === */
+  --ds-weight-normal: 400;
+  --ds-weight-medium: 500;
+  --ds-weight-semibold: 600;
+  --ds-weight-bold: 700;
+  
+  /* === Line Heights === */
+  --ds-leading-tight: 1.25;
+  --ds-leading-normal: 1.5;
+  --ds-leading-relaxed: 1.625;
+  
+  /* =========================================
+     SPACING - 4px BASE GRID (STRICT)
+     ========================================= */
+  
+  --ds-space-0: 0;
+  --ds-space-1: 0.25rem;       /* 4px */
+  --ds-space-2: 0.5rem;        /* 8px */
+  --ds-space-3: 0.75rem;       /* 12px */
+  --ds-space-4: 1rem;          /* 16px */
+  --ds-space-5: 1.25rem;       /* 20px */
+  --ds-space-6: 1.5rem;        /* 24px */
+  --ds-space-8: 2rem;          /* 32px */
+  --ds-space-10: 2.5rem;       /* 40px */
+  --ds-space-12: 3rem;         /* 48px */
+  --ds-space-16: 4rem;         /* 64px */
+  --ds-space-20: 5rem;         /* 80px */
+  
+  /* =========================================
+     BORDER RADIUS - CONSISTENT VALUES
+     ========================================= */
+  
+  --ds-radius-none: 0;
+  --ds-radius-sm: 0.375rem;    /* 6px - Small elements */
+  --ds-radius-md: 0.5rem;      /* 8px - Buttons, inputs */
+  --ds-radius-lg: 0.75rem;     /* 12px - Cards */
+  --ds-radius-xl: 1rem;        /* 16px - Large cards */
+  --ds-radius-2xl: 1.25rem;    /* 20px - Modals */
+  --ds-radius-full: 9999px;    /* Pills, avatars */
+  
+  /* =========================================
+     SHADOWS - Apple-style Elevation
+     ========================================= */
+  
+  --ds-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --ds-shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.08), 0 4px 8px -4px rgb(0 0 0 / 0.04);
+  --ds-shadow-xl: 0 24px 48px -12px rgb(0 0 0 / 0.12);
+  
+  /* === Card-specific shadows === */
+  --ds-shadow-card: 0 0 0 1px rgb(0 0 0 / 0.04), 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --ds-shadow-card-hover: 0 0 0 1px rgb(0 0 0 / 0.06), 0 4px 12px -2px rgb(0 0 0 / 0.08);
+  
+  /* =========================================
+     TRANSITIONS - Smooth & Consistent
+     ========================================= */
+  
+  --ds-duration-fast: 150ms;
+  --ds-duration-normal: 200ms;
+  --ds-duration-slow: 300ms;
+  --ds-ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ds-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ds-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ds-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  /* =========================================
+     COMPONENT DIMENSIONS - FIXED VALUES
+     ========================================= */
+  
+  /* === Button Heights (STRICT) === */
+  --ds-btn-height-sm: 2rem;      /* 32px - Small buttons */
+  --ds-btn-height-md: 2.5rem;    /* 40px - Default buttons */
+  --ds-btn-height-lg: 2.75rem;   /* 44px - Large buttons */
+  
+  /* === Input Heights (STRICT) === */
+  --ds-input-height-sm: 2rem;    /* 32px */
+  --ds-input-height-md: 2.5rem;  /* 40px */
+  --ds-input-height-lg: 2.75rem; /* 44px */
+  
+  /* === Icon Sizes (STRICT) === */
+  --ds-icon-xs: 0.875rem;        /* 14px */
+  --ds-icon-sm: 1rem;            /* 16px */
+  --ds-icon-md: 1.25rem;         /* 20px */
+  --ds-icon-lg: 1.5rem;          /* 24px */
+  --ds-icon-xl: 2rem;            /* 32px */
+  
+  /* === Layout Dimensions === */
+  --ds-sidebar-collapsed: 4.5rem;   /* 72px */
+  --ds-sidebar-expanded: 16rem;     /* 256px */
+  --ds-header-height: 3.5rem;       /* 56px */
+  --ds-content-max-width: 1440px;
+}
+
+/* =========================================
+   COMPONENT CLASSES - STRICT IMPLEMENTATION
+   ========================================= */
+
+/* === Cards === */
+.ds-card {
+  background: hsl(var(--ds-bg-surface));
+  border: 1px solid hsl(var(--ds-border-light));
+  border-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-shadow-card);
+  overflow: hidden;
+  transition: all var(--ds-duration-normal) var(--ds-ease-default);
+}
+
+.ds-card:hover {
+  box-shadow: var(--ds-shadow-card-hover);
+}
+
+.ds-card-header {
+  padding: var(--ds-space-5) var(--ds-space-6);
+  border-bottom: 1px solid hsl(var(--ds-border-light));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-4);
+}
+
+.ds-card-content {
+  padding: var(--ds-space-6);
+}
+
+.ds-card-footer {
+  padding: var(--ds-space-4) var(--ds-space-6);
+  border-top: 1px solid hsl(var(--ds-border-light));
+  background: hsl(var(--ds-bg-muted));
+}
+
+/* === Buttons === */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  line-height: 1;
+  border-radius: var(--ds-radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--ds-duration-fast) var(--ds-ease-default);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ds-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button Sizes - STRICT */
+.ds-btn-sm {
+  height: var(--ds-btn-height-sm);
+  padding: 0 var(--ds-space-3);
+  font-size: var(--ds-text-xs);
+}
+
+.ds-btn-md {
+  height: var(--ds-btn-height-md);
+  padding: 0 var(--ds-space-4);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-btn-lg {
+  height: var(--ds-btn-height-lg);
+  padding: 0 var(--ds-space-5);
+  font-size: var(--ds-text-base);
+}
+
+/* Button Variants */
+.ds-btn-primary {
+  background: hsl(var(--ds-brand-primary));
+  color: hsl(var(--ds-text-inverse));
+}
+
+.ds-btn-primary:hover {
+  background: hsl(var(--ds-brand-primary-hover));
+}
+
+.ds-btn-primary:active {
+  background: hsl(var(--ds-brand-primary-active));
+}
+
+.ds-btn-secondary {
+  background: hsl(var(--ds-bg-elevated));
+  color: hsl(var(--ds-text-primary));
+  border: 1px solid hsl(var(--ds-border-default));
+}
+
+.ds-btn-secondary:hover {
+  background: hsl(var(--ds-bg-hover));
+  border-color: hsl(var(--ds-border-strong));
+}
+
+.ds-btn-ghost {
+  background: transparent;
+  color: hsl(var(--ds-text-secondary));
+}
+
+.ds-btn-ghost:hover {
+  background: hsl(var(--ds-bg-hover));
+  color: hsl(var(--ds-text-primary));
+}
+
+/* === Inputs === */
+.ds-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--ds-input-height-md);
+  padding: 0 var(--ds-space-3);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-sm);
+  background: hsl(var(--ds-bg-surface));
+  border: 1px solid hsl(var(--ds-border-default));
+  border-radius: var(--ds-radius-md);
+  color: hsl(var(--ds-text-primary));
+  transition: all var(--ds-duration-fast) var(--ds-ease-default);
+}
+
+.ds-input:focus {
+  outline: none;
+  border-color: hsl(var(--ds-border-focus));
+  box-shadow: 0 0 0 3px hsl(var(--ds-brand-primary) / 0.15);
+}
+
+.ds-input::placeholder {
+  color: hsl(var(--ds-text-muted));
+}
+
+/* === Badges === */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  height: 1.375rem;
+  padding: 0 var(--ds-space-2);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  border-radius: var(--ds-radius-full);
+  line-height: 1;
+}
+
+.ds-badge-neutral {
+  background: hsl(var(--ds-bg-elevated));
+  color: hsl(var(--ds-text-secondary));
+}
+
+.ds-badge-success {
+  background: hsl(var(--ds-success-bg));
+  color: hsl(var(--ds-success));
+}
+
+.ds-badge-warning {
+  background: hsl(var(--ds-warning-bg));
+  color: hsl(var(--ds-warning));
+}
+
+.ds-badge-error {
+  background: hsl(var(--ds-error-bg));
+  color: hsl(var(--ds-error));
+}
+
+.ds-badge-info {
+  background: hsl(var(--ds-info-bg));
+  color: hsl(var(--ds-info));
+}
+
+.ds-badge-primary {
+  background: hsl(var(--ds-brand-primary) / 0.1);
+  color: hsl(var(--ds-brand-primary));
+}
+
+/* === Icons Container === */
+.ds-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ds-icon-xs { width: var(--ds-icon-xs); height: var(--ds-icon-xs); }
+.ds-icon-sm { width: var(--ds-icon-sm); height: var(--ds-icon-sm); }
+.ds-icon-md { width: var(--ds-icon-md); height: var(--ds-icon-md); }
+.ds-icon-lg { width: var(--ds-icon-lg); height: var(--ds-icon-lg); }
+.ds-icon-xl { width: var(--ds-icon-xl); height: var(--ds-icon-xl); }
+
+/* === Tables === */
+.ds-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-text-sm);
+}
+
+.ds-table th {
+  padding: var(--ds-space-3) var(--ds-space-4);
+  text-align: inherit;
+  font-weight: var(--ds-weight-medium);
+  color: hsl(var(--ds-text-muted));
+  background: hsl(var(--ds-bg-muted));
+  border-bottom: 1px solid hsl(var(--ds-border-default));
+  font-size: var(--ds-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ds-table td {
+  padding: var(--ds-space-4);
+  border-bottom: 1px solid hsl(var(--ds-border-light));
+  color: hsl(var(--ds-text-primary));
+}
+
+.ds-table tr:hover {
+  background: hsl(var(--ds-bg-hover));
+}
+
+/* === Stats Card === */
+.ds-stat-card {
+  background: hsl(var(--ds-bg-surface));
+  border: 1px solid hsl(var(--ds-border-light));
+  border-radius: var(--ds-radius-xl);
+  padding: var(--ds-space-6);
+  box-shadow: var(--ds-shadow-card);
+  transition: all var(--ds-duration-normal) var(--ds-ease-default);
+}
+
+.ds-stat-card:hover {
+  box-shadow: var(--ds-shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.ds-stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--ds-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--ds-space-4);
+}
+
+.ds-stat-value {
+  font-size: var(--ds-text-3xl);
+  font-weight: var(--ds-weight-bold);
+  color: hsl(var(--ds-text-primary));
+  line-height: var(--ds-leading-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-stat-label {
+  font-size: var(--ds-text-sm);
+  color: hsl(var(--ds-text-muted));
+  margin-top: var(--ds-space-1);
+}
+
+/* === Grid System === */
+.ds-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ds-space-6);
+}
+
+.ds-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ds-space-6);
+}
+
+.ds-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--ds-space-6);
+}
+
+@media (max-width: 1024px) {
+  .ds-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .ds-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .ds-grid-4,
+  .ds-grid-3,
+  .ds-grid-2 { grid-template-columns: 1fr; }
+}
+
+/* === Typography Classes === */
+.ds-heading-1 {
+  font-size: var(--ds-text-4xl);
+  font-weight: var(--ds-weight-bold);
+  line-height: var(--ds-leading-tight);
+  color: hsl(var(--ds-text-primary));
+}
+
+.ds-heading-2 {
+  font-size: var(--ds-text-3xl);
+  font-weight: var(--ds-weight-bold);
+  line-height: var(--ds-leading-tight);
+  color: hsl(var(--ds-text-primary));
+}
+
+.ds-heading-3 {
+  font-size: var(--ds-text-2xl);
+  font-weight: var(--ds-weight-semibold);
+  line-height: var(--ds-leading-tight);
+  color: hsl(var(--ds-text-primary));
+}
+
+.ds-heading-4 {
+  font-size: var(--ds-text-xl);
+  font-weight: var(--ds-weight-semibold);
+  line-height: var(--ds-leading-normal);
+  color: hsl(var(--ds-text-primary));
+}
+
+.ds-body {
+  font-size: var(--ds-text-base);
+  font-weight: var(--ds-weight-normal);
+  line-height: var(--ds-leading-relaxed);
+  color: hsl(var(--ds-text-secondary));
+}
+
+.ds-body-sm {
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-normal);
+  line-height: var(--ds-leading-relaxed);
+  color: hsl(var(--ds-text-secondary));
+}
+
+.ds-label {
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: hsl(var(--ds-text-muted));
+}
+
+/* === Dividers === */
+.ds-divider {
+  height: 1px;
+  background: hsl(var(--ds-border-light));
+  border: none;
+  margin: var(--ds-space-6) 0;
+}
+
+.ds-divider-subtle {
+  height: 1px;
+  background: hsl(var(--ds-border-light) / 0.5);
+  border: none;
+  margin: var(--ds-space-4) 0;
+}
+
+/* === Spacing Utility Classes === */
+.ds-gap-1 { gap: var(--ds-space-1); }
+.ds-gap-2 { gap: var(--ds-space-2); }
+.ds-gap-3 { gap: var(--ds-space-3); }
+.ds-gap-4 { gap: var(--ds-space-4); }
+.ds-gap-6 { gap: var(--ds-space-6); }
+.ds-gap-8 { gap: var(--ds-space-8); }
+
+.ds-p-4 { padding: var(--ds-space-4); }
+.ds-p-6 { padding: var(--ds-space-6); }
+.ds-p-8 { padding: var(--ds-space-8); }
+
+.ds-py-4 { padding-top: var(--ds-space-4); padding-bottom: var(--ds-space-4); }
+.ds-py-6 { padding-top: var(--ds-space-6); padding-bottom: var(--ds-space-6); }
+.ds-px-4 { padding-left: var(--ds-space-4); padding-right: var(--ds-space-4); }
+.ds-px-6 { padding-left: var(--ds-space-6); padding-right: var(--ds-space-6); }
+
+.ds-mb-2 { margin-bottom: var(--ds-space-2); }
+.ds-mb-4 { margin-bottom: var(--ds-space-4); }
+.ds-mb-6 { margin-bottom: var(--ds-space-6); }
+.ds-mb-8 { margin-bottom: var(--ds-space-8); }
+
+.ds-mt-2 { margin-top: var(--ds-space-2); }
+.ds-mt-4 { margin-top: var(--ds-space-4); }
+.ds-mt-6 { margin-top: var(--ds-space-6); }
+.ds-mt-8 { margin-top: var(--ds-space-8); }
+
+/* =========================================
+   GLOBAL ENFORCEMENT - Apply to all content
+   ========================================= */
+
+/* Force design system on all nested elements */
+.ds-enforced * {
+  font-family: var(--ds-font-sans) !important;
+}
+
+.ds-enforced h1, .ds-enforced .h1 { 
+  font-size: var(--ds-text-4xl) !important;
+  font-weight: var(--ds-weight-bold) !important;
+  line-height: var(--ds-leading-tight) !important;
+}
+
+.ds-enforced h2, .ds-enforced .h2 { 
+  font-size: var(--ds-text-3xl) !important;
+  font-weight: var(--ds-weight-bold) !important;
+  line-height: var(--ds-leading-tight) !important;
+}
+
+.ds-enforced h3, .ds-enforced .h3 { 
+  font-size: var(--ds-text-2xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+}
+
+.ds-enforced h4, .ds-enforced .h4 { 
+  font-size: var(--ds-text-xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+}
+
+.ds-enforced p, .ds-enforced span, .ds-enforced div {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Button normalization across the app */
+.ds-enforced button,
+.ds-enforced [role="button"],
+.ds-enforced .btn {
+  min-height: var(--ds-btn-height-md);
+  border-radius: var(--ds-radius-md) !important;
+  font-family: var(--ds-font-sans) !important;
+  font-weight: var(--ds-weight-medium) !important;
+}
+
+/* Card normalization */
+.ds-enforced [class*="card"],
+.ds-enforced [class*="Card"] {
+  border-radius: var(--ds-radius-xl) !important;
+  border: 1px solid hsl(var(--ds-border-light)) !important;
+}
+
+/* Input normalization */
+.ds-enforced input,
+.ds-enforced select,
+.ds-enforced textarea {
+  min-height: var(--ds-input-height-md);
+  border-radius: var(--ds-radius-md) !important;
+  font-family: var(--ds-font-sans) !important;
+  font-size: var(--ds-text-sm) !important;
+}

@@ -5,6 +5,9 @@
  * RTL-FIRST ARABIC NATIVE
  */
 
+/* Import Design System Tokens */
+@import './design-system.css';
+
 /* Import animations */
 @import './animations.css';
 
@@ -1801,98 +1804,255 @@ html, body {
 }
 
 /* =========================================
-   V3 LEGACY OVERRIDE - Forces Modern Theme
-   Ensures all nested components inherit V3 tokens
+   UNIFIED DESIGN SYSTEM ENFORCEMENT
+   Ensures all components use consistent tokens
    ========================================= */
 
 .modern-content {
-  /* V3 Design Tokens Override for Legacy Components */
-  --background: var(--modern-bg-page);
-  --foreground: var(--modern-text-primary);
-  --card: var(--modern-bg-card);
-  --card-foreground: var(--modern-text-primary);
-  --popover: var(--modern-bg-elevated);
-  --popover-foreground: var(--modern-text-primary);
-  --primary: var(--modern-accent);
+  /* Map V3 tokens to standard CSS variables */
+  --background: var(--ds-bg-page);
+  --foreground: var(--ds-text-primary);
+  --card: var(--ds-bg-surface);
+  --card-foreground: var(--ds-text-primary);
+  --popover: var(--ds-bg-elevated);
+  --popover-foreground: var(--ds-text-primary);
+  --primary: var(--ds-brand-primary);
   --primary-foreground: 0 0% 100%;
-  --secondary: var(--modern-bg-subtle);
-  --secondary-foreground: var(--modern-text-secondary);
-  --muted: var(--modern-bg-subtle);
-  --muted-foreground: var(--modern-text-muted);
-  --accent: var(--modern-accent);
+  --secondary: var(--ds-bg-elevated);
+  --secondary-foreground: var(--ds-text-secondary);
+  --muted: var(--ds-bg-muted);
+  --muted-foreground: var(--ds-text-muted);
+  --accent: var(--ds-brand-primary);
   --accent-foreground: 0 0% 100%;
-  --destructive: var(--modern-danger);
+  --destructive: var(--ds-error);
   --destructive-foreground: 0 0% 100%;
-  --border: var(--modern-border);
-  --input: var(--modern-border);
-  --ring: var(--modern-accent);
-  --radius: 0.75rem;
+  --border: var(--ds-border-default);
+  --input: var(--ds-border-default);
+  --ring: var(--ds-brand-primary);
+  --radius: var(--ds-radius-lg);
 }
 
-/* Force cards within modern-content to use V3 styling */
+/* =========================================
+   STRICT COMPONENT ENFORCEMENT
+   All cards, buttons, inputs use DS tokens
+   ========================================= */
+
+/* Card Enforcement */
 .modern-content .card,
-.modern-content [class*="Card"] {
-  background: hsl(var(--modern-bg-card));
-  border: 1px solid hsl(var(--modern-border));
-  border-radius: var(--modern-radius-xl);
-  box-shadow: var(--modern-shadow-sm);
+.modern-content [class*="Card"],
+.modern-content [class*="card-"] {
+  background: hsl(var(--ds-bg-surface)) !important;
+  border: 1px solid hsl(var(--ds-border-light)) !important;
+  border-radius: var(--ds-radius-xl) !important;
+  box-shadow: var(--ds-shadow-card) !important;
 }
 
-/* Force buttons to use V3 styling */
+.modern-content .card:hover,
+.modern-content [class*="Card"]:hover {
+  box-shadow: var(--ds-shadow-card-hover) !important;
+}
+
+/* Button Height Enforcement */
+.modern-content button,
+.modern-content [role="button"],
+.modern-content .btn {
+  min-height: var(--ds-btn-height-md);
+  border-radius: var(--ds-radius-md) !important;
+  font-family: var(--ds-font-sans) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  font-size: var(--ds-text-sm) !important;
+}
+
+/* Small Buttons */
+.modern-content button[class*="sm"],
+.modern-content .btn-sm,
+.modern-content [class*="Button-sm"] {
+  min-height: var(--ds-btn-height-sm) !important;
+  font-size: var(--ds-text-xs) !important;
+}
+
+/* Large Buttons */
+.modern-content button[class*="lg"],
+.modern-content .btn-lg,
+.modern-content [class*="Button-lg"] {
+  min-height: var(--ds-btn-height-lg) !important;
+  font-size: var(--ds-text-base) !important;
+}
+
+/* Primary Buttons */
 .modern-content button[class*="primary"],
 .modern-content .btn-primary {
-  background: linear-gradient(135deg, hsl(var(--modern-accent)), hsl(var(--modern-accent-hover)));
-  color: white;
-  border-radius: var(--modern-radius-lg);
+  background: hsl(var(--ds-brand-primary)) !important;
+  color: white !important;
 }
 
-/* Force inputs to use V3 styling */
-.modern-content input,
+.modern-content button[class*="primary"]:hover,
+.modern-content .btn-primary:hover {
+  background: hsl(var(--ds-brand-primary-hover)) !important;
+}
+
+/* Input Enforcement */
+.modern-content input:not([type="checkbox"]):not([type="radio"]),
 .modern-content select,
 .modern-content textarea {
-  border-color: hsl(var(--modern-border));
-  border-radius: var(--modern-radius-lg);
-  background: hsl(var(--modern-bg-card));
+  min-height: var(--ds-input-height-md);
+  border: 1px solid hsl(var(--ds-border-default)) !important;
+  border-radius: var(--ds-radius-md) !important;
+  background: hsl(var(--ds-bg-surface)) !important;
+  font-family: var(--ds-font-sans) !important;
+  font-size: var(--ds-text-sm) !important;
+  padding: 0 var(--ds-space-3) !important;
 }
 
 .modern-content input:focus,
 .modern-content select:focus,
 .modern-content textarea:focus {
-  border-color: hsl(var(--modern-accent));
-  outline: none;
-  box-shadow: 0 0 0 3px hsl(var(--modern-accent) / 0.1);
+  border-color: hsl(var(--ds-border-focus)) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px hsl(var(--ds-brand-primary) / 0.15) !important;
 }
 
-/* Force tables to use V3 styling */
+/* Table Enforcement */
 .modern-content table {
-  border-radius: var(--modern-radius-xl);
-  overflow: hidden;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-text-sm) !important;
 }
 
 .modern-content thead {
-  background: hsl(var(--modern-bg-subtle));
+  background: hsl(var(--ds-bg-muted)) !important;
 }
 
 .modern-content th {
-  font-weight: var(--modern-font-semibold);
-  color: hsl(var(--modern-text-secondary));
-  padding: var(--modern-space-4);
-  text-align: start;
+  font-size: var(--ds-text-xs) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  color: hsl(var(--ds-text-muted)) !important;
+  padding: var(--ds-space-3) var(--ds-space-4) !important;
+  text-align: start !important;
 }
 
 .modern-content td {
-  padding: var(--modern-space-4);
-  border-bottom: 1px solid hsl(var(--modern-border));
+  padding: var(--ds-space-4) !important;
+  border-bottom: 1px solid hsl(var(--ds-border-light)) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content tbody tr {
+  transition: background var(--ds-duration-fast) var(--ds-ease-default);
 }
 
 .modern-content tbody tr:hover {
-  background: hsl(var(--modern-bg-hover));
+  background: hsl(var(--ds-bg-hover)) !important;
 }
 
-/* Badge overrides */
+/* Badge Enforcement */
 .modern-content [class*="badge"],
 .modern-content [class*="Badge"] {
-  border-radius: var(--modern-radius-full);
-  font-weight: var(--modern-font-medium);
-  padding: var(--modern-space-1) var(--modern-space-3);
+  height: 1.375rem !important;
+  border-radius: var(--ds-radius-full) !important;
+  font-size: var(--ds-text-xs) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  padding: 0 var(--ds-space-2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Typography Enforcement */
+.modern-content h1 {
+  font-size: var(--ds-text-4xl) !important;
+  font-weight: var(--ds-weight-bold) !important;
+  line-height: var(--ds-leading-tight) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content h2 {
+  font-size: var(--ds-text-3xl) !important;
+  font-weight: var(--ds-weight-bold) !important;
+  line-height: var(--ds-leading-tight) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content h3 {
+  font-size: var(--ds-text-2xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content h4 {
+  font-size: var(--ds-text-xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content p,
+.modern-content span,
+.modern-content div {
+  font-family: var(--ds-font-sans);
+}
+
+/* Icon Size Standardization */
+.modern-content svg:not(.recharts-surface) {
+  min-width: var(--ds-icon-sm);
+  min-height: var(--ds-icon-sm);
+}
+
+/* Spacing Consistency */
+.modern-content .gap-1 { gap: var(--ds-space-1) !important; }
+.modern-content .gap-2 { gap: var(--ds-space-2) !important; }
+.modern-content .gap-3 { gap: var(--ds-space-3) !important; }
+.modern-content .gap-4 { gap: var(--ds-space-4) !important; }
+.modern-content .gap-6 { gap: var(--ds-space-6) !important; }
+.modern-content .gap-8 { gap: var(--ds-space-8) !important; }
+
+.modern-content .p-4 { padding: var(--ds-space-4) !important; }
+.modern-content .p-6 { padding: var(--ds-space-6) !important; }
+.modern-content .p-8 { padding: var(--ds-space-8) !important; }
+
+/* Grid Consistency */
+.modern-content .grid {
+  gap: var(--ds-space-6);
+}
+
+/* Shadow Consistency */
+.modern-content .shadow,
+.modern-content .shadow-sm {
+  box-shadow: var(--ds-shadow-sm) !important;
+}
+
+.modern-content .shadow-md {
+  box-shadow: var(--ds-shadow-md) !important;
+}
+
+.modern-content .shadow-lg {
+  box-shadow: var(--ds-shadow-lg) !important;
+}
+
+/* Border Radius Consistency */
+.modern-content .rounded-md { border-radius: var(--ds-radius-md) !important; }
+.modern-content .rounded-lg { border-radius: var(--ds-radius-lg) !important; }
+.modern-content .rounded-xl { border-radius: var(--ds-radius-xl) !important; }
+.modern-content .rounded-2xl { border-radius: var(--ds-radius-2xl) !important; }
+.modern-content .rounded-full { border-radius: var(--ds-radius-full) !important; }
+
+/* =========================================
+   DARK MODE SUPPORT (Future-Ready)
+   ========================================= */
+
+.dark .modern-content,
+[data-theme="dark"] .modern-content {
+  --ds-bg-page: 220 15% 8%;
+  --ds-bg-surface: 220 15% 10%;
+  --ds-bg-elevated: 220 15% 14%;
+  --ds-bg-hover: 220 15% 16%;
+  --ds-bg-muted: 220 15% 12%;
+  
+  --ds-text-primary: 0 0% 98%;
+  --ds-text-secondary: 220 10% 70%;
+  --ds-text-muted: 220 10% 55%;
+  
+  --ds-border-light: 220 15% 18%;
+  --ds-border-default: 220 15% 22%;
+  --ds-border-strong: 220 15% 30%;
 }

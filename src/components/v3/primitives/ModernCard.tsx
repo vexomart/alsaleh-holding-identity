@@ -1,7 +1,9 @@
 /**
  * Modern Card Components
- * Stripe/Notion/Apple Inspired
- * Clean, Minimal, Professional
+ * Unified Design System - Enterprise SaaS Standard
+ * Uses Design System tokens from design-system.css
+ * 
+ * STRICT SPECIFICATIONS - All dimensions follow DS tokens
  */
 
 import * as React from 'react';
@@ -11,7 +13,7 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import '@/styles/v3/modern-theme.css';
 
 /* =========================================
-   Base Card
+   Base Card - Uses ds-card class
    ========================================= */
 
 interface ModernCardProps {
@@ -30,7 +32,7 @@ export const ModernCard: React.FC<ModernCardProps> = ({
   return (
     <div
       className={cn(
-        'modern-card',
+        'ds-card',
         hover && 'cursor-pointer',
         className
       )}
@@ -57,11 +59,11 @@ export const ModernCardHeader: React.FC<ModernCardHeaderProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('modern-card-header', className)}>
+    <div className={cn('ds-card-header', className)}>
       <div>
-        <h3 className="modern-card-title">{title}</h3>
+        <h3 className="ds-heading-4">{title}</h3>
         {description && (
-          <p className="modern-card-description">{description}</p>
+          <p className="ds-body-sm ds-mt-2">{description}</p>
         )}
       </div>
       {action && <div>{action}</div>}
@@ -81,7 +83,7 @@ export const ModernCardContent: React.FC<ModernCardContentProps> = ({
   noPadding = false,
 }) => {
   return (
-    <div className={cn(!noPadding && 'modern-card-content', className)}>
+    <div className={cn(!noPadding && 'ds-card-content', className)}>
       {children}
     </div>
   );
@@ -97,14 +99,14 @@ export const ModernCardFooter: React.FC<ModernCardFooterProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('modern-card-footer', className)}>
+    <div className={cn('ds-card-footer', className)}>
       {children}
     </div>
   );
 };
 
 /* =========================================
-   Stat Card - Dashboard KPIs
+   Stat Card - Dashboard KPIs (Uses DS tokens)
    ========================================= */
 
 type TrendDirection = 'up' | 'down' | 'neutral';
@@ -126,8 +128,8 @@ interface ModernStatCardProps {
 
 export const ModernStatCard: React.FC<ModernStatCardProps> = ({
   icon,
-  iconColor = 'hsl(var(--modern-brand-primary))',
-  iconBg = 'hsl(var(--modern-brand-primary) / 0.1)',
+  iconColor = 'hsl(var(--ds-brand-primary))',
+  iconBg = 'hsl(var(--ds-brand-primary) / 0.1)',
   label,
   value,
   change,
@@ -142,13 +144,13 @@ export const ModernStatCard: React.FC<ModernStatCardProps> = ({
 
   return (
     <motion.div
-      className={cn('modern-stat-card', onClick && 'cursor-pointer', className)}
+      className={cn('ds-stat-card', onClick && 'cursor-pointer', className)}
       onClick={onClick}
       whileHover={onClick ? { scale: 1.01 } : undefined}
       whileTap={onClick ? { scale: 0.99 } : undefined}
     >
       <div 
-        className="modern-stat-icon"
+        className="ds-stat-icon"
         style={{ 
           background: iconBg,
           color: iconColor,
@@ -157,20 +159,22 @@ export const ModernStatCard: React.FC<ModernStatCardProps> = ({
         {icon}
       </div>
       
-      <div className="modern-stat-value">{value}</div>
-      <div className="modern-stat-label">{label}</div>
+      <div className="ds-stat-value">{value}</div>
+      <div className="ds-stat-label">{label}</div>
       
       {change && (
         <div 
           className={cn(
-            'modern-stat-change',
-            change.direction === 'up' && 'positive',
-            change.direction === 'down' && 'negative'
+            'ds-badge',
+            change.direction === 'up' && 'ds-badge-success',
+            change.direction === 'down' && 'ds-badge-error',
+            change.direction === 'neutral' && 'ds-badge-neutral',
+            'ds-mt-4'
           )}
         >
           <TrendIcon size={12} />
           <span>{Math.abs(change.value)}%</span>
-          {change.label && <span className="opacity-70">{change.label}</span>}
+          {change.label && <span style={{ opacity: 0.7 }}>{change.label}</span>}
         </div>
       )}
     </motion.div>
@@ -178,7 +182,7 @@ export const ModernStatCard: React.FC<ModernStatCardProps> = ({
 };
 
 /* =========================================
-   Stats Grid
+   Stats Grid (Uses DS tokens)
    ========================================= */
 
 interface ModernStatsGridProps {
@@ -193,10 +197,10 @@ export const ModernStatsGrid: React.FC<ModernStatsGridProps> = ({
   className,
 }) => {
   const gridClass = columns === 2 
-    ? 'modern-grid-2' 
+    ? 'ds-grid-2' 
     : columns === 3 
-      ? 'modern-grid-3' 
-      : 'modern-grid-4';
+      ? 'ds-grid-3' 
+      : 'ds-grid-4';
 
   return (
     <div className={cn(gridClass, className)}>
@@ -206,7 +210,7 @@ export const ModernStatsGrid: React.FC<ModernStatsGridProps> = ({
 };
 
 /* =========================================
-   Empty State
+   Empty State (Uses DS tokens)
    ========================================= */
 
 interface ModernEmptyStateProps {
@@ -225,19 +229,32 @@ export const ModernEmptyState: React.FC<ModernEmptyStateProps> = ({
   className,
 }) => {
   return (
-    <div className={cn('modern-empty-state', className)}>
-      <div className="modern-empty-state-icon">{icon}</div>
-      <h3 className="modern-empty-state-title">{title}</h3>
-      {description && (
-        <p className="modern-empty-state-description">{description}</p>
+    <div 
+      className={cn(
+        'flex flex-col items-center justify-center text-center',
+        'ds-py-6',
+        className
       )}
-      {action && <div className="mt-6">{action}</div>}
+    >
+      <div 
+        className="ds-icon-xl ds-mb-4"
+        style={{ color: 'hsl(var(--ds-text-muted))' }}
+      >
+        {icon}
+      </div>
+      <h3 className="ds-heading-4 ds-mb-2">{title}</h3>
+      {description && (
+        <p className="ds-body-sm" style={{ maxWidth: '24rem' }}>
+          {description}
+        </p>
+      )}
+      {action && <div className="ds-mt-6">{action}</div>}
     </div>
   );
 };
 
 /* =========================================
-   Section Header
+   Section Header (Uses DS tokens)
    ========================================= */
 
 interface ModernSectionHeaderProps {
@@ -256,30 +273,14 @@ export const ModernSectionHeader: React.FC<ModernSectionHeaderProps> = ({
   return (
     <div 
       className={cn(
-        'flex items-start justify-between gap-4 mb-6',
+        'flex items-start justify-between ds-gap-4 ds-mb-6',
         className
       )}
     >
       <div>
-        <h2 
-          className="font-semibold"
-          style={{ 
-            fontSize: 'var(--modern-text-xl)',
-            color: 'hsl(var(--modern-text-primary))',
-          }}
-        >
-          {title}
-        </h2>
+        <h2 className="ds-heading-3">{title}</h2>
         {description && (
-          <p 
-            className="mt-1"
-            style={{ 
-              fontSize: 'var(--modern-text-sm)',
-              color: 'hsl(var(--modern-text-muted))',
-            }}
-          >
-            {description}
-          </p>
+          <p className="ds-body-sm ds-mt-2">{description}</p>
         )}
       </div>
       {action && <div className="flex-shrink-0">{action}</div>}
@@ -288,10 +289,10 @@ export const ModernSectionHeader: React.FC<ModernSectionHeaderProps> = ({
 };
 
 /* =========================================
-   Badge
+   Badge (Uses DS tokens)
    ========================================= */
 
-type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral';
+type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'primary';
 
 interface ModernBadgeProps {
   children: React.ReactNode;
@@ -306,18 +307,18 @@ export const ModernBadge: React.FC<ModernBadgeProps> = ({
   icon,
   className,
 }) => {
-  const variantClass = `modern-badge-${variant}`;
+  const variantClass = `ds-badge-${variant}`;
   
   return (
-    <span className={cn('modern-badge', variantClass, className)}>
-      {icon && <span>{icon}</span>}
+    <span className={cn('ds-badge', variantClass, className)}>
+      {icon && <span className="ds-icon-xs">{icon}</span>}
       {children}
     </span>
   );
 };
 
 /* =========================================
-   Button
+   Button (Uses DS tokens)
    ========================================= */
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -342,13 +343,13 @@ export const ModernButton: React.FC<ModernButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const variantClass = `modern-btn-${variant}`;
-  const sizeClass = size === 'sm' ? 'modern-btn-sm' : size === 'lg' ? 'modern-btn-lg' : '';
+  const variantClass = `ds-btn-${variant}`;
+  const sizeClass = size === 'sm' ? 'ds-btn-sm' : size === 'lg' ? 'ds-btn-lg' : 'ds-btn-md';
 
   return (
     <button
       className={cn(
-        'modern-btn',
+        'ds-btn',
         variantClass,
         sizeClass,
         className
@@ -357,24 +358,25 @@ export const ModernButton: React.FC<ModernButtonProps> = ({
       {...props}
     >
       {loading ? (
-        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <span className="ds-icon-sm border-2 border-current border-t-transparent rounded-full animate-spin" />
       ) : icon && iconPosition === 'start' ? (
-        icon
+        <span className="ds-icon-sm">{icon}</span>
       ) : null}
       {children}
-      {!loading && icon && iconPosition === 'end' ? icon : null}
+      {!loading && icon && iconPosition === 'end' ? <span className="ds-icon-sm">{icon}</span> : null}
     </button>
   );
 };
 
 /* =========================================
-   Divider
+   Divider (Uses DS tokens)
    ========================================= */
 
 interface ModernDividerProps {
   className?: string;
+  subtle?: boolean;
 }
 
-export const ModernDivider: React.FC<ModernDividerProps> = ({ className }) => {
-  return <div className={cn('modern-divider', className)} />;
+export const ModernDivider: React.FC<ModernDividerProps> = ({ className, subtle = false }) => {
+  return <hr className={cn(subtle ? 'ds-divider-subtle' : 'ds-divider', className)} />;
 };
