@@ -7,7 +7,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { V3AdminLayout } from '@/components/v3/layouts/V3AdminLayout';
-import { V3AdminOverview } from '@/components/v3/pages/V3AdminOverview';
+import { ModernAdminOverview } from '@/components/v3/pages/ModernAdminOverview';
 import '@/styles/v3/modern-theme.css';
 
 // Page imports - These will receive V3 wrapper automatically from layout
@@ -49,7 +49,7 @@ const V3AdminDashboard = () => {
     <V3AdminLayout>
       <Routes>
         {/* Main Routes - V3 Overview */}
-        <Route index element={<V3AdminOverview />} />
+        <Route index element={<ModernAdminOverview />} />
         
         {/* User Management Routes */}
         <Route path="users" element={<UsersManagement />} />

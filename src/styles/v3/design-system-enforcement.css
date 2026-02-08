@@ -1,0 +1,480 @@
+/**
+ * Design System Global Enforcement
+ * Forces all admin pages to use unified DS tokens
+ * Overrides legacy cmd-* and modern-* variables
+ */
+
+/* =========================================
+   VARIABLE ALIASING - Map old to new
+   ========================================= */
+
+:root,
+.modern-app,
+.modern-content {
+  /* Map cmd-* to ds-* for backward compatibility */
+  --cmd-bg-deep: var(--ds-bg-page);
+  --cmd-bg-panel: var(--ds-bg-surface);
+  --cmd-bg-card: var(--ds-bg-surface);
+  --cmd-bg-elevated: var(--ds-bg-elevated);
+  --cmd-bg-hover: var(--ds-bg-hover);
+  
+  --cmd-text-primary: var(--ds-text-primary);
+  --cmd-text-secondary: var(--ds-text-secondary);
+  --cmd-text-muted: var(--ds-text-muted);
+  --cmd-text-dim: var(--ds-text-disabled);
+  
+  --cmd-accent-cyan: var(--ds-brand-primary);
+  --cmd-accent-green: var(--ds-success);
+  --cmd-accent-amber: var(--ds-warning);
+  --cmd-accent-red: var(--ds-error);
+  --cmd-accent-blue: var(--ds-info);
+  --cmd-accent-purple: var(--ds-brand-accent);
+  
+  --cmd-border-subtle: var(--ds-border-light);
+  --cmd-border-default: var(--ds-border-default);
+  --cmd-border-strong: var(--ds-border-strong);
+  --cmd-border-accent: var(--ds-border-focus);
+  
+  /* Map modern-* to ds-* */
+  --modern-bg-page: var(--ds-bg-page);
+  --modern-bg-card: var(--ds-bg-surface);
+  --modern-bg-elevated: var(--ds-bg-elevated);
+  --modern-bg-hover: var(--ds-bg-hover);
+  --modern-bg-muted: var(--ds-bg-muted);
+  
+  --modern-text-primary: var(--ds-text-primary);
+  --modern-text-secondary: var(--ds-text-secondary);
+  --modern-text-muted: var(--ds-text-muted);
+  --modern-text-disabled: var(--ds-text-disabled);
+  
+  --modern-brand-primary: var(--ds-brand-primary);
+  --modern-brand-primary-hover: var(--ds-brand-primary-hover);
+  --modern-brand-secondary: var(--ds-brand-secondary);
+  --modern-brand-accent: var(--ds-brand-accent);
+  
+  --modern-success: var(--ds-success);
+  --modern-success-bg: var(--ds-success-bg);
+  --modern-warning: var(--ds-warning);
+  --modern-warning-bg: var(--ds-warning-bg);
+  --modern-error: var(--ds-error);
+  --modern-error-bg: var(--ds-error-bg);
+  --modern-info: var(--ds-info);
+  --modern-info-bg: var(--ds-info-bg);
+  
+  --modern-border: var(--ds-border-default);
+  --modern-border-light: var(--ds-border-light);
+  --modern-border-default: var(--ds-border-default);
+  --modern-border-strong: var(--ds-border-strong);
+  
+  --modern-shadow-sm: var(--ds-shadow-sm);
+  --modern-shadow-md: var(--ds-shadow-md);
+  --modern-shadow-lg: var(--ds-shadow-lg);
+  --modern-shadow-card: var(--ds-shadow-card);
+  --modern-shadow-card-hover: var(--ds-shadow-card-hover);
+  
+  --modern-radius-sm: var(--ds-radius-sm);
+  --modern-radius-md: var(--ds-radius-md);
+  --modern-radius-lg: var(--ds-radius-lg);
+  --modern-radius-xl: var(--ds-radius-xl);
+  --modern-radius-2xl: var(--ds-radius-2xl);
+  --modern-radius-full: var(--ds-radius-full);
+  
+  --modern-font-sans: var(--ds-font-sans);
+  --modern-font-mono: var(--ds-font-mono);
+  
+  --modern-text-xs: var(--ds-text-xs);
+  --modern-text-sm: var(--ds-text-sm);
+  --modern-text-base: var(--ds-text-base);
+  --modern-text-lg: var(--ds-text-lg);
+  --modern-text-xl: var(--ds-text-xl);
+  --modern-text-2xl: var(--ds-text-2xl);
+  --modern-text-3xl: var(--ds-text-3xl);
+  --modern-text-4xl: var(--ds-text-4xl);
+  
+  --modern-font-normal: var(--ds-weight-normal);
+  --modern-font-medium: var(--ds-weight-medium);
+  --modern-font-semibold: var(--ds-weight-semibold);
+  --modern-font-bold: var(--ds-weight-bold);
+  
+  --modern-space-1: var(--ds-space-1);
+  --modern-space-2: var(--ds-space-2);
+  --modern-space-3: var(--ds-space-3);
+  --modern-space-4: var(--ds-space-4);
+  --modern-space-5: var(--ds-space-5);
+  --modern-space-6: var(--ds-space-6);
+  --modern-space-8: var(--ds-space-8);
+  
+  --modern-duration-fast: var(--ds-duration-fast);
+  --modern-duration-normal: var(--ds-duration-normal);
+  --modern-duration-slow: var(--ds-duration-slow);
+  --modern-ease-out: var(--ds-ease-out);
+}
+
+/* =========================================
+   LIGHT THEME ENFORCEMENT
+   All admin pages use light theme
+   ========================================= */
+
+.modern-app {
+  background: hsl(var(--ds-bg-page)) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+/* =========================================
+   CARD UNIFORMITY
+   All cards look the same across pages
+   ========================================= */
+
+.modern-content [class*="Card"],
+.modern-content [class*="card"],
+.modern-content .bg-card,
+.modern-content .rounded-xl[style*="background"] {
+  background: hsl(var(--ds-bg-surface)) !important;
+  border: 1px solid hsl(var(--ds-border-light)) !important;
+  border-radius: var(--ds-radius-xl) !important;
+  box-shadow: var(--ds-shadow-card) !important;
+}
+
+.modern-content [class*="Card"]:hover,
+.modern-content [class*="card"]:hover {
+  box-shadow: var(--ds-shadow-card-hover) !important;
+}
+
+/* =========================================
+   BUTTON HEIGHT UNIFORMITY
+   All buttons same height per size
+   ========================================= */
+
+.modern-content button:not([class*="icon"]),
+.modern-content [role="button"]:not([class*="icon"]) {
+  min-height: var(--ds-btn-height-md) !important;
+  border-radius: var(--ds-radius-md) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  padding-inline: var(--ds-space-4) !important;
+  transition: all var(--ds-duration-fast) var(--ds-ease-default) !important;
+}
+
+.modern-content button:hover:not(:disabled),
+.modern-content [role="button"]:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Small buttons */
+.modern-content button.h-8,
+.modern-content button.h-9,
+.modern-content [class*="btn-sm"] {
+  min-height: var(--ds-btn-height-sm) !important;
+  font-size: var(--ds-text-xs) !important;
+  padding-inline: var(--ds-space-3) !important;
+}
+
+/* =========================================
+   ICON SIZE UNIFORMITY
+   ========================================= */
+
+.modern-content svg:not(.recharts-surface):not([class*="animate"]) {
+  width: var(--ds-icon-md);
+  height: var(--ds-icon-md);
+}
+
+.modern-content .h-4.w-4,
+.modern-content [class*="icon-sm"] svg {
+  width: var(--ds-icon-sm) !important;
+  height: var(--ds-icon-sm) !important;
+}
+
+.modern-content .h-5.w-5,
+.modern-content [class*="icon-md"] svg {
+  width: var(--ds-icon-md) !important;
+  height: var(--ds-icon-md) !important;
+}
+
+.modern-content .h-6.w-6,
+.modern-content .h-7.w-7,
+.modern-content [class*="icon-lg"] svg {
+  width: var(--ds-icon-lg) !important;
+  height: var(--ds-icon-lg) !important;
+}
+
+/* =========================================
+   SPACING UNIFORMITY
+   ========================================= */
+
+.modern-content .space-y-4 > * + * { margin-top: var(--ds-space-4) !important; }
+.modern-content .space-y-6 > * + * { margin-top: var(--ds-space-6) !important; }
+.modern-content .space-y-8 > * + * { margin-top: var(--ds-space-8) !important; }
+
+.modern-content .gap-2 { gap: var(--ds-space-2) !important; }
+.modern-content .gap-3 { gap: var(--ds-space-3) !important; }
+.modern-content .gap-4 { gap: var(--ds-space-4) !important; }
+.modern-content .gap-6 { gap: var(--ds-space-6) !important; }
+
+.modern-content .p-4 { padding: var(--ds-space-4) !important; }
+.modern-content .p-5 { padding: var(--ds-space-5) !important; }
+.modern-content .p-6 { padding: var(--ds-space-6) !important; }
+
+.modern-content .px-4 { padding-inline: var(--ds-space-4) !important; }
+.modern-content .px-5 { padding-inline: var(--ds-space-5) !important; }
+.modern-content .px-6 { padding-inline: var(--ds-space-6) !important; }
+
+.modern-content .py-4 { padding-block: var(--ds-space-4) !important; }
+.modern-content .py-5 { padding-block: var(--ds-space-5) !important; }
+
+/* =========================================
+   TYPOGRAPHY UNIFORMITY
+   ========================================= */
+
+.modern-content {
+  font-family: var(--ds-font-sans) !important;
+  font-size: var(--ds-text-base) !important;
+  line-height: var(--ds-leading-relaxed) !important;
+}
+
+.modern-content h1,
+.modern-content .text-2xl,
+.modern-content .text-3xl {
+  font-size: var(--ds-text-3xl) !important;
+  font-weight: var(--ds-weight-bold) !important;
+  line-height: var(--ds-leading-tight) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content h2,
+.modern-content .text-xl {
+  font-size: var(--ds-text-2xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content h3,
+.modern-content .text-lg {
+  font-size: var(--ds-text-xl) !important;
+  font-weight: var(--ds-weight-semibold) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content .text-sm {
+  font-size: var(--ds-text-sm) !important;
+}
+
+.modern-content .text-xs {
+  font-size: var(--ds-text-xs) !important;
+}
+
+.modern-content .font-bold {
+  font-weight: var(--ds-weight-bold) !important;
+}
+
+.modern-content .font-semibold {
+  font-weight: var(--ds-weight-semibold) !important;
+}
+
+.modern-content .font-medium {
+  font-weight: var(--ds-weight-medium) !important;
+}
+
+/* =========================================
+   TABLE UNIFORMITY
+   ========================================= */
+
+.modern-content table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+.modern-content table th {
+  font-size: var(--ds-text-xs) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+  color: hsl(var(--ds-text-muted)) !important;
+  background: hsl(var(--ds-bg-muted)) !important;
+  padding: var(--ds-space-3) var(--ds-space-4) !important;
+  text-align: start !important;
+}
+
+.modern-content table td {
+  font-size: var(--ds-text-sm) !important;
+  padding: var(--ds-space-4) !important;
+  border-bottom: 1px solid hsl(var(--ds-border-light)) !important;
+  color: hsl(var(--ds-text-primary)) !important;
+}
+
+.modern-content table tbody tr:hover {
+  background: hsl(var(--ds-bg-hover)) !important;
+}
+
+/* =========================================
+   BADGE UNIFORMITY
+   ========================================= */
+
+.modern-content [class*="Badge"],
+.modern-content [class*="badge"] {
+  height: 1.375rem !important;
+  padding-inline: var(--ds-space-2) !important;
+  border-radius: var(--ds-radius-full) !important;
+  font-size: var(--ds-text-xs) !important;
+  font-weight: var(--ds-weight-medium) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* =========================================
+   INPUT UNIFORMITY
+   ========================================= */
+
+.modern-content input:not([type="checkbox"]):not([type="radio"]),
+.modern-content select,
+.modern-content textarea {
+  min-height: var(--ds-input-height-md) !important;
+  border: 1px solid hsl(var(--ds-border-default)) !important;
+  border-radius: var(--ds-radius-md) !important;
+  background: hsl(var(--ds-bg-surface)) !important;
+  font-size: var(--ds-text-sm) !important;
+  padding-inline: var(--ds-space-3) !important;
+  transition: all var(--ds-duration-fast) !important;
+}
+
+.modern-content input:focus,
+.modern-content select:focus,
+.modern-content textarea:focus {
+  border-color: hsl(var(--ds-border-focus)) !important;
+  box-shadow: 0 0 0 3px hsl(var(--ds-brand-primary) / 0.15) !important;
+  outline: none !important;
+}
+
+/* =========================================
+   STATUS COLORS UNIFORMITY
+   ========================================= */
+
+/* Success states */
+[class*="success"],
+[class*="completed"],
+[class*="active"],
+[style*="green"],
+.text-green-500,
+.text-green-600,
+.bg-green-500,
+.bg-green-100 {
+  --status-color: var(--ds-success);
+  --status-bg: var(--ds-success-bg);
+}
+
+/* Warning states */
+[class*="warning"],
+[class*="pending"],
+[style*="amber"],
+[style*="yellow"],
+.text-amber-500,
+.text-amber-600,
+.bg-amber-500,
+.bg-amber-100 {
+  --status-color: var(--ds-warning);
+  --status-bg: var(--ds-warning-bg);
+}
+
+/* Error states */
+[class*="error"],
+[class*="destructive"],
+[class*="rejected"],
+[class*="cancelled"],
+[style*="red"],
+.text-red-500,
+.text-red-600,
+.bg-red-500,
+.bg-red-100 {
+  --status-color: var(--ds-error);
+  --status-bg: var(--ds-error-bg);
+}
+
+/* Info states */
+[class*="info"],
+[class*="processing"],
+[style*="blue"],
+.text-blue-500,
+.text-blue-600,
+.bg-blue-500,
+.bg-blue-100 {
+  --status-color: var(--ds-info);
+  --status-bg: var(--ds-info-bg);
+}
+
+/* =========================================
+   ANIMATION UNIFORMITY
+   ========================================= */
+
+.modern-content * {
+  transition-timing-function: var(--ds-ease-default) !important;
+}
+
+.modern-content .transition,
+.modern-content .transition-all {
+  transition-duration: var(--ds-duration-normal) !important;
+}
+
+.modern-content .transition-fast {
+  transition-duration: var(--ds-duration-fast) !important;
+}
+
+/* =========================================
+   GRID UNIFORMITY
+   ========================================= */
+
+.modern-content .grid-cols-1.md\\:grid-cols-2.xl\\:grid-cols-3,
+.modern-content .grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-3 {
+  gap: var(--ds-space-6) !important;
+}
+
+.modern-content .grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4,
+.modern-content .grid-cols-2.lg\\:grid-cols-4 {
+  gap: var(--ds-space-6) !important;
+}
+
+/* =========================================
+   SHADOW UNIFORMITY
+   ========================================= */
+
+.modern-content .shadow,
+.modern-content .shadow-sm {
+  box-shadow: var(--ds-shadow-sm) !important;
+}
+
+.modern-content .shadow-md {
+  box-shadow: var(--ds-shadow-md) !important;
+}
+
+.modern-content .shadow-lg {
+  box-shadow: var(--ds-shadow-lg) !important;
+}
+
+.modern-content .shadow-xl {
+  box-shadow: var(--ds-shadow-xl) !important;
+}
+
+/* =========================================
+   BORDER RADIUS UNIFORMITY
+   ========================================= */
+
+.modern-content .rounded {
+  border-radius: var(--ds-radius-sm) !important;
+}
+
+.modern-content .rounded-md {
+  border-radius: var(--ds-radius-md) !important;
+}
+
+.modern-content .rounded-lg {
+  border-radius: var(--ds-radius-lg) !important;
+}
+
+.modern-content .rounded-xl {
+  border-radius: var(--ds-radius-xl) !important;
+}
+
+.modern-content .rounded-2xl {
+  border-radius: var(--ds-radius-2xl) !important;
+}
+
+.modern-content .rounded-full {
+  border-radius: var(--ds-radius-full) !important;
+}
