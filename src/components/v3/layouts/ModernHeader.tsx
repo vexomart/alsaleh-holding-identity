@@ -104,16 +104,8 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
   return (
     <header className="modern-header" dir="rtl">
-      {/* RIGHT SIDE: Menu + Title (RTL: starts from right) */}
+      {/* RIGHT SIDE: Title + Menu (RTL: starts from right) */}
       <div className="flex items-center gap-4">
-        <button
-          className="modern-btn-ghost h-9 w-9 p-0"
-          onClick={onMenuClick}
-          aria-label="القائمة"
-        >
-          <Menu size={20} />
-        </button>
-
         <h1 
           className="font-semibold hidden sm:block"
           style={{ 
@@ -123,6 +115,14 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
         >
           {getPageTitle()}
         </h1>
+
+        <button
+          className="modern-btn-ghost h-9 w-9 p-0 sm:hidden"
+          onClick={onMenuClick}
+          aria-label="القائمة"
+        >
+          <Menu size={20} />
+        </button>
       </div>
 
       {/* CENTER: Search (Desktop) */}

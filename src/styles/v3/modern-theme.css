@@ -153,6 +153,8 @@
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100%;
+  /* Layout stability - prevent content shift on scrollbar */
+  scrollbar-gutter: stable;
 }
 
 /* =========================================
@@ -166,6 +168,8 @@
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  /* Prevent layout shift from scrollbar */
+  box-sizing: border-box;
 }
 
 /* Sidebar - RIGHT side for RTL */
@@ -198,7 +202,7 @@
   background: hsl(var(--modern-bg-page));
 }
 
-/* Header - Clean minimal */
+/* Header - Clean minimal, fixed during scroll */
 .modern-header {
   height: var(--modern-header-height);
   background: hsl(var(--modern-bg-card));
@@ -211,9 +215,12 @@
   position: sticky;
   top: 0;
   z-index: 40;
+  /* Prevent any layout shift */
+  flex-shrink: 0;
+  will-change: auto;
 }
 
-/* Content Area */
+/* Content Area - Smooth scrolling, no horizontal overflow */
 .modern-content {
   flex: 1;
   padding: var(--modern-space-8);
@@ -222,6 +229,10 @@
   max-width: var(--modern-content-max-width);
   margin: 0 auto;
   width: 100%;
+  /* Smooth scroll behavior */
+  scroll-behavior: smooth;
+  /* Prevent content shift */
+  box-sizing: border-box;
 }
 
 /* =========================================
@@ -1717,5 +1728,47 @@
   
   .modern-search-input {
     width: 100%;
+  }
+}
+
+/* =========================================
+   GLOBAL LAYOUT STABILITY RULES
+   Prevents horizontal scroll & shaking
+   ========================================= */
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Prevent any element from causing horizontal overflow */
+.modern-app * {
+  max-width: 100%;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .modern-sidebar,
+  .modern-header {
+    display: none !important;
+  }
+  
+  .modern-content {
+    padding: 0;
+    max-width: 100%;
   }
 }
