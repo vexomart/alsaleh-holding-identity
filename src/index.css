@@ -7,6 +7,9 @@
 @import url('./styles/finance-animations.css');
 @import url('./styles/customer-dark-theme.css');
 
+/* iOS-Like Experience System */
+@import url('./styles/v3/ios-experience.css');
+
 /* ===========================================
    GLOBAL BOX-SIZING FIX
    Prevent width overflow from padding/borders

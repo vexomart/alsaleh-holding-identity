@@ -1,12 +1,12 @@
 /**
- * AnimatedContainer Component - PHASE WALLET-4
- * RTL-safe page enter animations
+ * AnimatedContainer Component - iOS-style Animations
+ * RTL-safe page enter animations with Apple-quality timing
  * Respects prefers-reduced-motion
  */
 
 import { ReactNode } from 'react';
 import { motion, Variants } from 'framer-motion';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useReducedMotion, iosDuration, iosEasing } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
 
 interface AnimatedContainerProps {
@@ -18,11 +18,11 @@ interface AnimatedContainerProps {
 
 const variants: Record<string, Variants> = {
   up: {
-    hidden: { opacity: 0, y: 10 },
+    hidden: { opacity: 0, y: 8 },
     visible: { opacity: 1, y: 0 },
   },
   down: {
-    hidden: { opacity: 0, y: -10 },
+    hidden: { opacity: 0, y: -8 },
     visible: { opacity: 1, y: 0 },
   },
   fade: {
@@ -51,9 +51,9 @@ export function AnimatedContainer({
       animate="visible"
       variants={variants[direction]}
       transition={{
-        duration: 0.15, // 150ms max for finance modules
+        duration: iosDuration.normal,
         delay,
-        ease: [0.25, 0.1, 0.25, 1], // Custom cubic-bezier
+        ease: iosEasing.decel,
       }}
     >
       {children}
@@ -75,7 +75,8 @@ const listVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05,
+      staggerChildren: 0.04,
+      delayChildren: 0.02,
     },
   },
 };
@@ -86,8 +87,8 @@ const itemVariants: Variants = {
     opacity: 1, 
     y: 0,
     transition: {
-      duration: 0.15,
-      ease: [0.25, 0.1, 0.25, 1],
+      duration: iosDuration.normal,
+      ease: iosEasing.decel,
     },
   },
 };
