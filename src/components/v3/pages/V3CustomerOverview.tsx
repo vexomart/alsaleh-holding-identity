@@ -1,8 +1,7 @@
 /**
  * V3 Customer Banking Portal Overview
- * 100% Custom - NO SHADCN
- * Premium Banking App Inspired
- * NOW WITH REAL DATA - NO MOCK DATA
+ * Premium Smart Dashboard - Enterprise Grade
+ * Real-time Data + Intelligent Insights
  */
 
 import * as React from 'react';
@@ -10,53 +9,49 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { V3StatCard } from '../data/V3StatCard';
-import { V3Badge } from '../primitives/V3Badge';
-import { V3Button } from '../primitives/V3Button';
-import { V3Card, V3CardHeader, V3CardTitle, V3CardContent } from '../primitives/V3Card';
-import '@/styles/v3/light-theme.css';
-import './V3Pages.css';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Wallet, 
+  ShoppingCart, 
+  FileSignature, 
+  Briefcase,
+  ArrowUpRight,
+  ArrowDownLeft,
+  TrendingUp,
+  Clock,
+  Sparkles,
+  CreditCard,
+  Bell,
+  ChevronLeft,
+  Plus,
+  Eye
+} from 'lucide-react';
+import '@/styles/v3/modern-theme.css';
 
-// Icons
-const WalletIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
-  </svg>
-);
+// Animation variants with proper typing
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08 }
+  }
+};
 
-const OrderIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-    <rect width="8" height="4" x="8" y="2" rx="1"/>
-    <path d="M9 14l2 2 4-4"/>
-  </svg>
-);
-
-const ContractIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <path d="M9 13h6"/><path d="M9 17h3"/>
-  </svg>
-);
-
-const ServiceIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
-  </svg>
-);
-
-const ArrowIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-  </svg>
-);
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { type: 'spring' as const, stiffness: 300, damping: 24 }
+  }
+};
 
 interface WalletData {
   id: string;
   balance: number;
   wallet_number: string;
   currency: string;
+  reserved_balance?: number;
 }
 
 interface OrderData {
@@ -66,12 +61,6 @@ interface OrderData {
   status: string;
   created_at: string;
   total_amount?: number;
-}
-
-interface ContractData {
-  id: string;
-  contract_number: string;
-  status: string;
 }
 
 interface TransactionData {
@@ -88,6 +77,7 @@ interface DashboardStats {
   activeOrders: number;
   activeContracts: number;
   totalServices: number;
+  pendingInvoices: number;
 }
 
 export const V3CustomerOverview: React.FC = () => {
@@ -104,8 +94,16 @@ export const V3CustomerOverview: React.FC = () => {
     activeOrders: 0,
     activeContracts: 0,
     totalServices: 0,
+    pendingInvoices: 0,
   });
   const [isLoading, setIsLoading] = React.useState(true);
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+
+  // Update time every minute
+  React.useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Fetch real data from database
   React.useEffect(() => {
@@ -118,65 +116,30 @@ export const V3CustomerOverview: React.FC = () => {
       try {
         setIsLoading(true);
 
-        // Fetch wallet - filtered by current user
-        const { data: walletData } = await supabase
-          .from('customer_wallets')
-          .select('id, balance, wallet_number, currency')
-          .eq('customer_user_id', user.id)
-          .maybeSingle();
+        // Parallel fetches for performance
+        const [walletRes, ordersRes, contractsRes, servicesRes, invoicesRes, transactionsRes] = await Promise.all([
+          supabase.from('customer_wallets').select('id, balance, wallet_number, currency, reserved_balance').eq('customer_user_id', user.id).maybeSingle(),
+          supabase.from('orders').select('id, order_number, title, status, created_at, total_amount').eq('customer_id', user.id).order('created_at', { ascending: false }).limit(5),
+          supabase.from('contracts').select('*', { count: 'exact', head: true }).eq('customer_user_id', user.id).in('status', ['signed', 'pending_signature', 'pre_approved_by_customer']),
+          supabase.from('services').select('*', { count: 'exact', head: true }).eq('is_active', true).eq('is_visible_to_customers', true),
+          supabase.from('invoices').select('*', { count: 'exact', head: true }).eq('customer_id', user.id).eq('status', 'draft'),
+          supabase.from('financial_transactions').select('id, transaction_type, amount, description, description_ar, created_at, status').eq('customer_user_id', user.id).order('created_at', { ascending: false }).limit(5),
+        ]);
 
-        if (walletData) {
-          setWallet(walletData as WalletData);
-        }
+        if (walletRes.data) setWallet(walletRes.data as WalletData);
+        if (ordersRes.data) setRecentOrders(ordersRes.data as OrderData[]);
+        if (transactionsRes.data) setRecentTransactions(transactionsRes.data as TransactionData[]);
 
-        // Fetch orders - filtered by current user
-        const { data: ordersData } = await supabase
-          .from('orders')
-          .select('id, order_number, title, status, created_at, total_amount')
-          .eq('customer_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        if (ordersData) {
-          setRecentOrders(ordersData as OrderData[]);
-        }
-
-        // Fetch contracts count - filtered by current user
-        const { count: contractsCount } = await supabase
-          .from('contracts')
-          .select('*', { count: 'exact', head: true })
-          .eq('customer_user_id', user.id)
-          .in('status', ['signed', 'pending_signature', 'pre_approved_by_customer']);
-
-        // Fetch active orders count
-        const activeOrdersCount = (ordersData || []).filter(
+        const activeOrdersCount = (ordersRes.data || []).filter(
           o => ['pending', 'processing', 'in_progress'].includes(o.status)
         ).length;
 
-        // Fetch services count (public services)
-        const { count: servicesCount } = await supabase
-          .from('services')
-          .select('*', { count: 'exact', head: true })
-          .eq('is_active', true)
-          .eq('is_visible_to_customers', true);
-
         setStats({
           activeOrders: activeOrdersCount,
-          activeContracts: contractsCount || 0,
-          totalServices: servicesCount || 0,
+          activeContracts: contractsRes.count || 0,
+          totalServices: servicesRes.count || 0,
+          pendingInvoices: invoicesRes.count || 0,
         });
-
-        // Fetch transactions - filtered by current user
-        const { data: transactionsData } = await supabase
-          .from('financial_transactions')
-          .select('id, transaction_type, amount, description, description_ar, created_at, status')
-          .eq('customer_user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        if (transactionsData) {
-          setRecentTransactions(transactionsData as TransactionData[]);
-        }
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -189,17 +152,30 @@ export const V3CustomerOverview: React.FC = () => {
   }, [user?.id]);
 
   const formatCurrency = (amount: number) => {
-    const formatted = Math.abs(amount).toLocaleString('ar-SA');
-    return `${amount < 0 ? '-' : ''}${formatted}`;
+    return new Intl.NumberFormat('ar-SA', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(Math.abs(amount));
   };
 
   const formatWalletNumber = (walletNumber: string | undefined) => {
-    if (!walletNumber || walletNumber.length < 4) return '****';
-    return `${walletNumber.slice(0, 4).replace(/./g, '*')} **** **** ${walletNumber.slice(-4)}`;
+    if (!walletNumber || walletNumber.length < 4) return '•••• •••• •••• ••••';
+    return `•••• •••• •••• ${walletNumber.slice(-4)}`;
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return isAr ? 'الآن' : 'Just now';
+    if (diffMins < 60) return isAr ? `منذ ${diffMins} دقيقة` : `${diffMins}m ago`;
+    if (diffHours < 24) return isAr ? `منذ ${diffHours} ساعة` : `${diffHours}h ago`;
+    if (diffDays < 7) return isAr ? `منذ ${diffDays} يوم` : `${diffDays}d ago`;
+    
     return date.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
       month: 'short',
       day: 'numeric',
@@ -207,282 +183,396 @@ export const V3CustomerOverview: React.FC = () => {
   };
 
   const getGreeting = () => {
-    const hour = new Date().getHours();
+    const hour = currentTime.getHours();
     if (hour < 12) return isAr ? 'صباح الخير' : 'Good Morning';
     if (hour < 18) return isAr ? 'مساء الخير' : 'Good Afternoon';
     return isAr ? 'مساء الخير' : 'Good Evening';
   };
 
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case 'topup':
-      case 'deposit':
-        return <span className="bank-tx-icon bank-tx-icon--in">↓</span>;
-      case 'invoice_payment':
-      case 'payment':
-        return <span className="bank-tx-icon bank-tx-icon--out">↑</span>;
-      case 'refund':
-        return <span className="bank-tx-icon bank-tx-icon--refund">↻</span>;
-      default:
-        return <span className="bank-tx-icon">•</span>;
-    }
+  const getStatusConfig = (status: string) => {
+    const configs: Record<string, { label: string; labelEn: string; color: string; bg: string }> = {
+      pending: { label: 'قيد الانتظار', labelEn: 'Pending', color: 'hsl(var(--modern-warning))', bg: 'hsl(var(--modern-warning) / 0.1)' },
+      processing: { label: 'قيد المعالجة', labelEn: 'Processing', color: 'hsl(var(--modern-info))', bg: 'hsl(var(--modern-info) / 0.1)' },
+      in_progress: { label: 'قيد التنفيذ', labelEn: 'In Progress', color: 'hsl(var(--modern-brand-primary))', bg: 'hsl(var(--modern-brand-primary) / 0.1)' },
+      completed: { label: 'مكتمل', labelEn: 'Completed', color: 'hsl(var(--modern-success))', bg: 'hsl(var(--modern-success) / 0.1)' },
+      cancelled: { label: 'ملغي', labelEn: 'Cancelled', color: 'hsl(var(--modern-error))', bg: 'hsl(var(--modern-error) / 0.1)' },
+    };
+    return configs[status] || { label: status, labelEn: status, color: 'hsl(var(--modern-text-muted))', bg: 'hsl(var(--modern-bg-elevated))' };
   };
 
   const quickActions = [
-    { id: 'order', label: 'طلب جديد', labelEn: 'New Order', icon: <OrderIcon />, path: '/portal/services' },
-    { id: 'deposit', label: 'إيداع رصيد', labelEn: 'Deposit', icon: <WalletIcon />, path: '/portal/wallet' },
-    { id: 'services', label: 'تصفح الخدمات', labelEn: 'Browse Services', icon: <ServiceIcon />, path: '/portal/services' },
-    { id: 'contracts', label: 'العقود', labelEn: 'Contracts', icon: <ContractIcon />, path: '/portal/contracts' },
+    { id: 'order', label: 'طلب جديد', labelEn: 'New Order', icon: Plus, path: '/portal/services', color: 'var(--modern-brand-primary)' },
+    { id: 'wallet', label: 'المحفظة', labelEn: 'Wallet', icon: Wallet, path: '/portal/wallet', color: 'var(--modern-success)' },
+    { id: 'orders', label: 'طلباتي', labelEn: 'My Orders', icon: ShoppingCart, path: '/portal/orders', color: 'var(--modern-info)' },
+    { id: 'contracts', label: 'العقود', labelEn: 'Contracts', icon: FileSignature, path: '/portal/contracts', color: 'var(--modern-warning)' },
   ];
 
-  // Loading state
+  // Loading skeleton
   if (isLoading) {
     return (
-      <div className="bank-overview">
-        <div className="bank-overview__welcome">
-          <div className="bank-overview__greeting">
-            <div style={{ height: '24px', width: '120px', background: 'var(--v3-neutral-200)', borderRadius: '4px', marginBottom: '8px' }} />
-            <div style={{ height: '32px', width: '200px', background: 'var(--v3-neutral-200)', borderRadius: '4px' }} />
-          </div>
-        </div>
-        <div className="bank-wallet-hero">
-          <div className="bank-wallet-hero__card" style={{ opacity: 0.5 }}>
-            <div className="bank-wallet-hero__background" />
-            <div className="bank-wallet-hero__content">
-              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                {isAr ? 'جاري التحميل...' : 'Loading...'}
-              </div>
-            </div>
-          </div>
+      <div className="smart-overview">
+        <div className="smart-overview__loading">
+          <motion.div 
+            className="smart-loading-pulse"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Sparkles size={32} />
+            <span>{isAr ? 'جاري تحميل بياناتك...' : 'Loading your data...'}</span>
+          </motion.div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bank-overview">
+    <motion.div 
+      className="smart-overview"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Welcome Header */}
-      <div className="bank-overview__welcome">
-        <div className="bank-overview__greeting">
-          <span className="bank-overview__greeting-time">{getGreeting()}</span>
-          <h1 className="bank-overview__greeting-name">
+      <motion.header className="smart-overview__header" variants={itemVariants}>
+        <div className="smart-overview__greeting">
+          <div className="smart-overview__greeting-row">
+            <span className="smart-overview__greeting-emoji">👋</span>
+            <span className="smart-overview__greeting-text">{getGreeting()}</span>
+          </div>
+          <h1 className="smart-overview__name">
             {profile?.full_name || (isAr ? 'عميلنا العزيز' : 'Dear Customer')}
           </h1>
         </div>
-        <div className="bank-overview__date">
-          {new Date().toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
+        <div className="smart-overview__datetime">
+          <Clock size={14} />
+          <span>
+            {currentTime.toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'short',
+            })}
+          </span>
         </div>
-      </div>
+      </motion.header>
 
-      {/* Wallet Card - Real Data */}
-      <div className="bank-wallet-hero">
-        <div className="bank-wallet-hero__card">
-          <div className="bank-wallet-hero__background" />
-          <div className="bank-wallet-hero__content">
-            <div className="bank-wallet-hero__header">
-              <span className="bank-wallet-hero__label">
+      {/* Premium Wallet Card */}
+      <motion.div className="smart-wallet" variants={itemVariants}>
+        <motion.div 
+          className="smart-wallet__card"
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          onClick={() => navigate('/portal/wallet')}
+        >
+          {/* Decorative Elements */}
+          <div className="smart-wallet__decor">
+            <div className="smart-wallet__decor-circle smart-wallet__decor-circle--1" />
+            <div className="smart-wallet__decor-circle smart-wallet__decor-circle--2" />
+            <div className="smart-wallet__decor-pattern" />
+          </div>
+
+          <div className="smart-wallet__content">
+            <div className="smart-wallet__top">
+              <div className="smart-wallet__label">
+                <CreditCard size={16} />
+                <span>{isAr ? 'المحفظة الرقمية' : 'Digital Wallet'}</span>
+              </div>
+              <div className="smart-wallet__chip" />
+            </div>
+
+            <div className="smart-wallet__balance">
+              <span className="smart-wallet__balance-label">
                 {isAr ? 'الرصيد المتاح' : 'Available Balance'}
               </span>
-              <div className="bank-wallet-hero__icon">
-                <WalletIcon />
+              <div className="smart-wallet__balance-amount">
+                <span className="smart-wallet__balance-value" dir="ltr">
+                  {formatCurrency(wallet?.balance || 0)}
+                </span>
+                <span className="smart-wallet__balance-currency">SAR</span>
               </div>
             </div>
-            <div className="bank-wallet-hero__amount">
-              <span className="bank-wallet-hero__value">
-                {formatCurrency(wallet?.balance || 0)}
-              </span>
-              <span className="bank-wallet-hero__currency">SAR</span>
-            </div>
-            <div className="bank-wallet-hero__footer">
-              <div className="bank-wallet-hero__account">
-                <span className="bank-wallet-hero__account-label">
-                  {isAr ? 'رقم المحفظة' : 'Wallet No.'}
-                </span>
-                <span className="bank-wallet-hero__account-number">
-                  {formatWalletNumber(wallet?.wallet_number)}
-                </span>
+
+            <div className="smart-wallet__bottom">
+              <div className="smart-wallet__number" dir="ltr">
+                {formatWalletNumber(wallet?.wallet_number)}
               </div>
-              <V3Button 
-                context="bank" 
-                variant="secondary" 
-                size="sm"
-                onClick={() => navigate('/portal/wallet')}
-              >
-                {isAr ? 'إيداع' : 'Deposit'}
-              </V3Button>
+              <div className="smart-wallet__brand">
+                ASH WALLET
+              </div>
             </div>
           </div>
+        </motion.div>
+
+        {/* Quick Wallet Actions */}
+        <div className="smart-wallet__actions">
+          <motion.button 
+            className="smart-wallet__action"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/portal/wallet')}
+          >
+            <ArrowDownLeft size={18} />
+            <span>{isAr ? 'إيداع' : 'Deposit'}</span>
+          </motion.button>
+          <motion.button 
+            className="smart-wallet__action"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/portal/wallet')}
+          >
+            <ArrowUpRight size={18} />
+            <span>{isAr ? 'تحويل' : 'Transfer'}</span>
+          </motion.button>
+          <motion.button 
+            className="smart-wallet__action"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/portal/wallet')}
+          >
+            <Eye size={18} />
+            <span>{isAr ? 'التفاصيل' : 'Details'}</span>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Smart Stats Grid */}
+      <motion.div className="smart-stats" variants={itemVariants}>
+        <motion.div 
+          className="smart-stat"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/portal/orders')}
+        >
+          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-info) / 0.1)', color: 'hsl(var(--modern-info))' }}>
+            <ShoppingCart size={20} />
+          </div>
+          <div className="smart-stat__content">
+            <span className="smart-stat__value">{stats.activeOrders}</span>
+            <span className="smart-stat__label">{isAr ? 'طلبات نشطة' : 'Active Orders'}</span>
+          </div>
+          {stats.activeOrders > 0 && (
+            <div className="smart-stat__indicator smart-stat__indicator--active" />
+          )}
+        </motion.div>
+
+        <motion.div 
+          className="smart-stat"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/portal/contracts')}
+        >
+          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-success) / 0.1)', color: 'hsl(var(--modern-success))' }}>
+            <FileSignature size={20} />
+          </div>
+          <div className="smart-stat__content">
+            <span className="smart-stat__value">{stats.activeContracts}</span>
+            <span className="smart-stat__label">{isAr ? 'عقود سارية' : 'Active Contracts'}</span>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="smart-stat"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/portal/services')}
+        >
+          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-brand-primary) / 0.1)', color: 'hsl(var(--modern-brand-primary))' }}>
+            <Briefcase size={20} />
+          </div>
+          <div className="smart-stat__content">
+            <span className="smart-stat__value">{stats.totalServices}</span>
+            <span className="smart-stat__label">{isAr ? 'خدمات متاحة' : 'Services'}</span>
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="smart-stat"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => navigate('/portal/invoices')}
+        >
+          <div className="smart-stat__icon" style={{ background: 'hsl(var(--modern-warning) / 0.1)', color: 'hsl(var(--modern-warning))' }}>
+            <Bell size={20} />
+          </div>
+          <div className="smart-stat__content">
+            <span className="smart-stat__value">{stats.pendingInvoices}</span>
+            <span className="smart-stat__label">{isAr ? 'فواتير معلقة' : 'Pending Invoices'}</span>
+          </div>
+          {stats.pendingInvoices > 0 && (
+            <div className="smart-stat__indicator smart-stat__indicator--warning" />
+          )}
+        </motion.div>
+      </motion.div>
 
       {/* Quick Actions */}
-      <div className="bank-quick-actions">
-        <h2 className="bank-section-title">
+      <motion.section className="smart-actions" variants={itemVariants}>
+        <h2 className="smart-section-title">
+          <Sparkles size={16} />
           {isAr ? 'إجراءات سريعة' : 'Quick Actions'}
         </h2>
-        <div className="bank-quick-actions__grid">
-          {quickActions.map((action) => (
-            <button 
-              key={action.id} 
-              className="bank-quick-action"
-              onClick={() => navigate(action.path)}
-            >
-              <div className="bank-quick-action__icon">{action.icon}</div>
-              <span className="bank-quick-action__label">
-                {isAr ? action.label : action.labelEn}
-              </span>
-            </button>
-          ))}
+        <div className="smart-actions__grid">
+          {quickActions.map((action, index) => {
+            const Icon = action.icon;
+            return (
+              <motion.button
+                key={action.id}
+                className="smart-action"
+                onClick={() => navigate(action.path)}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <div 
+                  className="smart-action__icon"
+                  style={{ background: `hsl(${action.color} / 0.1)`, color: `hsl(${action.color})` }}
+                >
+                  <Icon size={22} />
+                </div>
+                <span className="smart-action__label">
+                  {isAr ? action.label : action.labelEn}
+                </span>
+              </motion.button>
+            );
+          })}
         </div>
-      </div>
-
-      {/* Stats Row - Real Data */}
-      <div className="bank-overview__stats">
-        <V3StatCard
-          context="bank"
-          title={isAr ? 'الطلبات النشطة' : 'Active Orders'}
-          value={String(stats.activeOrders)}
-          icon={<OrderIcon />}
-          variant="info"
-        />
-        <V3StatCard
-          context="bank"
-          title={isAr ? 'العقود السارية' : 'Active Contracts'}
-          value={String(stats.activeContracts)}
-          icon={<ContractIcon />}
-          variant="success"
-        />
-        <V3StatCard
-          context="bank"
-          title={isAr ? 'الخدمات المتاحة' : 'Available Services'}
-          value={String(stats.totalServices)}
-          icon={<ServiceIcon />}
-        />
-      </div>
+      </motion.section>
 
       {/* Content Grid */}
-      <div className="bank-overview__grid">
-        {/* Active Orders - Real Data */}
-        <V3Card context="bank">
-          <V3CardHeader>
-            <V3CardTitle context="bank">
-              {isAr ? 'طلباتي النشطة' : 'My Active Orders'}
-            </V3CardTitle>
-            <V3Button 
-              context="bank" 
-              variant="ghost" 
-              size="sm"
+      <div className="smart-grid">
+        {/* Recent Orders */}
+        <motion.section className="smart-card" variants={itemVariants}>
+          <div className="smart-card__header">
+            <h3 className="smart-card__title">
+              <ShoppingCart size={18} />
+              {isAr ? 'آخر الطلبات' : 'Recent Orders'}
+            </h3>
+            <button 
+              className="smart-card__link"
               onClick={() => navigate('/portal/orders')}
             >
               {isAr ? 'عرض الكل' : 'View All'}
-              <ArrowIcon />
-            </V3Button>
-          </V3CardHeader>
-          <V3CardContent>
-            <div className="bank-orders-list">
-              {recentOrders.length === 0 ? (
-                <div className="bank-empty-state">
-                  <p>{isAr ? 'لا توجد طلبات بعد' : 'No orders yet'}</p>
-                  <V3Button 
-                    context="bank" 
-                    variant="primary" 
-                    size="sm"
-                    onClick={() => navigate('/portal/services')}
-                  >
-                    {isAr ? 'اطلب خدمة الآن' : 'Request a Service'}
-                  </V3Button>
-                </div>
-              ) : (
-                recentOrders.slice(0, 3).map((order) => (
-                  <div key={order.id} className="bank-order-item">
-                    <div className="bank-order-item__info">
-                      <span className="bank-order-item__id">{order.order_number}</span>
-                      <span className="bank-order-item__service">
-                        {order.title || (isAr ? 'طلب خدمة' : 'Service Order')}
-                      </span>
-                    </div>
-                    <div className="bank-order-item__status">
-                      <V3Badge 
-                        context="bank"
-                        variant={
-                          order.status === 'completed' ? 'success' :
-                          order.status === 'pending' ? 'warning' :
-                          order.status === 'cancelled' ? 'danger' : 'info'
-                        }
+              <ChevronLeft size={16} />
+            </button>
+          </div>
+          <div className="smart-card__content">
+            {recentOrders.length === 0 ? (
+              <div className="smart-empty">
+                <ShoppingCart size={40} strokeWidth={1} />
+                <p>{isAr ? 'لا توجد طلبات بعد' : 'No orders yet'}</p>
+                <button 
+                  className="smart-empty__action"
+                  onClick={() => navigate('/portal/services')}
+                >
+                  {isAr ? 'اطلب خدمة الآن' : 'Request a Service'}
+                </button>
+              </div>
+            ) : (
+              <div className="smart-orders">
+                <AnimatePresence>
+                  {recentOrders.slice(0, 4).map((order, index) => {
+                    const statusConfig = getStatusConfig(order.status);
+                    return (
+                      <motion.div 
+                        key={order.id} 
+                        className="smart-order"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
                       >
-                        {isAr ? (
-                          order.status === 'pending' ? 'قيد الانتظار' :
-                          order.status === 'processing' ? 'قيد المعالجة' :
-                          order.status === 'in_progress' ? 'قيد التنفيذ' :
-                          order.status === 'completed' ? 'مكتمل' :
-                          order.status === 'cancelled' ? 'ملغي' : order.status
-                        ) : order.status}
-                      </V3Badge>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </V3CardContent>
-        </V3Card>
+                        <div className="smart-order__main">
+                          <span className="smart-order__title">
+                            {order.title || (isAr ? 'طلب خدمة' : 'Service Order')}
+                          </span>
+                          <span className="smart-order__number" dir="ltr">
+                            #{order.order_number}
+                          </span>
+                        </div>
+                        <div className="smart-order__meta">
+                          <span 
+                            className="smart-order__status"
+                            style={{ background: statusConfig.bg, color: statusConfig.color }}
+                          >
+                            {isAr ? statusConfig.label : statusConfig.labelEn}
+                          </span>
+                          <span className="smart-order__time">
+                            {formatDate(order.created_at)}
+                          </span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+        </motion.section>
 
-        {/* Recent Transactions - Real Data */}
-        <V3Card context="bank">
-          <V3CardHeader>
-            <V3CardTitle context="bank">
+        {/* Recent Transactions */}
+        <motion.section className="smart-card" variants={itemVariants}>
+          <div className="smart-card__header">
+            <h3 className="smart-card__title">
+              <TrendingUp size={18} />
               {isAr ? 'آخر المعاملات' : 'Recent Transactions'}
-            </V3CardTitle>
-            <V3Button 
-              context="bank" 
-              variant="ghost" 
-              size="sm"
+            </h3>
+            <button 
+              className="smart-card__link"
               onClick={() => navigate('/portal/wallet')}
             >
               {isAr ? 'عرض الكل' : 'View All'}
-              <ArrowIcon />
-            </V3Button>
-          </V3CardHeader>
-          <V3CardContent>
-            <div className="bank-transactions-list">
-              {recentTransactions.length === 0 ? (
-                <div className="bank-empty-state">
-                  <p>{isAr ? 'لا توجد معاملات بعد' : 'No transactions yet'}</p>
-                </div>
-              ) : (
-                recentTransactions.map((tx) => (
-                  <div key={tx.id} className="bank-transaction-item">
-                    <div className="bank-transaction-item__icon">
-                      {getTransactionIcon(tx.transaction_type)}
-                    </div>
-                    <div className="bank-transaction-item__info">
-                      <span className="bank-transaction-item__desc">
-                        {isAr ? (tx.description_ar || tx.description || tx.transaction_type) : (tx.description || tx.transaction_type)}
-                      </span>
-                      <span className="bank-transaction-item__date">
-                        {formatDate(tx.created_at)}
-                      </span>
-                    </div>
-                    <div className={`bank-transaction-item__amount ${
-                      tx.transaction_type === 'topup' || tx.transaction_type === 'refund' 
-                        ? 'bank-transaction-item__amount--positive' 
-                        : 'bank-transaction-item__amount--negative'
-                    }`}>
-                      {tx.transaction_type === 'topup' || tx.transaction_type === 'refund' ? '+' : '-'}
-                      {formatCurrency(tx.amount)} SAR
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </V3CardContent>
-        </V3Card>
+              <ChevronLeft size={16} />
+            </button>
+          </div>
+          <div className="smart-card__content">
+            {recentTransactions.length === 0 ? (
+              <div className="smart-empty">
+                <Wallet size={40} strokeWidth={1} />
+                <p>{isAr ? 'لا توجد معاملات بعد' : 'No transactions yet'}</p>
+              </div>
+            ) : (
+              <div className="smart-transactions">
+                <AnimatePresence>
+                  {recentTransactions.map((tx, index) => {
+                    const isCredit = ['topup', 'deposit', 'refund'].includes(tx.transaction_type);
+                    return (
+                      <motion.div 
+                        key={tx.id} 
+                        className="smart-transaction"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <div 
+                          className="smart-transaction__icon"
+                          style={{ 
+                            background: isCredit ? 'hsl(var(--modern-success) / 0.1)' : 'hsl(var(--modern-error) / 0.1)',
+                            color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-error))'
+                          }}
+                        >
+                          {isCredit ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
+                        </div>
+                        <div className="smart-transaction__info">
+                          <span className="smart-transaction__desc">
+                            {isAr ? (tx.description_ar || tx.description || tx.transaction_type) : (tx.description || tx.transaction_type)}
+                          </span>
+                          <span className="smart-transaction__time">
+                            {formatDate(tx.created_at)}
+                          </span>
+                        </div>
+                        <div 
+                          className="smart-transaction__amount"
+                          style={{ color: isCredit ? 'hsl(var(--modern-success))' : 'hsl(var(--modern-text-primary))' }}
+                          dir="ltr"
+                        >
+                          {isCredit ? '+' : '-'}{formatCurrency(tx.amount)}
+                          <span className="smart-transaction__currency">SAR</span>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+        </motion.section>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
