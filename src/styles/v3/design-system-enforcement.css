@@ -1,7 +1,7 @@
 /**
- * Design System Global Enforcement
- * Forces all admin pages to use unified DS tokens
- * Overrides legacy cmd-* and modern-* variables
+ * Design System Global Enforcement - 2024 Ultra Modern
+ * Forces all pages to use unified DS tokens
+ * Overrides legacy variables
  */
 
 /* =========================================
@@ -11,7 +11,7 @@
 :root,
 .modern-app,
 .modern-content {
-  /* Map cmd-* to ds-* for backward compatibility */
+  /* Map legacy cmd-* to ds-* */
   --cmd-bg-deep: var(--ds-bg-page);
   --cmd-bg-panel: var(--ds-bg-surface);
   --cmd-bg-card: var(--ds-bg-surface);
@@ -28,7 +28,7 @@
   --cmd-accent-amber: var(--ds-warning);
   --cmd-accent-red: var(--ds-error);
   --cmd-accent-blue: var(--ds-info);
-  --cmd-accent-purple: var(--ds-brand-accent);
+  --cmd-accent-purple: var(--ds-brand-secondary);
   
   --cmd-border-subtle: var(--ds-border-light);
   --cmd-border-default: var(--ds-border-default);
@@ -111,52 +111,62 @@
 }
 
 /* =========================================
-   LIGHT THEME ENFORCEMENT
-   All admin pages use light theme
+   MODERN THEME ENFORCEMENT
    ========================================= */
 
 .modern-app {
   background: hsl(var(--ds-bg-page)) !important;
   color: hsl(var(--ds-text-primary)) !important;
+  font-family: var(--ds-font-sans) !important;
 }
 
 /* =========================================
-   CARD UNIFORMITY
-   All cards look the same across pages
+   CARD UNIFORMITY - Ultra Modern
    ========================================= */
 
 .modern-content [class*="Card"],
 .modern-content [class*="card"],
-.modern-content .bg-card,
-.modern-content .rounded-xl[style*="background"] {
+.modern-content .bg-card {
   background: hsl(var(--ds-bg-surface)) !important;
   border: 1px solid hsl(var(--ds-border-light)) !important;
   border-radius: var(--ds-radius-xl) !important;
   box-shadow: var(--ds-shadow-card) !important;
+  transition: 
+    box-shadow var(--ds-duration-normal) var(--ds-ease-default),
+    border-color var(--ds-duration-fast) var(--ds-ease-default),
+    transform var(--ds-duration-normal) var(--ds-ease-default) !important;
 }
 
 .modern-content [class*="Card"]:hover,
 .modern-content [class*="card"]:hover {
   box-shadow: var(--ds-shadow-card-hover) !important;
+  border-color: hsl(var(--ds-border-default)) !important;
 }
 
 /* =========================================
-   BUTTON HEIGHT UNIFORMITY
-   All buttons same height per size
+   BUTTON UNIFORMITY - Premium Feel
    ========================================= */
 
-.modern-content button:not([class*="icon"]),
-.modern-content [role="button"]:not([class*="icon"]) {
+.modern-content button:not([class*="icon"]):not(.inline-flex),
+.modern-content [role="button"]:not([class*="icon"]):not(.p-0) {
   min-height: var(--ds-btn-height-md) !important;
   border-radius: var(--ds-radius-md) !important;
   font-weight: var(--ds-weight-medium) !important;
   padding-inline: var(--ds-space-4) !important;
-  transition: all var(--ds-duration-fast) var(--ds-ease-default) !important;
+  transition: 
+    background var(--ds-duration-fast) var(--ds-ease-default),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-default),
+    transform var(--ds-duration-fast) var(--ds-ease-default) !important;
 }
 
 .modern-content button:hover:not(:disabled),
 .modern-content [role="button"]:hover:not(:disabled) {
   transform: translateY(-1px);
+}
+
+.modern-content button:active:not(:disabled),
+.modern-content [role="button"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Small buttons */
@@ -207,6 +217,7 @@
 .modern-content .gap-2 { gap: var(--ds-space-2) !important; }
 .modern-content .gap-3 { gap: var(--ds-space-3) !important; }
 .modern-content .gap-4 { gap: var(--ds-space-4) !important; }
+.modern-content .gap-5 { gap: var(--ds-space-5) !important; }
 .modern-content .gap-6 { gap: var(--ds-space-6) !important; }
 
 .modern-content .p-4 { padding: var(--ds-space-4) !important; }
@@ -228,6 +239,8 @@
   font-family: var(--ds-font-sans) !important;
   font-size: var(--ds-text-base) !important;
   line-height: var(--ds-leading-relaxed) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .modern-content h1,
@@ -237,6 +250,7 @@
   font-weight: var(--ds-weight-bold) !important;
   line-height: var(--ds-leading-tight) !important;
   color: hsl(var(--ds-text-primary)) !important;
+  letter-spacing: -0.01em !important;
 }
 
 .modern-content h2,
@@ -274,7 +288,7 @@
 }
 
 /* =========================================
-   TABLE UNIFORMITY
+   TABLE UNIFORMITY - Clean & Modern
    ========================================= */
 
 .modern-content table {
@@ -286,11 +300,12 @@
   font-size: var(--ds-text-xs) !important;
   font-weight: var(--ds-weight-medium) !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
+  letter-spacing: 0.04em !important;
   color: hsl(var(--ds-text-muted)) !important;
   background: hsl(var(--ds-bg-muted)) !important;
   padding: var(--ds-space-3) var(--ds-space-4) !important;
   text-align: start !important;
+  border-bottom: 1px solid hsl(var(--ds-border-default)) !important;
 }
 
 .modern-content table td {
@@ -298,29 +313,35 @@
   padding: var(--ds-space-4) !important;
   border-bottom: 1px solid hsl(var(--ds-border-light)) !important;
   color: hsl(var(--ds-text-primary)) !important;
+  transition: background var(--ds-duration-fast) var(--ds-ease-default) !important;
 }
 
-.modern-content table tbody tr:hover {
+.modern-content table tbody tr:hover td {
   background: hsl(var(--ds-bg-hover)) !important;
 }
 
+.modern-content table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
 /* =========================================
-   BADGE UNIFORMITY
+   BADGE UNIFORMITY - Refined Pills
    ========================================= */
 
 .modern-content [class*="Badge"],
 .modern-content [class*="badge"] {
-  height: 1.375rem !important;
-  padding-inline: var(--ds-space-2) !important;
+  height: 1.5rem !important;
+  padding-inline: var(--ds-space-2-5) !important;
   border-radius: var(--ds-radius-full) !important;
   font-size: var(--ds-text-xs) !important;
   font-weight: var(--ds-weight-medium) !important;
   display: inline-flex !important;
   align-items: center !important;
+  letter-spacing: 0.01em !important;
 }
 
 /* =========================================
-   INPUT UNIFORMITY
+   INPUT UNIFORMITY - Premium Feel
    ========================================= */
 
 .modern-content input:not([type="checkbox"]):not([type="radio"]),
@@ -328,18 +349,27 @@
 .modern-content textarea {
   min-height: var(--ds-input-height-md) !important;
   border: 1px solid hsl(var(--ds-border-default)) !important;
-  border-radius: var(--ds-radius-md) !important;
+  border-radius: var(--ds-radius-sm) !important;
   background: hsl(var(--ds-bg-surface)) !important;
   font-size: var(--ds-text-sm) !important;
   padding-inline: var(--ds-space-3) !important;
-  transition: all var(--ds-duration-fast) !important;
+  transition: 
+    border-color var(--ds-duration-fast) var(--ds-ease-default),
+    box-shadow var(--ds-duration-fast) var(--ds-ease-default) !important;
+}
+
+.modern-content input:hover:not(:focus):not(:disabled),
+.modern-content select:hover:not(:focus):not(:disabled) {
+  border-color: hsl(var(--ds-border-strong)) !important;
 }
 
 .modern-content input:focus,
 .modern-content select:focus,
 .modern-content textarea:focus {
   border-color: hsl(var(--ds-border-focus)) !important;
-  box-shadow: 0 0 0 3px hsl(var(--ds-brand-primary) / 0.15) !important;
+  box-shadow: 
+    0 0 0 3px hsl(var(--ds-brand-primary) / 0.12),
+    var(--ds-shadow-xs) !important;
   outline: none !important;
 }
 
@@ -350,12 +380,9 @@
 /* Success states */
 [class*="success"],
 [class*="completed"],
-[class*="active"],
-[style*="green"],
-.text-green-500,
-.text-green-600,
-.bg-green-500,
-.bg-green-100 {
+[class*="active"]:not([class*="inactive"]),
+.text-green-500, .text-green-600,
+.bg-green-500, .bg-green-100 {
   --status-color: var(--ds-success);
   --status-bg: var(--ds-success-bg);
 }
@@ -363,12 +390,8 @@
 /* Warning states */
 [class*="warning"],
 [class*="pending"],
-[style*="amber"],
-[style*="yellow"],
-.text-amber-500,
-.text-amber-600,
-.bg-amber-500,
-.bg-amber-100 {
+.text-amber-500, .text-amber-600,
+.bg-amber-500, .bg-amber-100 {
   --status-color: var(--ds-warning);
   --status-bg: var(--ds-warning-bg);
 }
@@ -378,11 +401,8 @@
 [class*="destructive"],
 [class*="rejected"],
 [class*="cancelled"],
-[style*="red"],
-.text-red-500,
-.text-red-600,
-.bg-red-500,
-.bg-red-100 {
+.text-red-500, .text-red-600,
+.bg-red-500, .bg-red-100 {
   --status-color: var(--ds-error);
   --status-bg: var(--ds-error-bg);
 }
@@ -390,11 +410,8 @@
 /* Info states */
 [class*="info"],
 [class*="processing"],
-[style*="blue"],
-.text-blue-500,
-.text-blue-600,
-.bg-blue-500,
-.bg-blue-100 {
+.text-blue-500, .text-blue-600,
+.bg-blue-500, .bg-blue-100 {
   --status-color: var(--ds-info);
   --status-bg: var(--ds-info-bg);
 }
@@ -414,20 +431,6 @@
 
 .modern-content .transition-fast {
   transition-duration: var(--ds-duration-fast) !important;
-}
-
-/* =========================================
-   GRID UNIFORMITY
-   ========================================= */
-
-.modern-content .grid-cols-1.md\\:grid-cols-2.xl\\:grid-cols-3,
-.modern-content .grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-3 {
-  gap: var(--ds-space-6) !important;
-}
-
-.modern-content .grid-cols-1.sm\\:grid-cols-2.xl\\:grid-cols-4,
-.modern-content .grid-cols-2.lg\\:grid-cols-4 {
-  gap: var(--ds-space-6) !important;
 }
 
 /* =========================================
@@ -477,4 +480,76 @@
 
 .modern-content .rounded-full {
   border-radius: var(--ds-radius-full) !important;
+}
+
+/* =========================================
+   SCROLLBAR STYLING - Modern & Minimal
+   ========================================= */
+
+.modern-content::-webkit-scrollbar,
+.modern-content *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.modern-content::-webkit-scrollbar-track,
+.modern-content *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modern-content::-webkit-scrollbar-thumb,
+.modern-content *::-webkit-scrollbar-thumb {
+  background: hsl(var(--ds-border-default));
+  border-radius: var(--ds-radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.modern-content::-webkit-scrollbar-thumb:hover,
+.modern-content *::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--ds-border-strong));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* =========================================
+   FOCUS STATES - Accessibility
+   ========================================= */
+
+.modern-content *:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 2px hsl(var(--ds-bg-surface)),
+    0 0 0 4px hsl(var(--ds-brand-primary)) !important;
+}
+
+/* =========================================
+   LOADING STATES
+   ========================================= */
+
+.modern-content .animate-pulse {
+  animation: ds-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+@keyframes ds-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.modern-content .animate-spin {
+  animation: ds-spin 1s linear infinite !important;
+}
+
+@keyframes ds-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   SELECTION STYLING
+   ========================================= */
+
+.modern-content ::selection {
+  background: hsl(var(--ds-brand-primary) / 0.2);
+  color: hsl(var(--ds-text-primary));
 }
