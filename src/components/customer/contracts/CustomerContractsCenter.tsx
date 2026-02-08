@@ -1,17 +1,18 @@
 /**
- * Customer Contracts Center - World-class enterprise contracts page
+ * Customer Contracts Center - iOS-style enterprise contracts page
  * RTL-first, responsive (table/cards), realtime updates, KPI stats
+ * Smooth animations with reduced motion support
  */
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useMotionConfig } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { IOSPage, IOSAnimated } from '@/components/ui/ios-animated';
 
 // Local components
 import { useCustomerContracts } from './useCustomerContracts';
@@ -31,7 +32,7 @@ export function CustomerContractsCenter() {
   const { language } = useLanguage();
   const isRTL = language === 'ar';
   const isMobile = useIsMobile();
-  const reducedMotion = useReducedMotion();
+  const { shouldAnimate } = useMotionConfig();
   const navigate = useNavigate();
 
   // Data fetching
@@ -124,9 +125,7 @@ export function CustomerContractsCenter() {
           total: pricing.total || 0,
         },
         currency: pricing.currency || 'SAR',
-        // Admin approval stamp
         adminApprovedAt: contract.admin_approved_at || null,
-        // Customer signature stamp
         customerSignedAt: contract.signed_at || null,
         customerSignatureName: sig?.signer_name || null,
       };
@@ -140,14 +139,6 @@ export function CustomerContractsCenter() {
     }
   };
 
-  // Animation wrapper
-  const AnimationWrapper = reducedMotion ? 'div' : motion.div;
-  const pageAnimation = reducedMotion ? {} : {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.2 },
-  };
-
   // KPI data for strip
   const kpiStripData = {
     total: kpiData.total,
@@ -158,129 +149,134 @@ export function CustomerContractsCenter() {
   };
 
   return (
-    <section 
-      dir={isRTL ? 'rtl' : 'ltr'} 
-      className={cn("space-y-4 pb-6", isRTL ? "text-right" : "text-left")}
-    >
-      {/* Premium Header */}
-      <ContractsHeader
-        searchValue={filters.search}
-        onSearchChange={(value) => updateFilters({ search: value })}
-        onRefresh={handleRefresh}
-        isRefreshing={isRefreshing}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        onOpenFilters={() => setFiltersOpen(true)}
-        hasActiveFilters={hasActiveFilters}
-      />
-
-      {/* KPI Strip - directly after header */}
-      <AnimationWrapper {...pageAnimation}>
-        <ContractsKPIStrip 
-          data={kpiStripData}
-          isLoading={isLoading && contracts.length === 0}
-          onFilterByStatus={handleFilterByStatus}
-          activeFilter={filters.status === 'all' ? 'all' : filters.status}
-        />
-      </AnimationWrapper>
-
-      {/* Content Area */}
-      <div className="space-y-4">
-        {/* Filters (Desktop inline, Mobile sheet) */}
-        <ContractsFilters
-          filters={filters}
-          onFilterChange={updateFilters}
-          onClearFilters={clearFilters}
+    <IOSPage>
+      <section 
+        dir={isRTL ? 'rtl' : 'ltr'} 
+        className={cn(
+          "space-y-4 pb-6",
+          isRTL ? "text-right" : "text-left"
+        )}
+      >
+        {/* Premium Header */}
+        <ContractsHeader
+          searchValue={filters.search}
+          onSearchChange={(value) => updateFilters({ search: value })}
+          onRefresh={handleRefresh}
+          isRefreshing={isRefreshing}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onOpenFilters={() => setFiltersOpen(true)}
           hasActiveFilters={hasActiveFilters}
-          totalCount={totalCount}
-          isOpen={filtersOpen}
-          onOpenChange={setFiltersOpen}
         />
 
-        {/* Error State */}
-        {error && (
-          <ContractsErrorState error={error} onRetry={refetch} />
-        )}
-
-        {/* Empty State */}
-        {!isLoading && !error && contracts.length === 0 && (
-          <ContractsEmptyState 
-            hasFilters={hasActiveFilters} 
-            onClearFilters={clearFilters} 
+        {/* KPI Strip - directly after header */}
+        <IOSAnimated animation="slide-up" delay={0.05}>
+          <ContractsKPIStrip 
+            data={kpiStripData}
+            isLoading={isLoading && contracts.length === 0}
+            onFilterByStatus={handleFilterByStatus}
+            activeFilter={filters.status === 'all' ? 'all' : filters.status}
           />
-        )}
+        </IOSAnimated>
 
-        {/* Content */}
-        {!error && contracts.length > 0 && (
-          <>
-            {/* Table View (Desktop) or Cards View (Mobile/Toggle) */}
-            {(viewMode === 'table' && !isMobile) ? (
-              <ContractsTable
-                contracts={contracts}
-                isLoading={isLoading}
-                sort={sort}
-                onSort={handleSort}
-                onRowClick={handleRowClick}
-                onSign={handleSign}
-                onDownload={handleDownload}
-                onViewOrder={handleViewOrder}
-                selectedContractId={selectedContract?.id}
-              />
-            ) : (
-              <ContractsCardList
-                contracts={contracts}
-                isLoading={isLoading}
-                onCardClick={handleRowClick}
-                onSign={handleSign}
-                onDownload={handleDownload}
-                onViewOrder={handleViewOrder}
-                selectedContractId={selectedContract?.id}
-              />
-            )}
+        {/* Content Area */}
+        <IOSAnimated animation="slide-up" delay={0.1} className="space-y-4">
+          {/* Filters (Desktop inline, Mobile sheet) */}
+          <ContractsFilters
+            filters={filters}
+            onFilterChange={updateFilters}
+            onClearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+            totalCount={totalCount}
+            isOpen={filtersOpen}
+            onOpenChange={setFiltersOpen}
+          />
 
-            {/* Pagination */}
-            <ContractsPagination
-              page={page}
-              pageSize={pageSize}
-              totalPages={totalPages}
-              totalCount={totalCount}
-              onPageChange={setPage}
-              onPageSizeChange={setPageSize}
+          {/* Error State */}
+          {error && (
+            <ContractsErrorState error={error} onRetry={refetch} />
+          )}
+
+          {/* Empty State */}
+          {!isLoading && !error && contracts.length === 0 && (
+            <ContractsEmptyState 
+              hasFilters={hasActiveFilters} 
+              onClearFilters={clearFilters} 
             />
-          </>
-        )}
+          )}
 
-        {/* Loading skeleton fallback */}
-        {isLoading && contracts.length === 0 && (
-          <>
-            {(viewMode === 'table' && !isMobile) ? (
-              <ContractsTable
-                contracts={[]}
-                isLoading={true}
-                sort={sort}
-                onSort={handleSort}
-                onRowClick={() => {}}
-              />
-            ) : (
-              <ContractsCardList
-                contracts={[]}
-                isLoading={true}
-                onCardClick={() => {}}
-              />
-            )}
-          </>
-        )}
-      </div>
+          {/* Content */}
+          {!error && contracts.length > 0 && (
+            <>
+              {/* Table View (Desktop) or Cards View (Mobile/Toggle) */}
+              {(viewMode === 'table' && !isMobile) ? (
+                <ContractsTable
+                  contracts={contracts}
+                  isLoading={isLoading}
+                  sort={sort}
+                  onSort={handleSort}
+                  onRowClick={handleRowClick}
+                  onSign={handleSign}
+                  onDownload={handleDownload}
+                  onViewOrder={handleViewOrder}
+                  selectedContractId={selectedContract?.id}
+                />
+              ) : (
+                <ContractsCardList
+                  contracts={contracts}
+                  isLoading={isLoading}
+                  onCardClick={handleRowClick}
+                  onSign={handleSign}
+                  onDownload={handleDownload}
+                  onViewOrder={handleViewOrder}
+                  selectedContractId={selectedContract?.id}
+                />
+              )}
 
-      {/* Details Drawer */}
-      <ContractDetailsDrawer
-        contract={selectedContract}
-        open={drawerOpen}
-        onClose={() => {
-          setDrawerOpen(false);
-          setTimeout(() => setSelectedContract(null), 300);
-        }}
-      />
-    </section>
+              {/* Pagination */}
+              <ContractsPagination
+                page={page}
+                pageSize={pageSize}
+                totalPages={totalPages}
+                totalCount={totalCount}
+                onPageChange={setPage}
+                onPageSizeChange={setPageSize}
+              />
+            </>
+          )}
+
+          {/* Loading skeleton fallback */}
+          {isLoading && contracts.length === 0 && (
+            <>
+              {(viewMode === 'table' && !isMobile) ? (
+                <ContractsTable
+                  contracts={[]}
+                  isLoading={true}
+                  sort={sort}
+                  onSort={handleSort}
+                  onRowClick={() => {}}
+                />
+              ) : (
+                <ContractsCardList
+                  contracts={[]}
+                  isLoading={true}
+                  onCardClick={() => {}}
+                />
+              )}
+            </>
+          )}
+        </IOSAnimated>
+
+        {/* Details Drawer */}
+        <ContractDetailsDrawer
+          contract={selectedContract}
+          open={drawerOpen}
+          onClose={() => {
+            setDrawerOpen(false);
+            setTimeout(() => setSelectedContract(null), 300);
+          }}
+        />
+      </section>
+    </IOSPage>
   );
 }

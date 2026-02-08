@@ -1,7 +1,7 @@
 /**
- * UnifiedLayout - Single Layout for Entire Application
+ * UnifiedLayout - iOS-style Single Layout for Entire Application
  * Header (sticky) + Main Content + Footer (sticky bottom)
- * iOS-like smooth behavior with no horizontal overflow
+ * Buttery smooth behavior with zero horizontal overflow
  * Footer always at bottom even with short content
  * Auto-hides navigation for dashboard routes
  */
@@ -42,15 +42,10 @@ export function UnifiedLayout({
   return (
     <div 
       dir="rtl"
-      className="min-h-screen min-h-dvh flex flex-col bg-background"
-      style={{ 
-        direction: 'rtl',
-        width: '100%',
-        maxWidth: '100%',
-        minWidth: 0,
-        overflowX: 'hidden',
-        boxSizing: 'border-box',
-      }}
+      className={cn(
+        "min-h-screen min-h-dvh flex flex-col bg-background",
+        "w-full overflow-x-hidden"
+      )}
     >
       {/* Sticky Header - Hidden for dashboard pages */}
       {showNavigation && <NavigationDark />}
@@ -59,26 +54,16 @@ export function UnifiedLayout({
       <main 
         className={cn(
           "flex-1 flex-grow w-full",
+          "overflow-x-hidden",
           contentClassName
         )}
-        style={{
-          width: '100%',
-          maxWidth: '100%',
-          minWidth: 0,
-          overflowX: 'hidden',
-          flex: '1 0 auto',
-          boxSizing: 'border-box',
-        }}
       >
         {children}
       </main>
       
       {/* Footer - Hidden for dashboard and auth pages */}
       {showFooter && (
-        <div 
-          className="flex-shrink-0 mt-auto w-full"
-          style={{ width: '100%', maxWidth: '100%', overflowX: 'hidden' }}
-        >
+        <div className="flex-shrink-0 mt-auto w-full overflow-x-hidden">
           <Footer />
         </div>
       )}

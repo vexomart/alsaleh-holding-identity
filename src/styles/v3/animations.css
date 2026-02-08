@@ -1,7 +1,23 @@
 /**
- * Shimmer Animation for Skeletons
- * Add to tailwind.config.ts or as CSS
+ * iOS-Style Animation System
+ * Apple-quality smooth transitions
+ * Respects prefers-reduced-motion
  */
+
+/* =========================================
+   iOS TIMING FUNCTIONS
+   ========================================= */
+
+:root {
+  --ios-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ios-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ios-decel: cubic-bezier(0, 0, 0.2, 1);
+  --ios-accel: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* =========================================
+   SHIMMER - Loading States
+   ========================================= */
 
 @keyframes shimmer {
   0% {
@@ -13,11 +29,15 @@
 }
 
 .animate-shimmer {
-  animation: shimmer 2s ease-in-out infinite;
+  animation: shimmer 1.5s ease-in-out infinite;
+  background-size: 200% 100%;
 }
 
-/* Smooth fade transitions */
-@keyframes fadeSlideIn {
+/* =========================================
+   iOS FADE TRANSITIONS
+   ========================================= */
+
+@keyframes ios-fade-slide-in {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -28,60 +48,69 @@
   }
 }
 
-@keyframes fadeSlideOut {
+@keyframes ios-fade-slide-out {
   from {
     opacity: 1;
     transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
 }
 
 .animate-fade-slide-in {
-  animation: fadeSlideIn 0.2s ease-out forwards;
+  animation: ios-fade-slide-in 0.25s var(--ios-decel) forwards;
 }
 
 .animate-fade-slide-out {
-  animation: fadeSlideOut 0.2s ease-in forwards;
+  animation: ios-fade-slide-out 0.15s var(--ios-accel) forwards;
 }
 
-/* Pulse animation for live indicators */
-@keyframes livePulse {
+/* =========================================
+   LIVE INDICATORS
+   ========================================= */
+
+@keyframes live-pulse {
   0%, 100% {
     transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.5);
+    transform: scale(1.4);
     opacity: 0;
   }
 }
 
 .animate-live-pulse {
-  animation: livePulse 2s ease-in-out infinite;
+  animation: live-pulse 2s ease-in-out infinite;
 }
 
-/* Bounce animation for notifications */
-@keyframes notificationBounce {
+/* =========================================
+   NOTIFICATION BOUNCE
+   ========================================= */
+
+@keyframes notification-bounce {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
 .animate-notification-bounce {
-  animation: notificationBounce 0.5s ease-in-out;
+  animation: notification-bounce 0.4s var(--ios-spring);
 }
 
-/* Scale in for modals and cards */
-@keyframes scaleIn {
+/* =========================================
+   SCALE IN - Modals & Cards
+   ========================================= */
+
+@keyframes ios-scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
   to {
     opacity: 1;
@@ -89,46 +118,125 @@
   }
 }
 
-.animate-scale-in {
-  animation: scaleIn 0.2s ease-out forwards;
+@keyframes ios-scale-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
 }
 
-/* Stagger delay utilities */
-.stagger-1 { animation-delay: 50ms; }
-.stagger-2 { animation-delay: 100ms; }
-.stagger-3 { animation-delay: 150ms; }
-.stagger-4 { animation-delay: 200ms; }
-.stagger-5 { animation-delay: 250ms; }
+.animate-scale-in {
+  animation: ios-scale-in 0.2s var(--ios-spring) forwards;
+}
 
-/* Smooth transitions for interactive elements */
+.animate-scale-out {
+  animation: ios-scale-out 0.15s var(--ios-accel) forwards;
+}
+
+/* =========================================
+   STAGGER DELAYS - Natural Flow
+   ========================================= */
+
+.stagger-1 { animation-delay: 40ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
+.stagger-6 { animation-delay: 240ms; }
+.stagger-7 { animation-delay: 280ms; }
+.stagger-8 { animation-delay: 320ms; }
+
+/* =========================================
+   SMOOTH TRANSITIONS
+   ========================================= */
+
 .transition-smooth {
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s var(--ios-ease);
 }
 
 .transition-spring {
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s var(--ios-spring);
 }
 
-/* Hover lift effect */
+.transition-fast {
+  transition: all 0.1s var(--ios-ease);
+}
+
+/* =========================================
+   HOVER EFFECTS
+   ========================================= */
+
 .hover-lift {
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: transform 0.2s var(--ios-spring), box-shadow 0.2s var(--ios-ease);
 }
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: var(--modern-shadow-lg);
+  box-shadow: var(--ds-shadow-card-hover, 0 8px 24px -4px rgba(0,0,0,0.08));
 }
 
-/* Active press effect */
+.hover-lift:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   PRESS FEEDBACK
+   ========================================= */
+
 .active-press:active {
   transform: scale(0.98);
 }
 
-/* Focus ring */
+.ios-pressable {
+  transition: transform 0.1s var(--ios-ease), opacity 0.1s var(--ios-ease);
+}
+
+.ios-pressable:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+/* =========================================
+   FOCUS STATES
+   ========================================= */
+
 .focus-ring {
   outline: none;
 }
 
 .focus-ring:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--modern-bg-card)), 0 0 0 4px hsl(var(--modern-brand-primary) / 0.3);
+  box-shadow: 
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--primary) / 0.3);
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-shimmer,
+  .animate-live-pulse,
+  .animate-fade-slide-in,
+  .animate-fade-slide-out,
+  .animate-scale-in,
+  .animate-scale-out,
+  .animate-notification-bounce {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

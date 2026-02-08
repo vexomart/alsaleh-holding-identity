@@ -1,15 +1,46 @@
 /**
  * useReducedMotion Hook
  * Respects user's prefers-reduced-motion accessibility preference
+ * iOS-style motion system with Apple-quality timing
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
+/**
+ * iOS-style easing curves
+ */
+export const iosEasing = {
+  default: [0.25, 0.1, 0.25, 1] as const,
+  spring: [0.34, 1.56, 0.64, 1] as const,
+  decel: [0, 0, 0.2, 1] as const,
+  accel: [0.4, 0, 1, 1] as const,
+  bounce: [0.68, -0.15, 0.265, 1.15] as const,
+};
+
+/**
+ * iOS-style durations (in seconds)
+ */
+export const iosDuration = {
+  instant: 0.1,
+  fast: 0.15,
+  normal: 0.25,
+  slow: 0.35,
+  slower: 0.45,
+};
+
+/**
+ * Check if user prefers reduced motion
+ */
 export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    // Initial check for SSR safety
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return false;
+    }
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   useEffect(() => {
-    // Check if matchMedia is available (SSR safety)
     if (typeof window === 'undefined' || !window.matchMedia) {
       return;
     }
@@ -21,7 +52,6 @@ export function useReducedMotion(): boolean {
       setPrefersReducedMotion(event.matches);
     };
 
-    // Modern browsers
     mediaQuery.addEventListener('change', handleChange);
 
     return () => {
@@ -33,28 +63,71 @@ export function useReducedMotion(): boolean {
 }
 
 /**
- * Get motion-safe transition config
- * Returns reduced values when user prefers reduced motion
+ * Get iOS-style motion config
+ * Returns optimized values based on user preference
+ */
+export function useMotionConfig() {
+  const reducedMotion = useReducedMotion();
+  
+  return useMemo(() => ({
+    // Should animate at all?
+    shouldAnimate: !reducedMotion,
+    
+    // Page transitions
+    pageTransition: reducedMotion
+      ? { duration: 0 }
+      : { duration: iosDuration.normal, ease: iosEasing.decel },
+    
+    // Card/item hover
+    hoverTransition: reducedMotion
+      ? { duration: 0 }
+      : { duration: iosDuration.fast, ease: iosEasing.spring },
+    
+    // Press feedback
+    pressTransition: reducedMotion
+      ? { duration: 0 }
+      : { duration: iosDuration.instant, ease: iosEasing.default },
+    
+    // Stagger children
+    stagger: reducedMotion ? 0 : 0.04,
+    
+    // Stagger container
+    staggerContainer: reducedMotion
+      ? {}
+      : {
+          staggerChildren: 0.04,
+          delayChildren: 0.02,
+        },
+    
+    // Scale on press
+    pressScale: reducedMotion ? 1 : 0.97,
+    
+    // Hover lift
+    hoverY: reducedMotion ? 0 : -2,
+    
+    // Slide distance
+    slideDistance: reducedMotion ? 0 : 8,
+  }), [reducedMotion]);
+}
+
+/**
+ * Legacy config for backward compatibility
  */
 export function getMotionConfig(prefersReducedMotion: boolean) {
   return {
-    // Page transitions
     pageTransition: prefersReducedMotion
       ? { duration: 0, ease: 'linear' }
-      : { duration: 0.15, ease: [0.4, 0, 0.2, 1] },
+      : { duration: iosDuration.normal, ease: iosEasing.decel },
     
-    // Row/item transitions
     rowTransition: prefersReducedMotion
       ? { duration: 0 }
-      : { duration: 0.2, ease: 'easeOut' },
+      : { duration: iosDuration.fast, ease: iosEasing.default },
     
-    // Highlight flash (realtime updates)
     highlightTransition: prefersReducedMotion
       ? { duration: 0 }
-      : { duration: 0.6, ease: 'easeOut' },
+      : { duration: 0.6, ease: iosEasing.decel },
     
-    // Stagger children
-    stagger: prefersReducedMotion ? 0 : 0.03,
+    stagger: prefersReducedMotion ? 0 : 0.04,
   };
 }
 
