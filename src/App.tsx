@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 
 // Unified Layout - Single layout for entire app
 import { UnifiedLayout } from "@/components/layouts/UnifiedLayout";
+import { ErrorBoundary } from "@/components/ux/ErrorBoundary";
 
 // Lazy load ALL pages including Index for optimal performance
 const Index = lazy(() => import("./pages/OptimizedIndex"));
@@ -339,9 +340,11 @@ const App = () => {
                       <Toaster />
                       <Sonner />
                     
-                    {/* Unified Layout wraps ALL routes - auto-hides nav for dashboard routes */}
-                    <UnifiedLayout>
-                      <Routes>
+                    {/* Error Boundary wraps all routes for graceful error handling */}
+                    <ErrorBoundary>
+                      {/* Unified Layout wraps ALL routes - auto-hides nav for dashboard routes */}
+                      <UnifiedLayout>
+                        <Routes>
                         {/* Public Website - Lazy loaded with optimized skeleton */}
                         <Route path="/" element={<Suspense fallback={<PageLoader />}><Index /></Suspense>} />
                       
@@ -566,8 +569,9 @@ const App = () => {
                       
                       {/* 404 */}
                       <Route path="*" element={<Suspense fallback={<PageLoader />}><NotFound /></Suspense>} />
-                    </Routes>
-                    </UnifiedLayout>
+                        </Routes>
+                      </UnifiedLayout>
+                    </ErrorBoundary>
                   </RTLAppShell>
                 </ReCaptchaProvider>
               </TooltipProvider>
