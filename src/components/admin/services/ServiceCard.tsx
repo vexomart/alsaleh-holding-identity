@@ -1,6 +1,6 @@
 /**
- * ServiceCard - Dark Theme Premium Service Card
- * Modern, responsive card design for services
+ * ServiceCard - Modern Unified Design
+ * Premium responsive card design for services
  */
 
 import { motion } from 'framer-motion';
@@ -10,17 +10,14 @@ import {
   Trash2, 
   MoreVertical,
   Eye,
-  CheckCircle,
-  XCircle,
   Copy,
   EyeOff,
-  TrendingUp,
   DollarSign,
-  Star,
   Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface Service {
   id: string;
@@ -67,16 +65,16 @@ interface ServiceCardProps {
 
 // Category color mapping
 const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  legal: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/30' },
-  consulting: { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/30' },
-  technical: { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30' },
-  financial: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-  marketing: { bg: 'bg-pink-500/10', text: 'text-pink-400', border: 'border-pink-500/30' },
-  development: { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/30' },
-  design: { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/30' },
-  support: { bg: 'bg-teal-500/10', text: 'text-teal-400', border: 'border-teal-500/30' },
-  training: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' },
-  other: { bg: 'bg-slate-500/10', text: 'text-slate-400', border: 'border-slate-500/30' },
+  legal: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/30' },
+  consulting: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/30' },
+  technical: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/30' },
+  financial: { bg: 'bg-accent/10', text: 'text-accent', border: 'border-accent/30' },
+  marketing: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/30' },
+  development: { bg: 'bg-primary/10', text: 'text-primary', border: 'border-primary/30' },
+  design: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/30' },
+  support: { bg: 'bg-accent/10', text: 'text-accent', border: 'border-accent/30' },
+  training: { bg: 'bg-secondary/10', text: 'text-secondary', border: 'border-secondary/30' },
+  other: { bg: 'bg-muted', text: 'text-muted-foreground', border: 'border-border' },
 };
 
 export function ServiceCard({
@@ -90,6 +88,8 @@ export function ServiceCard({
   onDuplicate,
   getCategoryLabel,
 }: ServiceCardProps) {
+  const { language } = useLanguage();
+  const isRTL = language === 'ar';
   const categoryStyle = categoryColors[service.category || 'other'] || categoryColors.other;
 
   return (
@@ -100,30 +100,25 @@ export function ServiceCard({
       whileHover={{ y: -4 }}
       className="group"
     >
-      <div className={cn(
-        "relative overflow-hidden rounded-2xl",
-        "bg-[#0f1629] border border-slate-800",
-        "hover:border-slate-700 transition-all duration-300",
-        "hover:shadow-lg hover:shadow-slate-900/50"
+      <Card className={cn(
+        "relative overflow-hidden border-border/50 shadow-sm",
+        "hover:shadow-md hover:border-border transition-all duration-300"
       )}>
         {/* Status Gradient Top Bar */}
         <div className={cn(
           "absolute top-0 inset-x-0 h-1 bg-gradient-to-r",
           service.is_active 
-            ? "from-emerald-500 via-teal-500 to-cyan-500" 
-            : "from-slate-600 to-slate-700"
+            ? "from-accent via-accent/80 to-primary" 
+            : "from-muted to-muted-foreground/20"
         )} />
 
-        {/* Card Content */}
-        <div className="p-5">
+        <CardContent className="p-5 pt-6">
           {/* Header Row */}
           <div className="flex items-start justify-between gap-4 mb-4">
             {/* Service Icon/Image */}
             <div className={cn(
               "relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0",
-              "bg-gradient-to-br from-slate-800 to-slate-900",
-              "flex items-center justify-center",
-              "ring-2 ring-slate-700/50"
+              "bg-muted flex items-center justify-center"
             )}>
               {service.image_url ? (
                 <img 
@@ -133,12 +128,12 @@ export function ServiceCard({
                   loading="lazy"
                 />
               ) : (
-                <Package className="h-7 w-7 text-slate-400" />
+                <Package className="h-7 w-7 text-muted-foreground" />
               )}
               {/* Active indicator */}
               {service.is_active && (
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#0f1629] flex items-center justify-center">
-                  <Zap className="h-2.5 w-2.5 text-white" />
+                <div className="absolute -bottom-1 -end-1 w-4 h-4 bg-accent rounded-full border-2 border-background flex items-center justify-center">
+                  <Zap className="h-2.5 w-2.5 text-accent-foreground" />
                 </div>
               )}
             </div>
@@ -149,60 +144,45 @@ export function ServiceCard({
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="h-8 w-8"
                 >
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end" 
-                className="bg-[#0f1629] border-slate-700 text-slate-200"
-              >
-                <DropdownMenuItem 
-                  onClick={() => onView(service)}
-                  className="hover:bg-slate-800 focus:bg-slate-800"
-                >
-                  <Eye className="h-4 w-4 me-2 text-blue-400" />
-                  عرض التفاصيل
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onView(service)}>
+                  <Eye className="h-4 w-4 me-2 text-primary" />
+                  {isRTL ? 'عرض التفاصيل' : 'View Details'}
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => onEdit(service)}
-                  className="hover:bg-slate-800 focus:bg-slate-800"
-                >
-                  <Edit className="h-4 w-4 me-2 text-amber-400" />
-                  تعديل
+                <DropdownMenuItem onClick={() => onEdit(service)}>
+                  <Edit className="h-4 w-4 me-2 text-secondary" />
+                  {isRTL ? 'تعديل' : 'Edit'}
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => onDuplicate(service)}
-                  className="hover:bg-slate-800 focus:bg-slate-800"
-                >
-                  <Copy className="h-4 w-4 me-2 text-purple-400" />
-                  نسخ
+                <DropdownMenuItem onClick={() => onDuplicate(service)}>
+                  <Copy className="h-4 w-4 me-2 text-muted-foreground" />
+                  {isRTL ? 'نسخ' : 'Duplicate'}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-slate-700" />
-                <DropdownMenuItem 
-                  onClick={() => onToggleVisibility(service)}
-                  className="hover:bg-slate-800 focus:bg-slate-800"
-                >
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => onToggleVisibility(service)}>
                   {service.is_visible_to_customers ? (
                     <>
-                      <EyeOff className="h-4 w-4 me-2 text-slate-400" />
-                      إخفاء عن العملاء
+                      <EyeOff className="h-4 w-4 me-2" />
+                      {isRTL ? 'إخفاء عن العملاء' : 'Hide from customers'}
                     </>
                   ) : (
                     <>
-                      <Eye className="h-4 w-4 me-2 text-cyan-400" />
-                      إظهار للعملاء
+                      <Eye className="h-4 w-4 me-2" />
+                      {isRTL ? 'إظهار للعملاء' : 'Show to customers'}
                     </>
                   )}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-slate-700" />
+                <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   onClick={() => onDelete(service)}
-                  className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-red-400"
+                  className="text-destructive focus:text-destructive"
                 >
                   <Trash2 className="h-4 w-4 me-2" />
-                  حذف
+                  {isRTL ? 'حذف' : 'Delete'}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -211,13 +191,16 @@ export function ServiceCard({
           {/* Service Info */}
           <div className="space-y-3">
             {/* Name */}
-            <h3 className="font-bold text-lg text-white line-clamp-1 group-hover:text-blue-400 transition-colors">
-              {service.name_ar || service.name}
+            <h3 className="font-bold text-lg text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+              {isRTL ? (service.name_ar || service.name) : service.name}
             </h3>
 
             {/* Description */}
-            <p className="text-sm text-slate-400 line-clamp-2 min-h-[2.5rem]">
-              {service.description_ar || service.description || 'لا يوجد وصف متاح'}
+            <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
+              {isRTL 
+                ? (service.description_ar || service.description || 'لا يوجد وصف متاح')
+                : (service.description || 'No description available')
+              }
             </p>
 
             {/* Badges Row */}
@@ -241,10 +224,10 @@ export function ServiceCard({
               {!service.is_visible_to_customers && (
                 <Badge 
                   variant="outline" 
-                  className="text-xs bg-orange-500/10 text-orange-400 border-orange-500/30 gap-1"
+                  className="text-xs gap-1"
                 >
                   <EyeOff className="h-3 w-3" />
-                  مخفي
+                  {isRTL ? 'مخفي' : 'Hidden'}
                 </Badge>
               )}
 
@@ -252,31 +235,33 @@ export function ServiceCard({
               {service.include_vat && (
                 <Badge 
                   variant="outline" 
-                  className="text-xs bg-green-500/10 text-green-400 border-green-500/30"
+                  className="text-xs bg-accent/10 text-accent border-accent/30"
                 >
-                  شامل VAT
+                  {isRTL ? 'شامل VAT' : 'Incl. VAT'}
                 </Badge>
               )}
             </div>
           </div>
 
           {/* Footer Row */}
-          <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-between mt-5 pt-4 border-t">
             {/* Price */}
             <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-emerald-500/10">
-                <DollarSign className="h-4 w-4 text-emerald-400" />
+              <div className="p-1.5 rounded-lg bg-accent/10">
+                <DollarSign className="h-4 w-4 text-accent" />
               </div>
-              <span className="font-bold text-white">
+              <span className="font-bold text-foreground">
                 {service.price != null ? (
                   <>
-                    {service.price.toLocaleString('ar-SA')}
-                    <span className="text-xs text-slate-400 mr-1">
+                    {service.price.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
+                    <span className="text-xs text-muted-foreground ms-1">
                       {service.currency || 'SAR'}
                     </span>
                   </>
                 ) : (
-                  <span className="text-slate-500">غير محدد</span>
+                  <span className="text-muted-foreground">
+                    {isRTL ? 'غير محدد' : 'Not set'}
+                  </span>
                 )}
               </span>
             </div>
@@ -285,24 +270,20 @@ export function ServiceCard({
             <div className="flex items-center gap-2">
               <span className={cn(
                 "text-xs",
-                service.is_active ? "text-emerald-400" : "text-slate-500"
+                service.is_active ? "text-accent" : "text-muted-foreground"
               )}>
-                {service.is_active ? 'نشط' : 'متوقف'}
+                {service.is_active 
+                  ? (isRTL ? 'نشط' : 'Active') 
+                  : (isRTL ? 'متوقف' : 'Inactive')}
               </span>
               <Switch
                 checked={service.is_active ?? false}
                 onCheckedChange={() => onToggleStatus(service)}
-                className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-slate-700"
               />
             </div>
           </div>
-        </div>
-
-        {/* Hover Glow Effect */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
