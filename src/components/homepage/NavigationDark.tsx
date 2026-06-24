@@ -57,7 +57,7 @@ export function NavigationDark() {
     <>
       {/* Sticky Header Wrapper - iOS-like behavior */}
       <div 
-        className="sticky top-0 z-50 w-full"
+        className="homepage-dark sticky top-0 z-50 w-full"
         style={{
           position: 'sticky',
           top: 0,
