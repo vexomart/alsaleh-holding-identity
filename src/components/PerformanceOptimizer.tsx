@@ -62,8 +62,9 @@ export const PerformanceOptimizer = () => {
     // تحسين memory management
     const optimizeMemory = () => {
       // تنظيف event listeners القديمة
-      if (window.gc && typeof window.gc === 'function') {
-        setTimeout(() => window.gc(), 5000);
+      const garbageCollect = (window as Window & { gc?: () => void }).gc;
+      if (typeof garbageCollect === 'function') {
+        setTimeout(garbageCollect, 5000);
       }
     };
 

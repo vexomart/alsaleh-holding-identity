@@ -4,7 +4,9 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import type { Json } from '@/integrations/supabase/types';
+import type { Database, Json } from '@/integrations/supabase/types';
+
+type ServiceUpdate = Database['public']['Tables']['services']['Update'];
 
 export interface Service {
   id: string;
@@ -283,7 +285,7 @@ export async function createService(request: CreateServiceRequest): Promise<Serv
 export async function updateService(request: UpdateServiceRequest): Promise<Service> {
   const { id, metadata, ...rest } = request;
 
-  const updateData: Record<string, unknown> = {
+  const updateData: ServiceUpdate = {
     ...rest,
     updated_at: new Date().toISOString(),
   };
@@ -384,7 +386,7 @@ export async function bulkUpdateServices(
 ): Promise<void> {
   const { metadata, ...rest } = updates;
   
-  const updateData: Record<string, unknown> = {
+  const updateData: ServiceUpdate = {
     ...rest,
     updated_at: new Date().toISOString(),
   };

@@ -70,7 +70,8 @@ export const securityConfig = {
   // حماية من CSRF
   csrf: {
     enabled: true,
-    secret: process.env.CSRF_SECRET || 'secure-csrf-secret-key',
+    // Secrets must never be embedded in the browser bundle. Token signing is server-side.
+    secret: '',
     sameSite: 'strict'
   },
 

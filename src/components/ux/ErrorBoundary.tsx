@@ -63,7 +63,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     this.setState({ errorInfo });
     
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
     
@@ -186,7 +186,7 @@ const ErrorFallbackUI: React.FC<ErrorFallbackUIProps> = ({ error, onReset }) => 
         </div>
 
         {/* Technical Details (Collapsible) */}
-        {process.env.NODE_ENV === 'development' && error && (
+        {import.meta.env.DEV && error && (
           <div className="mt-6 pt-6 border-t border-border">
             <button
               onClick={() => setShowDetails(!showDetails)}

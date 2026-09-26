@@ -5,7 +5,9 @@
  */
 
 import { supabase } from '@/integrations/supabase/client';
-import type { Json } from '@/integrations/supabase/types';
+import type { Database, Json } from '@/integrations/supabase/types';
+
+type InvoiceUpdate = Database['public']['Tables']['invoices']['Update'];
 
 export type InvoiceStatus = 'draft' | 'issued' | 'paid' | 'cancelled' | 'overdue';
 
@@ -305,7 +307,7 @@ export async function updateInvoice(request: UpdateInvoiceRequest): Promise<Invo
   const { id, metadata, ...rest } = request;
   const previousInvoice = await getInvoiceById(id);
 
-  const updateData: Record<string, unknown> = {
+  const updateData: InvoiceUpdate = {
     ...rest,
     updated_at: new Date().toISOString(),
   };

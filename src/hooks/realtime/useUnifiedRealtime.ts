@@ -117,7 +117,7 @@ export function useUnifiedRealtime(options: UnifiedRealtimeOptions): UnifiedReal
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected' | 'error'>('disconnected');
   const [lastEvent, setLastEvent] = useState<SyncEvent | null>(null);
   const [eventCount, setEventCount] = useState(0);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const MAX_RECONNECT_ATTEMPTS = 5;
 
