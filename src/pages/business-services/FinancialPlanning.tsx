@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import BackButton from "@/components/ui/back-button";
@@ -123,8 +122,6 @@ const FinancialPlanning = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50" dir="rtl">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-green-900 via-emerald-800 to-teal-900 text-white">
         <div className="absolute inset-0 bg-black/20"></div>

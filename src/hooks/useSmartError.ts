@@ -22,7 +22,7 @@ export function useSmartError(options: UseSmartErrorOptions = {}) {
     const friendlyMessage = getFriendlyError(error, language);
     
     // Log to console in development
-    if (logToConsole && process.env.NODE_ENV === 'development') {
+    if (logToConsole && import.meta.env.DEV) {
       console.error(`[Error${context ? ` - ${context}` : ''}]:`, error);
     }
     

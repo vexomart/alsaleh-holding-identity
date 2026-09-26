@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -138,8 +137,6 @@ const DatabaseSupport = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navigation />
-      
       <main className="pt-20">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 relative overflow-hidden">

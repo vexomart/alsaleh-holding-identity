@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BackButton from "@/components/ui/back-button";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { FloatingParticles } from "@/components/customer/hub/FloatingParticles";
@@ -298,8 +297,6 @@ const DigitalTransformation = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-indigo-100/50" dir="rtl">
-      <Navigation />
-      
       {/* Hero Section - Premium Design */}
       <section className="relative overflow-hidden bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 text-white pt-24 lg:pt-32">
         {/* Animated Background Effects */}

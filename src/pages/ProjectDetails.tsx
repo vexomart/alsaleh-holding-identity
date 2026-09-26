@@ -1,5 +1,4 @@
 import { useParams, Link } from "react-router-dom";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1132,7 +1131,6 @@ const ProjectDetails = () => {
   if (!project) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-        <Navigation />
         <div className="container mx-auto px-6 py-32 text-center">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">المشروع غير موجود</h1>
           <p className="text-xl text-slate-600 mb-8">لم نتمكن من العثور على هذا المشروع</p>
@@ -1149,8 +1147,6 @@ const ProjectDetails = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-emerald-600/10" />

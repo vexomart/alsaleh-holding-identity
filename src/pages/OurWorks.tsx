@@ -25,7 +25,6 @@ import {
   CheckCircle,
   ArrowUpRight
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import masterEduPathScreenshot from "@/assets/works/masteredupath-screenshot.png";
 import fekrahAcademyScreenshot from "@/assets/works/fekrah-academy-screenshot.png";
@@ -1878,8 +1877,6 @@ const OurWorks = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       <PageContainer>
         {/* Enhanced Hero Section */}
         <div className="relative py-24 lg:py-40 overflow-hidden">

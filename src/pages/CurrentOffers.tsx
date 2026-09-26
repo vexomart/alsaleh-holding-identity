@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import SEO from "@/components/SEO";
@@ -215,8 +214,6 @@ const currentOffers = [
         title="العروض الحالية - خصومات حصرية تصل إلى 61%"
         description="اكتشف أفضل العروض الحصرية على خدماتنا الاحترافية. تصميم مواقع، متاجر إلكترونية، تطبيقات جوال بأسعار مميزة ولفترة محدودة."
       />
-      <Navigation />
-      
       {/* Customer Service Contact Bar */}
       <div className="fixed top-24 left-4 z-50 group">
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-full p-3 shadow-lg cursor-pointer transform transition-all duration-300 hover:scale-110 animate-bounce hover:animate-none">

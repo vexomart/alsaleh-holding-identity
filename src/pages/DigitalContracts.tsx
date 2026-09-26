@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -519,8 +518,6 @@ const DigitalContracts = () => {
         description="عقد إلكتروني احترافي يشمل جميع الخدمات مع توقيع وختم رقمي وتنبيهات الدفع. تجربة تعاقد موثوقة وآمنة."
         jsonLd={jsonLd}
       />
-      <Navigation />
-      
       {/* Hero Section */}
       <ContractHeroSection 
         onStartClick={() => document.getElementById('contract-form')?.scrollIntoView({ behavior: 'smooth' })}

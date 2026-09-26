@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const mainServices = [
@@ -331,8 +330,6 @@ const IntegratedServicesPage = () => {
 
   return (
     <div dir="rtl" className="min-h-screen bg-background">
-      <Navigation />
-      
       <main className="pt-20 lg:pt-28">
         {/* Hero Section */}
         <section className="py-16 sm:py-20 relative overflow-hidden">

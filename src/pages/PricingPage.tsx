@@ -22,7 +22,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { db, supabase } from '@/integrations/supabase/db';
 import SEO from '@/components/SEO';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 const PricingPage = () => {
@@ -187,8 +186,6 @@ const PricingPage = () => {
         title="خطط الاشتراك - نظام الأتمتة الذكية"
         description="اختر الخطة المناسبة لك واستمتع بأتمتة ذكية لأعمالك مع خطط مرنة وأسعار تنافسية"
       />
-
-      <Navigation />
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100" dir="rtl">
         {/* Hero Section */}

@@ -1,4 +1,3 @@
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -271,8 +270,6 @@ const TechInvestment = () => {
 
   return (
     <div className="min-h-screen bg-background font-official">
-      <Navigation />
-      
       {/* Hero Section - Professional & Clean */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         {/* Background Elements */}

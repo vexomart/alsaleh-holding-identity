@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useRTL } from "@/components/RTLProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -160,8 +159,6 @@ const AppSupport = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
-      <Navigation />
-      
       <main className="pt-20">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 relative overflow-hidden">

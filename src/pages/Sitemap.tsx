@@ -5,7 +5,6 @@
 
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { 
   Building2, 
@@ -149,8 +148,6 @@ const Sitemap = () => {
 
   return (
     <div dir="rtl" className="min-h-screen bg-background">
-      <Navigation />
-      
       <main className="py-16 lg:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}

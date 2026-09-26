@@ -26,7 +26,6 @@ import {
   Calendar
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import BusinessServiceRequestForm from "@/components/BusinessServiceRequestForm";

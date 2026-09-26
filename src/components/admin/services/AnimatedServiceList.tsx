@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, Reorder, useDragControls, AnimatePresence } from 'framer-motion';
+import { motion, Reorder, useDragControls, AnimatePresence, type Variants } from 'framer-motion';
 import { 
   Package, 
   Edit, 
@@ -70,7 +70,7 @@ interface AnimatedServiceListProps {
 // Animation configuration - all durations < 250ms
 const ANIMATION_CONFIG = {
   duration: 0.2,
-  ease: [0.25, 0.1, 0.25, 1], // Custom cubic-bezier for smooth feel
+  ease: [0.25, 0.1, 0.25, 1] as const, // Custom cubic-bezier for smooth feel
 };
 
 // RTL-aware slide direction
@@ -210,7 +210,7 @@ function ServiceListItem({
   const itemRef = useRef<HTMLLIElement>(null);
 
   // Variants for list items - skip initial animation
-  const itemVariants = {
+  const itemVariants: Variants = {
     initial: hasInitialized 
       ? { opacity: 0, x: slideDirection.initial } 
       : { opacity: 1, x: 0 },

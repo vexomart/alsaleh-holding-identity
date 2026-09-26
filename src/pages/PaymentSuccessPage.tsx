@@ -17,7 +17,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { db, supabase } from '@/integrations/supabase/db';
 import SEO from '@/components/SEO';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 const PaymentSuccessPage = () => {
@@ -139,8 +138,6 @@ const PaymentSuccessPage = () => {
         title="تم الدفع بنجاح - نظام الأتمتة الذكية"
         description="تم تفعيل اشتراكك بنجاح في نظام الأتمتة الذكية"
       />
-
-      <Navigation />
 
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50" dir="rtl">
         <div className="container mx-auto px-6 py-32">

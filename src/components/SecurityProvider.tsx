@@ -125,7 +125,7 @@ export const SecurityProvider: React.FC<SecurityProviderProps> = ({ children }) 
     console.warn('Security Incident:', incident);
     
     // إرسال إلى النظام الخلفي في بيئة الإنتاج
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       fetch('/api/security/incident', {
         method: 'POST',
         headers: {

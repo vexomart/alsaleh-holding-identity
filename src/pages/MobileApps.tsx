@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import {
@@ -126,8 +125,6 @@ const MobileApps = () => {
         title="تطوير التطبيقات الذكية - iOS و Android"
         description="خدمات تطوير التطبيقات الذكية للهواتف والأجهزة اللوحية - تطبيقات iOS وAndroid وحلول متعددة المنصات"
       />
-      <Navigation />
-
       {/* Hero Section */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-secondary/10"></div>

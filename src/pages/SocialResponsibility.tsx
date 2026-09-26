@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { 
@@ -48,8 +47,6 @@ const SocialResponsibility = () => {
 
   return (
     <div className="min-h-screen bg-background font-corporate" dir="rtl">
-      <Navigation />
-      
       <main className="relative overflow-hidden">
         {/* Hero Section */}
         <section className="relative min-h-[90vh] flex items-center justify-center py-16 sm:py-20">
