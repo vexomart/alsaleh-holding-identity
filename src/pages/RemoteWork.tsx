@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { Wifi, Globe, Users, Shield, Clock, Star, CheckCircle, Building, ArrowRight, Zap, Target, Award, Code, Palette, TrendingUp, HeadphonesIcon, ExternalLink } from "lucide-react";
@@ -143,8 +142,6 @@ const RemoteWork = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pb-24 bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 dark:from-emerald-950 dark:via-cyan-950 dark:to-blue-950 overflow-hidden relative">
         {/* Background Decorations */}

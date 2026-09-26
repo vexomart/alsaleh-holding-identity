@@ -1,4 +1,3 @@
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -219,8 +218,6 @@ const Careers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20" />

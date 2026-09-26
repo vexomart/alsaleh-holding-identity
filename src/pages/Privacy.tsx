@@ -1,4 +1,3 @@
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -158,8 +157,6 @@ const Privacy = () => {
 
   return (
     <div className="min-h-screen">
-      <Navigation />
-      
       <main className="pt-20">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary via-primary/95 to-secondary relative overflow-hidden">

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -98,8 +97,6 @@ const EnterpriseDevelopment = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       <main className="relative">
         {/* Hero Section */}
         <section className="relative py-24 overflow-hidden">

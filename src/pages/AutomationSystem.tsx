@@ -47,7 +47,6 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from "sonner";
 import SEO from '@/components/SEO';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 const AutomationSystem = () => {
@@ -371,8 +370,6 @@ const AutomationSystem = () => {
         title="نظام الأتمتة المتكامل - شركة علي صالح الشهري القابضة"
         description="نظام أتمتة ذكي متكامل لإدارة العمليات التجارية وتحسين الكفاءة باستخدام أحدث تقنيات الذكاء الاصطناعي"
       />
-
-      <Navigation />
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100" dir="rtl">
         {/* Hero Section */}

@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { Button } from "@/components/ui/button";
@@ -716,7 +715,6 @@ const EnhancedDesignCategory = () => {
   if (!currentCategory) {
     return (
       <div className="min-h-screen bg-background" dir="rtl">
-        <Navigation />
         <main className="container mx-auto px-6 py-20">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">القسم غير موجود</h1>
@@ -789,8 +787,6 @@ const EnhancedDesignCategory = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <Navigation />
-      
       {/* Hero Section with Enhanced Design */}
       <section className={`relative py-20 ${currentCategory.accent.headerBg} overflow-hidden`} dir="rtl">
         {/* Animated Background Elements */}

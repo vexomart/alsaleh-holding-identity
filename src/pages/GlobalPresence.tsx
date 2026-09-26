@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import InteractiveMap from "@/components/InteractiveMap";
@@ -215,8 +214,6 @@ const GlobalPresence = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-surface to-background">
-      <Navigation />
-      
       <main className="pt-16">
         {/* Hero Section */}
         <section className="py-20 md:py-32 relative overflow-hidden">

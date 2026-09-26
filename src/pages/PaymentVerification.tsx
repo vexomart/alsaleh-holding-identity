@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, XCircle, Clock, AlertTriangle, Home, Download, Receipt, FileText, Loader2 } from 'lucide-react';
 import { db, supabase } from '@/integrations/supabase/db';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { downloadInvoicePdf, type InvoiceDataLegacy } from '@/lib/invoices';
@@ -295,8 +294,6 @@ const PaymentVerification = () => {
         title="التحقق من حالة الدفع" 
         description="صفحة التحقق من حالة الدفع والمعاملات المالية" 
       />
-      <Navigation />
-      
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           

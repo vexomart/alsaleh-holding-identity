@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -111,8 +110,6 @@ const CRMSystem = () => {
 
   return (
     <div dir="rtl" className="min-h-screen bg-background">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-violet-50 via-white to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-900" />

@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet-async";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { 
   MessageSquare, 
@@ -403,8 +402,6 @@ const Complaints = () => {
         <meta name="keywords" content="شكوى, طلب دعم, خدمة العملاء, ASH HOLDING" />
       </Helmet>
 
-      <Navigation />
-      
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         {/* Advanced Hero Section */}
         <section className="relative py-20 overflow-hidden">

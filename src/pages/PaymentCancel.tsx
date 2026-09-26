@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { XCircle, ArrowRight, Home, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const PaymentCancel = () => {
@@ -10,8 +9,6 @@ const PaymentCancel = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       <main className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto text-center space-y-8">
           {/* Cancel Icon and Message */}

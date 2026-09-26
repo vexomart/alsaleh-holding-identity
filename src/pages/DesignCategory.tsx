@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { Button } from "@/components/ui/button";
@@ -237,8 +236,6 @@ export default function DesignCategory() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-
       <header className={`relative bg-gradient-to-br from-success/10 via-success/5 to-success/0 dark:from-success/20 dark:via-slate-900 dark:to-slate-900 border-b border-white/20 dark:border-slate-700/50 py-16 px-6 text-center animate-fade-in`}>
         <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background/80"></div>

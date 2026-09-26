@@ -35,7 +35,6 @@ import {
   LogIn
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { JobApplicationSteps } from "@/components/JobApplicationSteps";
 import { supabase } from "@/integrations/supabase/client";
@@ -790,7 +789,6 @@ const JobApplication = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50">
-        <Navigation />
         <div className="pt-20 flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
@@ -803,8 +801,6 @@ const JobApplication = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50">
-      <Navigation />
-      
       <div className="pt-20">
         {/* Enhanced Header */}
         <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white relative overflow-hidden">

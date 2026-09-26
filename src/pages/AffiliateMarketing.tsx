@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import {
   TrendingUp,
@@ -170,8 +169,6 @@ const AffiliateMarketing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">

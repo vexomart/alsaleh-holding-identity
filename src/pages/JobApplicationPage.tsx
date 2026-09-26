@@ -1,4 +1,3 @@
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
@@ -289,8 +288,6 @@ const JobApplicationPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       <PageHeader 
         title="انضم إلى فريق العمل"
         description="كن جزءاً من رحلتنا في تشكيل مستقبل التكنولوجيا"

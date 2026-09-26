@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, XCircle, Clock, AlertCircle, Home, Download, Receipt, FileText } from 'lucide-react';
 import { db, supabase } from '@/integrations/supabase/db';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import html2canvas from 'html2canvas';
@@ -273,7 +272,6 @@ const PaymentSuccess = () => {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
         <SEO title="جاري التحقق من الدفع" description="التحقق من حالة الدفع" />
-        <Navigation />
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-2xl mx-auto text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-8"></div>
@@ -292,8 +290,6 @@ const PaymentSuccess = () => {
         title={paymentStatus === 'success' ? 'تم الدفع بنجاح' : 'حالة الدفع'} 
         description="صفحة تأكيد حالة الدفع" 
       />
-      <Navigation />
-      
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           

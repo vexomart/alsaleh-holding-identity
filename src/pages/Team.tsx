@@ -1,4 +1,3 @@
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -65,8 +64,6 @@ const Team = () => {
 
   return (
     <div className="min-h-screen">
-      <Navigation />
-      
       <main className="pt-20">
         <section className="py-24 bg-gradient-subtle relative overflow-hidden">
           {/* Background Elements */}

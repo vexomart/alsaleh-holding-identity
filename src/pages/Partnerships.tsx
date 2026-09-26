@@ -29,7 +29,6 @@ import {
   Shield
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -125,8 +124,6 @@ const Partnerships = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <Navigation />
-      
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-indigo-50/60 to-purple-50/80"></div>
